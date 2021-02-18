@@ -1,0 +1,27 @@
+
+.tile {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    display: inline-block;
+
+}
+
+.darkTile {    
+    background-color: #412234;
+    color: white;
+}
+
+.lightTile {
+    background-color: #E5D0CC;
+    color: black;
+}
+
+.board {
+    display: block; 
+    position: absolute
+}
+
+body {
+    background-color: #efefef;
+}
