@@ -19,7 +19,11 @@
 
     <body>
 
-        <div id="root"></div>
+        {% if loggedIn %}
+            <div id="root"></div>
+        {% else %}
+            <p>loginForm put here</p>
+        {% endif %}
 
     </body>
 </html>
