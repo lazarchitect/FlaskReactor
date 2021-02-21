@@ -1,9 +1,6 @@
-from postgres import checkIfUserExists, createUser, createStat
 from flask import Flask, render_template, redirect, request
-from uuid import uuid4 as generateId
-import hashlib
-import os
-
+from pgdb import checkIfUserExists, checkLogin, createUser, createStat
+from utils import generateId, generateHash
 
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
@@ -29,10 +26,10 @@ def homepage():
 @app.route('/login', methods=["POST"])
 def login():
     username = request.form['username']
-    # password = request.form['password']
-    #TODO verify password hash in postgres database. if not matching, dont allow login.
-    userExists = checkIfUserExists(username)
-    if(userExists): 
+    password = request.form['password']
+    password_hash = generateHash(password)
+    correctLogin = checkLogin(username, password_hash)
+    if(correctLogin): 
     
         #success
         session['loggedIn'] = True
@@ -52,7 +49,7 @@ def signup():
     if(password != password_repeat):
         return ("Your passwords did not match.")
 
-    password_hash = hash(password)
+    password_hash = generateHash(password)
 
     userid = str(generateId())
 
