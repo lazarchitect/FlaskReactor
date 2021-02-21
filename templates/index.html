@@ -10,11 +10,12 @@
         <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 
-        <script>var gamestate = JSON.parse('{{ gamestate | tojson | safe}}');</script>
-        
-        <script type="text/jsx" src="/static/scripts/Board.js"></script>
-        <script type="text/jsx" src="/static/scripts/index_script.js"></script>
-        
+        {% if loggedIn %}
+            <script>var gamestate = JSON.parse('{{ gamestate | tojson | safe}}');</script>
+            
+            <script type="text/jsx" src="/static/scripts/Board.js"></script>
+            <script type="text/jsx" src="/static/scripts/index_script.js"></script>
+        {% endif %}
         
         
     </head>
