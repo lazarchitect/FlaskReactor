@@ -16,7 +16,7 @@ app.secret_key = open('secret_key.txt', 'r').read()
 def homepage():
     print(session)
     loggedIn = session['loggedIn']
-    return render_template("index.html", loggedIn=loggedIn)
+    return render_template("index.html", loggedIn=loggedIn, gamestate="lmao wtf?")
     
 @app.route('/login', methods=["POST"])
 def login():
