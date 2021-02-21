@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <link rel="stylesheet" href="/static/styles/index.css">
+        
+        <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+        
+    </head>
+
+    <body>
+        <!-- TODO move as much of this page as possible into react code  -->
+        <h1>Log In</h1>
+        <form action="/login" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username"><br><br>
+            <br>
+            <label>Password:</label> <input type="password" name="password">
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+
+        <br><br>
+
+        <h1>Sign Up</h1>
+        <form action="/signup" method="POST">
+            <label>Username:</label> <input type="text" name="username">
+            <br>
+            <label>Password:</label> <input type="password" name="password">
+            <br>
+            <label>Repeat Password:</label> <input type="password" name="password_repeat">
+            <br>
+            <label>Email (optional):</label> <input type="text" name="email">
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+
+
+    </body>
+</html>
