@@ -21,8 +21,15 @@ def homepage():
         return render_template("splash.html")
 
     else:
-        return render_template("home.html", gamestate = "no lol")
+        return render_template("home.html")
     
+@app.route('/games/<gameid>')
+def game():
+    # TODO fetch game with corresponding gameID from pgdb
+    pass
+
+
+
 @app.route('/login', methods=["POST"])
 def login():
     username = request.form['username']

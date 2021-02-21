@@ -9,14 +9,16 @@
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
 
+        <script>var gamestate = JSON.parse('{{ gamestate | tojson | safe}}');</script>
+            
+        <script type="text/jsx" src="/static/scripts/Board.js"></script>
         <script type="text/jsx" src="/static/scripts/home_script.js"></script>
 
     </head>
 
     <body>
 
-        <!-- TODO needs list of games, list of..., friends? hmm... -->
-        <div id="root"></div>
+        <div id="root"></div> <!-- react chesssboard -->
 
         <!-- TODO move into react -->
         <form action="/logout" method="POST">
