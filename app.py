@@ -7,9 +7,9 @@ session = {'loggedIn':False}
 
 # from postgres import getUser, createUser
 
+
 app = Flask(__name__)
 app.secret_key = open('secret_key.txt', 'r').read()
-
 
 
 @app.route('/')
@@ -47,3 +47,4 @@ def logout():
     session['loggedIn'] = False
     del session['username']
     return redirect("/")
+
