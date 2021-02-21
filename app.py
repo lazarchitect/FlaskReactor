@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request
-from pgdb import checkIfUserExists, checkLogin, createUser, createStat
 from utils import generateId, generateHash
+import pgdb
 
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
@@ -24,9 +24,10 @@ def homepage():
         return render_template("home.html")
     
 @app.route('/games/<gameid>')
-def game():
-    # TODO fetch game with corresponding gameID from pgdb
-    pass
+def game(gameid):
+    gameid = "7144fdd3-87ea-43ca-a492-160a2f462af5"
+    game = pgdb.getGame(gameid)
+    return str(game)
 
 
 
@@ -35,10 +36,9 @@ def login():
     username = request.form['username']
     password = request.form['password']
     password_hash = generateHash(password)
-    correctLogin = checkLogin(username, password_hash)
+
+    correctLogin = pgdb.checkLogin(username, password_hash)
     if(correctLogin): 
-    
-        #success
         session['loggedIn'] = True
         session['username'] = username
         return redirect('/')
@@ -56,12 +56,16 @@ def signup():
     if(password != password_repeat):
         return ("Your passwords did not match.")
 
+    usernameTaken = pgdb.checkIfUserExists(username)
+    if(usernameTaken):
+        return("That username is taken! sorry fam")
+
     password_hash = generateHash(password)
 
     userid = str(generateId())
 
-    createUser(username, password_hash, email, userid)
-    createStat(userid)
+    pgdb.createUser(username, password_hash, email, userid)
+    pgdb.createStat(userid)
 
     session['loggedIn'] = True
     session['username'] = request.form['username']

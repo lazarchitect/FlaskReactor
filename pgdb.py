@@ -14,6 +14,7 @@ cursor = conn.cursor()
 
 sql = {
     "getUser": "SELECT * FROM chess.users WHERE name=%s",
+    "getGame": "SELECT * FROM chess.games WHERE id=%s",
     "checkLogin": "SELECT * FROM chess.users WHERE name=%s AND password_hash=%s",
     "createUser": "INSERT INTO chess.users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)", #TODO add all values, not just name
     "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)" #TODO see above
@@ -38,3 +39,11 @@ def createStat(userId):
     values = [str(userId)]
     cursor.execute(query, values) 
     conn.commit()
+
+def getGame(gameId):
+    query = sql['getGame']
+    values = [gameId]
+    cursor.execute(query, values)
+    game = cursor.fetchone()
+    print(game)
+    return game
