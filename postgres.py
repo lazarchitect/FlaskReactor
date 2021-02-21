@@ -1,5 +1,6 @@
 from psycopg2 import connect
 from json import loads
+from uuid import uuid4 as generateId
 
 dbDetails = loads(open("dbdetails.json", "r").read())
 
@@ -13,17 +14,17 @@ conn = connect(
 cursor = conn.cursor()
 
 sql = {
-    "getUser": "SELECT * FROM chess.\"Users\" where name=%s",
-    "createUser": "INSERT INTO chess.\"Users\" (name, password_hash) VALUES (%s, %s)" #todo add all values, not just name
+    "getUser": "SELECT * FROM chess.users WHERE name=%s",
+    "createUser": "INSERT INTO chess.users (name, password_hash, id) VALUES (%s, %s, %s)", #TODO add all values, not just name
+    "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)" #TODO see above
 }
-
-
 
 def userExists(username):
     cursor.execute(sql['getUser'], [username])
-    # print(cursor.fetchone())
     return cursor.fetchone() != None
 
 def createUser(username):
-    cursor.execute(sql['createUser'], [username, "passworderino! WIP!"])
-    print(cursor.fetchone())
+    userId = generateId()
+    cursor.execute(sql['createUser'], [username, "passworderino! WIP!", str(userId)])
+    cursor.execute(sql['createStat'], [str(userId)]) 
+    conn.commit()
