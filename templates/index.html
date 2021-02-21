@@ -19,7 +19,29 @@
 
     <body>
 
-        <div id="root"></div>
+        {% if loggedIn %}
+            <div id="root"></div>
+            <form action="/logout" method="POST">
+                <input type="submit" value="Log Out">
+            </form>
+        {% else %}
+            <!-- TODO move as much of this page as possible into react code  -->
+            <form action="/login" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"><br><br>
+                <!-- <label for="lname">Last name:</label> -->
+                <!-- <input type="text" id="lname" name="lname"><br><br> -->
+                <input type="submit" value="Submit">
+            </form>
+            <form action="/signup" method="POST">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username"><br><br>
+                <!-- <label for="lname">Last name:</label> -->
+                <!-- <input type="text" id="lname" name="lname"><br><br> -->
+                <input type="submit" value="Submit">
+            </form>
+        {% endif %}
+
 
     </body>
 </html>
