@@ -16,11 +16,11 @@ sql = {
     "getUser": "SELECT * FROM chess.users WHERE name=%s",
     "getGame": "SELECT * FROM chess.games WHERE id=%s",
     "checkLogin": "SELECT * FROM chess.users WHERE name=%s AND password_hash=%s",
-    "createUser": "INSERT INTO chess.users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)", #TODO add all values, not just name
-    "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)" #TODO see above
+    "createUser": "INSERT INTO chess.users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)",
+    "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)"
 }
 
-def checkIfUserExists(username):
+def checkIfUsernameTaken(username):
     cursor.execute(sql['getUser'], [username])
     return cursor.fetchone() != None
 
