@@ -1,3 +1,4 @@
+from postgres import userExists, createUser
 from flask import Flask, render_template, redirect, request
 
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
@@ -19,19 +20,24 @@ def homepage():
     
 @app.route('/login', methods=["POST"])
 def login():
-    
+    username = request.form['username']
     # password = request.form['password']
-    #TODO check for user in postgres database. if not found, dont allow login. 
+    #TODO check for user in postgres database. if not found, dont allow login.
+    if(userExists(username)): 
     
-    #success
-    session['loggedIn'] = True
-    session['username'] = request.form['username']
-    return redirect('/')
+        #success
+        session['loggedIn'] = True
+        session['username'] = username
+        return redirect('/')
+    else:
+        return "you dont exist..."
 
 
 @app.route('/signup', methods=["POST"])
 def signup():
+    username = request.form['username']
     #TODO create user in postgres database
+    createUser(username)
     session['loggedIn'] = True
     session['username'] = request.form['username']
     return redirect('/')
