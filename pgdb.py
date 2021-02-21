@@ -14,12 +14,17 @@ cursor = conn.cursor()
 
 sql = {
     "getUser": "SELECT * FROM chess.users WHERE name=%s",
+    "checkLogin": "SELECT * FROM chess.users WHERE name=%s AND password_hash=%s",
     "createUser": "INSERT INTO chess.users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)", #TODO add all values, not just name
     "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)" #TODO see above
 }
 
 def checkIfUserExists(username):
     cursor.execute(sql['getUser'], [username])
+    return cursor.fetchone() != None
+
+def checkLogin(username, password_hash):
+    cursor.execute(sql['checkLogin'], [username, password_hash])
     return cursor.fetchone() != None
 
 def createUser(username, password_hash, email, userid):
