@@ -38,7 +38,7 @@ def login():
     password_hash = generateHash(password)
 
     correctLogin = pgdb.checkLogin(username, password_hash)
-    if(correctLogin): 
+    if(correctLogin):
         session['loggedIn'] = True
         session['username'] = username
         return redirect('/')
@@ -56,7 +56,7 @@ def signup():
     if(password != password_repeat):
         return ("Your passwords did not match.")
 
-    usernameTaken = pgdb.checkIfUserExists(username)
+    usernameTaken = pgdb.checkIfUsernameTaken(username)
     if(usernameTaken):
         return("That username is taken! sorry fam")
 
