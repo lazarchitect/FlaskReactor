@@ -38,12 +38,12 @@ def login():
     password_hash = generateHash(password)
 
     correctLogin = pgdb.checkLogin(username, password_hash)
-    if(correctLogin):
+    if(correctLogin): 
         session['loggedIn'] = True
         session['username'] = username
         return redirect('/')
     else:
-        return "you dont exist..."
+        return "Username or password incorrect. Please check your details and try again."
 
 
 @app.route('/signup', methods=["POST"])
