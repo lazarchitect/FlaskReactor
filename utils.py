@@ -5,4 +5,4 @@ def generateId():
     return str(uuid4())
 
 def generateHash(password):
-    return sha256(password).hexdigest()
+    return sha256(password.encode('utf8')).hexdigest()
