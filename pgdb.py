@@ -17,7 +17,8 @@ sql = {
     "getGame": "SELECT * FROM chess.games WHERE id=%s",
     "checkLogin": "SELECT * FROM chess.users WHERE name=%s AND password_hash=%s",
     "createUser": "INSERT INTO chess.users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)",
-    "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)"
+    "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)",
+    "createGame": "INSERT INTO chess.games (id, white_player, black_player, boardstate, completed, time_started) VALUES (%s, %s, %s, %s, %s, %s)"
 }
 
 def checkIfUsernameTaken(username):
@@ -38,6 +39,12 @@ def createStat(userId):
     query = sql['createStat']
     values = [str(userId)]
     cursor.execute(query, values) 
+    conn.commit()
+
+def createGame(gameid, white_player, black_player, boardstate, completed, time_started):
+    query = sql['createGame']
+    values = [gameid, white_player, black_player, boardstate, completed, time_started]
+    cursor.execute(query, values)
     conn.commit()
 
 def getGame(gameId):
