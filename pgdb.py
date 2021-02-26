@@ -13,6 +13,8 @@ conn = connect(
 cursor = conn.cursor()
 
 sql = {
+    "getCompletedGames": "SELECT * FROM chess.games where completed=true AND (white_player=%s OR black_player=%s)",
+    "getActiveGames": "SELECT * FROM chess.games where completed=false AND (white_player=%s OR black_player=%s)",
     "getUser": "SELECT * FROM chess.users WHERE name=%s",
     "getGame": "SELECT * FROM chess.games WHERE id=%s",
     "checkLogin": "SELECT * FROM chess.users WHERE name=%s AND password_hash=%s",
@@ -54,3 +56,9 @@ def getGame(gameId):
     game = cursor.fetchone()
     print(game)
     return game
+
+def getActiveGames(username):
+    query = sql['getAllGames']
+    values = [username, username]
+    cursor.execute(query, values)
+    return cursor.fetchall()
