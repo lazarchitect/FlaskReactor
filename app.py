@@ -26,9 +26,9 @@ def homepage():
     else:
 
         # TODO fetch all game data for this user, pass into view. react will process it.
+        games = pgdb.getActiveGames(session['username'])
 
-
-        return render_template("home.html")
+        return render_template("home.html", games = games)
 
     
 @app.route('/games/<gameid>')
