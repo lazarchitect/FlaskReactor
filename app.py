@@ -1,6 +1,10 @@
 from flask import Flask, render_template, redirect, request
 from utils import generateId, generateHash
+from datetime import datetime
+import random
 import pgdb
+  
+
 
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
@@ -15,17 +19,21 @@ app.secret_key = open('secret_key.txt', 'r').read()
 
 @app.route('/')
 def homepage():
-    print(session)
-    loggedIn = session['loggedIn']
-    if(loggedIn == False):
+
+    if(session['loggedIn'] == False):
         return render_template("splash.html")
 
     else:
+
+        # TODO fetch all game data for this user, pass into view. react will process it.
+
+
         return render_template("home.html")
+
     
 @app.route('/games/<gameid>')
 def game(gameid):
-    gameid = "7144fdd3-87ea-43ca-a492-160a2f462af5"
+    gameid = "b9482237-8c8e-41c8-879e-4e3cb695cab0"
     game = pgdb.getGame(gameid)
     return str(game)
 
@@ -77,3 +85,26 @@ def logout():
     del session['username']
     return redirect("/")
 
+@app.route("/creategame", methods=["POST"])
+def createGame():
+
+    if(session['loggedIn'] == False): return #shouldnt happen
+
+    color = random.choice(['white', 'black'])
+
+    if(color == "white"):
+        white_player = session['username']
+        black_player = request.form['opponent']
+
+    else:
+        white_player = request.form['opponent']
+        black_player = session['username']
+
+    gameId = generateId()
+    completed = False #ongoing
+    boardstate = open('initialLayout.json', 'r').read()
+    time_started = datetime.now() 
+
+    pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started)
+
+    return redirect('/')
