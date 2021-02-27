@@ -64,7 +64,7 @@ def signup():
     if(password != password_repeat):
         return ("Your passwords did not match.")
 
-    usernameTaken = pgdb.checkIfUsernameTaken(username)
+    usernameTaken = pgdb.getUser(username) != None
     if(usernameTaken):
         return("That username is taken! sorry fam")
 
@@ -88,21 +88,31 @@ def logout():
 @app.route("/creategame", methods=["POST"])
 def createGame():
 
-    if(session['loggedIn'] == False): return #shouldnt happen
+    opponent_name = request.form['opponent']
+
+    if(session['loggedIn'] == False): 
+        return #shouldnt happen
+
+    # TODO check if opponent exists
+    opponentExists = pgdb.getUser(opponent_name) != None
+    if(opponentExists == False):
+        return "no user by that name. try again or message me if this is incorrect."
 
     color = random.choice(['white', 'black'])
 
     if(color == "white"):
         white_player = session['username']
-        black_player = request.form['opponent']
+        black_player = opponent_name
 
     else:
-        white_player = request.form['opponent']
+        white_player = opponent_name
         black_player = session['username']
 
     gameId = generateId()
     completed = False #ongoing
     boardstate = open('initialLayout.json', 'r').read()
+    # print(initialLayout)
+    # boardstate = dict(initialLayout)
     time_started = datetime.now() 
 
     pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started)

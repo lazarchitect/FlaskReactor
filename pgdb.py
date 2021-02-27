@@ -23,9 +23,9 @@ sql = {
     "createGame": "INSERT INTO chess.games (id, white_player, black_player, boardstate, completed, time_started) VALUES (%s, %s, %s, %s, %s, %s)"
 }
 
-def checkIfUsernameTaken(username):
+def getUser(username):
     cursor.execute(sql['getUser'], [username])
-    return cursor.fetchone() != None
+    return cursor.fetchone()
 
 def checkLogin(username, password_hash):
     cursor.execute(sql['checkLogin'], [username, password_hash])
@@ -58,7 +58,7 @@ def getGame(gameId):
     return game
 
 def getActiveGames(username):
-    query = sql['getAllGames']
+    query = sql['getActiveGames']
     values = [username, username]
     cursor.execute(query, values)
     return cursor.fetchall()
