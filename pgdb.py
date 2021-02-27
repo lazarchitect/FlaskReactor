@@ -18,9 +18,14 @@ sql = {
     "getUser": "SELECT * FROM chess.users WHERE name=%s",
     "getGame": "SELECT * FROM chess.games WHERE id=%s",
     "checkLogin": "SELECT * FROM chess.users WHERE name=%s AND password_hash=%s",
+    
     "createUser": "INSERT INTO chess.users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)",
     "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)",
-    "createGame": "INSERT INTO chess.games (id, white_player, black_player, boardstate, completed, time_started) VALUES (%s, %s, %s, %s, %s, %s)"
+    "createGame": "INSERT INTO chess.games (id, white_player, black_player, boardstate, completed, time_started) VALUES (%s, %s, %s, %s, %s, %s)",
+    
+    "updateBoardstate": "UPDATE chess.games SET boardstate=%s, last_move=%s WHERE id=%s",
+    "endGame": "UPDATE chess.games SET time_ended=%s, completed=%s WHERE id=%s"
+    
 }
 
 def getUser(username):
@@ -62,3 +67,16 @@ def getActiveGames(username):
     values = [username, username]
     cursor.execute(query, values)
     return cursor.fetchall()
+
+def updateBoardstate(new_boardstate, update_time, gameid):
+    query = sql['updateBoardstate']
+    values = [new_boardstate, update_time, gameid]
+    cursor.execute(query, values)
+    conn.commit()
+
+def endGame(end_time, gameid):
+    query = sql['endGame']
+    completed = True
+    values = [end_time, completed, gameid]
+    cursor.execute(query, values)
+    conn.commit()
