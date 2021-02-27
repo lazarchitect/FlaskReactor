@@ -111,9 +111,7 @@ def createGame():
     gameId = generateId()
     completed = False #ongoing
     boardstate = open('initialLayout.json', 'r').read()
-    # print(initialLayout)
-    # boardstate = dict(initialLayout)
-    time_started = datetime.now() 
+    time_started = datetime.now()
 
     pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started)
 
