@@ -3,6 +3,7 @@ from utils import generateId, generateHash
 from datetime import datetime
 import random
 import pgdb
+import json
   
 
 
@@ -24,10 +25,8 @@ def homepage():
         return render_template("splash.html")
 
     else:
-
-        # TODO fetch all game data for this user, pass into view. react will process it.
         games = pgdb.getActiveGames(session['username'])
-
+        games = json.dumps(games, default=str)
         return render_template("home.html", games = games)
 
     
