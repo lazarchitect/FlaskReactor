@@ -1,4 +1,12 @@
+const ChessGame = styled.div`
+	background-color: #ff2233;
+	width: 100px;
+	height: 50px
+`;
 
+var chessGameList = games.map((game) => 
+	<ChessGame key={game[0]}>{"Game ID: " + game[0]}</ChessGame>
+);
 
 var elem = (
 
@@ -14,9 +22,7 @@ var elem = (
 			<input type="submit" value="Create"/>
 		</form>
 
-		<div>
-			{games}
-		</div>
+		{chessGameList}
 	</div>
 
 );
