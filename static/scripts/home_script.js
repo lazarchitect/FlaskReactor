@@ -1,24 +1,32 @@
-// Create a Title component that'll render an <h1> tag with some styles
-const Title = styled.h1`
-  font-size: 1.5em;
-  text-align: center;
-  color: palevioletred;
+const ChessGame = styled.div`
+	background-color: #ff2233;
+	width: 100px;
+	height: 50px
 `;
 
-// Create a Wrapper component that'll render a <section> tag with some styles
-const Wrapper = styled.section`
-  padding: 4em;
-  background: papayawhip;
-`;
-
-// Use Title and Wrapper like any other React component – except they're styled!
-var elem = (
-  <Wrapper>
-    <Title>
-      Hello World!
-    </Title>
-  </Wrapper>
+var chessGameList = games.map((game) => 
+	<ChessGame key={game[0]}>{"Game ID: " + game[0]}</ChessGame>
 );
+
+var elem = (
+
+	<div>
+
+		<form action="/logout" method="POST">
+			<input type="submit" value="Log Out"/>
+		</form>
+
+		<form action="/creategame" method="POST">
+			Opponent Username: <input type="text" name="opponent"/>
+			<br/>
+			<input type="submit" value="Create"/>
+		</form>
+
+		{chessGameList}
+	</div>
+
+);
+
 
 var rootDiv = document.getElementById("root");
 

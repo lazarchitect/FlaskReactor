@@ -2,3 +2,5 @@ __pycache__
 secret_key.txt
 dbdetails.json
 *.pyc
+*.github
+python-app.yml
