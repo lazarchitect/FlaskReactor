@@ -5,7 +5,9 @@ const ChessGame = styled.div`
 `;
 
 var chessGameList = games.map((game) => 
-	<ChessGame key={game[0]}>{"Game ID: " + game[0]}</ChessGame>
+	<ChessGame key={game[0]}>
+		{"Vs. " + (game[1] === username ? game[2] : game[1])}
+	</ChessGame>
 );
 
 var elem = (
