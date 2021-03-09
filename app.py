@@ -27,7 +27,7 @@ def homepage():
     else:
         games = pgdb.getActiveGames(session['username'])
         games = json.dumps(games, default=str)
-        return render_template("home.html", games = games)
+        return render_template("home.html", games = games, username = session['username'])
 
     
 @app.route('/games/<gameid>')
@@ -92,7 +92,9 @@ def createGame():
     if(session['loggedIn'] == False): 
         return #shouldnt happen
 
-    # TODO check if opponent exists
+    if(session['username'] == opponent_name):
+        return "you can't vs yourself, bubso."
+
     opponentExists = pgdb.getUser(opponent_name) != None
     if(opponentExists == False):
         return "no user by that name. try again or message me if this is incorrect."
@@ -111,7 +113,8 @@ def createGame():
     completed = False #ongoing
     boardstate = open('initialLayout.json', 'r').read()
     time_started = datetime.now()
+    last_move = time_started
 
-    pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started)
+    pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started, last_move)
 
     return redirect('/')
