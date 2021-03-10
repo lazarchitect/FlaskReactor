@@ -1,11 +1,16 @@
 const ChessGame = styled.div`
 	background-color: #ff2233;
 	width: 100px;
-	height: 50px
+	height: 50px;
+	border-radius: 10px
 `;
 
+function openGame(gameId){
+	window.location.href = "/games/" + gameId;
+}
+
 var chessGameList = games.map((game) => 
-	<ChessGame key={game[0]}>
+	<ChessGame key={game[0]} onClick={() => openGame(game[0])}>
 		{"Vs. " + (game[1] === username ? game[2] : game[1])}
 	</ChessGame>
 );
