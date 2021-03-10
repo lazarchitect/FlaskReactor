@@ -32,9 +32,8 @@ def homepage():
     
 @app.route('/games/<gameid>')
 def game(gameid):
-    gameid = "b9482237-8c8e-41c8-879e-4e3cb695cab0"
     game = pgdb.getGame(gameid)
-    return str(game)
+    return render_template("game.html", gamestate = game[3])
 
 
 
