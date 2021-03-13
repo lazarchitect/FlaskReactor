@@ -33,8 +33,8 @@ def homepage():
 @app.route('/games/<gameid>')
 def game(gameid):
     game = pgdb.getGame(gameid)
-    return render_template("game.html", gamestate = game[3])
-
+    if(game != None): return render_template("game.html", gamestate = game[3])
+    else: return render_template("home.html", alert="Game could not be retrieved from database.")
 
 
 @app.route('/login', methods=["POST"])
