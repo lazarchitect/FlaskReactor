@@ -26,11 +26,18 @@ class Board extends React.Component {
 
 	generateTile(isDarkTile, rowIndex, tileIndex, tile){
 
+		var columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
+		var tileId = columns[tileIndex].toString() + (rowIndex+1);
+
 		var tileDiv = (
 		<div 
 			key = {tileIndex.toString() + rowIndex.toString()}
 			style = {{left: (tileIndex*60) + "px", top:(rowIndex*60)+"px"}} 
-			className = {isDarkTile ? "tile darkTile" : "tile lightTile"}>
+			className = {isDarkTile ? "tile darkTile" : "tile lightTile"}
+			id = {tileId}
+			onClick = {() => document.getElementById(tileId).style.backgroundColor = "blue"}
+		>
 
 			{/* tile contents	 */}
 			<span>{this.pieceInitials(tile)}</span>
