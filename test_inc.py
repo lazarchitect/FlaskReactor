@@ -1,3 +1,5 @@
+from models import Game
+
 def inc(x):
     return x + 1
 
