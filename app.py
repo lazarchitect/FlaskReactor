@@ -4,6 +4,7 @@ from datetime import datetime
 import random
 import pgdb
 import json
+from models.Game import Game
   
 
 
@@ -33,7 +34,7 @@ def homepage():
 @app.route('/games/<gameid>')
 def game(gameid):
     game = pgdb.getGame(gameid)
-    if(game != None): return render_template("game.html", gamestate = game[3])
+    if(game != None): return render_template("game.html", gamestate = game.boardstate)
     else: return render_template("home.html", alert="Game could not be retrieved from database.")
 
 
@@ -62,7 +63,7 @@ def signup():
     if(password != password_repeat):
         return ("Your passwords did not match.")
 
-    usernameTaken = pgdb.getUser(username) != None
+    usernameTaken = pgdb.userExists(username) != None
     if(usernameTaken):
         return("That username is taken! sorry fam")
 
@@ -94,7 +95,7 @@ def createGame():
     if(session['username'] == opponent_name):
         return "you can't vs yourself, bubso."
 
-    opponentExists = pgdb.getUser(opponent_name) != None
+    opponentExists = pgdb.userExists(opponent_name) != None
     if(opponentExists == False):
         return "no user by that name. try again or message me if this is incorrect."
 
@@ -108,12 +109,8 @@ def createGame():
         white_player = opponent_name
         black_player = session['username']
 
-    gameId = generateId()
-    completed = False #ongoing
-    boardstate = open('initialLayout.json', 'r').read()
-    time_started = datetime.now()
-    last_move = time_started
+    game = Game.manualCreate(white_player, black_player)
 
-    pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started, last_move)
+    pgdb.createGame(game)
 
     return redirect('/')

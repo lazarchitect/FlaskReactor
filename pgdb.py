@@ -1,5 +1,9 @@
 from psycopg2 import connect
 from json import loads
+from models.Game import Game
+from models.User import User
+from models.Stats import Stats
+from models.Message import Message
 
 dbDetails = loads(open("dbdetails.json", "r").read())
 
@@ -21,17 +25,17 @@ sql = {
     
     "createUser": "INSERT INTO chess.users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)",
     "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)",
-    "createGame": "INSERT INTO chess.games (id, white_player, black_player, boardstate, completed, time_started, last_move) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+    "createGame": "INSERT INTO chess.games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
     
     "updateBoardstate": "UPDATE chess.games SET boardstate=%s, last_move=%s WHERE id=%s",
-    "endGame": "UPDATE chess.games SET time_ended=%s, completed=%s WHERE id=%s"
+    "endGame": "UPDATE chess.games SET completed=%s, time_ended=%s WHERE id=%s"
     
 }
 
-def getUser(username):
+def userExists(username):
     cursor.execute(sql['getUser'], [username])
     return cursor.fetchone()
-
+    
 def checkLogin(username, password_hash):
     cursor.execute(sql['checkLogin'], [username, password_hash])
     return cursor.fetchone() != None
@@ -48,9 +52,9 @@ def createStat(userId):
     cursor.execute(query, values) 
     conn.commit()
 
-def createGame(gameid, white_player, black_player, boardstate, completed, time_started, last_move):
+def createGame(g):
     query = sql['createGame']
-    values = [gameid, white_player, black_player, boardstate, completed, time_started, last_move]
+    values = g.toTuple()
     cursor.execute(query, values)
     conn.commit()
 
@@ -58,10 +62,10 @@ def getGame(gameId):
     query = sql['getGame']
     values = [gameId]
     cursor.execute(query, values)
-    game = cursor.fetchone()
-    print(game)
+    game = Game(cursor.fetchone())
     return game
 
+#TODO return list of Game() objects instead of tuples?
 def getActiveGames(username):
     query = sql['getActiveGames']
     values = [username, username]
@@ -77,6 +81,6 @@ def updateBoardstate(new_boardstate, update_time, gameid):
 def endGame(end_time, gameid):
     query = sql['endGame']
     completed = True
-    values = [end_time, completed, gameid]
+    values = [completed, end_time, gameid]
     cursor.execute(query, values)
     conn.commit()
