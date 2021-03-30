@@ -17,7 +17,7 @@ class User:
         self.username = record[0]
         self.email = record[1]
         self.userId = record[2]
-        self.password_hash = record[4]
+        self.password_hash = record[3]
 
     def toTuple(self):
         return (self.username, self.email, self.userId, self.password_hash)
