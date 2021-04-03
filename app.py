@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 from flask import Flask, render_template, redirect, request
 from utils import generateId, generateHash
 from datetime import datetime
@@ -13,11 +14,16 @@ session = {'loggedIn':False}
 
 # from postgres import getUser, createUser
 
+=======
+from flask import Flask, render_template
+from json import loads
+>>>>>>> Stashed changes
 
 app = Flask(__name__)
 app.secret_key = open('secret_key.txt', 'r').read()
 
 
+<<<<<<< Updated upstream
 @app.route('/')
 def homepage():
 
@@ -117,3 +123,13 @@ def createGame():
     pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started, last_move)
 
     return redirect('/')
+=======
+@app.route('/games/<int:gameId>')
+def homepage(gameId):
+
+    # get game state with corresponding ID from pgdb
+    gamestate = loads(open("static/games/initialLayout.json", "r").read())
+
+    print(type(gamestate))
+    return render_template("index.html", gamestate=gamestate)
+>>>>>>> Stashed changes
