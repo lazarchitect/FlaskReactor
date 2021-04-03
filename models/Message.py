@@ -3,11 +3,11 @@ class Message:
     
     def __init__(self, gameId, content, index):
         self.gameId = gameId
-        self.content = content
         self.index = index
+        self.content = content
 
     def __init__(self, record):
-        self.gameId, self.content, self.index = record
+        self.gameId, self.index, self.content = record
 
     def toTuple(self):
-        return (self.gameId, self.content, self.index)
+        return (self.gameId, self.index, self.content)
