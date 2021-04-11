@@ -8,11 +8,27 @@
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+        
 
         <script>var gamestate = JSON.parse('{{ gamestate | tojson | safe}}');</script>
             
         <script type="text/jsx" src="/static/scripts/Board.js"></script>
         <script type="text/jsx" src="/static/scripts/game_script.js"></script>
+
+        <script>
+            window.onload = function(){
+                const clientSocket = new WebSocket("ws://localhost:5001")
+
+                clientSocket.onmessage = (data) => {
+                    console.log("Message from server: ", data);
+                };
+
+                document.body.onclick = function(){
+                    console.log("click detected: sending message to socketServer.");
+                    clientSocket.send("hello, server");
+                };
+            }
+        </script>
 
     </head>
 

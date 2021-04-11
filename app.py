@@ -4,15 +4,30 @@ from datetime import datetime
 import random
 import pgdb
 import json
-  
+import asyncio
+import websockets
+from threading import Thread
 
+##websocket server init
+async def echo(websocket, path):
+    async for message in websocket:
+        # await websocket.send(message)
+        print(message)
+
+def startSocketServer():
+    print("establishing websocket server...")
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(websockets.serve(echo, 'localhost', 5001))
+    # loop.run_forever()
+    print("websocket server established. moving on...")
+
+socketServerThread = Thread(target = startSocketServer)
+socketServerThread.start()
 
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
 session = {'loggedIn':False}
-
-# from postgres import getUser, createUser
-
 
 app = Flask(__name__)
 app.secret_key = open('secret_key.txt', 'r').read()
