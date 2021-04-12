@@ -6,7 +6,11 @@ import pgdb
 import json
 import asyncio
 import websockets
+import signal
 from threading import Thread
+
+socket_port = 5001
+socket_host = "localhost"
 
 ##websocket server init
 async def echo(websocket, path):
@@ -14,13 +18,20 @@ async def echo(websocket, path):
         # await websocket.send(message)
         print(message)
 
+# def sysexit():
+#     exit()
+
+# def die(loop):
+#     loop.call_soon_threadsafe(sysexit())
+
 def startSocketServer():
-    print("establishing websocket server...")
+    print("---establishing websocket server---")
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    loop.run_until_complete(websockets.serve(echo, 'localhost', 5001))
-    # loop.run_forever()
-    print("websocket server established. moving on...")
+    # stop = loop.create_future()
+    # loop.add_signal_handler(signal.SIGTERM, die(loop), None)
+    loop.run_until_complete(websockets.serve(echo, socket_host, socket_port))
+    loop.run_forever()
 
 socketServerThread = Thread(target = startSocketServer)
 socketServerThread.start()

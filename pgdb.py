@@ -3,6 +3,7 @@ from json import loads
 
 dbDetails = loads(open("dbdetails.json", "r").read())
 
+print("---establishing database connection---")
 conn = connect(
     host=dbDetails['host'],
     database=dbDetails['database'],
