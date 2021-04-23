@@ -17,6 +17,8 @@ async def echo(websocket, path):
     async for message in websocket:
         # await websocket.send(message)
         print(message)
+        if message == "B3":
+            pass
 
 # def sysexit():
 #     exit()
@@ -29,7 +31,7 @@ def startSocketServer():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     # stop = loop.create_future()
-    # loop.add_signal_handler(signal.SIGTERM, die(loop), None)
+    loop.add_signal_handler(signal.SIGTERM, loop.call_soon_threadsafe(exit()), None)
     loop.run_until_complete(websockets.serve(echo, socket_host, socket_port))
     loop.run_forever()
 
