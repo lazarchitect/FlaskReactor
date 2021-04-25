@@ -13,24 +13,17 @@ socket_port = 5001
 socket_host = "localhost"
 
 ##websocket server init
-async def echo(websocket, path):
+async def handleSocketClient(websocket, path):
     async for message in websocket:
         # await websocket.send(message)
         print(message)
         if message == "B3":
             pass
 
-# def sysexit():
-#     exit()
-
-# def die(loop):
-#     loop.call_soon_threadsafe(sysexit())
-
 def startSocketServer():
     print("---establishing websocket server---")
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    # stop = loop.create_future()
     loop.add_signal_handler(signal.SIGTERM, loop.call_soon_threadsafe(exit()), None)
     loop.run_until_complete(websockets.serve(echo, socket_host, socket_port))
     loop.run_forever()
@@ -57,7 +50,7 @@ def homepage():
         games = json.dumps(games, default=str)
         return render_template("home.html", games = games, username = session['username'])
 
-    
+
 @app.route('/games/<gameid>')
 def game(gameid):
     game = pgdb.getGame(gameid)
@@ -72,7 +65,7 @@ def login():
     password_hash = generateHash(password)
 
     correctLogin = pgdb.checkLogin(username, password_hash)
-    if(correctLogin): 
+    if(correctLogin):
         session['loggedIn'] = True
         session['username'] = username
         return redirect('/')
@@ -116,7 +109,7 @@ def createGame():
 
     opponent_name = request.form['opponent']
 
-    if(session['loggedIn'] == False): 
+    if(session['loggedIn'] == False):
         return #shouldnt happen
 
     if(session['username'] == opponent_name):
