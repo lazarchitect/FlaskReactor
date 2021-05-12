@@ -25,7 +25,7 @@ def startSocketServer():
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     loop.add_signal_handler(signal.SIGTERM, loop.call_soon_threadsafe(exit()), None)
-    loop.run_until_complete(websockets.serve(echo, socket_host, socket_port))
+    loop.run_until_complete(websockets.serve(handleSocketClient, socket_host, socket_port))
     loop.run_forever()
 
 socketServerThread = Thread(target = startSocketServer)
