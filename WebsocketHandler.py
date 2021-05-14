@@ -1,6 +1,6 @@
 import tornado.websocket
 
-class ChessWebSocket(tornado.websocket.WebSocketHandler):
+class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print("WebSocket opened")
 
