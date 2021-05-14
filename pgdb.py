@@ -1,17 +1,7 @@
 from psycopg2 import connect
 from json import loads
 
-dbDetails = loads(open("dbdetails.json", "r").read())
-
-print("---establishing database connection---")
-conn = connect(
-    host=dbDetails['host'],
-    database=dbDetails['database'],
-    user=dbDetails['user'],
-    password=dbDetails['password']
-)
-
-cursor = conn.cursor()
+cursor = None
 
 sql = {
     "getCompletedGames": "SELECT * FROM chess.games where completed=true AND (white_player=%s OR black_player=%s)",
@@ -28,6 +18,21 @@ sql = {
     "endGame": "UPDATE chess.games SET time_ended=%s, completed=%s WHERE id=%s"
     
 }
+
+def pgdbconnect():
+    global cursor
+    dbDetails = loads(open("dbdetails.json", "r").read())
+
+    conn = connect(
+        host=dbDetails['host'],
+        database=dbDetails['database'],
+        user=dbDetails['user'],
+        password=dbDetails['password']
+    )
+
+    cursor = conn.cursor()
+
+    
 
 def getUser(username):
     cursor.execute(sql['getUser'], [username])
