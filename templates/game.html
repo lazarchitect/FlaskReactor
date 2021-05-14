@@ -18,7 +18,7 @@
 
         <script>
             window.onload = function(){
-                const clientSocket = new WebSocket("ws://localhost:5001")
+                const clientSocket = new WebSocket("ws://localhost:5000/websocket")
 
                 clientSocket.onmessage = (data) => {
                     console.log("Message from server: ", data);
