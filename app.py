@@ -2,14 +2,12 @@ from flask import Flask, render_template, redirect, request
 from utils import generateId, generateHash
 from datetime import datetime
 import random
-import pgdb
+from pgdb import Pgdb
 import json
-import signal
-from threading import Thread
 import tornado
 from tornado.wsgi import WSGIContainer
 from tornado.web import Application, FallbackHandler
-from WebsocketHandler import ChessWebSocket
+from websockethandler import WebSocketHandler
 
 ## flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
@@ -123,7 +121,7 @@ if __name__ == "__main__":
 
     print()
     print("---establishing database connection---")
-    pgdb.pgdbconnect()
+    pgdb = Pgdb()
 
     port = 5000
     websocketHanderUrl = "/websocket"
@@ -132,7 +130,7 @@ if __name__ == "__main__":
     
     container = WSGIContainer(app)
     application = Application([
-        (websocketHanderUrl, ChessWebSocket),
+        (websocketHanderUrl, WebSocketHandler),
         (".*", FallbackHandler, dict(fallback=container))
     ], debug=True)
     application.listen(port)
