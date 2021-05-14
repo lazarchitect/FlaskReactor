@@ -4,47 +4,19 @@ from datetime import datetime
 import random
 import pgdb
 import json
-import asyncio
-import websockets
 import signal
 from threading import Thread
+import tornado
+from tornado.wsgi import WSGIContainer
+from tornado.web import Application, FallbackHandler
+from WebsocketHandler import ChessWebSocket
 
-socket_port = 5001
-socket_host = "localhost"
-
-##websocket server init
-async def echo(websocket, path):
-    async for message in websocket:
-        # await websocket.send(message)
-        print(message)
-        if message == "B3":
-            pass
-
-# def sysexit():
-#     exit()
-
-# def die(loop):
-#     loop.call_soon_threadsafe(sysexit())
-
-def startSocketServer():
-    print("---establishing websocket server---")
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    # stop = loop.create_future()
-    loop.add_signal_handler(signal.SIGTERM, loop.call_soon_threadsafe(exit()), None)
-    loop.run_until_complete(websockets.serve(echo, socket_host, socket_port))
-    loop.run_forever()
-
-socketServerThread = Thread(target = startSocketServer)
-socketServerThread.start()
-
-### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
+## flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
 session = {'loggedIn':False}
 
 app = Flask(__name__)
 app.secret_key = open('secret_key.txt', 'r').read()
-
 
 @app.route('/')
 def homepage():
@@ -145,3 +117,23 @@ def createGame():
     pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started, last_move)
 
     return redirect('/')
+
+
+if __name__ == "__main__":
+
+    print()
+    print("---establishing database connection---")
+    pgdb.pgdbconnect()
+
+    port = 5000
+    websocketHanderUrl = "/websocket"
+    print("---running server on 127.0.0.1:" + str(port) + "---")
+    print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
+    
+    container = WSGIContainer(app)
+    application = Application([
+        (websocketHanderUrl, ChessWebSocket),
+        (".*", FallbackHandler, dict(fallback=container))
+    ], debug=True)
+    application.listen(port)
+    tornado.ioloop.IOLoop.instance().start()
