@@ -1,13 +1,14 @@
 from flask import Flask, render_template, redirect, request
-from utils import generateId, generateHash
-from datetime import datetime
-import random
-from pgdb import Pgdb
-import json
-import tornado
-from tornado.wsgi import WSGIContainer
 from tornado.web import Application, FallbackHandler
-from websockethandler import WebSocketHandler
+from tornado.wsgi import WSGIContainer
+from datetime import datetime
+import tornado
+import random
+import json
+
+from pgdb import Pgdb
+from utils import generateId, generateHash
+from socketeer import WebSocketHandler
 
 ## flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
@@ -31,7 +32,7 @@ def homepage():
 @app.route('/games/<gameid>')
 def game(gameid):
     game = pgdb.getGame(gameid)
-    if(game != None): return render_template("game.html", gamestate = game[3])
+    if(game != None): return render_template("game.html", gameId = game[0], gamestate = game[3])
     else: return render_template("home.html", alert="Game could not be retrieved from database.")
 
 

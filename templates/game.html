@@ -21,6 +21,7 @@
                 const clientSocket = new WebSocket("ws://localhost:5000/websocket")
 
                 clientSocket.onmessage = (data) => {
+                    // TODO handle websocket message from server. update board or chat message.
                     console.log("Message from server: ", data);
                 };
 

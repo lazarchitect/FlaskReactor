@@ -1,5 +1,7 @@
 import tornado.websocket
 
+clientConnections = dict() # {}
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
     def open(self):
         print("WebSocket opened")
