@@ -9,7 +9,7 @@ import json
 from pgdb import Pgdb
 from utils import generateId, generateHash
 from socketeer import WebSocketHandler
-
+   
 ## flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
 session = {'loggedIn':False}

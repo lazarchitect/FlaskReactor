@@ -25,8 +25,10 @@
                     console.log("Message from server: ", data);
                 };
 
-                console.log(document.body);
-                document.body.onclick = function(){
+                // console.log(document.body);
+                var board = document.getElementsByClassName("board")[0];
+                // console.log(board);
+                board.onclick = function(){
                     console.log("click detected: sending message to socketServer.");
                     clientSocket.send("hello, server");
                 };
