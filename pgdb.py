@@ -57,6 +57,9 @@ class Pgdb:
         self.cursor.execute(sql['getUser'], [username])
         return self.cursor.fetchone()
 
+    def userExists(self, username):
+        return self.getUser(username) != None
+
     def checkLogin(self, username, password_hash):
         self.cursor.execute(sql['checkLogin'], [username, password_hash])
         return self.cursor.fetchone() != None
@@ -85,7 +88,7 @@ class Pgdb:
         query = sql['getGame']
         values = [gameId]
         self.cursor.execute(query, values)
-        game = Game(self.cursor.fetchone())
+        game = Game.dbCreate(self.cursor.fetchone())
         return game
 
     #TODO return list of Game() objects instead of tuples?
