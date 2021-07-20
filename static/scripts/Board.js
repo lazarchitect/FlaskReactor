@@ -6,8 +6,7 @@ class Board extends React.Component {
 		var boardArray = gamestate.tiles // comes from flask -> jinja -> clientside scope
 		var reactRowArray = []
 		for(var i = 0; i < boardArray.length; i++){
-			reactRowArray.push(<Row rowIndex={i} tiles={boardArray[i]} />);
-			console.log(reactRowArray)
+			reactRowArray.push(<Row key={i.toString()} rowIndex={i} tiles={boardArray[i]} />);
 		}
 		return <div className="board">{reactRowArray}</div>
 	}
@@ -20,11 +19,9 @@ class Row extends React.Component {
 		
 		var darkTile = this.props.rowIndex % 2 == 0 ? false : true;
 		
-		console.log("rendering row " + this.props.rowIndex)
-
 		var reactTileArray = []
 		for(var tileIndex = 0; tileIndex < this.props.tiles.length; tileIndex++) {
-			reactTileArray.push(<Tile darkTile={darkTile} rowIndex={this.props.rowIndex} tileIndex={tileIndex} data={this.props.tiles[tileIndex]}/>)
+			reactTileArray.push(<Tile key={tileIndex} darkTile={darkTile} rowIndex={this.props.rowIndex} tileIndex={tileIndex} data={this.props.tiles[tileIndex]}/>)
 			darkTile = !darkTile
 		}
 
@@ -36,8 +33,6 @@ var columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 class Tile extends React.Component {
 	render() {
-
-		console.log("rendering a tile at " + this.props.rowIndex + this.props.tileIndex)
 		
 		var tileId = columns[this.props.tileIndex].toString() + (this.props.rowIndex+1);
 

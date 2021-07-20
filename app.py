@@ -44,6 +44,7 @@ socketServerThread.start()
 session = {'loggedIn':False}
 
 app = Flask(__name__)
+
 app.secret_key = open('secret_key.txt', 'r').read()
 
 @app.route('/')
@@ -143,7 +144,6 @@ def createGame():
     last_move = time_started
 
     pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started, last_move)
-
     return redirect('/')
 
 

@@ -18,6 +18,7 @@
 
         <script>
             window.onload = function(){
+                console.log("initializing WS")
                 const clientSocket = new WebSocket("ws://localhost:5000/websocket")
 
                 clientSocket.onmessage = (data) => {
