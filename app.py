@@ -1,9 +1,17 @@
 from flask import Flask, render_template, redirect, request
-from utils import generateId, generateHash
+from tornado.web import Application, FallbackHandler
+from tornado.wsgi import WSGIContainer
 from datetime import datetime
+import tornado
 import random
-import pgdb
 import json
+
+from pgdb import Pgdb
+from utils import generateId, generateHash
+from socketeer import WebSocketHandler
+   
+## flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
+
 import asyncio
 import websockets
 import signal
@@ -38,7 +46,6 @@ session = {'loggedIn':False}
 app = Flask(__name__)
 app.secret_key = open('secret_key.txt', 'r').read()
 
-
 @app.route('/')
 def homepage():
 
@@ -54,7 +61,7 @@ def homepage():
 @app.route('/games/<gameid>')
 def game(gameid):
     game = pgdb.getGame(gameid)
-    if(game != None): return render_template("game.html", gamestate = game[3])
+    if(game != None): return render_template("game.html", gameId = game[0], gamestate = game[3])
     else: return render_template("home.html", alert="Game could not be retrieved from database.")
 
 
@@ -138,3 +145,23 @@ def createGame():
     pgdb.createGame(gameId, white_player, black_player, boardstate, completed, time_started, last_move)
 
     return redirect('/')
+
+
+if __name__ == "__main__":
+
+    print()
+    print("---establishing database connection---")
+    pgdb = Pgdb()
+
+    port = 5000
+    websocketHanderUrl = "/websocket"
+    print("---running server on 127.0.0.1:" + str(port) + "---")
+    print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
+    
+    container = WSGIContainer(app)
+    application = Application([
+        (websocketHanderUrl, WebSocketHandler),
+        (".*", FallbackHandler, dict(fallback=container))
+    ], debug=True)
+    application.listen(port)
+    tornado.ioloop.IOLoop.instance().start()
