@@ -9,32 +9,13 @@
         <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         
 
         <script>var gamestate = JSON.parse('{{ gamestate | tojson | safe}}');</script>
             
         <script type="text/jsx" src="/static/scripts/Board.js"></script>
         <script type="text/jsx" src="/static/scripts/game_script.js"></script>
-
-        <script>
-            window.onload = function(){
-                console.log("initializing WS")
-                const clientSocket = new WebSocket("ws://localhost:5000/websocket")
-
-                clientSocket.onmessage = (data) => {
-                    // TODO handle websocket message from server. update board or chat message.
-                    console.log("Message from server: ", data);
-                };
-
-                // console.log(document.body);
-                var board = document.getElementsByClassName("board")[0];
-                // console.log(board);
-                board.onclick = function(){
-                    console.log("click detected: sending message to socketServer.");
-                    clientSocket.send("hello, server");
-                };
-            }
-        </script>
 
     </head>
 

@@ -10,7 +10,24 @@ class Board extends React.Component {
 		}
 		return <div className="board">{reactRowArray}</div>
 	}
-    
+
+	componentDidMount(){
+		console.log("initializing WS")
+        const clientSocket = new WebSocket("ws://localhost:5000/websocket")
+
+        clientSocket.onmessage = (data) => {
+			// TODO handle websocket message from server. update board or chat message.
+			console.log("Message from server: ", data);
+        };
+
+		// console.log(document.body);
+        var board = document.getElementsByClassName("board")[0];
+        console.log(board);
+		board.onclick = function(){
+        	console.log("click detected: sending message to socketServer.");
+        	clientSocket.send("hello, server");
+        };
+	}
 }
 
 class Row extends React.Component {
