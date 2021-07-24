@@ -1,3 +1,5 @@
+#!usr/bin/env python
+
 from flask import Flask, render_template, redirect, request
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
@@ -10,35 +12,9 @@ from models.Game import Game
 from pgdb import Pgdb
 from utils import generateId, generateHash
 from socketeer import WebSocketHandler
-   
-## flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 
-import asyncio
-import websockets
 import signal
 from threading import Thread
-
-socket_port = 5001
-socket_host = "localhost"
-
-##websocket server init
-# async def handleSocketClient(websocket, path):
-#     async for message in websocket:
-#         # await websocket.send(message)
-#         print(message)
-#         if message == "B3":
-#             pass
-
-# def startSocketServer():
-#     print("---establishing websocket server---")
-#     loop = asyncio.new_event_loop()
-#     asyncio.set_event_loop(loop)
-#     loop.add_signal_handler(signal.SIGTERM, loop.call_soon_threadsafe(exit()), None)
-#     loop.run_until_complete(websockets.serve(handleSocketClient, socket_host, socket_port))
-#     loop.run_forever()
-
-# socketServerThread = Thread(target = startSocketServer)
-# socketServerThread.start()
 
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
