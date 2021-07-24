@@ -27,7 +27,7 @@ class Pgdb:
         dbDetails = loads(open("dbdetails.json", "r").read())
 
         self.conn = connect(
-            host=dbDetails['host'],
+            host=dbDetails['local_ip'],
             database=dbDetails['database'],
             user=dbDetails['user'],
             password=dbDetails['password']
