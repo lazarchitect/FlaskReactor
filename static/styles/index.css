@@ -1,15 +1,25 @@
 
+body {
+    background-color: #d69191;
+}
+
+#gamePage {
+    /* position: absolute; */
+}
+
+.board {
+    position: relative;
+}
+
+#logout {
+    position: absolute;
+}
+
 .tile {
     width: 60px;
     height: 60px;
     position: absolute;
-    display: inline-block;
 
-}
-
-.darkTile {    
-    background-color: #412234;
-    color: white;
 }
 
 .lightTile {
@@ -17,11 +27,8 @@
     color: black;
 }
 
-.board {
-    display: block; 
-    position: absolute
+.darkTile {    
+    background-color: #412234;
+    color: white;
 }
 
-body {
-    background-color: #d69191;
-}
