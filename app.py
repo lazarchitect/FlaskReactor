@@ -23,7 +23,7 @@ session = {'loggedIn':False}
 
 app = Flask(__name__)
 
-app.secret_key = open('secret_key.txt', '').read()
+app.secret_key = open('secret_key.txt', 'r').read()
 
 @app.route('/')
 def homepage():
