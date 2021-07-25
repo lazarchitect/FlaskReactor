@@ -1,5 +1,7 @@
 import utils
 from datetime import datetime
+from psycopg2.extras import UUID_adapter, Json
+import json
 
 class Game:
 
@@ -8,14 +10,14 @@ class Game:
     def __init__(self):
         pass
 
-
-    """constructor for manual creation"""
+    
     def manualCreate(white_player, black_player):
+        """constructor for creation from user-input values."""
         g = Game()
         g.id = utils.generateId()
         g.white_player = white_player
         g.black_player = black_player
-        g.boardstate = open('initialLayout.json', 'r').read()
+        g.boardstate = open('initialLayout.json', 'r').read().replace("\n", "")
         g.completed = False
         g.time_started = datetime.now()
         g.last_move = g.time_started
@@ -37,5 +39,13 @@ class Game:
 
     """transforms the object into a database-friendly format"""
     def toTuple(self):
-        return (self.id, self.white_player, self.black_player, self.boardstate,
-        self.completed, self.time_started, self.last_move, self.time_ended)
+        return (
+            UUID_adapter(self.id), 
+            self.white_player, 
+            self.black_player, 
+            Json(self.boardstate),
+            self.completed, 
+            self.time_started, 
+            self.last_move, 
+            self.time_ended
+        )
