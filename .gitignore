@@ -4,3 +4,4 @@ dbdetails.json
 *.pyc
 *.github
 python-app.yml
+.vscode
