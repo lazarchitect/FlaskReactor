@@ -23,14 +23,5 @@
 }
 
 body {
-    background-color: #efefef;
-}
-
-#logoutButton {
-    float: right;
-    margin-right: 10px;
-}
-
-.chessGame:hover {
-    background-color: lightseagreen;
+    background-color: #d69191;
 }
