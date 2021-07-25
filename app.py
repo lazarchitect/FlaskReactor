@@ -8,13 +8,14 @@ import tornado
 import random
 import json
 from models.Game import Game
-
 from pgdb import Pgdb
 from utils import generateId, generateHash
 from socketeer import WebSocketHandler
-
 import signal
 from threading import Thread
+
+host = "127.0.0.1"
+port = 5000
 
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
 # from flask import session
@@ -22,7 +23,7 @@ session = {'loggedIn':False}
 
 app = Flask(__name__)
 
-app.secret_key = open('secret_key.txt', 'r').read()
+app.secret_key = open('secret_key.txt', '').read()
 
 @app.route('/')
 def homepage():
@@ -129,15 +130,14 @@ if __name__ == "__main__":
     print("---establishing database connection---")
     pgdb = Pgdb()
 
-    port = 5000
-    websocketHanderUrl = "/websocket"
-    print("---running server on 127.0.0.1:" + str(port) + "---")
-    print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
     
+    websocketHanderUrl = "/websocket"
+    print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
+    print("---running server on " + host + ":" + str(port) + "---")
     container = WSGIContainer(app)
     application = Application([
         (websocketHanderUrl, WebSocketHandler),
         (".*", FallbackHandler, dict(fallback=container))
     ], debug=True)
     application.listen(port)
-    tornado.ioloop.IOLoop.instance().start()
+    tornado.ioloop.IOLoop.instance().start() #runs until killed
