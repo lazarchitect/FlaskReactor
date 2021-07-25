@@ -11,8 +11,6 @@ from models.Game import Game
 from pgdb import Pgdb
 from utils import generateId, generateHash
 from socketeer import WebSocketHandler
-import signal
-from threading import Thread
 
 host = "127.0.0.1"
 port = 5000
@@ -71,7 +69,7 @@ def signup():
     if(password != password_repeat):
         return ("Your passwords did not match.")
 
-    usernameTaken = pgdb.userExists(username) != None
+    usernameTaken = pgdb.userExists(username)
     if(usernameTaken):
         return("That username is taken! sorry fam")
 
@@ -89,7 +87,8 @@ def signup():
 @app.route("/logout", methods=["POST"])
 def logout():
     session['loggedIn'] = False
-    del session['username']
+    if 'username' in session: #IT SHOULD BE THERE. TODO REMOVE THIS IF STATEMENT AFTER DEVELOPMENT 
+        del session['username']
     return redirect("/")
 
 @app.route("/creategame", methods=["POST"])
@@ -129,7 +128,6 @@ if __name__ == "__main__":
     print()
     print("---establishing database connection---")
     pgdb = Pgdb()
-
     
     websocketHanderUrl = "/websocket"
     print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
