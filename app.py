@@ -10,7 +10,7 @@ import json
 from models.Game import Game
 from pgdb import Pgdb
 from utils import generateId, generateHash
-from socketeer import WebSocketHandler
+from socketeer import Socketeer
 
 host = "127.0.0.1"
 port = 5000
@@ -134,7 +134,7 @@ if __name__ == "__main__":
     print("---running server on " + host + ":" + str(port) + "---")
     container = WSGIContainer(app)
     application = Application([
-        (websocketHanderUrl, WebSocketHandler),
+        (websocketHanderUrl, Socketeer),
         (".*", FallbackHandler, dict(fallback=container))
     ], debug=True)
     application.listen(port)
