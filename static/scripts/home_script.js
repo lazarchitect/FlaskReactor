@@ -14,7 +14,7 @@ function openGame(gameId){
 }
 
 var chessGameList = games.map((game) => 
-	<ChessGame className="chessGame" key={game[0]} onClick={() => openGame(game[0])}>
+	<ChessGame className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0])}>
 		{"Vs. " + (game[1] === username ? game[2] : game[1])}
 	</ChessGame>
 );
