@@ -4,7 +4,7 @@ body {
 }
 
 #gamePage {
-    /* position: absolute; */
+    position: absolute;
 }
 
 .board {
@@ -12,13 +12,15 @@ body {
 }
 
 #logout {
-    position: absolute;
+    position: relative;
+    top: 485px;
 }
 
 .tile {
     width: 60px;
     height: 60px;
     position: absolute;
+    display: inline-block;
 
 }
 
