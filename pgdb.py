@@ -85,16 +85,7 @@ class Pgdb:
     def createGame(self, g):
         query = sql['createGame']
         values = g.toTuple()
-        
-        print(values)
-        print([type(x) for x in values])
-
         self.__execute(query, values)
-
-        # try:
-        #     self.__execute(query, values)
-        # except TypeError as te:
-        #     print()
         self.conn.commit()
 
     def getGame(self, gameId):
