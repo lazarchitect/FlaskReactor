@@ -63,10 +63,13 @@ class Tile extends React.Component {
 		>
 
 			{/* tile contents	 */}
-			<span>{this.pieceInitials(this.props.data)}</span>
+			{/* <span>{this.pieceInitials(this.props.data)}</span> */}
+			<img className="pieceImg" src={this.imagePath(this.props.data)} />
 		
 		</div>
 		);
+
+		console.log(this.props.data);
 
 		return tileDiv;
 	}
@@ -74,6 +77,13 @@ class Tile extends React.Component {
 	pieceInitials(data){
 		if (data.piece == null) return;
 		return data.piece.color[0] + data.piece.type[0]
+	}
+
+	imagePath(data){
+		if(data.piece == null) return "";
+		else {
+			return "/static/images/" + data.piece.color + data.piece.type + ".png"
+		}
 	}
 	
 }
