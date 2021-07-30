@@ -15,13 +15,17 @@ from socketeer import Socketeer
 host = "127.0.0.1"
 port = 5000
 
-### flask sessions save cookies in browser, which is better but annoying for development. TODO switch this later.
+### flask sessions save cookies in browser, which is better but annoying for development. TODO toggle this later.
 # from flask import session
 session = {'loggedIn':False}
 
 app = Flask(__name__)
 
-app.secret_key = open('secret_key.txt', 'r').read()
+try:
+    app.secret_key = open('secret_key.txt', 'r').read()
+except FileNotFoundError:
+    print("you need to add a file called secret_key.txt, containing a random bytestring, for the app to work.")
+    exit()
 
 @app.route('/')
 def homepage():
