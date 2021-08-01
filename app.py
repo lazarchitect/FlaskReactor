@@ -4,6 +4,7 @@ from flask import Flask, render_template, redirect, request
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 from datetime import datetime
+from sys import argv
 import tornado
 import random
 import json
@@ -128,7 +129,8 @@ if __name__ == "__main__":
 
     print()
     print("---establishing database connection---")
-    pgdb = Pgdb()
+    db_env = argv[1]
+    pgdb = Pgdb(db_env)    
     
     websocketHanderUrl = "/websocket"
     print("---WebSocketHandler uses "+ websocketHanderUrl+"---")

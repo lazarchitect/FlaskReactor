@@ -23,11 +23,11 @@ sql = {
 class Pgdb:
     """interacts with a PostgreSQL database of Chesster users and games for CRUD operations on records."""
 
-    def __init__(self):
+    def __init__(self, db_env):
         dbDetails = loads(open("dbdetails.json", "r").read())
 
         self.conn = connect(
-            host=dbDetails['local_ip'],
+            host=dbDetails['remote_ip' if db_env=='remote_db' else 'local_ip'],
             database=dbDetails['database'],
             user=dbDetails['user'],
             password=dbDetails['password']
