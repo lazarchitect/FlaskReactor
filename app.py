@@ -87,6 +87,7 @@ def signup():
 @app.route("/logout", methods=["POST"])
 def logout():
     session['loggedIn'] = False
+    # assert 'username' in session
     if 'username' in session: #IT SHOULD BE THERE. TODO REMOVE THIS IF STATEMENT AFTER DEVELOPMENT 
         del session['username']
     return redirect("/")
