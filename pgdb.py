@@ -21,19 +21,29 @@ sql = {
     }
 
 class Pgdb:
-    """interacts with a PostgreSQL database of Chesster users and games for CRUD operations on records."""
+    """interacts with a PostgreSQL database of Chesster users and games, for CRUD operations on records."""
 
-    def __init__(self, db_env):
-        dbDetails = loads(open("dbdetails.json", "r").read())
+    def __init__(self):
 
-        self.conn = connect(
-            host=dbDetails['remote_ip' if db_env=='remote_db' else 'local_ip'],
-            database=dbDetails['database'],
-            user=dbDetails['user'],
-            password=dbDetails['password']
-        )
+        try:
 
-        self.cursor = self.conn.cursor()
+            dbDetails = loads(open("dbdetails.json", "r").read())
+
+            self.conn = connect(
+                host=dbDetails['remote_ip' if db_env=='remote_db' else 'local_ip'],
+                database=dbDetails['database'],
+                user=dbDetails['user'],
+                password=dbDetails['password']
+            )
+            
+            self.cursor = self.conn.cursor()
+
+        except KeyError as ke:
+            print("dbdetails.json file missing a key:", ke.args[0])
+            exit()
+        except FileNotFoundError:
+            print("you need to add a dbdetails.json file to run the app.")
+            exit()
 
     def __execute(self, query, values):
         """
