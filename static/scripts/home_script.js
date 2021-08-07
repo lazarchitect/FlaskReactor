@@ -1,4 +1,4 @@
-const ChessGame = styled.div`
+const GameDiv = styled.div`
 	background-color: #bbb;
 	margin: 10px;
 	text-align: center;
@@ -10,16 +10,23 @@ const ChessGame = styled.div`
 `;
 
 function openGame(gameId){
-	window.location.href = "/games/" + gameId;
+	window.location.href = "/games/" + gameId; // TODO change to /games/chess/<ID>
 }
 
-var chessGameList = games.map((game) => 
-	<ChessGame className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0])}>
+// chessGames comes from Flask -> html script
+var chessGameList = chessGames.map((game) => 
+	<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0])}>
 		{"Vs. " + (game[1] === username ? game[2] : game[1])}
-	</ChessGame>
+	</GameDiv>
 );
 
-var elem = (
+// var TTTGameList = tttGames.map((game) => 
+// 	<gameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0])}>
+// 		{"Vs. " + (game[1] === username ? game[2] : game[1])}
+// 	</gameDiv>
+// );
+
+var rootElem = (
 
 	<div>
 
@@ -32,7 +39,11 @@ var elem = (
 			Opponent Username: <input type="text" name="opponent"/> <input type="submit" value="Create"/>
 		</form>
 
-		{chessGameList}
+		Chess Games: {chessGameList}
+
+		{/* TicTacToe Games: {TTTGameList} */}
+
+
 	</div>
 
 );
@@ -40,4 +51,4 @@ var elem = (
 
 var rootDiv = document.getElementById("root");
 
-ReactDOM.render(elem, rootDiv)
+ReactDOM.render(rootElem, rootDiv)
