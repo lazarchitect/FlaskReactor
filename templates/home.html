@@ -5,22 +5,23 @@
         <link rel="stylesheet" href="/static/styles/index.css">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         
-        <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-        <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
-        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
-        <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
-        <script src="https://unpkg.com/react-is@17.0.1/umd/react-is.production.min.js"></script>
-        <script src="https://unpkg.com/styled-components/dist/styled-components.min.js"></script>
-
         <script>
-            var games = JSON.parse('{{games | safe}}');
+            var chessGames = JSON.parse('{{games | safe}}');
             var username = "{{username}}";
+            var tttGames = "";
         </script>
+        
+        <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+        <script src="/static/scripts/ReactStuff/React.js"></script>
+        <script src="/static/scripts/ReactStuff/ReactDom.js"></script>
+        <script src="/static/scripts/ReactStuff/Babel.js"></script>
+        <script src="/static/scripts/ReactStuff/ReactIS.js"></script> <!--Do we even use this???-->
+        <script src="/static/scripts/ReactStuff/StyledComponents.js"></script>
 
         <script type="text/jsx" src="/static/scripts/home_script.js"></script>
 
     </head>
 
     <body><div id="root"></div></body>
-    
+        
 </html>
