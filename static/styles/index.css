@@ -42,3 +42,7 @@ body {
     margin-right: auto;
     margin-top: 10%;
 }
+
+#createGameDiv {
+    border: 2px solid blue
+}

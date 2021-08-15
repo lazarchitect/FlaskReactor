@@ -26,6 +26,10 @@ var chessGameList = chessGames.map((game) =>
 // 	</gameDiv>
 // );
 
+const gameTypes = ["Chess", "Tic-Tac-Toe"]; // TODO replace with server-passed list
+
+const jsxGT = gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>);
+
 var rootElem = (
 
 	<div>
@@ -34,9 +38,17 @@ var rootElem = (
 			<input type="submit" value="Log Out"/>
 		</form>
 
-		<form action="/creategame" method="POST">
-			<p>Create Game</p>
-			Opponent Username: <input type="text" name="opponent"/> <input type="submit" value="Create"/>
+		<form action="/creategame" method="POST" id="createGameDiv">
+			<h4>Create Game</h4>
+			
+			
+			<select name="gameType"> {/*The name attribute is used to reference the form data*/}
+  				{jsxGT}
+			</select>
+			<br/>
+			
+			Opponent Username: <input type="text" name="opponent"/> 
+			<input type="submit" value="Create"/>
 		</form>
 
 		Chess Games: {chessGameList}

@@ -100,6 +100,8 @@ def logout():
 @app.route("/creategame", methods=["POST"])
 def createGame():
 
+    game_type = request.form['gameType']
+
     opponent_name = request.form['opponent']
 
     if(session['loggedIn'] == False):
@@ -112,19 +114,25 @@ def createGame():
     if(opponentExists == False):
         return "no user by that name. try again or message me if this is incorrect."
 
-    color = random.choice(['white', 'black'])
+    if game_type == "Chess":
+        color = random.choice(['white', 'black'])
 
-    if(color == "white"):
-        white_player = session['username']
-        black_player = opponent_name
+        if(color == "white"):
+            white_player = session['username']
+            black_player = opponent_name
 
-    else:
-        white_player = opponent_name
-        black_player = session['username']
+        else:
+            white_player = opponent_name
+            black_player = session['username']
 
-    game = Game.manualCreate(white_player, black_player)
+        game = Game.manualCreate(white_player, black_player)
 
-    pgdb.createGame(game)
+        pgdb.createGame(game)
+
+    elif game_type == "Tic-Tac-Toe":
+        pass 
+        # TODO implement tic tac toe logic. requires change to schema to support gameType.
+
 
     return redirect('/')
 
