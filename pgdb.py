@@ -23,7 +23,7 @@ sql = {
 class Pgdb:
     """interacts with a PostgreSQL database of Chesster users and games, for CRUD operations on records."""
 
-    def __init__(self):
+    def __init__(self, db_env):
 
         try:
 
