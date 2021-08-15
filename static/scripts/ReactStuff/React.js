@@ -12,7 +12,7 @@
 	(global = global || self, factory(global.React = {}));
   }(this, (function (exports) { 'use strict';
   
-	// TODO: this is special because it gets imported during build.
+	// TO DO: this is special because it gets imported during build.
 	var ReactVersion = '17.0.2';
   
 	// ATTENTION
@@ -1511,7 +1511,7 @@
 	  {
 		if (unstable_observedBits !== undefined) {
 		  error('useContext() second argument is reserved for future ' + 'use in React. Passing it is not supported. ' + 'You passed: %s.%s', unstable_observedBits, typeof unstable_observedBits === 'number' && Array.isArray(arguments[2]) ? '\n\nDid you call array.map(useContext)? ' + 'Calling Hooks inside a loop is not supported. ' + 'Learn more at https://reactjs.org/link/rules-of-hooks' : '');
-		} // TODO: add a more generic warning for invalid values.
+		} // TO DO: add a more generic warning for invalid values.
   
   
 		if (Context._context !== undefined) {
@@ -2242,7 +2242,7 @@
 	  }
   
 	  var element = createElement.apply(this, arguments); // The result can be nullish if a mock or a custom function is used.
-	  // TODO: Drop this when these are no longer allowed as the type argument.
+	  // TO DO: Drop this when these are no longer allowed as the type argument.
   
 	  if (element == null) {
 		return element;
@@ -2387,7 +2387,7 @@
 	  var _clearTimeout = window.clearTimeout;
   
 	  if (typeof console !== 'undefined') {
-		// TODO: Scheduler no longer requires these methods to be polyfilled. But
+		// TO DO: Scheduler no longer requires these methods to be polyfilled. But
 		// maybe we want to continue warning if they don't exist, to preserve the
 		// option to rely on it in the future?
 		var requestAnimationFrame = window.requestAnimationFrame;
@@ -2412,7 +2412,7 @@
 	  // need to be frame aligned; for those that do, use requestAnimationFrame.
   
 	  var yieldInterval = 5;
-	  var deadline = 0; // TODO: Make this configurable
+	  var deadline = 0; // TO DO: Make this configurable
   
 	  {
 		// `isInputPending` is not available. Since we have no way of knowing if
@@ -2579,7 +2579,7 @@
 	  return diff !== 0 ? diff : a.id - b.id;
 	}
   
-	// TODO: Use symbols?
+	// TO DO: Use symbols?
 	var ImmediatePriority = 1;
 	var UserBlockingPriority = 2;
 	var NormalPriority = 3;
