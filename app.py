@@ -107,6 +107,9 @@ def createGame():
     if(session['loggedIn'] == False):
         return "not logged in?"#shouldnt happen
 
+    if(opponent_name == ""):
+        return "enter a name, doofbury."
+
     if(session['username'] == opponent_name):
         return "you can't vs yourself, bubso."
 
