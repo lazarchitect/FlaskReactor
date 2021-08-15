@@ -36,7 +36,7 @@ def homepage():
 
     else:
         games = pgdb.getActiveGames(session['username'])
-        games = json.dumps(games, default=str)
+        games = json.dumps(games)
         return render_template("home.html", games = games, username = session['username'])
 
 
