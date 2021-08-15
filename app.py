@@ -34,7 +34,7 @@ def homepage():
     if(session['loggedIn'] == False):
         return render_template("splash.html")
 
-    else:
+    else: # user is logged in
         games = pgdb.getActiveGames(session['username'])
         games = json.dumps(games, default=str)
         return render_template("home.html", games = games, username = session['username'])
