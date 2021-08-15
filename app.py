@@ -133,9 +133,13 @@ if __name__ == "__main__":
 
     print()
     print("---establishing database connection---")
-    db_env = argv[1]
-    pgdb = Pgdb(db_env)    
-    
+    try:
+        db_env = argv[1]
+    except IndexError:
+        db_env = "local_db"
+    pgdb = Pgdb(db_env)
+
+
     websocketHanderUrl = "/websocket"
     print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
     print("---running server on " + host + ":" + str(port) + "---")

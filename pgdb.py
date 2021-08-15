@@ -35,7 +35,7 @@ class Pgdb:
                 user=dbDetails['user'],
                 password=dbDetails['password']
             )
-            
+
             self.cursor = self.conn.cursor()
 
         except KeyError as ke:
