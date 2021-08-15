@@ -1,3 +1,5 @@
+/* contains all JS, react or otherwise, that creates and maintains the home.html template. */
+
 const GameDiv = styled.div`
 	background-color: #bbb;
 	margin: 10px;
