@@ -13,6 +13,12 @@
         
 
         <script>var gamestate = JSON.parse('{{ gamestate | tojson | safe}}');</script>
+
+        <script>
+            function clogHello(){
+                console.log("Hello, world!");
+            }
+        </script>
             
         <script type="text/jsx" src="/static/scripts/Board.js"></script>
         <script type="text/jsx" src="/static/scripts/game_script.js"></script>

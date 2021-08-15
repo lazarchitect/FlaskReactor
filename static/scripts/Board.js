@@ -59,7 +59,7 @@ class Tile extends React.Component {
 			style = {{left: (this.props.tileIndex*60) + "px", top:(this.props.rowIndex*60)+"px"}} 
 			className = {this.props.darkTile ? "tile darkTile" : "tile lightTile"}
 			id = {tileId}
-			onClick = {() => document.getElementById(tileId).style.backgroundColor = "blue"}
+			onClick = {() => clogHello()}
 		>
 
 			{/* tile contents	 */}
