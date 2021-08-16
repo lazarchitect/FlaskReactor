@@ -10,6 +10,7 @@ import random
 import json
 from models.Game import Game
 from pgdb import Pgdb
+from FakePgdb import FakePgdb
 from utils import generateId, generateHash
 from socketeer import Socketeer
 
@@ -143,13 +144,19 @@ def createGame():
 if __name__ == "__main__":
 
     print()
-    print("---establishing database connection---")
+    
     try:
         db_env = argv[1]
     except IndexError:
         db_env = "local_db"
-    pgdb = Pgdb(db_env)
+    
+    if db_env == "no_db":
+        pgdb = FakePgdb()
 
+    else:
+        pgdb = Pgdb(db_env)
+
+    print("---database connected on " + db_env + "---")
 
     websocketHanderUrl = "/websocket"
     print("---WebSocketHandler uses "+ websocketHanderUrl+"---")

@@ -3,4 +3,3 @@ secret_key.txt
 dbdetails.json
 *.pyc
 python-app.yml
-.vscode

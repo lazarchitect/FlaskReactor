@@ -1,0 +1,35 @@
+{
+	// Use IntelliSense to learn about possible attributes.
+	// Hover to view descriptions of existing attributes.
+	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "FlaskReactor LOCAL DB",
+			"type": "python",
+			"request": "launch",
+			"module": "app",
+			"args": [
+				"local_db"
+			]
+		},
+		{
+			"name": "FlaskReactor REMOTE DB",
+			"type": "python",
+			"request": "launch",
+			"module": "app",
+			"args": [
+				"remote_db"
+			]
+		},
+		{
+			"name": "FlaskReactor NO DB",
+			"type": "python",
+			"request": "launch",
+			"module": "app",
+			"args": [
+				"no_db"
+			]
+		}
+	]
+}
