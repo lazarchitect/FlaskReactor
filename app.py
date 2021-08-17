@@ -37,7 +37,8 @@ def homepage():
 
     else: # user is logged in
         games = pgdb.getActiveGames(session['username'])
-        games = json.dumps(games, default=str)
+        tttGames = pgdb.getTttGames(session['username'])
+        games = json.dumps(games + tttGames, default=str)
         return render_template("home.html", games = games, username = session['username'])
 
 
@@ -135,7 +136,7 @@ def createGame():
 
     elif game_type == "Tic-Tac-Toe":
         pass 
-        # TODO implement tic tac toe logic. requires change to schema to support gameType.
+        # TODO implement create tic-tac-toe game logic
 
 
     return redirect('/')

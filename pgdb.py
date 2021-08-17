@@ -8,6 +8,8 @@ from models.Message import Message
 relation = "flaskreactor"
 
 sql = {
+        
+        # Chess
         "getCompletedGames": "SELECT * FROM " + relation + ".chess_games where completed=true AND (white_player=%s OR black_player=%s)",
         "getActiveGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
         "getUser": "SELECT * FROM " + relation + ".users WHERE name=%s",
@@ -19,7 +21,11 @@ sql = {
         "createGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
         
         "updateBoardstate": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s WHERE id=%s",
-        "endGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s"
+        "endGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s",
+
+        # Tic-Tac-Toe
+        "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
+        "":""
     }
 
 class Pgdb:
@@ -126,6 +132,14 @@ class Pgdb:
         values = [completed, end_time, gameid]
         self.__execute(query, values)
         self.conn.commit()
+
+    ### Tic-Tac-Toe
+
+    def getTttGames(self, username):
+        query = sql["getTTTGames"]
+        values = [username, username]
+        self.__execute(query, values)
+        return self.cursor.fetchall()
 
     ####### HELPER METHODS #########
 
