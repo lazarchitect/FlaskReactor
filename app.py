@@ -3,7 +3,6 @@
 from flask import Flask, render_template, redirect, request
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
-from datetime import datetime
 from sys import argv
 import tornado
 import random
