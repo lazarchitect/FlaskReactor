@@ -9,7 +9,10 @@ class Board extends React.Component {
 			reactRowArray.push(<Row key={i.toString()} rowIndex={i} tiles={boardArray[i]} />);
 		}
 		return <div className="board">{reactRowArray}</div>
+		
 	}
+
+	
 
 	componentDidMount(){
 		console.log("initializing WS")

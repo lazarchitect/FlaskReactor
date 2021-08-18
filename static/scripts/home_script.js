@@ -1,6 +1,8 @@
 /* contains all JS, react or otherwise, that creates and maintains the home.html template. */
 
-console.log(chessGames);
+// console.log("chessGames: "+ chessGames);
+// console.log("tttGames: "+ tttGames);
+// console.log("username: "+ username);
 
 const GameDiv = styled.div`
 	background-color: #bbb;
@@ -13,22 +15,22 @@ const GameDiv = styled.div`
 	border-radius: 10px
 `;
 
-function openGame(gameId){
-	window.location.href = "/games/" + gameId; // TODO change to /games/chess/<ID>
+function openGame(gameId, gameType){
+	window.location.href = "/games/" + gameType + "/" + gameId; // TODO change to /games/chess/<ID>
 }
 
 // chessGames comes from Flask -> html script
 var chessGameList = chessGames.map((game) => 
-	<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0])}>
+	<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "chess")}>
 		{"Vs. " + (game[1] === username ? game[2] : game[1])}
 	</GameDiv>
 );
 
-// var TTTGameList = tttGames.map((game) => 
-// 	<gameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0])}>
-// 		{"Vs. " + (game[1] === username ? game[2] : game[1])}
-// 	</gameDiv>
-// );
+var TTTGameList = tttGames.map((game) => 
+	<GameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "ttt")}>
+		{"Vs. " + (game[1] === username ? game[2] : game[1])}
+	</GameDiv>
+);
 
 const gameTypes = ["Chess", "Tic-Tac-Toe"]; // TODO replace with server-passed list
 
@@ -57,7 +59,7 @@ var rootElem = (
 
 		Chess Games: {chessGameList}
 
-		{/* TicTacToe Games: {TTTGameList} */}
+		TicTacToe Games: {TTTGameList}
 
 
 	</div>

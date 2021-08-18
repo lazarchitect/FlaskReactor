@@ -35,19 +35,33 @@ def homepage():
         return render_template("splash.html")
 
     else: # user is logged in
-        games = pgdb.getActiveGames(session['username'])
+        chessGames = pgdb.getActiveGames(session['username'])
         tttGames = pgdb.getTttGames(session['username'])
-        games = json.dumps(games + tttGames, default=str)
-        return render_template("home.html", games = games, username = session['username'])
+        payload = {
+            "username": session['username'],
+            "chessGames": chessGames,
+            "tttGames": tttGames
+        }
+        payload = json.dumps(payload, default=str)
+        return render_template("home.html", payload=payload)
 
 
-@app.route('/games/<gameid>')
-def game(gameid):
+@app.route('/games/chess/<gameid>')
+def chessGame(gameid):
     game = pgdb.getGame(gameid)
 
     if(game != None): return render_template("game.html", gamestate = game.boardstate)
 
     else: return render_template("home.html", alert="Game could not be retrieved from database.")
+
+@app.route('/games/ttt/<gameid>')
+def tttGame(gameid):
+    tttGame = pgdb.getTttGame(gameid)
+    payload = {
+        "tttGame": tttGame
+    }
+    payload = json.dumps(payload, default=str)
+    return render_template("tttGame.html", payload=payload)
 
 
 @app.route('/login', methods=["POST"])

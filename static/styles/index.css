@@ -46,3 +46,8 @@ body {
 #createGameDiv {
     border: 2px solid blue
 }
+
+.tttCell{
+    background-color: blue;
+    font-size: 100px;
+}
