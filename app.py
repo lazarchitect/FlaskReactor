@@ -1,5 +1,6 @@
 #!usr/bin/env python
 
+from models.TttGame import TttGame
 from flask import Flask, render_template, redirect, request
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
@@ -148,9 +149,19 @@ def createGame():
         pgdb.createGame(game)
 
     elif game_type == "Tic-Tac-Toe":
-        pass 
+        # pass 
         # TODO implement create tic-tac-toe game logic
+        role = random.choice(['X', 'O'])
+        if(role == 'X'):
+            x_player = session['username']
+            o_player = opponent_name
+        else:
+            o_player = session['username']
+            x_player = opponent_name
 
+        game = TttGame.manualCreate(x_player, o_player)
+
+        pgdb.createTttGame(game)
 
     return redirect('/')
 
