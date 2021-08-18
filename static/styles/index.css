@@ -44,10 +44,24 @@ body {
 }
 
 #createGameDiv {
-    border: 2px solid blue
+    border: 2px solid blue;
 }
 
 .tttCell{
-    background-color: blue;
     font-size: 100px;
+    position: relative;
+}
+
+#octothorpe {
+    text-align: center;
+    position: relative;
+    bottom: 350px;
+    right: 10px;
+}
+
+#tttBoard {
+    height: 500px;
+    width: 500px;
+    background-color: cadetblue;
+    overflow: hidden;
 }
