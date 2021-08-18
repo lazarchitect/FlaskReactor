@@ -25,7 +25,8 @@ sql = {
 
         # Tic-Tac-Toe
         "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
-        "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s"
+        "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s",
+        "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
     }
 
 class Pgdb:
@@ -151,6 +152,12 @@ class Pgdb:
         values = [username, username]
         self.__execute(query, values)
         return self.cursor.fetchall()
+
+    def createTttGame(self, g):
+        query = sql['createTttGame']
+        values = g.toTuple()
+        self.__execute(query, values)
+        self.conn.commit()
 
     ####### HELPER METHODS #########
 
