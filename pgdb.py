@@ -25,7 +25,7 @@ sql = {
 
         # Tic-Tac-Toe
         "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
-        "":""
+        "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s"
     }
 
 class Pgdb:
@@ -110,8 +110,19 @@ class Pgdb:
         query = sql['getGame']
         values = [gameId]
         self.__execute(query, values)
-        game = Game.dbCreate(self.cursor.fetchone())
-        return game
+        record = self.cursor.fetchone()
+        if(record == None):
+            print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+        return Game.dbCreate(record)
+
+    def getTttGame(self, gameId):
+        query = sql['getTttGame']
+        values = [gameId]
+        self.__execute(query, values)
+        record = self.cursor.fetchone()
+        if(record == None):
+            print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+        return record
 
     #TODO return list of Game() objects instead of tuples?
     def getActiveGames(self, username):
