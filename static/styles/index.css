@@ -52,11 +52,14 @@ body {
     position: relative;
 }
 
+.tttCell:hover{
+    background-color: grey;
+}
+
 #octothorpe {
-    text-align: center;
     position: relative;
-    bottom: 350px;
-    right: 10px;
+    /* bottom: 350px;
+    right: 10px; */
 }
 
 #tttBoard {
@@ -64,4 +67,8 @@ body {
     width: 500px;
     background-color: cadetblue;
     overflow: hidden;
+}
+
+#tttBoardData{
+    position: relative;
 }
