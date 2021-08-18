@@ -149,8 +149,6 @@ def createGame():
         pgdb.createGame(game)
 
     elif game_type == "Tic-Tac-Toe":
-        # pass 
-        # TODO implement create tic-tac-toe game logic
         role = random.choice(['X', 'O'])
         if(role == 'X'):
             x_player = session['username']
