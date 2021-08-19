@@ -9,7 +9,4 @@ var reactRoot = (
 
 var rootDiv = document.getElementById("root");
 
-if(rootDiv !== null){
-    ReactDOM.render(reactRoot, rootDiv);
-}
-
+ReactDOM.render(reactRoot, rootDiv);
