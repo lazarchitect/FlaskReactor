@@ -7,8 +7,6 @@ from psycopg2.extras import UUID_adapter, Json
 class TttGame:
     """Python object representing a specific Ttt game between two players, with all schema fields that a game record has.
     These are easier to work with than the tuples that psycopg2 returns, and can be converted back to a database record easily."""
-
-    #TODO test all of these functions
     
     def __init__(self):
         pass
