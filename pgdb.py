@@ -1,6 +1,8 @@
 from psycopg2 import connect, InterfaceError
+from psycopg2.extras import DictCursor
 from json import loads
 from models.Game import Game
+from models.TttGame import TttGame
 from models.User import User
 from models.Stats import Stats
 from models.Message import Message
@@ -45,7 +47,7 @@ class Pgdb:
                 password=dbDetails['password']
             )
 
-            self.cursor = self.conn.cursor()
+            self.cursor = self.conn.cursor(cursor_factory=DictCursor)
 
         except KeyError as ke:
             print("dbdetails.json file missing a key:", ke.args[0])
@@ -72,7 +74,7 @@ class Pgdb:
                 user=dbDetails['user'],
                 password=dbDetails['password']
             )
-            self.cursor = self.conn.cursor()
+            self.cursor = self.conn.cursor(cursor_factory=DictCursor)
             self.__execute(query, values)
 
     ###### DB QUERY METHODS ######
@@ -116,14 +118,7 @@ class Pgdb:
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
         return Game.dbCreate(record)
 
-    def getTttGame(self, gameId):
-        query = sql['getTttGame']
-        values = [gameId]
-        self.__execute(query, values)
-        record = self.cursor.fetchone()
-        if(record == None):
-            print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
-        return record
+    
 
     #TODO return list of Game() objects instead of tuples?
     def getActiveGames(self, username):
@@ -146,6 +141,15 @@ class Pgdb:
         self.conn.commit()
 
     ### Tic-Tac-Toe
+
+    def getTttGame(self, gameId):
+        query = sql['getTttGame']
+        values = [gameId]
+        self.__execute(query, values)
+        record = self.cursor.fetchone()
+        if(record == None):
+            print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+        return record
 
     def getTttGames(self, username):
         query = sql["getTTTGames"]
