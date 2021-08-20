@@ -1,10 +1,11 @@
 
+console.log(payload);
 var boardstate = payload.boardstate;
 
-// TODO DELETE THIS AFTER DEVELOPMENT
-boardstate = ['X', 'X', 'O', 'O', 'X', 'X', 'O', 'X', 'O'];
+// DELETE THIS AFTER DEVELOPMENT
+// boardstate = ['X', 'X', 'O', 'O', 'X', 'X', 'O', 'X', 'O'];
 
-function logCell(){
+function logCell(row, index){
 	console.log(row + "/" + index);
 }
 
@@ -14,10 +15,10 @@ function TttBoardRow(props){
 			<span 
 				key={index} 
 				className="tttCell" 
-				onClick={() => logCell()}
-				style={{left: 10+((15*index)+(index+1)*60) + "px", top: (-450+row*30) + "px"}}
+				// onClick={() => }
+				style={{left: 75+(index*150) + "px", top: 70+(row*150) + "px"}}
 			>
-				{cellItem}
+				{cellItem === "" ? " ": cellItem}
 			</span>
 	);
 }
@@ -44,9 +45,7 @@ function TttBoard(){
 var rootElem = (
 	<div id="tttGamePage">
 		<TttBoard/>
-		<form id="logoutButton" action="/logout" method="POST">
-			<input type="submit" value="Log Out"/>
-		</form>
+		<LogoutButton/>
 	</div>
 );
 

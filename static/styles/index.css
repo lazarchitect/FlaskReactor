@@ -13,7 +13,7 @@ body {
 
 #logout {
     position: relative;
-    top: 485px;
+    /* top: 485px; */
 }
 
 .tile {
@@ -48,8 +48,20 @@ body {
 }
 
 .tttCell{
-    font-size: 100px;
-    position: relative;
+    font-size: 70px;
+    overflow: hidden;
+    
+    /* x and y centering */
+    text-align: center;
+    /* padding: -10px 0; */
+
+    /* positioning */
+    position: absolute;
+    width: 70px;
+    height: 70px;
+
+    /* debug */
+    border: 1px solid indianred;    
 }
 
 .tttCell:hover{
@@ -67,8 +79,4 @@ body {
     width: 500px;
     background-color: cadetblue;
     overflow: hidden;
-}
-
-#tttBoardData{
-    position: relative;
 }
