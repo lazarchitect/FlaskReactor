@@ -57,9 +57,9 @@ def chessGame(gameid):
 
 @app.route('/games/ttt/<gameid>')
 def tttGame(gameid):
-    tttGame = pgdb.getTttGame(gameid)
+    game = pgdb.getTttGame(gameid)
     payload = {
-        "tttGame": tttGame
+        "boardstate": game["boardstate"]
     }
     payload = json.dumps(payload, default=str)
     return render_template("tttGame.html", payload=payload)
