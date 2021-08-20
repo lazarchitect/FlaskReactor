@@ -2,7 +2,7 @@
 
 // console.log("chessGames: "+ chessGames);
 // console.log("tttGames: "+ tttGames);
-// console.log("username: "+ username);
+// console.log("username: "+ username)
 
 const GameDiv = styled.div`
 	background-color: #bbb;
@@ -16,7 +16,7 @@ const GameDiv = styled.div`
 `;
 
 function openGame(gameId, gameType){
-	window.location.href = "/games/" + gameType + "/" + gameId; // TODO change to /games/chess/<ID>
+	window.location.href = "/games/" + gameType + "/" + gameId;
 }
 
 // chessGames comes from Flask -> html script
@@ -32,7 +32,7 @@ var TTTGameList = tttGames.map((game) =>
 	</GameDiv>
 );
 
-const gameTypes = ["Chess", "Tic-Tac-Toe"]; // TODO replace with server-passed list
+const gameTypes = ["Chess", "Tic-Tac-Toe"]; 
 
 const jsxGT = gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>);
 
@@ -40,9 +40,7 @@ var rootElem = (
 
 	<div>
 
-		<form id="logoutButton" action="/logout" method="POST">
-			<input type="submit" value="Log Out"/>
-		</form>
+		<LogoutButton/>
 
 		<form action="/creategame" method="POST" id="createGameDiv">
 			<h4>Create Game</h4>
