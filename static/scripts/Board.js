@@ -18,9 +18,9 @@ class Board extends React.Component {
 		console.log("initializing WS")
         const clientSocket = new WebSocket("ws://localhost:5000/websocket")
 
-        clientSocket.onmessage = (data) => {
+        clientSocket.onmessage = (message) => {
 			// TODO handle websocket message from server. update board or chat message.
-			console.log("Message from server: ", data);
+			console.log("Message from server: ", message.data);
         };
 
         var board = document.getElementsByClassName("board")[0];
