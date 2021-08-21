@@ -43,7 +43,11 @@ class Row extends React.Component {
 			darkTile = !darkTile
 		}
 
-		return reactTileArray
+		return (
+			<div className="chessRow">
+				{reactTileArray}
+			</div>
+		);
 	}
 }
 
@@ -55,9 +59,8 @@ class Tile extends React.Component {
 		var tileId = columns[this.props.tileIndex].toString() + (this.props.rowIndex+1);
 
 		var tileDiv = (
-		<div 
+		<span 
 			key = {this.props.tileIndex.toString() + this.props.rowIndex.toString()}
-			style = {{left: (this.props.tileIndex*60) + "px", top:(this.props.rowIndex*60)+"px"}} 
 			className = {this.props.darkTile ? "tile darkTile" : "tile lightTile"}
 			id = {tileId}
 		>
@@ -65,7 +68,7 @@ class Tile extends React.Component {
 			{/* tile contents */}
 			<img className="pieceImg" src={this.imagePath(this.props.data)} />
 		
-		</div>
+		</span>
 		);
 		return tileDiv;
 	}
