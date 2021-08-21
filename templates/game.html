@@ -12,14 +12,7 @@
         <script src="/static/scripts/ReactStuff/ReactIS.js"></script> <!--Do we even use this???-->
         <script src="/static/scripts/ReactStuff/StyledComponents.js"></script>
         
-
         <script>var gamestate = JSON.parse('{{ gamestate | tojson | safe}}');</script>
-
-        <script>
-            function clogHello(){
-                console.log("Hello, world!");
-            }
-        </script>
             
         <script type="text/jsx" src="/static/scripts/CommonComponents.js"></script>
         <script type="text/jsx" src="/static/scripts/Board.js"></script>
@@ -27,9 +20,5 @@
 
     </head>
 
-    <body>
-
-        <div id="root"></div>
-
-    </body>
+    <body><div id="root"></div></body>
 </html>
