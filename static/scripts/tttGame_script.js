@@ -1,10 +1,23 @@
 
-function tttBoardClick(boardstate) {
-	// websockets!
+const gameId = payload.gameId;
 
-	// connect to WS. In order to update the game board, server will need these things: gameId, gameType, 
+function websocketConnect() {
+	// simply connect to WS. In order to update the game board, server will need these things: gameId, gameType, boardstate index, etc
 
-	console.log(boardstate);
+	console.log("initializing WS")
+    const clientSocket = new WebSocket("ws://localhost:5000/websocket")
+	clientSocket.onopen = (() => clientSocket.send(JSON.stringify({"request": "subscribe", "gameId": gameId})));
+
+    clientSocket.onmessage = (message) => {
+		// TODO handle websocket message from server. update board or chat message.
+		console.log("Message from server: ", message.data);
+    };
+
+    var board = document.getElementById("tttBoard");
+    board.onclick = function(){
+    	console.log("click detected: sending message to socketServer.");
+    	clientSocket.send(JSON.stringify({"request": "update", "gameId": gameId}));
+    };
 }
 
 
@@ -26,9 +39,12 @@ function TttBoard(){
 
 	payload.boardstate = ['X', 'X', 'O', 'O', 'X', 'X', 'O', 'X', 'O'];
 	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
+	
+	React.useEffect(() => websocketConnect(), []); 
+	// empty array is a list of values that would trigger the function if they change. we dont want any.
 
 	return (
-		<div id="tttBoard" onClick={() => tttBoardClick(boardstate)}>
+		<div id="tttBoard">
 			
 			<svg id="octothorpe" width="500px" height="500px" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
   				<rect className="rectLine" x="166" y="50" width="12" height="400" rx="5" />
