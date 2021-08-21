@@ -59,7 +59,8 @@ def chessGame(gameid):
 def tttGame(gameid):
     game = pgdb.getTttGame(gameid)
     payload = {
-        "boardstate": game["boardstate"]
+        "boardstate": game["boardstate"],
+        "gameId": gameid
     }
     payload = json.dumps(payload, default=str)
     return render_template("tttGame.html", payload=payload)
