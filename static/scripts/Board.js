@@ -23,10 +23,8 @@ class Board extends React.Component {
 			console.log("Message from server: ", data);
         };
 
-		// console.log(document.body);
         var board = document.getElementsByClassName("board")[0];
-        console.log(board);
-		board.onclick = function(){
+        board.onclick = function(){
         	console.log("click detected: sending message to socketServer.");
         	clientSocket.send("hello, server");
         };
@@ -62,24 +60,14 @@ class Tile extends React.Component {
 			style = {{left: (this.props.tileIndex*60) + "px", top:(this.props.rowIndex*60)+"px"}} 
 			className = {this.props.darkTile ? "tile darkTile" : "tile lightTile"}
 			id = {tileId}
-			onClick = {() => clogHello()}
 		>
 
-			{/* tile contents	 */}
-			{/* <span>{this.pieceInitials(this.props.data)}</span> */}
+			{/* tile contents */}
 			<img className="pieceImg" src={this.imagePath(this.props.data)} />
 		
 		</div>
 		);
-
-		console.log(this.props.data);
-
 		return tileDiv;
-	}
-
-	pieceInitials(data){
-		if (data.piece == null) return;
-		return data.piece.color[0] + data.piece.type[0]
 	}
 
 	imagePath(data){
