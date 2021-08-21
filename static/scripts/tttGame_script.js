@@ -1,13 +1,16 @@
 
 function tttBoardClick(boardstate) {
 	// websockets!
-	console.log(cellItem);
+
+	// connect to WS. In order to update the game board, server will need these things: gameId, gameType, 
+
+	console.log(boardstate);
 }
 
 
 function TttBoardRow(props){
 	const row = props.row;
-	// props values will look like ["X", "X", "O"]. each is a cellItem
+	// props.values will look like ["X", "X", "O"]. each is a cellItem
 	return (props.values).map((cellItem, index) => 
 			<span 
 				key={index} 
@@ -25,7 +28,7 @@ function TttBoard(){
 	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
 
 	return (
-		<div id="tttBoard" onClick={() => tttBoardClick()}>
+		<div id="tttBoard" onClick={() => tttBoardClick(boardstate)}>
 			
 			<svg id="octothorpe" width="500px" height="500px" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
   				<rect className="rectLine" x="166" y="50" width="12" height="400" rx="5" />
