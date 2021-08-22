@@ -14,13 +14,12 @@ function websocketConnect() {
     };
 
     var board = document.getElementById("tttBoard");
-    board.onclick = function(){
+    board.onclick = function(e){
     	console.log("click detected: sending message to socketServer.");
 
-		// TODO implement this next line
-		const boardIndex = calculateBoardIndex(getClickLocation(mouseClickEvent));
+		const boardIndex = e.target.id;
 
-    	clientSocket.send(JSON.stringify({"request": "update", "gameId": gameId, "gameType": "ttt", player=payload.username, boardIndex=boardIndex}));
+    	clientSocket.send(JSON.stringify({"request": "update", "gameId": gameId, "gameType": "ttt", "player": payload.username, "boardIndex": boardIndex}));
     };
 }
 
@@ -31,7 +30,8 @@ function TttBoardRow(props){
 	return (props.values).map((cellItem, index) => 
 			<span 
 				key={index} 
-				className="tttCell" 
+				className="tttCell"
+				id={index+(row*3)}
 				style={{left: 75+(index*150) + "px", top: 70+(row*150) + "px"}}
 			>
 				{cellItem === "" ? " ": cellItem}
