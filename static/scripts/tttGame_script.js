@@ -1,12 +1,17 @@
 
-const gameId = payload.game.gameId;
+const gameId = payload.game.id;
 
 function websocketConnect() {
 	// simply connect to WS. In order to update the game board, server will need these things: gameId, gameType, boardstate index, etc
 
 	console.log("initializing WS")
     const clientSocket = new WebSocket("ws://localhost:5000/websocket")
-	clientSocket.onopen = (() => clientSocket.send(JSON.stringify({"request": "subscribe", "gameId": gameId})));
+
+	clientSocket.onopen = (function subscribe() {
+		const subscribeObj = {"request": "subscribe", "gameId": gameId};
+		const subscribeJSON = JSON.stringify(subscribeObj);
+		clientSocket.send(subscribeJSON);
+	});
 
     clientSocket.onmessage = (message) => {
 		// TODO handle websocket message from server. update board or chat message.
