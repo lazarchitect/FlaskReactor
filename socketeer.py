@@ -1,9 +1,16 @@
 import json
+from pgdb import Pgdb
 import tornado.websocket
 
 clientConnections = dict() # {}
 
 class Socketeer(tornado.websocket.WebSocketHandler):
+
+    def initialize(self, db_env) -> None:
+        self.pgdb = Pgdb(db_env)
+        # return super()._initialize()
+        pass
+
     def open(self):
         print("WebSocket opened")
 
@@ -12,7 +19,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
         
         fields = json.loads(message)
         request = fields['request']
-        gameId = fields['gameId']
+        gameId = fields.get('gameId')  #can be null.
 
         if request == "subscribe":
 
@@ -24,6 +31,15 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             self.write_message(str(self.ws_connection) + " subscribed to gameId " + gameId)
 
         if request == "update":
+
+            """
+            TODO implement: check for all needed fields. 
+            if its all kosher, then we update the game AND send the new boardstate to all parties in some kind of well formatted way.
+            FOR NOW I WILL ASSUME ITS KOSHER.
+            """
+            
+            # WRITE CODE HERE
+
             for connection in clientConnections[gameId]:
                 try:
                     connection.write_message("the game " + gameId + "has been updated")

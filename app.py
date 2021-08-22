@@ -59,8 +59,8 @@ def chessGame(gameid):
 def tttGame(gameid):
     game = pgdb.getTttGame(gameid)
     payload = {
-        "game": game,
-        "username": session['username'] 
+        "game": vars(game),
+        "username": session.get('username') #can be null if not logged in  
     }
     payload = json.dumps(payload, default=str)
     return render_template("tttGame.html", payload=payload)
@@ -187,8 +187,8 @@ if __name__ == "__main__":
     print("---running server on " + host + ":" + str(port) + "---")
     container = WSGIContainer(app)
     application = Application([
-        (websocketHanderUrl, Socketeer),
+        (websocketHanderUrl, Socketeer, dict(db_env=db_env)),
         (".*", FallbackHandler, dict(fallback=container))
-    ], debug=True)
-    application.listen(port)
+    ])
+    application.listen(port) 
     tornado.ioloop.IOLoop.instance().start() #runs until killed
