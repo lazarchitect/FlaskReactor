@@ -1,5 +1,5 @@
 import utils
-import json
+import random
 from datetime import datetime
 from psycopg2.extras import UUID_adapter, Json
 
@@ -22,7 +22,8 @@ class TttGame:
         g.completed = False
         g.time_started = datetime.now()
         g.last_move = g.time_started
-        g.time_ended = None
+        g.time_ended = None,
+        g.player_turn = random.choice([x_player, o_player])
         return g
 
     @staticmethod
@@ -37,6 +38,7 @@ class TttGame:
         g.time_started = record[5]
         g.last_move = record[6]
         g.time_ended = record[7]
+        g.player_turn = record[8]
         return g
 
     def toTuple(self):
@@ -49,5 +51,6 @@ class TttGame:
             self.completed, 
             self.time_started, 
             self.last_move, 
-            self.time_ended
+            self.time_ended,
+            self.player_turn
         )

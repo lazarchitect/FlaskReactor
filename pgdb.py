@@ -1,5 +1,5 @@
 from psycopg2 import connect, InterfaceError
-from psycopg2.extras import DictCursor
+from psycopg2.extras import DictCursor, UUID_adapter, Json
 from json import loads
 from models.Game import Game
 from models.TttGame import TttGame
@@ -28,7 +28,9 @@ sql = {
         # Tic-Tac-Toe
         "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
         "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s",
-        "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended, player_turn) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        "updateTttGame": "UPDATE " + relation + ".tictactoe_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s"
+
     }
 
 class Pgdb:
@@ -149,8 +151,6 @@ class Pgdb:
         record = self.cursor.fetchone()
         if(record == None):
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
-
-        
         return TttGame.dbCreate(record)
 
     def getTttGames(self, username):
@@ -164,6 +164,12 @@ class Pgdb:
         values = g.toTuple()
         self.__execute(query, values)
         self.conn.commit()
+
+    def updateTttGame(self, boardstate, last_updated, otherPlayer, gameId):
+        query = sql['updateTttGame']
+        values = [Json(boardstate), last_updated, otherPlayer, gameId]
+        self.__execute(query, values)
+        self.conn.commit() 
 
     ####### HELPER METHODS #########
 
