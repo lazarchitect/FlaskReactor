@@ -1,17 +1,25 @@
 
 const gameId = payload.game.id;
 
-function websocketConnect() {
+function wsSubscribe(clientSocket){
+	const subscribeObj = {"request": "subscribe", "gameId": gameId};
+	const subscribeJSON = JSON.stringify(subscribeObj);
+	clientSocket.send(subscribeJSON);
+}
+
+function wsUpdate(clientSocket, boardIndex){
+	const updateObj = {"request": "update", "gameId": gameId, "gameType": "ttt", "player": payload.username, "boardIndex": boardIndex};
+	const updateStr = JSON.stringify(updateObj);
+    clientSocket.send(updateStr);
+}
+
+function wsConnect() {
 	// simply connect to WS. In order to update the game board, server will need these things: gameId, gameType, boardstate index, etc
 
 	console.log("initializing WS")
     const clientSocket = new WebSocket("ws://localhost:5000/websocket")
 
-	clientSocket.onopen = (function subscribe() {
-		const subscribeObj = {"request": "subscribe", "gameId": gameId};
-		const subscribeJSON = JSON.stringify(subscribeObj);
-		clientSocket.send(subscribeJSON);
-	});
+	clientSocket.onopen = (() => wsSubscribe(clientSocket));
 
     clientSocket.onmessage = (message) => {
 		// TODO handle websocket message from server. update board or chat message.
@@ -19,15 +27,16 @@ function websocketConnect() {
     };
 
     var board = document.getElementById("tttBoard");
-    board.onclick = function(e){
+    board.onclick = function(mouseClick){
     	console.log("click detected: sending message to socketServer.");
-
-		const boardIndex = e.target.id;
-
-    	clientSocket.send(JSON.stringify({"request": "update", "gameId": gameId, "gameType": "ttt", "player": payload.username, "boardIndex": boardIndex}));
+		const boardIndex = mouseClick.target.id;
+		wsUpdate(clientSocket, boardIndex);
     };
 }
 
+/////////////////////////////////////
+///// REACT COMPONENT FUNCTIONS /////
+/////////////////////////////////////
 
 function TttBoardRow(props){
 	const row = props.row;
@@ -46,10 +55,10 @@ function TttBoardRow(props){
 
 function TttBoard(){
 
-	payload.game.boardstate = ['X', 'X', 'O', 'O', 'X', 'X', 'O', 'X', 'O'];
+	// payload.game.boardstate = ['X', 'X', 'O', 'O', 'X', 'X', 'O', 'X', 'O'];
 	const [boardstate, setBoardstate] = React.useState(payload.game.boardstate);
 	
-	React.useEffect(() => websocketConnect(), []); 
+	React.useEffect(() => wsConnect(), []); 
 	// empty array is a list of values that would trigger the function if they change. we dont want any.
 
 	return (
