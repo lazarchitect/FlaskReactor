@@ -67,7 +67,7 @@ body {
     border: 1px solid indianred;    
 }
 
-.tttCell:hover{
+.activeTttCell:hover{
     background-color: grey;
 }
 
