@@ -2,19 +2,27 @@
 const gameId = payload.game.id;
 
 function wsSubscribe(clientSocket){
-	const subscribeObj = {"request": "subscribe", "gameId": gameId};
+	const subscribeObj = {
+		"request": "subscribe", 
+		"gameId": gameId
+	};
 	const subscribeJSON = JSON.stringify(subscribeObj);
 	clientSocket.send(subscribeJSON);
 }
 
 function wsUpdate(clientSocket, boardIndex){
-	const updateObj = {"request": "update", "gameId": gameId, "gameType": "ttt", "player": payload.username, "boardIndex": boardIndex};
+	const updateObj = {
+		"request": "update", 
+		"gameId": gameId, 
+		"gameType": "ttt", 
+		"player": payload.username, 
+		"boardIndex": boardIndex
+	};
 	const updateStr = JSON.stringify(updateObj);
     clientSocket.send(updateStr);
 }
 
 function wsConnect() {
-	// simply connect to WS. In order to update the game board, server will need these things: gameId, gameType, boardstate index, etc
 
 	console.log("initializing WS")
     const clientSocket = new WebSocket("ws://localhost:5000/websocket")
@@ -23,11 +31,24 @@ function wsConnect() {
 
     clientSocket.onmessage = (message) => {
 		// TODO handle websocket message from server. update board or chat message.
-		console.log("Message from server: ", message.data); 
+		const data = JSON.parse(message.data);
+		if(data.command === "update"){
+			const boardIndex = data.boardIndex;
+			document.getElementById(boardIndex).innerHTML = data.piece;
+		}
+		else if(data.command === "info"){
+			console.log(data.contents);
+		}
+		else if(data.command === "error"){
+			console.log(data.contents);
+		}
+
+
     };
 
     var board = document.getElementById("tttBoard");
     board.onclick = function(mouseClick){
+		if(mouseClick.target.className != "tttCell") return;
     	console.log("click detected: sending message to socketServer.");
 		const boardIndex = mouseClick.target.id;
 		wsUpdate(clientSocket, boardIndex);
