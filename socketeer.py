@@ -40,7 +40,10 @@ class Socketeer(tornado.websocket.WebSocketHandler):
         else:
             self.clientConnections[gameId].append(self.ws_connection)
             
-        self.write_message(str(self.ws_connection) + " subscribed to gameId " + gameId)
+        self.write_message({
+                "command": "info",
+                "contents": str(self.ws_connection) + " subscribed to gameId " + gameId
+            })
 
     def wsUpdate(self, fields):
         gameId = fields['gameId']
@@ -55,15 +58,21 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             
             player = fields['player']
             if player == None:
-                #huge issue. abort!!!
-                self.write_message("NOT LOGGED IN YO!! BRUH! WTF?")
+                #huge issue. the player is not logged in. abort!!!
+                self.write_message({
+                    "command": "error",
+                    "contents": "NOT LOGGED IN YO!! BRUH! WTF?"
+                })
                 return
 
             tttGame = self.pgdb.getTttGame(gameId)
 
             if player != tttGame.player_turn:
                 #uhhh what? the requester is not even the active player?
-                self.write_message("NOT YOUR TURN!")
+                self.write_message({
+                    "command": "error",
+                    "contents": "NOT YOUR TURN!"
+                })
                 return
 
             if tttGame.x_player == player:
@@ -87,3 +96,10 @@ class Socketeer(tornado.websocket.WebSocketHandler):
 
             # TODO check for game win! will need to review boardstate rows, cols, and diags.
             # if game has ended, tell pgdb to mark the game as completed and write down the time_ended.
+
+            for conn in self.clientConnections[gameId]:
+                conn.write_message(json.dumps({
+                    "command": "update",
+                    "boardIndex": boardIndex, 
+                    "piece": piece
+                }))
