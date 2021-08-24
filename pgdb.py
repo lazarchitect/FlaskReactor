@@ -1,4 +1,4 @@
-from psycopg2 import connect, InterfaceError
+from psycopg2 import connect, InterfaceError, OperationalError
 from psycopg2.extras import DictCursor, UUID_adapter, Json
 from json import loads
 from models.Game import Game
@@ -67,7 +67,7 @@ class Pgdb:
 
         try:
             self.cursor.execute(query, values)
-        except InterfaceError:
+        except (InterfaceError, OperationalError):
             #Connection was closed. reset conn and cursor. (this happens due to idle timeouts.)
             dbDetails = loads(open("dbdetails.json", "r").read())
             self.conn = connect(
