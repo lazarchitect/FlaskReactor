@@ -3,13 +3,10 @@
 var reactRoot = (
     <div id="gamePage">
         <Board gamestate={gamestate}/>
-        <form action="/logout" method="POST"><input id="logout" type="submit" value="Log Out"/></form>
+        <LogoutButton/>
     </div>
 );
 
 var rootDiv = document.getElementById("root");
 
-if(rootDiv !== null){
-    ReactDOM.render(reactRoot, rootDiv);
-}
-
+ReactDOM.render(reactRoot, rootDiv);

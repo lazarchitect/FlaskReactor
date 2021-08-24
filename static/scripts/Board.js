@@ -9,21 +9,22 @@ class Board extends React.Component {
 			reactRowArray.push(<Row key={i.toString()} rowIndex={i} tiles={boardArray[i]} />);
 		}
 		return <div className="board">{reactRowArray}</div>
+		
 	}
+
+	
 
 	componentDidMount(){
 		console.log("initializing WS")
         const clientSocket = new WebSocket("ws://localhost:5000/websocket")
 
-        clientSocket.onmessage = (data) => {
+        clientSocket.onmessage = (message) => {
 			// TODO handle websocket message from server. update board or chat message.
-			console.log("Message from server: ", data);
+			console.log("Message from server: ", message.data);
         };
 
-		// console.log(document.body);
         var board = document.getElementsByClassName("board")[0];
-        console.log(board);
-		board.onclick = function(){
+        board.onclick = function(){
         	console.log("click detected: sending message to socketServer.");
         	clientSocket.send("hello, server");
         };
@@ -42,7 +43,11 @@ class Row extends React.Component {
 			darkTile = !darkTile
 		}
 
-		return reactTileArray
+		return (
+			<div className="chessRow">
+				{reactTileArray}
+			</div>
+		);
 	}
 }
 
@@ -54,29 +59,18 @@ class Tile extends React.Component {
 		var tileId = columns[this.props.tileIndex].toString() + (this.props.rowIndex+1);
 
 		var tileDiv = (
-		<div 
+		<span 
 			key = {this.props.tileIndex.toString() + this.props.rowIndex.toString()}
-			style = {{left: (this.props.tileIndex*60) + "px", top:(this.props.rowIndex*60)+"px"}} 
 			className = {this.props.darkTile ? "tile darkTile" : "tile lightTile"}
 			id = {tileId}
-			onClick = {() => clogHello()}
 		>
 
-			{/* tile contents	 */}
-			{/* <span>{this.pieceInitials(this.props.data)}</span> */}
+			{/* tile contents */}
 			<img className="pieceImg" src={this.imagePath(this.props.data)} />
 		
-		</div>
+		</span>
 		);
-
-		console.log(this.props.data);
-
 		return tileDiv;
-	}
-
-	pieceInitials(data){
-		if (data.piece == null) return;
-		return data.piece.color[0] + data.piece.type[0]
 	}
 
 	imagePath(data){

@@ -1,3 +1,9 @@
+/* contains all JS, react or otherwise, that creates and maintains the home.html template. */
+
+// console.log("chessGames: "+ chessGames);
+// console.log("tttGames: "+ tttGames);
+// console.log("username: "+ username)
+
 const GameDiv = styled.div`
 	background-color: #bbb;
 	margin: 10px;
@@ -9,39 +15,49 @@ const GameDiv = styled.div`
 	border-radius: 10px
 `;
 
-function openGame(gameId){
-	window.location.href = "/games/" + gameId; // TODO change to /games/chess/<ID>
+function openGame(gameId, gameType){
+	window.location.href = "/games/" + gameType + "/" + gameId;
 }
 
 // chessGames comes from Flask -> html script
 var chessGameList = chessGames.map((game) => 
-	<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0])}>
+	<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "chess")}>
 		{"Vs. " + (game[1] === username ? game[2] : game[1])}
 	</GameDiv>
 );
 
-// var TTTGameList = tttGames.map((game) => 
-// 	<gameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0])}>
-// 		{"Vs. " + (game[1] === username ? game[2] : game[1])}
-// 	</gameDiv>
-// );
+var TTTGameList = tttGames.map((game) => 
+	<GameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "ttt")}>
+		{"Vs. " + (game[1] === username ? game[2] : game[1])}
+	</GameDiv>
+);
+
+const gameTypes = ["Chess", "Tic-Tac-Toe"]; 
+
+const jsxGT = gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>);
 
 var rootElem = (
 
 	<div>
 
-		<form id="logoutButton" action="/logout" method="POST">
-			<input type="submit" value="Log Out"/>
-		</form>
+		<LogoutButton/>
 
-		<form action="/creategame" method="POST">
-			<p>Create Game</p>
-			Opponent Username: <input type="text" name="opponent"/> <input type="submit" value="Create"/>
+		<form action="/creategame" method="POST" id="createGameDiv">
+			<h4>Create Game</h4>
+			
+			
+			<select name="gameType"> {/*The name attribute is used to reference the form data*/}
+  				{jsxGT}
+			</select>
+			<br/>
+			
+			Opponent Username: <input type="text" name="opponent"/> 
+			<input type="submit" value="Create"/>
 		</form>
 
 		Chess Games: {chessGameList}
 
-		{/* TicTacToe Games: {TTTGameList} */}
+		TicTacToe Games: {TTTGameList}
 
 
 	</div>

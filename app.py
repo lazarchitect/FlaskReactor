@@ -1,9 +1,9 @@
 #!usr/bin/env python
 
+from models.TttGame import TttGame
 from flask import Flask, render_template, redirect, request
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
-from datetime import datetime
 from sys import argv
 import tornado
 import random
@@ -36,18 +36,35 @@ def homepage():
         return render_template("splash.html")
 
     else: # user is logged in
-        games = pgdb.getActiveGames(session['username'])
-        games = json.dumps(games, default=str)
-        return render_template("home.html", games = games, username = session['username'])
+        chessGames = pgdb.getActiveGames(session['username'])
+        tttGames = pgdb.getTttGames(session['username'])
+        payload = {
+            "username": session['username'],
+            "chessGames": chessGames,
+            "tttGames": tttGames
+        }
+        payload = json.dumps(payload, default=str)
+        return render_template("home.html", payload=payload)
 
 
-@app.route('/games/<gameid>')
-def game(gameid):
+@app.route('/games/chess/<gameid>')
+def chessGame(gameid):
     game = pgdb.getGame(gameid)
 
     if(game != None): return render_template("game.html", gamestate = game.boardstate)
 
     else: return render_template("home.html", alert="Game could not be retrieved from database.")
+
+@app.route('/games/ttt/<gameid>')
+def tttGame(gameid):
+    game = pgdb.getTttGame(gameid)
+    payload = {
+        "game": vars(game),
+        "username": session.get('username'), #can be null if not logged in  
+        "yourTurn": game.player_turn == session.get('username')
+    }
+    payload = json.dumps(payload, default=str)
+    return render_template("tttGame.html", payload=payload)
 
 
 @app.route('/login', methods=["POST"])
@@ -101,6 +118,8 @@ def logout():
 @app.route("/creategame", methods=["POST"])
 def createGame():
 
+    game_type = request.form['gameType']
+
     opponent_name = request.form['opponent']
 
     if(session['loggedIn'] == False):
@@ -116,19 +135,33 @@ def createGame():
     if(opponentExists == False):
         return "no user by that name. try again or message me if this is incorrect."
 
-    color = random.choice(['white', 'black'])
+    if game_type == "Chess":
+        color = random.choice(['white', 'black'])
 
-    if(color == "white"):
-        white_player = session['username']
-        black_player = opponent_name
+        if(color == "white"):
+            white_player = session['username']
+            black_player = opponent_name
 
-    else:
-        white_player = opponent_name
-        black_player = session['username']
+        else:
+            white_player = opponent_name
+            black_player = session['username']
 
-    game = Game.manualCreate(white_player, black_player)
+        game = Game.manualCreate(white_player, black_player)
 
-    pgdb.createGame(game)
+        pgdb.createGame(game)
+
+    elif game_type == "Tic-Tac-Toe":
+        role = random.choice(['X', 'O'])
+        if(role == 'X'):
+            x_player = session['username']
+            o_player = opponent_name
+        else:
+            o_player = session['username']
+            x_player = opponent_name
+
+        game = TttGame.manualCreate(x_player, o_player)
+
+        pgdb.createTttGame(game)
 
     return redirect('/')
 
@@ -155,8 +188,8 @@ if __name__ == "__main__":
     print("---running server on " + host + ":" + str(port) + "---")
     container = WSGIContainer(app)
     application = Application([
-        (websocketHanderUrl, Socketeer),
+        (websocketHanderUrl, Socketeer, dict(db_env=db_env)),
         (".*", FallbackHandler, dict(fallback=container))
-    ], debug=True)
-    application.listen(port)
+    ])
+    application.listen(port) 
     tornado.ioloop.IOLoop.instance().start() #runs until killed
