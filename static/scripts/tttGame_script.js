@@ -1,5 +1,6 @@
 
 const gameId = payload.game.id;
+var yourTurn = payload.yourTurn;
 
 function wsSubscribe(clientSocket){
 	const subscribeObj = {
@@ -43,12 +44,11 @@ function wsConnect() {
 			console.log(data.contents);
 		}
 
-
     };
 
     var board = document.getElementById("tttBoard");
     board.onclick = function(mouseClick){
-		if(mouseClick.target.className != "tttCell") return;
+		if(mouseClick.target.className != "tttCell activeTttCell") return;
     	console.log("click detected: sending message to socketServer.");
 		const boardIndex = mouseClick.target.id;
 		wsUpdate(clientSocket, boardIndex);
@@ -65,7 +65,7 @@ function TttBoardRow(props){
 	return (props.values).map((cellItem, index) => 
 			<span 
 				key={index} 
-				className="tttCell"
+				className={"tttCell" + ((yourTurn && cellItem=="" && payload.username!="") ? " activeTttCell": "")}
 				id={index+(row*3)}
 				style={{left: 75+(index*150) + "px", top: 70+(row*150) + "px"}}
 			>
