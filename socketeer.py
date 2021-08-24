@@ -101,5 +101,6 @@ class Socketeer(tornado.websocket.WebSocketHandler):
                 conn.write_message(json.dumps({
                     "command": "update",
                     "boardIndex": boardIndex, 
-                    "piece": piece
+                    "piece": piece,
+                    "activePlayer": otherPlayer
                 }))
