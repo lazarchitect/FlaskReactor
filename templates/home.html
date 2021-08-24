@@ -6,9 +6,10 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         
         <script>
-            var chessGames = JSON.parse('{{games | safe}}'); // comes from Flask
-            var username = "{{username}}";
-            var tttGames = "";
+            var payload = JSON.parse('{{payload | safe}}'); // comes from Flask
+            var chessGames = payload.chessGames;
+            var username = payload.username;
+            var tttGames = payload.tttGames;
         </script>
         
         <!-- Note: when deploying, replace react development files with production ones. -->
@@ -18,6 +19,7 @@
         <script src="/static/scripts/ReactStuff/ReactIS.js"></script>
         <script src="/static/scripts/ReactStuff/StyledComponents.js"></script>
 
+        <script type="text/jsx" src="/static/scripts/CommonComponents.js"></script>
         <script type="text/jsx" src="/static/scripts/home_script.js"></script>
 
     </head>

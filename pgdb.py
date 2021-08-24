@@ -1,23 +1,36 @@
 from psycopg2 import connect, InterfaceError
+from psycopg2.extras import DictCursor, UUID_adapter, Json
 from json import loads
 from models.Game import Game
+from models.TttGame import TttGame
 from models.User import User
 from models.Stats import Stats
 from models.Message import Message
 
+relation = "flaskreactor"
+
 sql = {
-        "getCompletedGames": "SELECT * FROM chess.games where completed=true AND (white_player=%s OR black_player=%s)",
-        "getActiveGames": "SELECT * FROM chess.games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
-        "getUser": "SELECT * FROM chess.users WHERE name=%s",
-        "getGame": "SELECT * FROM chess.games WHERE id=%s",
-        "checkLogin": "SELECT * FROM chess.users WHERE name=%s AND password_hash=%s",
         
-        "createUser": "INSERT INTO chess.users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)",
-        "createStat": "INSERT INTO chess.stats (userid) VALUES (%s)",
-        "createGame": "INSERT INTO chess.games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+        # Chess
+        "getCompletedGames": "SELECT * FROM " + relation + ".chess_games where completed=true AND (white_player=%s OR black_player=%s)",
+        "getActiveGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
+        "getUser": "SELECT * FROM " + relation + ".users WHERE name=%s",
+        "getGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
+        "checkLogin": "SELECT * FROM " + relation + ".users WHERE name=%s AND password_hash=%s",
         
-        "updateBoardstate": "UPDATE chess.games SET boardstate=%s, last_move=%s WHERE id=%s",
-        "endGame": "UPDATE chess.games SET time_ended=%s, completed=%s WHERE id=%s"
+        "createUser": "INSERT INTO " + relation + ".users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)",
+        "createStat": "INSERT INTO " + relation + ".stats (userid) VALUES (%s)",
+        "createGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+        
+        "updateBoardstate": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s WHERE id=%s",
+        "endGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s",
+
+        # Tic-Tac-Toe
+        "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
+        "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s",
+        "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended, player_turn) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        "updateTttGame": "UPDATE " + relation + ".tictactoe_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s"
+
     }
 
 class Pgdb:
@@ -36,7 +49,7 @@ class Pgdb:
                 password=dbDetails['password']
             )
 
-            self.cursor = self.conn.cursor()
+            self.cursor = self.conn.cursor(cursor_factory=DictCursor)
 
         except KeyError as ke:
             print("dbdetails.json file missing a key:", ke.args[0])
@@ -63,7 +76,7 @@ class Pgdb:
                 user=dbDetails['user'],
                 password=dbDetails['password']
             )
-            self.cursor = self.conn.cursor()
+            self.cursor = self.conn.cursor(cursor_factory=DictCursor)
             self.__execute(query, values)
 
     ###### DB QUERY METHODS ######
@@ -102,8 +115,12 @@ class Pgdb:
         query = sql['getGame']
         values = [gameId]
         self.__execute(query, values)
-        game = Game.dbCreate(self.cursor.fetchone())
-        return game
+        record = self.cursor.fetchone()
+        if(record == None):
+            print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+        return Game.dbCreate(record)
+
+    
 
     #TODO return list of Game() objects instead of tuples?
     def getActiveGames(self, username):
@@ -124,6 +141,35 @@ class Pgdb:
         values = [completed, end_time, gameid]
         self.__execute(query, values)
         self.conn.commit()
+
+    ### Tic-Tac-Toe
+
+    def getTttGame(self, gameId):
+        query = sql['getTttGame']
+        values = [gameId]
+        self.__execute(query, values)
+        record = self.cursor.fetchone()
+        if(record == None):
+            print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+        return TttGame.dbCreate(record)
+
+    def getTttGames(self, username):
+        query = sql["getTTTGames"]
+        values = [username, username]
+        self.__execute(query, values)
+        return self.cursor.fetchall()
+
+    def createTttGame(self, g):
+        query = sql['createTttGame']
+        values = g.toTuple()
+        self.__execute(query, values)
+        self.conn.commit()
+
+    def updateTttGame(self, boardstate, last_updated, otherPlayer, gameId):
+        query = sql['updateTttGame']
+        values = [Json(boardstate), last_updated, otherPlayer, gameId]
+        self.__execute(query, values)
+        self.conn.commit() 
 
     ####### HELPER METHODS #########
 

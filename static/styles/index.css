@@ -1,44 +1,85 @@
 
 body {
-    background-color: #d69191;
+    background-color: #5ba7af;
+    width: fit-content;
 }
 
-#gamePage {
-    position: absolute;
-}
-
-.board {
+/* #gamePage {
     position: relative;
-}
+} */
+
+/* .board {
+    position: relative;
+    display: block;
+} */
 
 #logout {
-    position: relative;
-    top: 485px;
+    padding: 1%;
+}
+
+.chessRow {
+    width: fit-content;
+    margin-right: 0%;
 }
 
 .tile {
     width: 60px;
     height: 60px;
-    position: absolute;
+    position: relative;
     display: inline-block;
-
 }
 
 .lightTile {
     background-color: #E5D0CC;
-    color: black;
 }
 
 .darkTile {    
     background-color: #412234;
-    color: white;
 }
 
 .pieceImg {
     max-width: 80%;
     max-height: 80%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    display: inline-block;
+    margin-left: 10%;
     margin-top: 10%;
+}
+
+#createGameDiv {
+    border: 3px solid blue;
+    padding: 1em;
+}
+
+.tttCell{
+    font-size: 70px;
+    overflow: hidden;
+    
+    /* x and y centering */
+    text-align: center;
+    /* padding: -10px 0; */
+
+    /* positioning */
+    position: absolute;
+    width: 70px;
+    height: 70px;
+
+    /* debug */
+    border: 1px solid indianred;    
+}
+
+.activeTttCell:hover{
+    background-color: grey;
+}
+
+#octothorpe {
+    position: relative;
+    /* bottom: 350px;
+    right: 10px; */
+}
+
+#tttBoard {
+    height: 500px;
+    width: 500px;
+    background-color: cadetblue;
+    overflow: hidden;
 }
