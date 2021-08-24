@@ -33,13 +33,11 @@ function wsConnect(setBoardstate, setYourTurn) {
     clientSocket.onmessage = (message) => {
 		// TODO handle websocket message from server. update board or chat message.
 		const data = JSON.parse(message.data);
-		if(data.command === "update"){
-			
-			// TODO handle various things from the server. you went, opponent went, etc
-			
-			const boardIndex = data.boardIndex;
-			document.getElementById(boardIndex).innerHTML = data.piece;
+		if(data.command === "updateBoard"){
 
+			console.log("ws data recv. new activePlayer is " + data.activePlayer)
+			
+			setBoardstate(data.newBoardstate);
 			setYourTurn(payload.username === data.activePlayer);
 
 		}

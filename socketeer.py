@@ -99,8 +99,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
 
             for conn in self.clientConnections[gameId]:
                 conn.write_message(json.dumps({
-                    "command": "update",
-                    "boardIndex": boardIndex, 
-                    "piece": piece,
+                    "command": "updateBoard",
+                    "newBoardstate": boardstate,
                     "activePlayer": otherPlayer
                 }))
