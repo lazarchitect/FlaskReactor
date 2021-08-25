@@ -1,21 +1,22 @@
 from datetime import datetime
 import json
+from utils import generateId
+
+from tornado import util
 from pgdb import Pgdb
 import tornado.websocket
+
+# keys are gameIds. values are lists of WS connections to inform of updates.
+clientConnections = dict()
 
 class Socketeer(tornado.websocket.WebSocketHandler):
 
     def initialize(self, db_env):
-        """
-        custom constructor, sets up database connection and dictionary of client connections.
-        clientConnections = {gameId1: [conn1, conn2...], gameId2:[conn1, conn2...]...}
-        """
         self.pgdb = Pgdb(db_env)
-        self.clientConnections = dict()
         
     def open(self):
-        """not much use for this function besides debug."""
-        print("WebSocket opened:", str(self.ws_connection))
+        self.socketId = "socket"+ str(generateId())[:8]
+        print("WebSocket opened:", str(self.socketId))
 
     def on_message(self, message):
         """handler for incoming websocket messages. expect to see this format: message = {"request": "subscribe", "gameId": "whatever", ...}"""
@@ -26,23 +27,32 @@ class Socketeer(tornado.websocket.WebSocketHandler):
         if request == "subscribe":
             self.wsSubscribe(fields)
 
-        if request == "update":
+        elif request == "update":
             self.wsUpdate(fields)
         
     def on_close(self):
-        print("WebSocket closed")
+        print("WebSocket closed: " + str(self.socketId))
 
 
     def wsSubscribe(self, fields):
+
+        if self.socketId == None: 
+            print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
+
+        connectionDetails = {
+            "id": self.socketId,
+            "conn": self.ws_connection
+        }
+
         gameId = fields['gameId']
-        if gameId not in self.clientConnections:
-            self.clientConnections[gameId] = [self.ws_connection]
+        if gameId not in clientConnections:
+            clientConnections[gameId] = [connectionDetails]
         else:
-            self.clientConnections[gameId].append(self.ws_connection)
+            clientConnections[gameId].append(connectionDetails)
             
         self.write_message({
                 "command": "info",
-                "contents": str(self.ws_connection) + " subscribed to gameId " + gameId
+                "contents": str(self.socketId) + " subscribed to gameId " + gameId
             })
 
     def wsUpdate(self, fields):
@@ -97,8 +107,8 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             # TODO check for game win! will need to review boardstate rows, cols, and diags.
             # if game has ended, tell pgdb to mark the game as completed and write down the time_ended.
 
-            for conn in self.clientConnections[gameId]:
-                conn.write_message(json.dumps({
+            for connectionDetails in clientConnections[gameId]:
+                connectionDetails.conn.write_message(json.dumps({
                     "command": "updateBoard",
                     "newBoardstate": boardstate,
                     "activePlayer": otherPlayer
