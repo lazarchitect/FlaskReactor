@@ -4,13 +4,17 @@ pipeline {
     stages {
         stage('Info') {
             steps {
-                sh 'pwd'
-                sh 'cd /home/pi; ls'
+                sh 'echo \'current directory is:\'; pwd'
             }
         }
-        stage('Build') {
+        stage('Install Dependencies') {
             steps {
-                echo 'Building..'
+                sh 'pip install -r requirements.txt'
+            }
+        }
+        stage('Run') {
+            steps {
+                sh 'python app.py local_db'
             }
         }
         
