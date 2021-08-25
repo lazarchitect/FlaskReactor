@@ -51,6 +51,10 @@ class Pgdb:
 
             self.cursor = self.conn.cursor(cursor_factory=DictCursor)
 
+        except OperationalError as oe:
+            print(oe)
+            exit()
+
         except KeyError as ke:
             print("dbdetails.json file missing a key:", ke.args[0])
             exit()
