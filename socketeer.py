@@ -9,6 +9,13 @@ import tornado.websocket
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
 
+def deleteConnection(gameId, socketId):
+    gameConnectionList = clientConnections[gameId]
+    for x in gameConnectionList:
+        if x['id'] == socketId:
+            gameConnectionList.remove(x)
+            return
+
 class Socketeer(tornado.websocket.WebSocketHandler):
 
     def initialize(self, db_env):
@@ -32,7 +39,16 @@ class Socketeer(tornado.websocket.WebSocketHandler):
         
     def on_close(self):
         print("WebSocket closed: " + str(self.socketId))
+        
+        if self.gameId == None:
+            print("ws was not subscribed? not sure why this would happen")
+            return
+        
+        deleteConnection(self.gameId, self.socketId)
 
+    ###############################
+    ## Message Handler functions ##
+    ###############################
 
     def wsSubscribe(self, fields):
 
@@ -45,6 +61,10 @@ class Socketeer(tornado.websocket.WebSocketHandler):
         }
 
         gameId = fields['gameId']
+
+        #used for easy search during later deletion
+        self.gameId = gameId
+
         if gameId not in clientConnections:
             clientConnections[gameId] = [connectionDetails]
         else:
@@ -107,9 +127,17 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             # TODO check for game win! will need to review boardstate rows, cols, and diags.
             # if game has ended, tell pgdb to mark the game as completed and write down the time_ended.
 
+            print(clientConnections)
+
             for connectionDetails in clientConnections[gameId]:
-                connectionDetails['conn'].write_message(json.dumps({
-                    "command": "updateBoard",
-                    "newBoardstate": boardstate,
-                    "activePlayer": otherPlayer
-                }))
+
+                try:
+
+                    connectionDetails['conn'].write_message(json.dumps({
+                        "command": "updateBoard",
+                        "newBoardstate": boardstate,
+                        "activePlayer": otherPlayer
+                    }))
+                
+                except tornado.websocket.WebSocketClosedError:
+                    print(str(connectionDetails['id']) + " was closed i guess? nvm...")
