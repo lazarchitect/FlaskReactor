@@ -5,8 +5,7 @@ pipeline {
         stage('Info') {
             steps {
                 sh 'pwd'
-                sh 'cd /home/pi'
-                sh 'pwd; ls'
+                sh 'cd /home/pi; ls'
             }
         }
         stage('Build') {
