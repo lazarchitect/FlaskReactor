@@ -1,4 +1,6 @@
 
+
+
 const gameId = payload.game.id;
 var yourTurn = payload.yourTurn;
 
@@ -63,6 +65,23 @@ function wsConnect(setBoardstate, setYourTurn) {
 ///// REACT COMPONENT FUNCTIONS /////
 /////////////////////////////////////
 
+function X_Piece(){
+	return (
+		<svg width="70" height="70" xmlns="http://www.w3.org/2000/svg">
+  			<rect x="-6" y="9"   width="10" height="80" rx="5" fill="#f1b42f" transform="rotate(-45)"/>
+  			<rect x="43" y="-40" width="10" height="80" rx="5" fill="#f1b42f" transform="rotate(45)"/>
+		</svg>
+	);
+}
+
+function O_Piece(){
+	return (
+		<svg width="70" height="70" xmlns="http://www.w3.org/2000/svg">
+  			<circle cx="35" cy="35" r="27" stroke="#2f6cf1" stroke-width="9" fill="transparent" />
+		</svg>
+	);
+}
+
 function TttBoardRow(props){
 	const row = props.row;
 	// props.values will look like ["X", "X", "O"]. each is a cellItem
@@ -73,7 +92,7 @@ function TttBoardRow(props){
 				id={index+(row*3)}
 				style={{left: 75+(index*150) + "px", top: 70+(row*150) + "px"}}
 			>
-				{cellItem}
+				{cellItem === "" ? "" : (cellItem === 'X' ? <X_Piece/> : <O_Piece/>)}
 			</span>
 	);
 }
@@ -92,10 +111,10 @@ function TttBoard(){
 		<div id="tttBoard">
 			
 			<svg id="octothorpe" width="500px" height="500px" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-  				<rect className="rectLine" x="166" y="50" width="12" height="400" rx="5" />
-				<rect className="rectLine" x="330" y="50" width="12" height="400" rx="5"/>
-				<rect className="rectLine" x="50" y="166" width="400" height="12" rx="5"/>
-				<rect className="rectLine" x="50" y="330" width="400" height="12" rx="5"/>
+  				<rect x="166" y="50" width="12" height="400" rx="5" />
+				<rect x="330" y="50" width="12" height="400" rx="5"/>
+				<rect x="50" y="166" width="400" height="12" rx="5"/>
+				<rect x="50" y="330" width="400" height="12" rx="5"/>
 			</svg>
 			<div id="tttBoardData">
 				<TttBoardRow yourTurn={yourTurn} row={0} values={boardstate.slice(0,3)} /><br/>

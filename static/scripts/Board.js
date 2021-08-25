@@ -62,7 +62,7 @@ class Tile extends React.Component {
 		<span 
 			key = {this.props.tileIndex.toString() + this.props.rowIndex.toString()}
 			className = {this.props.darkTile ? "tile darkTile" : "tile lightTile"}
-			id = {tileId}
+			id = {tileId} // TODO do we even need this? 
 		>
 
 			{/* tile contents */}
