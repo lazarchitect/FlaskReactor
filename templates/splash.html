@@ -9,36 +9,15 @@
         <script src="/static/scripts/ReactStuff/React.js"></script>
         <script src="/static/scripts/ReactStuff/ReactDom.js"></script>
         <script src="/static/scripts/ReactStuff/Babel.js"></script>
+
+        <script type="text/jsx" src="/static/scripts/CommonComponents.js"></script>
+        <script type="text/jsx" src="/static/scripts/splash_script.js"></script>
         
     </head>
 
     <body>
-        <!-- TODO move as much of this page as possible into react code  -->
-        <h1>Log In</h1>
-        <form action="/login" method="POST">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username"><br><br>
-            <br>
-            <label>Password:</label> <input type="password" name="password">
-            <br>
-            <input type="submit" value="Submit">
-        </form>
 
-        <br><br>
-
-        <h1>Sign Up</h1>
-        <form action="/signup" method="POST">
-            <label>Username:</label> <input type="text" name="username">
-            <br>
-            <label>Password:</label> <input type="password" name="password">
-            <br>
-            <label>Repeat Password:</label> <input type="password" name="password_repeat">
-            <br>
-            <label>Email (optional):</label> <input type="text" name="email">
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-
+        <div id="root"></div>
 
     </body>
 </html>
