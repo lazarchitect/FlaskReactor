@@ -7,5 +7,17 @@ pipeline {
                 echo 'Building..'
             }
         }
+        stage('Deploy') {
+            steps {
+                ls
+                cd ~
+                ls
+            }
+        }
+        stage('Zany!') {
+            steps {
+                echo 'hello, wacky world!'
+            }
+        }
 	}
 }
