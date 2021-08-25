@@ -108,7 +108,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             # if game has ended, tell pgdb to mark the game as completed and write down the time_ended.
 
             for connectionDetails in clientConnections[gameId]:
-                connectionDetails.conn.write_message(json.dumps({
+                connectionDetails['conn'].write_message(json.dumps({
                     "command": "updateBoard",
                     "newBoardstate": boardstate,
                     "activePlayer": otherPlayer
