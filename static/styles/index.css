@@ -4,15 +4,6 @@ body {
     width: fit-content;
 }
 
-/* #gamePage {
-    position: relative;
-} */
-
-/* .board {
-    position: relative;
-    display: block;
-} */
-
 #logout {
     padding: 1%;
 }
@@ -64,7 +55,7 @@ body {
     height: 70px;
 
     /* debug */
-    border: 1px solid indianred;    
+    /* border: 1px solid indianred;     */
 }
 
 .activeTttCell:hover{
