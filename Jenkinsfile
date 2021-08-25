@@ -9,9 +9,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                ls
-                cd ~
-                ls
+                sh 'ls'
+                sh 'cd ~'
+                sh 'ls'
             }
         }
         stage('Zany!') {
