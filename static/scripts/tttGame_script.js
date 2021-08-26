@@ -37,13 +37,52 @@ function wsConnect(setBoardstate, setYourTurn) {
 		if(data.command === "updateBoard"){
 
 			console.log("ws data recv. new activePlayer is " + data.activePlayer)
+			if(payload.username == null){
+				document.getElementById('status').innerHTML = "spectating";
+			}
+			else if(payload.username === data.activePlayer){
+				document.getElementById('status').innerHTML = "your turn";
+			}
+			else {
+				document.getElementById('status').innerHTML = "waiting for opponent";
+			}
 			
 			setBoardstate(data.newBoardstate);
 			setYourTurn(payload.username === data.activePlayer);
 
 		}
+
+		else if(data.command == "endGame"){
+			if(data.winner == null) {
+				console.log("its a tie!");
+				document.getElementById('status').innerHTML = "it's a tie";
+			}
+			else {
+				console.log("winner is " + data.winner);
+
+				if(data.winner == payload.username){
+					document.getElementById('status').innerHTML = "You won!";
+				}
+				else {
+					document.getElementById('status').innerHTML = "You lost...";
+				}
+
+				setYourTurn(payload.username === data.activePlayer);
+			}
+		}
+
 		else if(data.command === "info"){
 			console.log(data.contents);
+			console.log("ws data recv. new activePlayer is " + data.activePlayer)
+			if(payload.username == null){
+				document.getElementById('status').innerHTML = "spectating";
+			}
+			else if(payload.username === data.activePlayer){
+				document.getElementById('status').innerHTML = "your turn";
+			}
+			else {
+				document.getElementById('status').innerHTML = "waiting for opponent";
+			}
 		}
 		else if(data.command === "error"){
 			console.log(data.contents);
@@ -127,6 +166,7 @@ function TttBoard(){
 var rootElem = (
 	<div id="tttGamePage">
 		<TttBoard/>
+		<p>Status: <span id="status"></span></p>
 		<LogoutButton/>
 	</div>
 );
