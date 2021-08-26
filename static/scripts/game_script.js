@@ -2,6 +2,7 @@
 
 var reactRoot = (
     <div id="gamePage">
+        <SiteHeader username={payload.username}/>
         <Board gamestate={gamestate}/>
         <LogoutButton/>
     </div>

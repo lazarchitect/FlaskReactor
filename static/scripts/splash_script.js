@@ -39,7 +39,7 @@ const SignupArea = (() =>
 
 const reactRoot = (
 	<div>
-		<SiteHeader word="whatever I want."/>
+		<SiteHeader username={null}/>
 		<LoginArea/>
 		<br/><br/>
 		<SignupArea/>
