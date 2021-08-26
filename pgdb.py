@@ -85,6 +85,9 @@ class Pgdb:
 
     ###### DB QUERY METHODS ######
 
+    ### Chess
+    # TODO give all these methods chess-related names, and sort them by game.
+
     def getUser(self, username):
         query = sql['getUser']
         values = [username]
