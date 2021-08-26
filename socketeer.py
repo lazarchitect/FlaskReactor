@@ -1,10 +1,8 @@
 from datetime import datetime
-import json
 from utils import generateId
-
-from tornado import util
 from pgdb import Pgdb
 import tornado.websocket
+import json
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
