@@ -33,7 +33,6 @@ function wsConnect(setBoardstate, setYourTurn) {
 	clientSocket.onopen = (() => wsSubscribe(clientSocket));
 
     clientSocket.onmessage = (message) => {
-		// TODO handle websocket message from server. update board or chat message.
 		const data = JSON.parse(message.data);
 		if(data.command === "updateBoard"){
 
