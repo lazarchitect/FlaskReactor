@@ -77,7 +77,7 @@ function X_Piece(){
 function O_Piece(){
 	return (
 		<svg width="70" height="70" xmlns="http://www.w3.org/2000/svg">
-  			<circle cx="35" cy="35" r="27" stroke="#2f6cf1" stroke-width="9" fill="transparent" />
+  			<circle cx="35" cy="35" r="27" stroke="#2f6cf1" strokeWidth="9" fill="transparent" />
 		</svg>
 	);
 }
@@ -127,6 +127,7 @@ function TttBoard(){
 
 var rootElem = (
 	<div id="tttGamePage">
+		<SiteHeader username={payload.username}/>
 		<TttBoard/>
 		<LogoutButton/>
 	</div>

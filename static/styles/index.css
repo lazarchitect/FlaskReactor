@@ -2,6 +2,15 @@
 body {
     background-color: #5ba7af;
     width: fit-content;
+    margin: 0%;
+}
+
+#siteHeader {
+    background-color: mediumaquamarine;
+    height: 10%;
+    width: 100vw;
+    /* margin: 0px;
+    padding: 0px */
 }
 
 #logout {
@@ -74,3 +83,4 @@ body {
     background-color: cadetblue;
     overflow: hidden;
 }
+

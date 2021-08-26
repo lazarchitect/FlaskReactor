@@ -6,6 +6,10 @@ const LogoutButton = (() =>
 );
 
 const SiteHeader = ((props) =>
-	<span>{props.word}</span>
+	<header id="siteHeader">
+		<span>{
+			props.username === null ? <a href="/">Log in / Sign up</a> : props.username			
+		}</span>
+	</header>
 
 );
