@@ -38,7 +38,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
     def on_close(self):
         print("WebSocket closed: " + str(self.socketId))
         
-        if self.gameId == None:
+        if not hasattr(self, "gameId"):
             print("ws was not subscribed? not sure why this would happen")
             return
         
@@ -73,6 +73,8 @@ class Socketeer(tornado.websocket.WebSocketHandler):
         self.write_message({
                 "command": "info",
                 "activePlayer": game.player_turn,
+                "gameEnded": game.completed,
+                "winner": game.winner,
                 "contents": str(self.socketId) + " subscribed to gameId " + gameId
         })
         
