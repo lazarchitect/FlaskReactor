@@ -16,7 +16,7 @@ pipeline {
         // }
         stage('Run') {
             steps {
-                sh 'python app.py local_db'
+                sh 'python3 app.py local_db'
             }
         }
         
