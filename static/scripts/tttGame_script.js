@@ -7,7 +7,8 @@ var yourTurn = payload.yourTurn;
 function wsSubscribe(clientSocket){
 	const subscribeObj = {
 		"request": "subscribe", 
-		"gameId": gameId
+		"gameId": gameId,
+		"username": payload.username
 	};
 	const subscribeJSON = JSON.stringify(subscribeObj);
 	clientSocket.send(subscribeJSON);
@@ -60,6 +61,11 @@ function wsConnect(setBoardstate, setYourTurn) {
 			else {
 				console.log("winner is " + data.winner);
 
+				if(payload.username == null){
+					// not logged in
+					
+				}
+
 				if(data.winner == payload.username){
 					document.getElementById('status').innerHTML = "You won!";
 				}
@@ -71,9 +77,21 @@ function wsConnect(setBoardstate, setYourTurn) {
 			}
 		}
 
+		// TODO MASSIVE REFACTORING NEEDED! 
+		//setting the status should be a function, setting innerHTML should be a clean one-liner fn.
+
 		else if(data.command === "info"){
 			console.log(data.contents);
 			console.log("ws data recv. new activePlayer is " + data.activePlayer)
+
+			if(data.gameEnded == true){
+				document.getElementById('status').innerHTML = "game over. ";
+				if(data.winner == payload.username) {
+					document.getElementById('status').innerHTML += "You won!";
+				}
+				else if(data.winner == payload.)
+			}
+
 			if(payload.username == null){
 				document.getElementById('status').innerHTML = "spectating";
 			}
