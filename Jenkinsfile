@@ -1,14 +1,13 @@
 pipeline {
-    agent any
-
+    
+    agent {docker { image 'python:3.7.3' } }
+    
     stages {
         stage('Info') {
             steps {
+                sh 'echo \'current user is:\'; whoami'
                 sh 'echo \'current directory is:\'; pwd'
                 sh 'python3 -c \'import sys; print(sys.path)\''
-                sh 'python3 -c "import sys; print(sys.path)"'
-                sh 'echo "$USER"'
-                sh 'whoami'
             }
         }
         // stage('Install Dependencies') {
@@ -18,7 +17,7 @@ pipeline {
         // }
         stage('Run') {
             steps {
-                sh 'python3 app.py local_db'
+                //sh 'python3 app.py local_db'
             }
         }
         
