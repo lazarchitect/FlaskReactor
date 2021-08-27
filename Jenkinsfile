@@ -12,14 +12,14 @@ pipeline {
         }
         // stage('Install Dependencies') {
         //     steps {
-        //         sh 'pip install -r requirements.txt'
+        //         sh 'pip3 install -r requirements.txt'
         //     }
         // }
-        stage('Run') {
-            steps {
-                //sh 'python3 app.py local_db'
-            }
-        }
+        // stage('Run') {
+        //     steps {
+        //         //sh 'python3 app.py local_db'
+        //     }
+        // }
         
 	}
 }
