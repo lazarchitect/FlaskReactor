@@ -5,8 +5,8 @@ pipeline {
         stage('Info') {
             steps {
                 sh 'echo \'current directory is:\'; pwd'
-                sh 'python -c \'import sys; print(sys.path)\''
-                sh 'python -c "import sys; print(sys.path)"'
+                sh 'python3 -c \'import sys; print(sys.path)\''
+                sh 'python3 -c "import sys; print(sys.path)"'
             }
         }
         // stage('Install Dependencies') {
