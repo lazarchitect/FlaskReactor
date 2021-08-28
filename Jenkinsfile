@@ -1,25 +1,20 @@
 pipeline {
-    
-    agent {docker { image 'python:3.7.3' } }
-    
+    agent { docker { image 'python:3.7.3' } }
     stages {
-        stage('Info') {
+        stage('build') {
             steps {
-                sh 'echo \'current user is:\'; whoami'
-                sh 'echo \'current directory is:\'; pwd'
-                sh 'python3 -c \'import sys; print(sys.path)\''
+                sh 'python --version'
             }
         }
-        // stage('Install Dependencies') {
-        //     steps {
-        //         sh 'pip3 install -r requirements.txt'
-        //     }
-        // }
-        // stage('Run') {
-        //     steps {
-        //         //sh 'python3 app.py local_db'
-        //     }
-        // }
-        
-	}
+    }
 }
+
+// scripted pipeline
+// node('docker') {
+//     checkout scm
+//     stage('Build') {
+//         docker.image('python:3.5.1').inside {
+//             sh 'python --version'
+//         }
+//     }
+// }
