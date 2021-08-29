@@ -61,16 +61,14 @@ function wsConnect(setBoardstate, setYourTurn) {
 			else {
 				console.log("winner is " + data.winner);
 
-				if(payload.username == null){
-					// not logged in
-					
-				}
-
 				if(data.winner == payload.username){
 					document.getElementById('status').innerHTML = "You won!";
 				}
-				else {
+				else if(data.winner == payload.otherPlayer) {
 					document.getElementById('status').innerHTML = "You lost...";
+				}
+				else {
+					document.getElementById('status').innerHTML = "game over. Winner: " + data.winner;
 				}
 
 				setYourTurn(payload.username === data.activePlayer);
@@ -84,23 +82,32 @@ function wsConnect(setBoardstate, setYourTurn) {
 			console.log(data.contents);
 			console.log("ws data recv. new activePlayer is " + data.activePlayer)
 
-			if(data.gameEnded == true){
-				document.getElementById('status').innerHTML = "game over. ";
-				if(data.winner == payload.username) {
-					document.getElementById('status').innerHTML += "You won!";
-				}
-				else if(data.winner == payload.)
-			}
+			
 
-			if(payload.username == null){
-				document.getElementById('status').innerHTML = "spectating";
-			}
-			else if(payload.username === data.activePlayer){
-				document.getElementById('status').innerHTML = "your turn";
+			if(data.gameEnded){
+				document.getElementById('status').innerHTML = "Game over.";
+				// winner: "you won!"
+				if(data.winner == payload.username){
+					document.getElementById('status').innerHTML = "You won!";
+				}
+				else if (data.winner == payload.otherPlayer) {
+					document.getElementById('status').innerHTML = "You lost...";
+				}
+
 			}
 			else {
-				document.getElementById('status').innerHTML = "waiting for opponent";
+				if(data.activePlayer == payload.username){
+					document.getElementById('status').innerHTML = "Your turn!";
+				}
+				else if (data.activePlayer == payload.otherPlayer) {
+					document.getElementById('status').innerHTML = "waiting for opponent";
+				}
+				else {
+					document.getElementById('status').innerHTML = "spectating";
+				}
 			}
+
+			
 		}
 		else if(data.command === "error"){
 			console.log(data.contents);

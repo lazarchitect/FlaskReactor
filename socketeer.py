@@ -146,6 +146,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
                     print(str(connectionDetails['id']) + " was closed i guess? nvm...")
 
             gameEnded = utils.tttGameEnded(boardstate)
+            winner = player if (gameEnded == "Win") else None
 
             if gameEnded:
                 for connectionDetails in clientConnections[gameId]:
@@ -153,10 +154,10 @@ class Socketeer(tornado.websocket.WebSocketHandler):
                         connectionDetails['conn'].write_message(json.dumps({
                             "command": "endGame",
                             "outcome": gameEnded,
-                            "winner": player if (gameEnded == "Win") else None
+                            "winner": winner
                         }))
                     
                     except tornado.websocket.WebSocketClosedError:
                         print(str(connectionDetails['id']) + " was closed i guess? nvm...")
 
-                self.pgdb.endTttGame(datetime.now(), gameId)
+                self.pgdb.endTttGame(datetime.now(), winner, gameId)
