@@ -28,7 +28,7 @@ function wsUpdate(clientSocket, boardIndex){
 function wsConnect(setBoardstate, setYourTurn) {
 
 	console.log("initializing WS")
-    const clientSocket = new WebSocket("ws://localhost:5000/websocket")
+    const clientSocket = new WebSocket("ws://100.1.211.86:5000/websocket")
 
 	clientSocket.onopen = (() => wsSubscribe(clientSocket));
 
