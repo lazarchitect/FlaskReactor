@@ -28,9 +28,9 @@ sql = {
         # Tic-Tac-Toe
         "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
         "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s",
-        "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended, player_turn) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         "updateTttGame": "UPDATE " + relation + ".tictactoe_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
-        "endTttGame": "UPDATE " + relation + ".tictactoe_games SET completed=true, time_ended=%s, player_turn='' WHERE id=%s" 
+        "endTttGame": "UPDATE " + relation + ".tictactoe_games SET completed=true, time_ended=%s, player_turn='', winner=%s WHERE id=%s"
 
     }
 
@@ -179,9 +179,9 @@ class Pgdb:
         self.__execute(query, values)
         self.conn.commit()
 
-    def endTttGame(self, time_ended, gameId):
+    def endTttGame(self, time_ended, winner, gameId):
         query = sql['endTttGame']
-        values = [time_ended, gameId]
+        values = [time_ended, winner, gameId]
         self.__execute(query, values)
         self.conn.commit()
 
