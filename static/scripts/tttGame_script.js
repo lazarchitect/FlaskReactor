@@ -7,7 +7,8 @@ var yourTurn = payload.yourTurn;
 function wsSubscribe(clientSocket){
 	const subscribeObj = {
 		"request": "subscribe", 
-		"gameId": gameId
+		"gameId": gameId,
+		"username": payload.username
 	};
 	const subscribeJSON = JSON.stringify(subscribeObj);
 	clientSocket.send(subscribeJSON);
@@ -63,26 +64,50 @@ function wsConnect(setBoardstate, setYourTurn) {
 				if(data.winner == payload.username){
 					document.getElementById('status').innerHTML = "You won!";
 				}
-				else {
+				else if(data.winner == payload.otherPlayer) {
 					document.getElementById('status').innerHTML = "You lost...";
+				}
+				else {
+					document.getElementById('status').innerHTML = "game over. Winner: " + data.winner;
 				}
 
 				setYourTurn(payload.username === data.activePlayer);
 			}
 		}
 
+		// TODO MASSIVE REFACTORING NEEDED! 
+		//setting the status should be a function, setting innerHTML should be a clean one-liner fn.
+
 		else if(data.command === "info"){
 			console.log(data.contents);
 			console.log("ws data recv. new activePlayer is " + data.activePlayer)
-			if(payload.username == null){
-				document.getElementById('status').innerHTML = "spectating";
-			}
-			else if(payload.username === data.activePlayer){
-				document.getElementById('status').innerHTML = "your turn";
+
+			
+
+			if(data.gameEnded){
+				document.getElementById('status').innerHTML = "Game over.";
+				// winner: "you won!"
+				if(data.winner == payload.username){
+					document.getElementById('status').innerHTML = "You won!";
+				}
+				else if (data.winner == payload.otherPlayer) {
+					document.getElementById('status').innerHTML = "You lost...";
+				}
+
 			}
 			else {
-				document.getElementById('status').innerHTML = "waiting for opponent";
+				if(data.activePlayer == payload.username){
+					document.getElementById('status').innerHTML = "Your turn!";
+				}
+				else if (data.activePlayer == payload.otherPlayer) {
+					document.getElementById('status').innerHTML = "waiting for opponent";
+				}
+				else {
+					document.getElementById('status').innerHTML = "spectating";
+				}
 			}
+
+			
 		}
 		else if(data.command === "error"){
 			console.log(data.contents);

@@ -24,6 +24,7 @@ class TttGame:
         g.last_move = g.time_started
         g.time_ended = None,
         g.player_turn = random.choice([x_player, o_player])
+        g.winner = None
         return g
 
     @staticmethod
@@ -39,6 +40,7 @@ class TttGame:
         g.last_move = record[6]
         g.time_ended = record[7]
         g.player_turn = record[8]
+        g.winner = record[9]
         return g
 
     def toTuple(self):
@@ -52,5 +54,6 @@ class TttGame:
             self.time_started, 
             self.last_move, 
             self.time_ended,
-            self.player_turn
+            self.player_turn,
+            self.winner
         )
