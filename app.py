@@ -60,7 +60,8 @@ def tttGame(gameid):
     game = pgdb.getTttGame(gameid)
     payload = {
         "game": vars(game),
-        "username": session.get('username'), #can be null if not logged in  
+        "username": session.get('username'), #can be null if not logged in
+        "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
         "yourTurn": game.player_turn == session.get('username')
     }
     payload = json.dumps(payload, default=str)
