@@ -16,16 +16,19 @@ def deleteConnection(gameId, socketId):
 
 class Socketeer(tornado.websocket.WebSocketHandler):
 
+    def check_origin(self, origin):
+        return True
+
     def initialize(self, db_env):
         self.pgdb = Pgdb(db_env)
-        
+
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
         print("WebSocket opened:", str(self.socketId))
 
     def on_message(self, message):
         """handler for incoming websocket messages. expect to see this format: message = {"request": "subscribe", "gameId": "whatever", ...}"""
-        
+
         fields = json.loads(message)
         request = fields['request']
 
