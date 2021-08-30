@@ -76,6 +76,20 @@ body {
     padding: 1em;
 }
 
+
+
+#tttBoard {
+    height: 500px;
+    width: 500px;
+    background-color: cadetblue;
+    overflow: hidden;
+    position: relative;
+}
+
+#octothorpe {
+    position: relative;
+}
+
 .tttCell{
     overflow: hidden;
     
@@ -92,16 +106,5 @@ body {
     background-color: grey;
 }
 
-#octothorpe {
-    position: relative;
-    /* bottom: 350px;
-    right: 10px; */
-}
 
-#tttBoard {
-    height: 500px;
-    width: 500px;
-    background-color: cadetblue;
-    overflow: hidden;
-}
 
