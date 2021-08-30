@@ -38,7 +38,7 @@ const SignupArea = (() =>
 
 
 const reactRoot = (
-	<div>
+	<div id="reactRoot">
 		<SiteHeader username={null}/>
 		<LoginArea/>
 		<br/><br/>

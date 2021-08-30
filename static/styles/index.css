@@ -1,20 +1,46 @@
 
+html {
+    height: 100%;
+}
+
 body {
     background-color: #5ba7af;
-    width: fit-content;
     margin: 0%;
+    height: 100%;
+}
+
+#root {
+    height: 100%
+}
+
+#reactRoot {
+    height: 100%;
 }
 
 #siteHeader {
     background-color: mediumaquamarine;
     height: 10%;
     width: 100vw;
-    /* margin: 0px;
-    padding: 0px */
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
-#logout {
-    padding: 1%;
+#headerLeft {
+    padding-left: 2%;
+    font-size: x-large;
+}
+
+#headerRight {
+    padding-right: 5%;
+    display: flex;
+    align-items: center;
+}
+
+#headerUsername {
+    min-width: 65%;
+    font-size: large;
 }
 
 .chessRow {
@@ -51,13 +77,8 @@ body {
 }
 
 .tttCell{
-    font-size: 70px;
     overflow: hidden;
     
-    /* x and y centering */
-    text-align: center;
-    /* padding: -10px 0; */
-
     /* positioning */
     position: absolute;
     width: 70px;

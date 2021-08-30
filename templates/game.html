@@ -12,7 +12,9 @@
         <script src="/static/scripts/ReactStuff/ReactIS.js"></script> <!--Do we even use this???-->
         <script src="/static/scripts/ReactStuff/StyledComponents.js"></script>
         
-        <script>var gamestate = JSON.parse('{{ gamestate | tojson | safe}}');</script>
+        <script>
+            var payload = JSON.parse('{{payload | safe}}'); // comes from Flask
+        </script>
             
         <script type="text/jsx" src="/static/scripts/CommonComponents.js"></script>
         <script type="text/jsx" src="/static/scripts/Board.js"></script>
