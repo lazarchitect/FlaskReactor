@@ -90,7 +90,7 @@ function TttBoardRow(props){
 				key={index} 
 				className={"tttCell" + ((props.yourTurn && cellItem=="" && payload.username!="") ? " activeTttCell": "")}
 				id={index+(row*3)}
-				style={{left: 75+(index*150) + "px", top: 70+(row*150) + "px"}}
+				style={{left: 7+(index*15.5) + "%", top: 20+(row*20) + "%"}}
 			>
 				{cellItem === "" ? "" : (cellItem === 'X' ? <X_Piece/> : <O_Piece/>)}
 			</span>
@@ -126,10 +126,9 @@ function TttBoard(){
 }
 
 var rootElem = (
-	<div id="tttGamePage">
+	<div id="reactRoot">
 		<SiteHeader username={payload.username}/>
 		<TttBoard/>
-		<LogoutButton/>
 	</div>
 );
 
