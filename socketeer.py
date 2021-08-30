@@ -1,10 +1,8 @@
 from datetime import datetime
-import json
-from utils import generateId
-
-from tornado import util
+import utils
 from pgdb import Pgdb
 import tornado.websocket
+import json
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -18,16 +16,19 @@ def deleteConnection(gameId, socketId):
 
 class Socketeer(tornado.websocket.WebSocketHandler):
 
+    def check_origin(self, origin):
+        return True
+
     def initialize(self, db_env):
         self.pgdb = Pgdb(db_env)
-        
+
     def open(self):
-        self.socketId = "socket"+ str(generateId())[:8]
+        self.socketId = "socket"+ str(utils.generateId())[:8]
         print("WebSocket opened:", str(self.socketId))
 
     def on_message(self, message):
         """handler for incoming websocket messages. expect to see this format: message = {"request": "subscribe", "gameId": "whatever", ...}"""
-        
+
         fields = json.loads(message)
         request = fields['request']
 
@@ -40,7 +41,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
     def on_close(self):
         print("WebSocket closed: " + str(self.socketId))
         
-        if self.gameId == None:
+        if not hasattr(self, "gameId"):
             print("ws was not subscribed? not sure why this would happen")
             return
         
@@ -69,11 +70,17 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             clientConnections[gameId] = [connectionDetails]
         else:
             clientConnections[gameId].append(connectionDetails)
-            
+
+        game = self.pgdb.getTttGame(gameId)
+
         self.write_message({
                 "command": "info",
+                "activePlayer": game.player_turn,
+                "gameEnded": game.completed,
+                "winner": game.winner,
                 "contents": str(self.socketId) + " subscribed to gameId " + gameId
-            })
+        })
+        
 
     def wsUpdate(self, fields):
         gameId = fields['gameId']
@@ -116,6 +123,9 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             # TODO authenticate user currently requesting an update.
 
             boardstate = tttGame.boardstate
+
+            # TODO verify that the board at BoardIndex is not occupado
+
             boardstate[boardIndex] = piece
             
             last_updated = datetime.now()
@@ -124,13 +134,9 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             # pgdb should update that field to the OTHER player now.
             self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
 
-            # TODO check for game win! will need to review boardstate rows, cols, and diags.
-            # if game has ended, tell pgdb to mark the game as completed and write down the time_ended.
-
-            print(clientConnections)
+            # TODO lines 130-140 can be a subroutine with the content dict as input
 
             for connectionDetails in clientConnections[gameId]:
-
                 try:
 
                     connectionDetails['conn'].write_message(json.dumps({
@@ -141,3 +147,20 @@ class Socketeer(tornado.websocket.WebSocketHandler):
                 
                 except tornado.websocket.WebSocketClosedError:
                     print(str(connectionDetails['id']) + " was closed i guess? nvm...")
+
+            gameEnded = utils.tttGameEnded(boardstate)
+            winner = player if (gameEnded == "Win") else None
+
+            if gameEnded:
+                for connectionDetails in clientConnections[gameId]:
+                    try:
+                        connectionDetails['conn'].write_message(json.dumps({
+                            "command": "endGame",
+                            "outcome": gameEnded,
+                            "winner": winner
+                        }))
+                    
+                    except tornado.websocket.WebSocketClosedError:
+                        print(str(connectionDetails['id']) + " was closed i guess? nvm...")
+
+                self.pgdb.endTttGame(datetime.now(), winner, gameId)

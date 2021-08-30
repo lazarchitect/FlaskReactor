@@ -7,7 +7,8 @@ var yourTurn = payload.yourTurn;
 function wsSubscribe(clientSocket){
 	const subscribeObj = {
 		"request": "subscribe", 
-		"gameId": gameId
+		"gameId": gameId,
+		"username": payload.username
 	};
 	const subscribeJSON = JSON.stringify(subscribeObj);
 	clientSocket.send(subscribeJSON);
@@ -28,23 +29,86 @@ function wsUpdate(clientSocket, boardIndex){
 function wsConnect(setBoardstate, setYourTurn) {
 
 	console.log("initializing WS")
-    const clientSocket = new WebSocket("ws://localhost:5000/websocket")
+	const wsServerHost = payload.wssh;
+    const clientSocket = new WebSocket("ws://" + wsServerHost + "/websocket")
 
 	clientSocket.onopen = (() => wsSubscribe(clientSocket));
 
     clientSocket.onmessage = (message) => {
-		// TODO handle websocket message from server. update board or chat message.
 		const data = JSON.parse(message.data);
 		if(data.command === "updateBoard"){
 
 			console.log("ws data recv. new activePlayer is " + data.activePlayer)
+			if(payload.username == null){
+				document.getElementById('status').innerHTML = "spectating";
+			}
+			else if(payload.username === data.activePlayer){
+				document.getElementById('status').innerHTML = "your turn";
+			}
+			else {
+				document.getElementById('status').innerHTML = "waiting for opponent";
+			}
 			
 			setBoardstate(data.newBoardstate);
 			setYourTurn(payload.username === data.activePlayer);
 
 		}
+
+		else if(data.command == "endGame"){
+			if(data.winner == null) {
+				console.log("its a tie!");
+				document.getElementById('status').innerHTML = "it's a tie";
+			}
+			else {
+				console.log("winner is " + data.winner);
+
+				if(data.winner == payload.username){
+					document.getElementById('status').innerHTML = "You won!";
+				}
+				else if(data.winner == payload.otherPlayer) {
+					document.getElementById('status').innerHTML = "You lost...";
+				}
+				else {
+					document.getElementById('status').innerHTML = "game over. Winner: " + data.winner;
+				}
+
+				setYourTurn(payload.username === data.activePlayer);
+			}
+		}
+
+		// TODO MASSIVE REFACTORING NEEDED! 
+		//setting the status should be a function, setting innerHTML should be a clean one-liner fn.
+
 		else if(data.command === "info"){
 			console.log(data.contents);
+			console.log("ws data recv. new activePlayer is " + data.activePlayer)
+
+			
+
+			if(data.gameEnded){
+				document.getElementById('status').innerHTML = "Game over.";
+				// winner: "you won!"
+				if(data.winner == payload.username){
+					document.getElementById('status').innerHTML = "You won!";
+				}
+				else if (data.winner == payload.otherPlayer) {
+					document.getElementById('status').innerHTML = "You lost...";
+				}
+
+			}
+			else {
+				if(data.activePlayer == payload.username){
+					document.getElementById('status').innerHTML = "Your turn!";
+				}
+				else if (data.activePlayer == payload.otherPlayer) {
+					document.getElementById('status').innerHTML = "waiting for opponent";
+				}
+				else {
+					document.getElementById('status').innerHTML = "spectating";
+				}
+			}
+
+			
 		}
 		else if(data.command === "error"){
 			console.log(data.contents);
@@ -129,6 +193,7 @@ var rootElem = (
 	<div id="reactRoot">
 		<SiteHeader username={payload.username}/>
 		<TttBoard/>
+		<p>Status: <span id="status"></span></p>
 	</div>
 );
 

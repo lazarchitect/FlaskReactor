@@ -17,6 +17,12 @@ from socketeer import Socketeer
 host = "127.0.0.1"
 port = 5000
 
+try:
+    wssh = json.loads(open("wsdetails.json", "r").read())['wssh']
+except:
+    print("you need to add wsdetails.json for the site to work.")
+    exit(1)
+
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO toggle this later.
 # from flask import session
 session = {'loggedIn':False}
@@ -66,8 +72,10 @@ def chessGame(gameid):
 def tttGame(gameid):
     game = pgdb.getTttGame(gameid)
     payload = {
+        "wssh": wssh,
         "game": vars(game),
-        "username": session.get('username'), #can be null if not logged in  
+        "username": session.get('username'), #can be null if not logged in
+        "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
         "yourTurn": game.player_turn == session.get('username')
     }
     payload = json.dumps(payload, default=str)
