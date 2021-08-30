@@ -38,9 +38,8 @@ const jsxGT = gameTypes.map((gameType) => <option key={gameType} value={gameType
 
 var rootElem = (
 
-	<div>
-
-		<LogoutButton/>
+	<div id="reactRoot">
+		<SiteHeader username={payload.username}/>
 
 		<form action="/creategame" method="POST" id="createGameDiv">
 			<h4>Create Game</h4>

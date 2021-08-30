@@ -3,7 +3,7 @@ class Board extends React.Component {
 
 	render() {
 
-		var boardArray = gamestate.tiles // comes from flask -> jinja -> clientside scope
+		var boardArray = this.props.boardstate.tiles // comes from flask -> jinja -> clientside scope
 		var reactRowArray = []
 		for(var i = 0; i < boardArray.length; i++){
 			reactRowArray.push(<Row key={i.toString()} rowIndex={i} tiles={boardArray[i]} />);
