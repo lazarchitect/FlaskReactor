@@ -154,7 +154,7 @@ function TttBoardRow(props){
 				key={index} 
 				className={"tttCell" + ((props.yourTurn && cellItem=="" && payload.username!="") ? " activeTttCell": "")}
 				id={index+(row*3)}
-				style={{left: 7+(index*15.5) + "%", top: 20+(row*20) + "%"}}
+				style={{left: 15+(index*29) + "%", top: 15+(row*29) + "%"}}
 			>
 				{cellItem === "" ? "" : (cellItem === 'X' ? <X_Piece/> : <O_Piece/>)}
 			</span>
