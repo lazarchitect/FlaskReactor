@@ -1,9 +1,9 @@
 'use strict';
 
 var reactRoot = (
-    <div id="gamePage">
-        <Board gamestate={gamestate}/>
-        <LogoutButton/>
+	<div id="reactRoot">
+        <SiteHeader username={payload.username}/>
+        <Board boardstate={payload.boardstate}/>
     </div>
 );
 
