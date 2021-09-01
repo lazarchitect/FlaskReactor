@@ -1,4 +1,4 @@
-from models.Game import Game
+from models.ChessGame import ChessGame
 from models.User import User
 from models.Stats import Stats
 from models.Message import Message

@@ -8,7 +8,7 @@ from sys import argv
 import tornado
 import random
 import json
-from models.Game import Game
+from models.ChessGame import ChessGame
 from pgdb import Pgdb
 from FakePgdb import FakePgdb
 from utils import generateId, generateHash
@@ -55,14 +55,13 @@ def homepage():
 
 @app.route('/games/chess/<gameid>')
 def chessGame(gameid):
-    game = pgdb.getGame(gameid)
+    game = pgdb.getChessGame(gameid)
 
     payload = {
         "username": session.get('username'),
         "boardstate": game.boardstate
     }
     payload = json.dumps(payload, default=str)
-
 
     if(game != None): return render_template("game.html", payload=payload)
 
@@ -161,7 +160,7 @@ def createGame():
             white_player = opponent_name
             black_player = session['username']
 
-        game = Game.manualCreate(white_player, black_player)
+        game = ChessGame.manualCreate(white_player, black_player)
 
         pgdb.createGame(game)
 

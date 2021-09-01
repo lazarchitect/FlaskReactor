@@ -119,13 +119,17 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             else:
                 otherPlayer = tttGame.x_player
                 piece = 'O'
-            
 
-            # TODO authenticate user currently requesting an update.
+            # here, we need to authenticate user currently requesting an update. Session tokens? cookies?
 
             boardstate = tttGame.boardstate
 
-            # TODO verify that the board at BoardIndex is not occupado
+            if boardstate[boardIndex] != "":
+                self.write_message({
+                    "command": "error",
+                    "contents": "that tile is occupied!"
+                })
+                return
 
             boardstate[boardIndex] = piece
             
@@ -135,17 +139,15 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             # pgdb should update that field to the OTHER player now.
             self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
 
-            # TODO lines 130-140 can be a subroutine with the content dict as input
+            # TODO next 8 lines of code can be a subroutine with the content dict as input
 
             for connectionDetails in clientConnections[gameId]:
                 try:
-
                     connectionDetails['conn'].write_message(json.dumps({
                         "command": "updateBoard",
                         "newBoardstate": boardstate,
                         "activePlayer": otherPlayer
                     }))
-                
                 except tornado.websocket.WebSocketClosedError:
                     print(str(connectionDetails['id']) + " was closed i guess? nvm...")
 
