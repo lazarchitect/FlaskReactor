@@ -38,7 +38,7 @@ except FileNotFoundError:
 @app.route('/')
 def homepage():
 
-    if(session.get('loggedIn') == False):
+    if(session.get('loggedIn') == False or session.get('loggedIn') == None):
         return render_template("splash.html")
 
     else: # user is logged in
