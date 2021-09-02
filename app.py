@@ -38,14 +38,14 @@ except FileNotFoundError:
 @app.route('/')
 def homepage():
 
-    if(session['loggedIn'] == False):
+    if(session.get('loggedIn') == False):
         return render_template("splash.html")
 
     else: # user is logged in
-        chessGames = pgdb.getActiveGames(session['username'])
-        tttGames = pgdb.getTttGames(session['username'])
+        chessGames = pgdb.getActiveGames(session.get('username'))
+        tttGames = pgdb.getTttGames(session.get('username'))
         payload = {
-            "username": session['username'],
+            "username": session.get('username'),
             "chessGames": chessGames,
             "tttGames": tttGames
         }
@@ -137,13 +137,13 @@ def createGame():
 
     opponent_name = request.form['opponent']
 
-    if(session['loggedIn'] == False):
+    if(session.get('loggedIn') == False):
         return "not logged in?"#shouldnt happen
 
     if(opponent_name == ""):
         return "enter a name, doofbury."
 
-    if(session['username'] == opponent_name):
+    if(session.get('username') == opponent_name):
         return "you can't vs yourself, bubso."
 
     opponentExists = pgdb.userExists(opponent_name)
@@ -154,12 +154,12 @@ def createGame():
         color = random.choice(['white', 'black'])
 
         if(color == "white"):
-            white_player = session['username']
+            white_player = session.get('username')
             black_player = opponent_name
 
         else:
             white_player = opponent_name
-            black_player = session['username']
+            black_player = session.get('username')
 
         game = Game.manualCreate(white_player, black_player)
 
@@ -168,10 +168,10 @@ def createGame():
     elif game_type == "Tic-Tac-Toe":
         role = random.choice(['X', 'O'])
         if(role == 'X'):
-            x_player = session['username']
+            x_player = session.get('username')
             o_player = opponent_name
         else:
-            o_player = session['username']
+            o_player = session.get('username')
             x_player = opponent_name
 
         game = TttGame.manualCreate(x_player, o_player)
