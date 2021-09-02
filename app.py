@@ -24,8 +24,8 @@ except:
     exit(1)
 
 ### flask sessions save cookies in browser, which is better but annoying for development. TODO toggle this later.
-# from flask import session
-session = {'loggedIn':False}
+from flask import session
+# session = {'loggedIn':False}
 
 app = Flask(__name__)
 
