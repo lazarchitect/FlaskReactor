@@ -102,6 +102,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
                 })
                 return
 
+            #issue: gameId can be invalid ttt game?
             tttGame = self.pgdb.getTttGame(gameId)
 
             if player != tttGame.player_turn:
