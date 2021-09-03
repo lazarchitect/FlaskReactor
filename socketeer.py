@@ -120,7 +120,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
                 otherPlayer = tttGame.x_player
                 piece = 'O'
 
-            # here, we need to authenticate user currently requesting an update. Session tokens? cookies?
+            # TODO here, we need to authenticate user currently requesting an update. Session tokens? cookies?
 
             boardstate = tttGame.boardstate
 
@@ -135,35 +135,29 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             
             last_updated = datetime.now()
 
-            # 'player' has been verified at this point to match the database record for 'player_turn', aka the player currently taking a turn.
+            # 'player' has been verified at this point to match the database record for 'player_turn', 
+            # aka the player currently taking a turn.
             # pgdb should update that field to the OTHER player now.
             self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
 
-            # TODO next 8 lines of code can be a subroutine with the content dict as input
+            message = {
+                "command": "updateBoard",
+                "newBoardstate": boardstate,
+                "activePlayer": otherPlayer
+            }
 
-            for connectionDetails in clientConnections[gameId]:
-                try:
-                    connectionDetails['conn'].write_message(json.dumps({
-                        "command": "updateBoard",
-                        "newBoardstate": boardstate,
-                        "activePlayer": otherPlayer
-                    }))
-                except tornado.websocket.WebSocketClosedError:
-                    print(str(connectionDetails['id']) + " was closed i guess? nvm...")
+            utils.updateAll(clientConnections[gameId], message)
 
             gameEnded = utils.tttGameEnded(boardstate)
             winner = player if (gameEnded == "Win") else None
 
             if gameEnded:
-                for connectionDetails in clientConnections[gameId]:
-                    try:
-                        connectionDetails['conn'].write_message(json.dumps({
-                            "command": "endGame",
-                            "outcome": gameEnded,
-                            "winner": winner
-                        }))
-                    
-                    except tornado.websocket.WebSocketClosedError:
-                        print(str(connectionDetails['id']) + " was closed i guess? nvm...")
+                message = {
+                    "command": "endGame",
+                    "outcome": gameEnded,
+                    "winner": winner
+                }
+
+                utils.updateAll(clientConnections[gameId], message)
 
                 self.pgdb.endTttGame(datetime.now(), winner, gameId)

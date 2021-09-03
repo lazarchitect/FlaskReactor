@@ -1,5 +1,7 @@
 from uuid import uuid4
 from hashlib import sha256
+from tornado.websocket import WebSocketClosedError
+import json
 
 tttSets = [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6)]
 
@@ -21,3 +23,12 @@ def tttGameEnded(b):
         return "Tie"
 
     return False
+
+
+def updateAll(connections, message):
+    for connectionDetails in connections:
+        try:
+            connectionDetails['conn'].write_message(json.dumps(message))
+        except WebSocketClosedError:
+            pass
+            #print(str(connectionDetails['id']) + " was closed i guess? nvm...")

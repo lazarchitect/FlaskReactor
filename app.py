@@ -42,7 +42,7 @@ def homepage():
         return render_template("splash.html")
 
     else: # user is logged in
-        chessGames = pgdb.getActiveGames(session.get('username'))
+        chessGames = pgdb.getActiveChessGames(session.get('username'))
         tttGames = pgdb.getTttGames(session.get('username'))
         payload = {
             "username": session.get('username'),
@@ -162,7 +162,7 @@ def createGame():
 
         game = ChessGame.manualCreate(white_player, black_player)
 
-        pgdb.createGame(game)
+        pgdb.createChessGame(game)
 
     elif game_type == "Tic-Tac-Toe":
         role = random.choice(['X', 'O'])
