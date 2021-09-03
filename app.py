@@ -195,7 +195,7 @@ if __name__ == "__main__":
     else:
         pgdb = Pgdb(db_env)
 
-    print("---database connected on " + db_env + "---")
+    print("---database hosted at " + db_env + "---")
 
     websocketHanderUrl = "/websocket"
     print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
@@ -205,5 +205,5 @@ if __name__ == "__main__":
         (websocketHanderUrl, Socketeer, dict(db_env=db_env)),
         (".*", FallbackHandler, dict(fallback=container))
     ])
-    application.listen(port) 
+    application.listen(port)
     tornado.ioloop.IOLoop.instance().start() #runs until killed
