@@ -120,7 +120,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
                 otherPlayer = tttGame.x_player
                 piece = 'O'
 
-            # TODO here, we need to authenticate user currently requesting an update. Session tokens? cookies?
+            # here, we need to authenticate user currently requesting an update. Session tokens? cookies?
 
             boardstate = tttGame.boardstate
 
