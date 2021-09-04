@@ -38,78 +38,21 @@ function wsConnect(setBoardstate, setYourTurn) {
 		const data = JSON.parse(message.data);
 		if(data.command === "updateBoard"){
 
-			console.log("ws data recv. new activePlayer is " + data.activePlayer)
-			if(payload.username == null){
-				document.getElementById('status').innerHTML = "spectating";
-			}
-			else if(payload.username === data.activePlayer){
-				document.getElementById('status').innerHTML = "your turn";
-			}
-			else {
-				document.getElementById('status').innerHTML = "waiting for opponent";
-			}
-			
+			setStatus(determineStatus(payload, data))
 			setBoardstate(data.newBoardstate);
 			setYourTurn(payload.username === data.activePlayer);
 
 		}
 
 		else if(data.command == "endGame"){
-			if(data.winner == null) {
-				console.log("its a tie!");
-				document.getElementById('status').innerHTML = "it's a tie";
-			}
-			else {
-				console.log("winner is " + data.winner);
-
-				if(data.winner == payload.username){
-					document.getElementById('status').innerHTML = "You won!";
-				}
-				else if(data.winner == payload.otherPlayer) {
-					document.getElementById('status').innerHTML = "You lost...";
-				}
-				else {
-					document.getElementById('status').innerHTML = "game over. Winner: " + data.winner;
-				}
-
-				setYourTurn(payload.username === data.activePlayer);
-			}
+			setStatus(determineStatus(payload, data));
+			setYourTurn(payload.username === data.activePlayer);
 		}
-
-		// TODO MASSIVE REFACTORING NEEDED! 
-		//setting the status should be a function, setting innerHTML should be a clean one-liner fn.
 
 		else if(data.command === "info"){
-			console.log(data.contents);
-			console.log("ws data recv. new activePlayer is " + data.activePlayer)
-
-			
-
-			if(data.gameEnded){
-				document.getElementById('status').innerHTML = "Game over.";
-				// winner: "you won!"
-				if(data.winner == payload.username){
-					document.getElementById('status').innerHTML = "You won!";
-				}
-				else if (data.winner == payload.otherPlayer) {
-					document.getElementById('status').innerHTML = "You lost...";
-				}
-
-			}
-			else {
-				if(data.activePlayer == payload.username){
-					document.getElementById('status').innerHTML = "Your turn!";
-				}
-				else if (data.activePlayer == payload.otherPlayer) {
-					document.getElementById('status').innerHTML = "waiting for opponent";
-				}
-				else {
-					document.getElementById('status').innerHTML = "spectating";
-				}
-			}
-
-			
+			setStatus(determineStatus(payload, data));
 		}
+
 		else if(data.command === "error"){
 			console.log(data.contents);
 		}
@@ -125,22 +68,57 @@ function wsConnect(setBoardstate, setYourTurn) {
     };
 }
 
-function determineStatus(){
+function setStatus(status){
+	document.getElementById('status').innerHTML = status;
+}
 
-	STEP 1 = STANDARDIZE SOCKET COMMUNICATION. WHAT FIELDS ARE WE GUARANTEED TO SEE?
+function determineStatus(payload, data){
+	
+	var retval = "";
+	if(data.gameEnded){
+		retval+="Game over. ";
+		if(data.winner==null){
+			retval+="It's a tie.";
+		}
+		else{
+			if(payload.username==data.winner) 
+				retval+="You win!";
+	
+			else if(payload.username==data.otherPlayer) 
+				retval+="You lose...";
+			
+			else
+				retval+="Winner was " + data.winner;
+		}
+	}
+	else{
+		switch(payload.username){
+			case data.activePlayer:
+				retval+="Your turn."; break;
+			case data.otherPlayer:
+				retval+="Waiting for opponent..."; break;
+			default:
+				retval+= "spectating";
+		}
+	}
+	return retval;
 
+	/* 
+	
+	fields we have: gameEnded, winner, otherPlayer, activePlayer
+	
+	here are all the different statuses.
 
-	/* here are all the different statuses.
+	4. game over. <player> won  :: gameEnded==true and winner==null
+	5. game over. you lose...	:: gameEnded==true and winner==otherPlayer and username==player
+	6. game over. you win!		:: gameEnded==true and winner==username
+	7. game over. its a tie		:: 
+
+	1. your turn 				:: 
+	2. waiting for opponent 	:: 
+	3. spectating 				:: 
 	
-	1. your turn 				:: username==activeplayer and winner==null
-	2. waiting for opponent 	:: username!=activeplayer and winner==null
-	
-	3. spectating 				:: username!=activeplayer and username!=inactiveplayer and winner==null
-	4. game over. <player> won  :: username!=activeplayer and username!=inactiveplayer and winner!=null
-	
-	5. you lose					:: outcome=="Win" and (username==activeplayer or username==inactiveplayer) and username!=winner
-	6. you win					:: outcome=="Win" and (username==activeplayer or username==inactiveplayer) and username==winner
-	7. its a tie				:: outcome=="Tie"
+
 
 	factors we need to determine the status:
 		- username of reader, if any

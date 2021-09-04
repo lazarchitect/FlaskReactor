@@ -73,10 +73,16 @@ class Socketeer(tornado.websocket.WebSocketHandler):
 
         game = self.pgdb.getTttGame(gameId)
 
+        if game.x_player == game.player_turn:
+            otherPlayer = game.o_player
+        else:
+            otherPlayer = game.x_player
+
         self.write_message({
                 "command": "info",
-                "activePlayer": game.player_turn,
                 "gameEnded": game.completed,
+                "activePlayer": game.player_turn,
+                "otherPlayer": otherPlayer,
                 "winner": game.winner,
                 "contents": str(self.socketId) + " subscribed to gameId " + gameId
         })
@@ -140,10 +146,14 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             # pgdb should update that field to the OTHER player now.
             self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
 
+            newActivePlayer = otherPlayer
+            oldActivePlayer = player
+
             message = {
                 "command": "updateBoard",
                 "newBoardstate": boardstate,
-                "activePlayer": otherPlayer
+                "activePlayer": newActivePlayer,
+                "otherPlayer": oldActivePlayer
             }
 
             utils.updateAll(clientConnections[gameId], message)
@@ -154,8 +164,9 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             if gameEnded:
                 message = {
                     "command": "endGame",
-                    "outcome": gameEnded,
-                    "winner": winner
+                    "gameEnded": True,
+                    "otherPlayer": otherPlayer,
+                    "winner": winner # None for a tie
                 }
 
                 utils.updateAll(clientConnections[gameId], message)
