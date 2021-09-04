@@ -103,31 +103,6 @@ function determineStatus(payload, data){
 	}
 	return retval;
 
-	/* 
-	
-	fields we have: gameEnded, winner, otherPlayer, activePlayer
-	
-	here are all the different statuses.
-
-	4. game over. <player> won  :: gameEnded==true and winner==null
-	5. game over. you lose...	:: gameEnded==true and winner==otherPlayer and username==player
-	6. game over. you win!		:: gameEnded==true and winner==username
-	7. game over. its a tie		:: 
-
-	1. your turn 				:: 
-	2. waiting for opponent 	:: 
-	3. spectating 				:: 
-	
-
-
-	factors we need to determine the status:
-		- username of reader, if any
-		- active player, if any
-		- winner, if any
-		- 
-
-
-	*/
 }
 
 /////////////////////////////////////
