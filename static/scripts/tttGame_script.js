@@ -125,6 +125,33 @@ function wsConnect(setBoardstate, setYourTurn) {
     };
 }
 
+function determineStatus(){
+
+	STEP 1 = STANDARDIZE SOCKET COMMUNICATION. WHAT FIELDS ARE WE GUARANTEED TO SEE?
+
+
+	/* here are all the different statuses.
+	
+	1. your turn 				:: username==activeplayer and winner==null
+	2. waiting for opponent 	:: username!=activeplayer and winner==null
+	
+	3. spectating 				:: username!=activeplayer and username!=inactiveplayer and winner==null
+	4. game over. <player> won  :: username!=activeplayer and username!=inactiveplayer and winner!=null
+	
+	5. you lose					:: outcome=="Win" and (username==activeplayer or username==inactiveplayer) and username!=winner
+	6. you win					:: outcome=="Win" and (username==activeplayer or username==inactiveplayer) and username==winner
+	7. its a tie				:: outcome=="Tie"
+
+	factors we need to determine the status:
+		- username of reader, if any
+		- active player, if any
+		- winner, if any
+		- 
+
+
+	*/
+}
+
 /////////////////////////////////////
 ///// REACT COMPONENT FUNCTIONS /////
 /////////////////////////////////////
