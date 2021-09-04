@@ -21,7 +21,7 @@ class FakePgdb:
 		pass
 
 	def getGame(self, gameId):
-		return Game.manualCreate("player1", "player2")
+		return ChessGame.manualCreate("player1", "player2")
 
 	def getActiveGames(self, username):
 		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'player1', 'player2', {}, False, None, None, None, 'player1')]
