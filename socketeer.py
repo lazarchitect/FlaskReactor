@@ -73,10 +73,16 @@ class Socketeer(tornado.websocket.WebSocketHandler):
 
         game = self.pgdb.getTttGame(gameId)
 
+        if game.x_player == game.player_turn:
+            otherPlayer = game.o_player
+        else:
+            otherPlayer = game.x_player
+
         self.write_message({
                 "command": "info",
-                "activePlayer": game.player_turn,
                 "gameEnded": game.completed,
+                "activePlayer": game.player_turn,
+                "otherPlayer": otherPlayer,
                 "winner": game.winner,
                 "contents": str(self.socketId) + " subscribed to gameId " + gameId
         })
@@ -119,49 +125,50 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             else:
                 otherPlayer = tttGame.x_player
                 piece = 'O'
-            
 
-            # TODO authenticate user currently requesting an update.
+            # here, we need to authenticate user currently requesting an update. Session tokens? cookies?
 
             boardstate = tttGame.boardstate
 
-            # TODO verify that the board at BoardIndex is not occupado
+            if boardstate[boardIndex] != "":
+                self.write_message({
+                    "command": "error",
+                    "contents": "that tile is occupied!"
+                })
+                return
 
             boardstate[boardIndex] = piece
             
             last_updated = datetime.now()
 
-            # 'player' has been verified at this point to match the database record for 'player_turn', aka the player currently taking a turn.
+            # 'player' has been verified at this point to match the database record for 'player_turn', 
+            # aka the player currently taking a turn.
             # pgdb should update that field to the OTHER player now.
             self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
 
-            # TODO lines 130-140 can be a subroutine with the content dict as input
+            newActivePlayer = otherPlayer
+            oldActivePlayer = player
 
-            for connectionDetails in clientConnections[gameId]:
-                try:
+            message = {
+                "command": "updateBoard",
+                "newBoardstate": boardstate,
+                "activePlayer": newActivePlayer,
+                "otherPlayer": oldActivePlayer
+            }
 
-                    connectionDetails['conn'].write_message(json.dumps({
-                        "command": "updateBoard",
-                        "newBoardstate": boardstate,
-                        "activePlayer": otherPlayer
-                    }))
-                
-                except tornado.websocket.WebSocketClosedError:
-                    print(str(connectionDetails['id']) + " was closed i guess? nvm...")
+            utils.updateAll(clientConnections[gameId], message)
 
             gameEnded = utils.tttGameEnded(boardstate)
             winner = player if (gameEnded == "Win") else None
 
             if gameEnded:
-                for connectionDetails in clientConnections[gameId]:
-                    try:
-                        connectionDetails['conn'].write_message(json.dumps({
-                            "command": "endGame",
-                            "outcome": gameEnded,
-                            "winner": winner
-                        }))
-                    
-                    except tornado.websocket.WebSocketClosedError:
-                        print(str(connectionDetails['id']) + " was closed i guess? nvm...")
+                message = {
+                    "command": "endGame",
+                    "gameEnded": True,
+                    "otherPlayer": otherPlayer,
+                    "winner": winner # None for a tie
+                }
+
+                utils.updateAll(clientConnections[gameId], message)
 
                 self.pgdb.endTttGame(datetime.now(), winner, gameId)

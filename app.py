@@ -8,7 +8,7 @@ from sys import argv
 import tornado
 import random
 import json
-from models.Game import Game
+from models.ChessGame import ChessGame
 from pgdb import Pgdb
 from FakePgdb import FakePgdb
 from utils import generateId, generateHash
@@ -42,7 +42,7 @@ def homepage():
         return render_template("splash.html")
 
     else: # user is logged in
-        chessGames = pgdb.getActiveGames(session.get('username'))
+        chessGames = pgdb.getActiveChessGames(session.get('username'))
         tttGames = pgdb.getTttGames(session.get('username'))
         payload = {
             "username": session.get('username'),
@@ -55,14 +55,13 @@ def homepage():
 
 @app.route('/games/chess/<gameid>')
 def chessGame(gameid):
-    game = pgdb.getGame(gameid)
+    game = pgdb.getChessGame(gameid)
 
     payload = {
         "username": session.get('username'),
         "boardstate": game.boardstate
     }
     payload = json.dumps(payload, default=str)
-
 
     if(game != None): return render_template("game.html", payload=payload)
 
@@ -161,9 +160,9 @@ def createGame():
             white_player = opponent_name
             black_player = session.get('username')
 
-        game = Game.manualCreate(white_player, black_player)
+        game = ChessGame.manualCreate(white_player, black_player)
 
-        pgdb.createGame(game)
+        pgdb.createChessGame(game)
 
     elif game_type == "Tic-Tac-Toe":
         role = random.choice(['X', 'O'])
@@ -196,7 +195,7 @@ if __name__ == "__main__":
     else:
         pgdb = Pgdb(db_env)
 
-    print("---database connected on " + db_env + "---")
+    print("---database hosted at " + db_env + "---")
 
     websocketHanderUrl = "/websocket"
     print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
@@ -206,5 +205,5 @@ if __name__ == "__main__":
         (websocketHanderUrl, Socketeer, dict(db_env=db_env)),
         (".*", FallbackHandler, dict(fallback=container))
     ])
-    application.listen(port) 
+    application.listen(port)
     tornado.ioloop.IOLoop.instance().start() #runs until killed

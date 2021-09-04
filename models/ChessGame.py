@@ -4,7 +4,7 @@ from datetime import datetime
 from psycopg2.extras import UUID_adapter, Json
 
 
-class Game:
+class ChessGame:
     """Python object representing a specific chess game between two players, with all schema fields that a game record has.
     These are easier to work with than the tuples that psycopg2 returns, and can be converted back to a database record easily."""
     
@@ -14,7 +14,7 @@ class Game:
     @staticmethod
     def manualCreate(white_player, black_player):
         """constructor for creation from user-input values."""
-        g = Game()
+        g = ChessGame()
         g.id = utils.generateId()
         g.white_player = white_player
         g.black_player = black_player
@@ -28,7 +28,7 @@ class Game:
     @staticmethod
     def dbCreate(record):
         """constructor for PGDB load"""
-        g = Game()
+        g = ChessGame()
         g.id = record[0]
         g.white_player = record[1]
         g.black_player = record[2]

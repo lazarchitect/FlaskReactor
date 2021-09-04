@@ -19,7 +19,6 @@ class Board extends React.Component {
         const clientSocket = new WebSocket("ws://100.1.211.86:5000/websocket")
 
         clientSocket.onmessage = (message) => {
-			// TODO handle websocket message from server. update board or chat message.
 			console.log("Message from server: ", message.data);
         };
 
@@ -51,18 +50,17 @@ class Row extends React.Component {
 	}
 }
 
-var columns = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
 class Tile extends React.Component {
 	render() {
 		
-		var tileId = columns[this.props.tileIndex].toString() + (this.props.rowIndex+1);
+		var tileId = this.props.tileIndex.toString() + this.props.rowIndex.toString();
 
 		var tileDiv = (
 		<span 
 			key = {this.props.tileIndex.toString() + this.props.rowIndex.toString()}
 			className = {this.props.darkTile ? "tile darkTile" : "tile lightTile"}
-			id = {tileId} // TODO do we even need this? 
+			id = {tileId} 
 		>
 
 			{/* tile contents */}

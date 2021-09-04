@@ -1,7 +1,7 @@
 from psycopg2 import connect, InterfaceError, OperationalError
-from psycopg2.extras import DictCursor, UUID_adapter, Json
+from psycopg2.extras import DictCursor, Json
 from json import loads
-from models.Game import Game
+from models.ChessGame import ChessGame
 from models.TttGame import TttGame
 from models.User import User
 from models.Stats import Stats
@@ -10,20 +10,20 @@ from models.Message import Message
 relation = "flaskreactor"
 
 sql = {
-        
-        # Chess
-        "getCompletedGames": "SELECT * FROM " + relation + ".chess_games where completed=true AND (white_player=%s OR black_player=%s)",
-        "getActiveGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
-        "getUser": "SELECT * FROM " + relation + ".users WHERE name=%s",
-        "getGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
-        "checkLogin": "SELECT * FROM " + relation + ".users WHERE name=%s AND password_hash=%s",
-        
+
+        #General
         "createUser": "INSERT INTO " + relation + ".users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)",
         "createStat": "INSERT INTO " + relation + ".stats (userid) VALUES (%s)",
-        "createGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-        
-        "updateBoardstate": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s WHERE id=%s",
-        "endGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s",
+        "getUser": "SELECT * FROM " + relation + ".users WHERE name=%s",
+        "checkLogin": "SELECT * FROM " + relation + ".users WHERE name=%s AND password_hash=%s",
+
+        # Chess
+        "getCompletedChessGames": "SELECT * FROM " + relation + ".chess_games where completed=true AND (white_player=%s OR black_player=%s)",
+        "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
+        "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
+        "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+        "updateChessBoardstate": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s WHERE id=%s",
+        "endChessGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s",
 
         # Tic-Tac-Toe
         "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
@@ -86,9 +86,8 @@ class Pgdb:
 
     ###### DB QUERY METHODS ######
 
-    ### Chess
-    # TODO give all these methods chess-related names, and sort them by game.
-
+    ### General
+    
     def getUser(self, username):
         query = sql['getUser']
         values = [username]
@@ -113,38 +112,37 @@ class Pgdb:
         self.__execute(query, values) 
         self.conn.commit()
 
-    def createGame(self, g):
-        query = sql['createGame']
+    ### Chess
+
+    def createChessGame(self, g):
+        query = sql['createChessGame']
         values = g.toTuple()
         self.__execute(query, values)
         self.conn.commit()
 
-    def getGame(self, gameId):
-        query = sql['getGame']
+    def getChessGame(self, gameId):
+        query = sql['getChessGame']
         values = [gameId]
         self.__execute(query, values)
         record = self.cursor.fetchone()
         if(record == None):
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
-        return Game.dbCreate(record)
+        return ChessGame.dbCreate(record)
 
-    
-
-    #TODO return list of Game() objects instead of tuples?
-    def getActiveGames(self, username):
-        query = sql['getActiveGames']
+    def getActiveChessGames(self, username):
+        query = sql['getActiveChessGames']
         values = [username, username]
         self.__execute(query, values)
         return self.cursor.fetchall()
 
-    def updateBoardstate(self, new_boardstate, update_time, gameid):
-        query = sql['updateBoardstate']
+    def updateChessBoardstate(self, new_boardstate, update_time, gameid):
+        query = sql['updateChessBoardstate']
         values = [new_boardstate, update_time, gameid]
         self.__execute(query, values)
         self.conn.commit()
 
-    def endGame(self, end_time, gameid):
-        query = sql['endGame']
+    def endChessGame(self, end_time, gameid):
+        query = sql['endChessGame']
         completed = True
         values = [completed, end_time, gameid]
         self.__execute(query, values)
