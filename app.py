@@ -1,7 +1,7 @@
 #!usr/bin/env python
 
 from models.TttGame import TttGame
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, session
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 from sys import argv
@@ -23,9 +23,6 @@ except:
     print("you need to add wsdetails.json for the site to work.")
     exit(1)
 
-### flask sessions save cookies in browser, which is better but annoying for development. TODO toggle this later.
-from flask import session
-# session = {'loggedIn':False}
 
 app = Flask(__name__)
 
@@ -201,9 +198,12 @@ if __name__ == "__main__":
     print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
     print("---running server on " + host + ":" + str(port) + "---")
     container = WSGIContainer(app)
-    application = Application([
-        (websocketHanderUrl, Socketeer, dict(db_env=db_env)),
-        (".*", FallbackHandler, dict(fallback=container))
-    ])
+    application = Application(
+        default_host="flaskreactor.com", 
+        handlers=[
+            (websocketHanderUrl, Socketeer, dict(db_env=db_env)),
+            (".*", FallbackHandler, dict(fallback=container))
+        ]
+    )
     application.listen(port)
     tornado.ioloop.IOLoop.instance().start() #runs until killed
