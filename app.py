@@ -63,7 +63,7 @@ def chessGame(gameid):
     }
     payload = json.dumps(payload, default=str)
 
-    if(game != None): return render_template("game.html", payload=payload)
+    if(game != None): return render_template("chessGame.html", payload=payload)
 
     else: return render_template("home.html", alert="Game could not be retrieved from database.")
 
