@@ -13,7 +13,7 @@ function mountBoard() {
 }
 
 
-function Board(props) {
+function Board() {
 
 	React.useEffect(() => mountBoard());
 
@@ -26,52 +26,43 @@ function Board(props) {
 	);		
 }
 
-class Row extends React.Component {
-	
-	render () {
+function Row(props){	
 		
-		var darkTile = this.props.rowIndex % 2 == 0 ? false : true;
+	var darkTile = props.rowIndex % 2 == 0 ? false : true;
 		
-		var reactTileArray = []
-		for(var tileIndex = 0; tileIndex < this.props.tiles.length; tileIndex++) {
-			reactTileArray.push(<Tile key={tileIndex} darkTile={darkTile} rowIndex={this.props.rowIndex} tileIndex={tileIndex} data={this.props.tiles[tileIndex]}/>)
-			darkTile = !darkTile
-		}
-
-		return (
-			<div className="chessRow">
-				{reactTileArray}
-			</div>
-		);
+	var reactTileArray = []
+	for(var tileIndex = 0; tileIndex < props.tiles.length; tileIndex++) {
+		reactTileArray.push(
+			<Tile key={tileIndex} darkTile={darkTile} rowIndex={props.rowIndex} tileIndex={tileIndex} data={props.tiles[tileIndex]}/>
+		)
+		darkTile = !darkTile
 	}
+
+	return (
+		<div className="chessRow">
+			{reactTileArray}
+		</div>
+	);
 }
 
+function Tile(props) {
+	var tileId = props.tileIndex.toString() + props.rowIndex.toString();
 
-class Tile extends React.Component {
-	render() {
-		
-		var tileId = this.props.tileIndex.toString() + this.props.rowIndex.toString();
-
-		var tileDiv = (
+	return (
 		<span 
-			key = {this.props.tileIndex.toString() + this.props.rowIndex.toString()}
-			className = {this.props.darkTile ? "tile darkTile" : "tile lightTile"}
+			key = {props.tileIndex.toString() + props.rowIndex.toString()}
+			className = {props.darkTile ? "tile darkTile" : "tile lightTile"}
 			id = {tileId} 
 		>
-
 			{/* tile contents */}
-			<img className="pieceImg" src={this.imagePath(this.props.data)} />
+			<img className="pieceImg" src={imagePath(props.data)} />
 		
 		</span>
-		);
-		return tileDiv;
-	}
+	);
+}
 
-	imagePath(data){
-		if(data.piece == null) return "";
-		else {
-			return "/static/images/" + data.piece.color + data.piece.type + ".png"
-		}
-	}
+function imagePath(data){
+	if(data.piece == null) return "";
 	
+	return "/static/images/" + data.piece.color + data.piece.type + ".png"	
 }
