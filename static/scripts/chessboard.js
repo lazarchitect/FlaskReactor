@@ -1,8 +1,11 @@
-function mountBoard() {
+function wsConnect(setBoardstate) {
 	// const clientSocket = new WebSocket("ws://100.1.211.86:5000/websocket");
 	const clientSocket = new WebSocket("ws://localhost:5000/websocket");
 		
 	clientSocket.onmessage = (message) => {
+
+		// TODO recv new boardstate from server (which was based on current boardstate and move) and do setBoardstate
+
 		console.log("Message from server: ", message.data);
 	};
 	var board = document.getElementsByClassName("board")[0];
@@ -15,9 +18,11 @@ function mountBoard() {
 
 function Board() {
 
-	React.useEffect(() => mountBoard());
-
 	var boardArray = payload.boardstate.tiles;
+
+	[boardstate, setBoardstate] = React.useState(boardArray);
+
+	React.useEffect(() => wsConnect(setBoardstate), []);
 
 	return (
 		<div className="board">
