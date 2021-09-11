@@ -1,4 +1,4 @@
-function wsConnect(setBoardstate) {
+function wsConnect(boardstate, setBoardstate) {
 	// const clientSocket = new WebSocket("ws://100.1.211.86:5000/websocket");
 	const clientSocket = new WebSocket("ws://localhost:5000/websocket");
 		
@@ -9,9 +9,21 @@ function wsConnect(setBoardstate) {
 		console.log("Message from server: ", message.data);
 	};
 	var board = document.getElementsByClassName("board")[0];
-	board.onclick = function(){
+	board.onclick = function(mouseEvent){
 		console.log("click detected: sending message to socketServer.");
-		clientSocket.send("hello, server");
+		const tile = mouseEvent.target.id;
+		const piece = getPieceAt(tile, boardstate); // row A column 2? ... its a black pawn!
+		if(highlight){
+			clientSocket.send({
+				"gameId": payload.gameId,
+				"src": "",
+				"dest": "",
+				"player": "Josh11"
+			});
+		}
+		else {
+			// do nothing socket-wise tbh
+		}
 	};
 }
 
