@@ -2,8 +2,8 @@
 var highlight = false;
 var boardstate = payload.boardstate;
 
-function pieceAt(){
-
+function pieceAt(tileId){
+	return boardstate[tileId[1]][tileId[0]];
 }
 
 function wsConnect(setBoardstate, setYourTurn) {
