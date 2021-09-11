@@ -1,3 +1,11 @@
+
+var highlight = false;
+var boardstate = payload.boardstate;
+
+function pieceAt(){
+
+}
+
 function wsConnect(setBoardstate, setYourTurn) {
 	// const clientSocket = new WebSocket("ws://100.1.211.86:5000/websocket");
 	const clientSocket = new WebSocket("ws://localhost:5000/websocket");
@@ -15,25 +23,32 @@ function wsConnect(setBoardstate, setYourTurn) {
 	};
 	var board = document.getElementsByClassName("board")[0];
 	board.onclick = function(mouseEvent){
+	
+		const tileId = mouseEvent.target.id;
 
-		const tile = mouseEvent.target.id;
-		
-		console.log(tile);
+		const piece = pieceAt(tileId);
+
+		if(highlight == false){
+
+		}
+		else {
+
+		}
+
+		console.log(tileId);
 	};
 }
 
 function Board() {
-
-	const boardArray = payload.boardstate.tiles;
 	
-	const [boardstate, setBoardstate] = React.useState(boardArray);
+	const [, setBoardstate] = React.useState(boardstate);
 	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn);
 
 	React.useEffect(() => wsConnect(setBoardstate, setYourTurn), []);
 
 	return (
 		<div className="board">
-			{boardArray.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val}></Row>)}
+			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val}></Row>)}
 		</div>
 	);		
 }
@@ -58,23 +73,19 @@ function Row(props){
 }
 
 function Tile(props) {
-	var tileId = props.tileIndex.toString() + props.rowIndex.toString();
+		
+	const piece = props.data.piece;
+	const imagePath = piece == null ? "" : "/static/images/" + piece.color + piece.type + ".png";
 
 	return (
 		<span 
 			key = {props.tileIndex.toString() + props.rowIndex.toString()}
 			className = {props.darkTile ? "tile darkTile" : "tile lightTile"}
-			id = {tileId} 
+			id = {props.tileIndex.toString() + props.rowIndex.toString()} 
 		>
 			{/* tile contents */}
-			<img className="pieceImg" src={imagePath(props.data)} />
-		
+			<img className="pieceImg" src={imagePath} />
+			
 		</span>
 	);
-}
-
-function imagePath(data){
-	if(data.piece == null) return "";
-	
-	return "/static/images/" + data.piece.color + data.piece.type + ".png"	
 }
