@@ -1,40 +1,35 @@
-function wsConnect(boardstate, setBoardstate) {
+function wsConnect(setBoardstate, setYourTurn) {
 	// const clientSocket = new WebSocket("ws://100.1.211.86:5000/websocket");
 	const clientSocket = new WebSocket("ws://localhost:5000/websocket");
 		
 	clientSocket.onmessage = (message) => {
 
-		// TODO recv new boardstate from server (which was based on current boardstate and move) and do setBoardstate
+		const data = JSON.parse(message.data);
+		
+		if(data.command == "updateBoard"){
+			setBoardstate(data.newBoardstate);
+			setYourTurn(payload.username === data.activePlayer);
+		}
 
 		console.log("Message from server: ", message.data);
 	};
 	var board = document.getElementsByClassName("board")[0];
 	board.onclick = function(mouseEvent){
-		console.log("click detected: sending message to socketServer.");
+
 		const tile = mouseEvent.target.id;
-		const piece = getPieceAt(tile, boardstate); // row A column 2? ... its a black pawn!
-		if(highlight){
-			clientSocket.send({
-				"gameId": payload.gameId,
-				"src": "",
-				"dest": "",
-				"player": "Josh11"
-			});
-		}
-		else {
-			// do nothing socket-wise tbh
-		}
+		
+		console.log(tile);
 	};
 }
 
-
 function Board() {
 
-	var boardArray = payload.boardstate.tiles;
+	const boardArray = payload.boardstate.tiles;
+	
+	const [boardstate, setBoardstate] = React.useState(boardArray);
+	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn);
 
-	[boardstate, setBoardstate] = React.useState(boardArray);
-
-	React.useEffect(() => wsConnect(setBoardstate), []);
+	React.useEffect(() => wsConnect(setBoardstate, setYourTurn), []);
 
 	return (
 		<div className="board">

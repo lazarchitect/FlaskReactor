@@ -69,6 +69,7 @@ body {
     display: inline-block;
     margin-left: 10%;
     margin-top: 10%;
+    pointer-events: none;
 }
 
 #createGameDiv {
