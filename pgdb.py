@@ -33,7 +33,9 @@ sql = {
         "endTttGame": "UPDATE " + relation + ".tictactoe_games SET completed=true, time_ended=%s, player_turn='', winner=%s WHERE id=%s",
 
         # Stats
-        "updateTttStats": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE id=%s" 
+        "getStat": "SELECT * FROM " + relation + ".stats WHERE id=%s",
+        "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE id=%s"
+
 
     }
 
@@ -186,7 +188,15 @@ class Pgdb:
         self.__execute(query, values)
         self.conn.commit()
 
-    def updateTttStats(self, ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id):
+    ### Stats
+
+    def getStat(self, userId):
+        query = sql["getStat"]
+        values = [userId]
+        self.__execute(query, values)
+        return self.cursor.fetchone()
+
+    def updateTttStat(self, ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id):
         query = sql['updateTttStats']
         values = [ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id]
         self.__execute(query, values)
