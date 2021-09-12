@@ -35,4 +35,4 @@ jobs:
     - name: scan for TODOs
       run: |
         # fail the build if any 'TODO' strings are found in the code anywhere
-        grep --exclude-dir .github -r -E 'TODO' .
+        grep -c --exclude-dir .github -r -E 'TODO' . -ge 1
