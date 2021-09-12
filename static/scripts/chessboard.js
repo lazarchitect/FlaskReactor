@@ -29,7 +29,10 @@ function wsConnect(setBoardstate, setYourTurn) {
 		const piece = pieceAt(tileId);
 
 		if(highlight == false){
+			if (piece == null) return;
+			if(piece.color != payload.color) return;
 
+			
 		}
 		else {
 
