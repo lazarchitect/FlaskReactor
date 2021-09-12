@@ -20,7 +20,8 @@ function wsUpdate(clientSocket, boardIndex){
 		"gameId": gameId, 
 		"gameType": "ttt", 
 		"player": payload.username, 
-		"boardIndex": boardIndex
+		"boardIndex": boardIndex,
+		"userId": payload.userId
 	};
 	const updateStr = JSON.stringify(updateObj);
     clientSocket.send(updateStr);
@@ -81,7 +82,7 @@ function determineStatus(payload, data){
 			retval+="It's a tie.";
 		}
 		else{
-			if(payload.username==data.winner) 
+			if(payload.username==data.winner)
 				retval+="You win!";
 	
 			else if(payload.username==data.otherPlayer) 

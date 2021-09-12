@@ -71,6 +71,7 @@ def tttGame(gameid):
         "wssh": wssh,
         "game": vars(game),
         "username": session.get('username'), #can be null if not logged in
+        "userId": session.get('userId'),
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
         "yourTurn": game.player_turn == session.get('username')
     }
@@ -84,10 +85,13 @@ def login():
     password = request.form['password']
     password_hash = generateHash(password)
 
+    # TODO there are 2 callouts to the db here, only need 1
     correctLogin = pgdb.checkLogin(username, password_hash)
     if(correctLogin):
+        userId = pgdb.getUser(username)[2]
         session['loggedIn'] = True
         session['username'] = username
+        session['userId'] = userId
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -121,8 +125,7 @@ def signup():
 @app.route("/logout", methods=["POST"])
 def logout():
     session['loggedIn'] = False
-    # assert 'username' in session
-    if 'username' in session: #IT SHOULD BE THERE. TODO REMOVE THIS IF STATEMENT AFTER DEVELOPMENT 
+    if 'username' in session:
         del session['username']
     return redirect("/")
 
