@@ -12,7 +12,8 @@ from models.ChessGame import ChessGame
 from pgdb import Pgdb
 from FakePgdb import FakePgdb
 from utils import generateId, generateHash
-from socketeer import Socketeer
+from handlers.tttHandler import tttHandler
+from handlers.statHandler import statHandler
 
 host = "127.0.0.1"
 port = 5000
@@ -186,27 +187,23 @@ if __name__ == "__main__":
     
     try:
         db_env = argv[1]
+        print("database: " + db_env)
     except IndexError:
         db_env = "local_db"
     
-    if db_env == "no_db":
-        pgdb = FakePgdb()
+    pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
 
-    else:
-        pgdb = Pgdb(db_env)
-
-    print("---database hosted at " + db_env + "---")
-
-    websocketHanderUrl = "/websocket"
-    print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
-    print("---running server on " + host + ":" + str(port) + "---")
     container = WSGIContainer(app)
     application = Application(
         default_host="flaskreactor.com", 
         handlers=[
-            (websocketHanderUrl, Socketeer, dict(db_env=db_env)),
+            ("/ws/ttt", tttHandler, dict(db_env=db_env)),
+            ("/ws/stat", statHandler, dict(db_env=db_env)),
             (".*", FallbackHandler, dict(fallback=container))
         ]
     )
     application.listen(port)
+
+    print("---running server on " + host + ":" + str(port) + "---")
+
     tornado.ioloop.IOLoop.instance().start() #runs until killed

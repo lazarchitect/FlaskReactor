@@ -4,17 +4,17 @@
 const gameId = payload.game.id;
 var yourTurn = payload.yourTurn;
 
-function wsSubscribe(clientSocket){
+function wsSubscribe(tttSocket){
 	const subscribeObj = {
 		"request": "subscribe", 
 		"gameId": gameId,
 		"username": payload.username
 	};
 	const subscribeJSON = JSON.stringify(subscribeObj);
-	clientSocket.send(subscribeJSON);
+	tttSocket.send(subscribeJSON);
 }
 
-function wsUpdate(clientSocket, boardIndex){
+function wsUpdate(tttSocket, boardIndex){
 	const updateObj = {
 		"request": "update", 
 		"gameId": gameId, 
@@ -24,18 +24,19 @@ function wsUpdate(clientSocket, boardIndex){
 		"userId": payload.userId
 	};
 	const updateStr = JSON.stringify(updateObj);
-    clientSocket.send(updateStr);
+    tttSocket.send(updateStr);
 }
 
 function wsConnect(setBoardstate, setYourTurn) {
 
 	console.log("initializing WS")
 	const wsServerHost = payload.wssh;
-    const clientSocket = new WebSocket("ws://" + wsServerHost + "/websocket")
+    const tttSocket = new WebSocket("ws://" + wsServerHost + "/ws/ttt")
+	const statSocket=new WebSocket("ws://" + wsServerHost + "/ws/stat")
 
-	clientSocket.onopen = (() => wsSubscribe(clientSocket));
+	tttSocket.onopen = (() => wsSubscribe(tttSocket));
 
-    clientSocket.onmessage = (message) => {
+    tttSocket.onmessage = (message) => {
 		const data = JSON.parse(message.data);
 		if(data.command === "updateBoard"){
 
@@ -48,6 +49,16 @@ function wsConnect(setBoardstate, setYourTurn) {
 		else if(data.command == "endGame"){
 			setStatus(determineStatus(payload, data));
 			setYourTurn(payload.username === data.activePlayer);
+			// call out to server - update this user's stats
+			const messageObj = {
+				"request": "updateStat", 
+				"gameType": "ttt",
+				"gameId": gameId,
+				"userId": payload.userId,
+				"username": payload.username
+			};
+			const message = JSON.stringify(messageObj);
+			statSocket.send(message);
 		}
 
 		else if(data.command === "info"){
@@ -65,7 +76,7 @@ function wsConnect(setBoardstate, setYourTurn) {
 		if(mouseClick.target.className != "tttCell activeTttCell") return;
     	console.log("click detected: sending message to socketServer.");
 		const boardIndex = mouseClick.target.id;
-		wsUpdate(clientSocket, boardIndex);
+		wsUpdate(tttSocket, boardIndex);
     };
 }
 

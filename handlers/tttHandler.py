@@ -1,7 +1,7 @@
 from datetime import datetime
 import utils
 from pgdb import Pgdb
-import tornado.websocket
+from tornado.websocket import WebSocketHandler
 import json
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
@@ -14,7 +14,7 @@ def deleteConnection(gameId, socketId):
             gameConnectionList.remove(x)
             return
 
-class Socketeer(tornado.websocket.WebSocketHandler):
+class tttHandler(WebSocketHandler):
 
     def check_origin(self, origin):
         return True
@@ -24,7 +24,7 @@ class Socketeer(tornado.websocket.WebSocketHandler):
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
-        print("WebSocket opened:", str(self.socketId))
+        print("tttSocket opened:", str(self.socketId))
 
     def on_message(self, message):
         """handler for incoming websocket messages. expect to see this format: message = {"request": "subscribe", "gameId": "whatever", ...}"""
@@ -39,10 +39,10 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             self.wsUpdate(fields)
         
     def on_close(self):
-        print("WebSocket closed: " + str(self.socketId))
+        print("tttSocket closed: " + str(self.socketId))
         
         if not hasattr(self, "gameId"):
-            print("ws was not subscribed? not sure why this would happen")
+            print("tttSocket was not subscribed? not sure why this would happen")
             return
         
         deleteConnection(self.gameId, self.socketId)
@@ -163,38 +163,35 @@ class Socketeer(tornado.websocket.WebSocketHandler):
             if gameEnded:
                 self.endTttGame(fields, otherPlayer, winner, gameId, player, tttGame)
                 
-def endTttGame(self, fields, otherPlayer, winner, gameId, player, tttGame):
-    message = {
-        "command": "endGame",
-        "gameEnded": True,
-        "otherPlayer": otherPlayer,
-        "winner": winner # None for a tie
-    }
+    def endTttGame(self, fields, otherPlayer, winner, gameId, player, tttGame):
+        message = {
+            "command": "endGame",
+            "gameEnded": True,
+            "otherPlayer": otherPlayer,
+            "winner": winner # None for a tie
+        }
 
-    utils.updateAll(clientConnections[gameId], message)
+        utils.updateAll(clientConnections[gameId], message)
 
-    self.pgdb.endTttGame(datetime.now(), winner, gameId)
+        self.pgdb.endTttGame(datetime.now(), winner, gameId)
 
-    userId = fields['userId']
-    stat = self.pgdb.getStat(userId)
+        # userId = fields['userId']
+        # stat = self.pgdb.getStat(userId)
 
-    # TODO only the user who clicked (the winner) gets this function to run, 
-    # so we have to update all other players stats as well
+        # ttt_games_played = stat['ttt_games_played'] + 1
+        # ttt_wins = stat['ttt_wins'] + (1 if winner == player else 0)
+        # ttt_win_percent = ttt_wins/ttt_games_played
+        # ttt_played_x = stat['ttt_played_x'] + (1 if player==tttGame.x_player else 0)
+        # ttt_played_o = stat['ttt_played_o'] + (1 if player==tttGame.o_player else 0)
+        # ttt_won_x = stat['ttt_won_x'] + (1 if winner == player and player==tttGame.x_player else 0)
+        # ttt_won_o = stat['ttt_won_o'] + (1 if winner == player and player==tttGame.o_player else 0)
 
-    ttt_games_played = stat['ttt_games_played'] + 1
-    ttt_wins = stat['ttt_wins'] + (1 if winner == player else 0)
-    ttt_win_percent = ttt_wins/ttt_games_played
-    ttt_played_x = stat['ttt_played_x'] + (1 if player==tttGame.x_player else 0)
-    ttt_played_o = stat['ttt_played_o'] + (1 if player==tttGame.o_player else 0)
-    ttt_won_x = stat['ttt_won_x'] + (1 if winner == player and player==tttGame.x_player else 0)
-    ttt_won_o = stat['ttt_won_o'] + (1 if winner == player and player==tttGame.o_player else 0)
-
-    self.pgdb.updateTttStat(
-        ttt_games_played,
-        ttt_wins,
-        ttt_win_percent,
-        ttt_played_x,
-        ttt_played_o,
-        ttt_won_x,
-        ttt_won_o,
-        userId)
+        # self.pgdb.updateTttStat(
+        #     ttt_games_played,
+        #     ttt_wins,
+        #     ttt_win_percent,
+        #     ttt_played_x,
+        #     ttt_played_o,
+        #     ttt_won_x,
+        #     ttt_won_o,
+        #     userId)
