@@ -30,7 +30,12 @@ sql = {
         "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s",
         "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         "updateTttGame": "UPDATE " + relation + ".tictactoe_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
-        "endTttGame": "UPDATE " + relation + ".tictactoe_games SET completed=true, time_ended=%s, player_turn='', winner=%s WHERE id=%s"
+        "endTttGame": "UPDATE " + relation + ".tictactoe_games SET completed=true, time_ended=%s, player_turn='', winner=%s WHERE id=%s",
+
+        # Stats
+        "getStat": "SELECT * FROM " + relation + ".stats WHERE userid=%s",
+        "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s"
+
 
     }
 
@@ -180,6 +185,20 @@ class Pgdb:
     def endTttGame(self, time_ended, winner, gameId):
         query = sql['endTttGame']
         values = [time_ended, winner, gameId]
+        self.__execute(query, values)
+        self.conn.commit()
+
+    ### Stats
+
+    def getStat(self, userId):
+        query = sql["getStat"]
+        values = [userId]
+        self.__execute(query, values)
+        return self.cursor.fetchone()
+
+    def updateTttStat(self, ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id):
+        query = sql['updateTttStat']
+        values = [ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id]
         self.__execute(query, values)
         self.conn.commit()
 

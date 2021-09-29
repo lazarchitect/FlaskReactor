@@ -12,7 +12,8 @@ from models.ChessGame import ChessGame
 from pgdb import Pgdb
 from FakePgdb import FakePgdb
 from utils import generateId, generateHash
-from socketeer import Socketeer
+from handlers.tttHandler import tttHandler
+from handlers.statHandler import statHandler
 
 host = "127.0.0.1"
 port = 5000
@@ -71,6 +72,7 @@ def tttGame(gameid):
         "wssh": wssh,
         "game": vars(game),
         "username": session.get('username'), #can be null if not logged in
+        "userId": session.get('userId'),
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
         "yourTurn": game.player_turn == session.get('username')
     }
@@ -84,10 +86,13 @@ def login():
     password = request.form['password']
     password_hash = generateHash(password)
 
+    # TODO there are 2 callouts to the db here, only need 1
     correctLogin = pgdb.checkLogin(username, password_hash)
     if(correctLogin):
+        userId = pgdb.getUser(username)[2]
         session['loggedIn'] = True
         session['username'] = username
+        session['userId'] = userId
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -121,8 +126,7 @@ def signup():
 @app.route("/logout", methods=["POST"])
 def logout():
     session['loggedIn'] = False
-    # assert 'username' in session
-    if 'username' in session: #IT SHOULD BE THERE. TODO REMOVE THIS IF STATEMENT AFTER DEVELOPMENT 
+    if 'username' in session:
         del session['username']
     return redirect("/")
 
@@ -183,27 +187,23 @@ if __name__ == "__main__":
     
     try:
         db_env = argv[1]
+        print("database: " + db_env)
     except IndexError:
         db_env = "local_db"
     
-    if db_env == "no_db":
-        pgdb = FakePgdb()
+    pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
 
-    else:
-        pgdb = Pgdb(db_env)
-
-    print("---database hosted at " + db_env + "---")
-
-    websocketHanderUrl = "/websocket"
-    print("---WebSocketHandler uses "+ websocketHanderUrl+"---")
-    print("---running server on " + host + ":" + str(port) + "---")
     container = WSGIContainer(app)
     application = Application(
         default_host="flaskreactor.com", 
         handlers=[
-            (websocketHanderUrl, Socketeer, dict(db_env=db_env)),
+            ("/ws/ttt", tttHandler, dict(db_env=db_env)),
+            ("/ws/stat", statHandler, dict(db_env=db_env)),
             (".*", FallbackHandler, dict(fallback=container))
         ]
     )
     application.listen(port)
+
+    print("---running server on " + host + ":" + str(port) + "---")
+
     tornado.ioloop.IOLoop.instance().start() #runs until killed
