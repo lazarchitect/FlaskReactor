@@ -40,12 +40,16 @@ def homepage():
         return render_template("splash.html")
 
     else: # user is logged in
-        chessGames = pgdb.getActiveChessGames(session.get('username'))
-        tttGames = pgdb.getTttGames(session.get('username'))
+        activeChessGames =    pgdb.getActiveChessGames(session.get('username'))
+        activeTttGames =      pgdb.getActiveTttGames(session.get('username'))
+        completedChessGames = pgdb.getCompletedChessGames(session.get('username'))
+        completedTttGames =   pgdb.getCompletedTttGames(session.get('username'))
         payload = {
             "username": session.get('username'),
-            "chessGames": chessGames,
-            "tttGames": tttGames
+            "activeChessGames": activeChessGames,
+            "activeTttGames": activeTttGames,
+            "completedChessGames": completedChessGames,
+            "completedTttGames": completedTttGames,
         }
         payload = json.dumps(payload, default=str)
         return render_template("home.html", payload=payload)

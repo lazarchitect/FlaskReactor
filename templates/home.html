@@ -7,9 +7,6 @@
         
         <script>
             var payload = JSON.parse('{{payload | safe}}'); // comes from Flask
-            var chessGames = payload.chessGames;
-            var username = payload.username;
-            var tttGames = payload.tttGames;
         </script>
         
         <!-- Note: when deploying, replace react development files with production ones. -->

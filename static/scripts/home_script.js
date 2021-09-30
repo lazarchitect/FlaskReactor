@@ -1,8 +1,11 @@
 /* contains all JS, react or otherwise, that creates and maintains the home.html template. */
 
-// console.log("chessGames: "+ chessGames);
-// console.log("tttGames: "+ tttGames);
-// console.log("username: "+ username)
+var username = payload.username;
+
+var activeChessGames = payload.activeChessGames;
+var activeTttGames   = payload.activeTttGames;
+var completedChessGames = payload.completedChessGames;
+var completedTttGames   = payload.completedTttGames;
 
 const GameDiv = styled.div`
 	background-color: #bbb;
@@ -19,18 +22,19 @@ function openGame(gameId, gameType){
 	window.location.href = "/games/" + gameType + "/" + gameId;
 }
 
-// chessGames comes from Flask -> html script
-var chessGameList = chessGames.map((game) => 
-	<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "chess")}>
-		{"Vs. " + (game[1] === username ? game[2] : game[1])}
-	</GameDiv>
-);
+function gameList(games, type){
+	return games.map((game) => 
+		<GameDiv className={type+"Game"} tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], type)}>
+			{"Vs. " + (game[1] === username ? game[2] : game[1])}
+		</GameDiv>
+	);
+}
 
-var TTTGameList = tttGames.map((game) => 
-	<GameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "ttt")}>
-		{"Vs. " + (game[1] === username ? game[2] : game[1])}
-	</GameDiv>
-);
+var activeChessGameList = gameList(activeChessGames, "chess");
+var activeTttGameList = gameList(activeTttGames, "ttt");
+var completedChessGameList = gameList(completedChessGames, "chess");
+var completedTttGameList = gameList(completedTttGames, "ttt");
+
 
 const gameTypes = ["Chess", "Tic-Tac-Toe"]; 
 
@@ -40,7 +44,7 @@ var rootElem = (
 
 	<div id="reactRoot">
 		<SiteHeader username={payload.username}/>
-
+		<br/>
 		<form action="/creategame" method="POST" id="createGameDiv">
 			<h4>Create Game</h4>
 			
@@ -54,10 +58,13 @@ var rootElem = (
 			<input type="submit" value="Create"/>
 		</form>
 
-		Chess Games: {chessGameList}
-
-		TicTacToe Games: {TTTGameList}
-
+		<h1>Games</h1>
+		<div>
+			{/* TODO display actives or completeds based on status of this here div and anchors. */}
+			<div> <a>ACTIVE</a> | <a>COMPLETED</a> </div>
+			Chess Games: {activeChessGameList}
+			TicTacToe Games: {activeTttGameList}
+		</div>
 
 	</div>
 

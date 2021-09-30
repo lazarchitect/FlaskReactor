@@ -18,16 +18,20 @@ sql = {
         "checkLogin": "SELECT * FROM " + relation + ".users WHERE name=%s AND password_hash=%s",
 
         # Chess
-        "getCompletedChessGames": "SELECT * FROM " + relation + ".chess_games where completed=true AND (white_player=%s OR black_player=%s)",
-        "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
+        "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games WHERE completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",
+        "getCompletedChessGames": "SELECT * FROM " + relation + ".chess_games WHERE completed=true AND (white_player=%s OR black_player=%s)",
         "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
         "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
         "updateChessBoardstate": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s WHERE id=%s",
         "endChessGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s",
 
         # Tic-Tac-Toe
-        "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
-        "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s",
+
+        "getActiveTttGames": "SELECT * FROM " + relation + ".tictactoe_games WHERE completed=false AND (x_player=%s OR o_player=%s) ORDER BY last_move DESC",
+        "getCompletedTttGames": "SELECT * FROM " + relation + ".tictactoe_games WHERE completed=true AND (x_player=%s OR o_player=%s)",
+
+        "getTttGames": "SELECT * FROM " + relation + ".tictactoe_games WHERE (x_player=%s OR o_player=%s)",
+        "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games WHERE id=%s",
         "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         "updateTttGame": "UPDATE " + relation + ".tictactoe_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
         "endTttGame": "UPDATE " + relation + ".tictactoe_games SET completed=true, time_ended=%s, player_turn='', winner=%s WHERE id=%s",
@@ -140,6 +144,12 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchall()
 
+    def getCompletedChessGames(self, username):
+        query = sql['getCompletedChessGames']
+        values = [username, username]
+        self.__execute(query, values)
+        return self.cursor.fetchall()
+
     def updateChessBoardstate(self, new_boardstate, update_time, gameid):
         query = sql['updateChessBoardstate']
         values = [new_boardstate, update_time, gameid]
@@ -164,8 +174,20 @@ class Pgdb:
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
         return TttGame.dbCreate(record)
 
+    def getActiveTttGames(self, username):
+        query = sql['getActiveTttGames']
+        values = [username, username]
+        self.__execute(query, values)
+        return self.cursor.fetchall()
+
+    def getCompletedTttGames(self, username):
+        query = sql['getCompletedTttGames']
+        values = [username, username]
+        self.__execute(query, values)
+        return self.cursor.fetchall()
+
     def getTttGames(self, username):
-        query = sql["getTTTGames"]
+        query = sql["getTttGames"]
         values = [username, username]
         self.__execute(query, values)
         return self.cursor.fetchall()
