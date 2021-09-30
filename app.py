@@ -14,6 +14,7 @@ from FakePgdb import FakePgdb
 from utils import generateId, generateHash
 from handlers.tttHandler import tttHandler
 from handlers.statHandler import statHandler
+from handlers.chessHandler import chessHandler
 
 host = "127.0.0.1"
 port = 5000
@@ -54,10 +55,9 @@ def homepage():
 @app.route('/games/chess/<gameid>')
 def chessGame(gameid):
     game = pgdb.getChessGame(gameid)
-
     payload = {
         "username": session.get('username'),
-        "boardstate": game.boardstate
+        "boardstate": game.boardstate["tiles"]
     }
     payload = json.dumps(payload, default=str)
 
@@ -199,6 +199,7 @@ if __name__ == "__main__":
         handlers=[
             ("/ws/ttt", tttHandler, dict(db_env=db_env)),
             ("/ws/stat", statHandler, dict(db_env=db_env)),
+            ("/ws/chess", chessHandler, dict(db_env=db_env)),
             (".*", FallbackHandler, dict(fallback=container))
         ]
     )

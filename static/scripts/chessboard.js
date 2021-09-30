@@ -1,6 +1,6 @@
 
 var highlight = false;
-var boardstate = payload.boardstate;
+var initialBoardstate = payload.boardstate;
 
 function pieceAt(tileId){
 	return boardstate[tileId[1]][tileId[0]];
@@ -44,7 +44,7 @@ function wsConnect(setBoardstate, setYourTurn) {
 
 function Board() {
 	
-	const [, setBoardstate] = React.useState(boardstate);
+	const [boardstate, setBoardstate] = React.useState(boardstate);
 	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn);
 
 	React.useEffect(() => wsConnect(setBoardstate, setYourTurn), []);
