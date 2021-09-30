@@ -14,7 +14,7 @@ def deleteConnection(gameId, socketId):
             gameConnectionList.remove(x)
             return
 
-class tttHandler(WebSocketHandler):
+class TttHandler(WebSocketHandler):
 
     def check_origin(self, origin):
         return True
