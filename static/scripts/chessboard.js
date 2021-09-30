@@ -1,14 +1,9 @@
 
 var highlight = false;
-var initialBoardstate = payload.boardstate;
 
-function pieceAt(tileId){
-	return boardstate[tileId[1]][tileId[0]];
-}
-
-function wsConnect(setBoardstate, setYourTurn) {
-	// const clientSocket = new WebSocket("ws://100.1.211.86:5000/websocket");
-	const clientSocket = new WebSocket("ws://localhost:5000/websocket");
+function wsConnect(boardstate, setBoardstate, setYourTurn) {
+	// const clientSocket = new WebSocket("ws://100.1.211.86:5000/ws/chess");
+	const clientSocket = new WebSocket("ws://localhost:5000/ws/chess");
 		
 	clientSocket.onmessage = (message) => {
 
@@ -21,36 +16,30 @@ function wsConnect(setBoardstate, setYourTurn) {
 
 		console.log("Message from server: ", message.data);
 	};
-	var board = document.getElementsByClassName("board")[0];
+
+	var board = document.getElementById("board");
+	
 	board.onclick = function(mouseEvent){
 	
 		const tileId = mouseEvent.target.id;
+		const piece = boardstate[tileId[1]][tileId[0]].piece;
 
-		const piece = pieceAt(tileId);
-
-		if(highlight == false){
-			if (piece == null) return;
-			if(piece.color != payload.color) return;
-
-			
-		}
-		else {
+		if(piece.type == "Pawn"){
 
 		}
 
-		console.log(tileId);
 	};
 }
 
 function Board() {
 	
-	const [boardstate, setBoardstate] = React.useState(boardstate);
+	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
 	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn);
 
-	React.useEffect(() => wsConnect(setBoardstate, setYourTurn), []);
+	React.useEffect(() => wsConnect(boardstate, setBoardstate, setYourTurn), []);
 
 	return (
-		<div className="board">
+		<div id="board">
 			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val}></Row>)}
 		</div>
 	);		

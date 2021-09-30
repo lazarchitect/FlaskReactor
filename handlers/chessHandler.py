@@ -1,3 +1,4 @@
+from pgdb import Pgdb
 from tornado.websocket import WebSocketHandler
 import json
 
@@ -5,6 +6,9 @@ import json
 
 class ChessHandler(WebSocketHandler):
     
+    def initialize(self, db_env):
+        self.pgdb = Pgdb(db_env)
+
     def open(self):
         pass
 
