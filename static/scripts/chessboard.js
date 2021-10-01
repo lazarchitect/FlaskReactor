@@ -20,12 +20,23 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 	var board = document.getElementById("board");
 	
 	board.onclick = function(mouseEvent){
-	
+
+		if(!payload.yourTurn) return;
+
 		const tileId = mouseEvent.target.id;
 		const piece = boardstate[tileId[1]][tileId[0]].piece;
 
-		if(piece.type == "Pawn"){
+		if (piece == null) return;
 
+		console.log(piece);
+
+		// TODO handle highlight logic.
+		//highlight is false? clicking on a piece generates the highlights.
+		// highlight is true, and the tile is highlighted? (each tile now needs a highlight boolean) then execute the move.
+
+
+		if(piece.color == payload.userColor){
+			console.log("thats your piece!");
 		}
 
 	};
