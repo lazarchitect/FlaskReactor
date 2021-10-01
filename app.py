@@ -55,15 +55,22 @@ def homepage():
 @app.route('/games/chess/<gameid>')
 def chessGame(gameid):
     game = pgdb.getChessGame(gameid)
+    username = session.get('username')
+    
+    colors = {game.white_player: "White", game.black_player: "Black"}
+
     payload = {
-        "username": session.get('username'),
-        "boardstate": game.boardstate["tiles"]
+        "boardstate": game.boardstate["tiles"],
+        "username": username,
+        "userColor": colors.get(username),
+        "yourTurn": game.player_turn == session.get('username')
     }
     payload = json.dumps(payload, default=str)
 
     if(game != None): return render_template("chessGame.html", payload=payload)
 
     else: return render_template("home.html", alert="Game could not be retrieved from database.")
+
 
 @app.route('/games/ttt/<gameid>')
 def tttGame(gameid):
