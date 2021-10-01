@@ -60,7 +60,7 @@ def chessGame(gameid):
     colors = {game.white_player: "White", game.black_player: "Black"}
 
     payload = {
-        "boardstate": game.boardstate["tiles"],
+        "boardstate": game.boardstate,
         "username": username,
         "userColor": colors.get(username),
         "yourTurn": game.player_turn == session.get('username')
