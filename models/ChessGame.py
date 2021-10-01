@@ -23,6 +23,8 @@ class ChessGame:
         g.time_started = datetime.now()
         g.last_move = g.time_started
         g.time_ended = None
+        g.player_turn = white_player
+        g.winner = None
         return g
 
     @staticmethod
@@ -37,6 +39,8 @@ class ChessGame:
         g.time_started = record[5]
         g.last_move = record[6]
         g.time_ended = record[7]
+        g.player_turn = record[8]
+        g.winner = record[9]
         return g
 
     def toTuple(self):
@@ -49,5 +53,7 @@ class ChessGame:
             self.completed, 
             self.time_started, 
             self.last_move, 
-            self.time_ended
+            self.time_ended,
+            self.player_turn,
+            self.winner
         )
