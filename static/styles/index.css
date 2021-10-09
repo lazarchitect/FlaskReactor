@@ -67,6 +67,10 @@ body {
     background-color: #412234;
 }
 
+.highlight {
+    background-color: red;
+}
+
 .pieceImg {
     max-width: 80%;
     max-height: 80%;

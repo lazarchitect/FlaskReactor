@@ -24,22 +24,54 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		if(!payload.yourTurn) return;
 
 		const tileId = mouseEvent.target.id;
-		const piece = boardstate[tileId[1]][tileId[0]].piece;
-
-		if (piece == null) return;
-
-		console.log(piece);
+		const tile = boardstate[tileId[1]][tileId[0]]
+		const piece = tile.piece;
 
 		// TODO handle highlight logic.
-		//highlight is false? clicking on a piece generates the highlights.
+		//highlight is false? clicking on your piece generates the highlights.
 		// highlight is true, and the tile is highlighted? (each tile now needs a highlight boolean) then execute the move.
 
+		if(!highlight){
+			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
+			
+			generateHighlights(boardstate, tile, piece);
 
-		if(piece.color == payload.userColor){
-			console.log("thats your piece!");
 		}
 
 	};
+}
+
+
+function generateHighlights(boardstate, tile, piece){ // void
+	
+	var coordinates = [];
+	
+	if(piece.type == "Pawn"){
+		const whiteDirection = -1;
+		const blackDirection =  1; 
+		const pieceDirection = piece.color == "Black" ? blackDirection : whiteDirection;
+		const finalRow = piece.color == "Black" ? 7 : 0;
+        const starterRow = piece.color == "Black" ? 1 : 6;
+
+		const row = piece.row;
+		if(row == finalRow) return; // will never happen under promotion
+		
+		// advance 1
+		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined){
+			var coordinate = [piece.row + pieceDirection, piece.col];
+			console.log(coordinate);
+			coordinates.push(coordinate);
+		}
+	}
+
+	
+	for(var index in coordinates){
+		const coordinate = coordinates[index];
+		const tileDiv = document.getElementById(coordinate[1]+""+coordinate[0]);
+		console.log(tileDiv);
+		tileDiv.style.backgroundColor = "red";
+	}
+
 }
 
 function Board() {
