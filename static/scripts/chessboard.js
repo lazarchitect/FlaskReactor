@@ -74,7 +74,7 @@ function generateHighlights(boardstate, tile, piece){ // void
 
 }
 
-function Board() {
+function Chessboard() {
 	
 	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
 	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn);
