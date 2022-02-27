@@ -1,10 +1,10 @@
 
-var highlight = false;
+var highlight = false; // default on page load.
 
 function wsConnect(boardstate, setBoardstate, setYourTurn) {
-	// const clientSocket = new WebSocket("ws://100.1.211.86:5000/ws/chess");
-	const clientSocket = new WebSocket("ws://localhost:5000/ws/chess");
-		
+	const webSocketServerHost = payload.wssh;
+	const clientSocket = new WebSocket("ws://" + webSocketServerHost + "/ws/chess");
+
 	clientSocket.onmessage = (message) => {
 
 		const data = JSON.parse(message.data);
@@ -31,6 +31,7 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		//highlight is false? clicking on your piece generates the highlights.
 		// highlight is true, and the tile is highlighted? (each tile now needs a highlight boolean) then execute the move.
 
+		console.log(highlight);
 		if(!highlight){
 			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
 			
