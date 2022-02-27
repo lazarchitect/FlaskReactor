@@ -60,6 +60,7 @@ def chessGame(gameid):
     colors = {game.white_player: "White", game.black_player: "Black"}
 
     payload = {
+        "wssh": wssh,
         "boardstate": game.boardstate,
         "username": username,
         "userColor": colors.get(username),
@@ -194,20 +195,21 @@ if __name__ == "__main__":
     
     try:
         db_env = argv[1]
-        print("database: " + db_env)
     except IndexError:
         db_env = "local_db"
+
+    print("connecting to: " + db_env)
     
     pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
 
-    container = WSGIContainer(app)
+    flaskApp = WSGIContainer(app)
     application = Application(
         default_host="flaskreactor.com", 
         handlers=[
             ("/ws/ttt", TttHandler, dict(db_env=db_env)),
             ("/ws/stat", StatHandler, dict(db_env=db_env)),
             ("/ws/chess", ChessHandler, dict(db_env=db_env)),
-            (".*", FallbackHandler, dict(fallback=container))
+            (".*", FallbackHandler, dict(fallback=flaskApp))
         ]
     )
     application.listen(port)
