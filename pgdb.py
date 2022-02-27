@@ -47,7 +47,7 @@ class Pgdb:
         try:
 
             dbDetails = loads(open("dbdetails.json", "r").read())
-
+            print("real pgdb instantiating.")
             self.conn = connect(
                 host=dbDetails['remote_ip' if db_env=='remote_db' else 'local_ip'],
                 database=dbDetails['database'],
