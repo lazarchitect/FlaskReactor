@@ -1,5 +1,4 @@
-
-var highlight = false; // default on page load.
+var highlightedTiles = [];
 
 function wsConnect(boardstate, setBoardstate, setYourTurn) {
 	const webSocketServerHost = payload.wssh;
@@ -28,13 +27,16 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		const piece = tile.piece;
 
 		// TODO handle highlight logic.
-		//highlight is false? clicking on your piece generates the highlights.
+		// highlight is false? clicking on your piece generates the highlights.
 		// highlight is true, and the tile is highlighted? (each tile now needs a highlight boolean) then execute the move.
 
-		console.log(highlight);
-		if(!highlight){
-			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
+		console.log(highlightedTiles);
+		console.log(tile);
+
+		if(!highlightedTiles.includes(tile)){
 			
+			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
+			removeHighlights(); 
 			generateHighlights(boardstate, tile, piece);
 
 		}
@@ -42,10 +44,13 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 	};
 }
 
+function removeHighlights(){
+	// TODO!
+}
 
 function generateHighlights(boardstate, tile, piece){ // void
 	
-	var coordinates = [];
+	highlightedTiles = [];
 	
 	if(piece.type == "Pawn"){
 		const whiteDirection = -1;
@@ -60,16 +65,14 @@ function generateHighlights(boardstate, tile, piece){ // void
 		// advance 1
 		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined){
 			var coordinate = [piece.row + pieceDirection, piece.col];
-			console.log(coordinate);
-			coordinates.push(coordinate);
+			highlightedTiles.push(coordinate);
 		}
 	}
 
 	
-	for(var index in coordinates){
-		const coordinate = coordinates[index];
+	for(var index in highlightedTiles){
+		const coordinate = highlightedTiles[index];
 		const tileDiv = document.getElementById(coordinate[1]+""+coordinate[0]);
-		console.log(tileDiv);
 		tileDiv.style.backgroundColor = "red";
 	}
 
