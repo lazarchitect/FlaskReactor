@@ -4,6 +4,8 @@ from models.TttGame import TttGame
 from flask import Flask, render_template, redirect, request, session
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
+from tornado.options import parse_command_line
+from signal import signal, SIGINT
 from sys import argv
 import tornado
 import random
@@ -188,6 +190,16 @@ def createGame():
 
     return redirect('/')
 
+is_closing = False
+
+def signal_handler(signum, frame):
+    global is_closing
+    is_closing = True
+    
+def try_exit():
+    if is_closing:
+        tornado.ioloop.IOLoop.instance().stop()
+        
 
 if __name__ == "__main__":
 
@@ -196,7 +208,7 @@ if __name__ == "__main__":
     try:
         db_env = argv[1]
     except IndexError:
-        db_env = "local_db"
+        db_env = "no_db"
 
     print("connecting to: " + db_env)
     
@@ -215,5 +227,10 @@ if __name__ == "__main__":
     application.listen(port)
 
     print("---running server on " + host + ":" + str(port) + "---")
+
+    parse_command_line()
+    signal(SIGINT, signal_handler)
+    application.listen(8888)
+    tornado.ioloop.PeriodicCallback(try_exit, 1000).start()
 
     tornado.ioloop.IOLoop.instance().start() #runs until killed
