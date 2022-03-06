@@ -67,8 +67,12 @@ body {
     background-color: #412234;
 }
 
-.highlight {
-    background-color: red;
+.darkHighlighted {
+    background-color: blue;
+}
+
+.lightHighlighted {
+    background-color: orange;
 }
 
 .pieceImg {

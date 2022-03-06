@@ -1,4 +1,5 @@
 var highlightedTiles = [];
+var active_coords = [];
 
 function wsConnect(boardstate, setBoardstate, setYourTurn) {
 	const webSocketServerHost = payload.wssh;
@@ -23,21 +24,31 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		if(!payload.yourTurn) return;
 
 		const tileId = mouseEvent.target.id;
-		const tile = boardstate[tileId[1]][tileId[0]]
+		const row = parseInt(tileId[1]);
+		const col = parseInt(tileId[0]);
+		const coord = row +""+ col;
+		const tile = boardstate[row][col]
 		const piece = tile.piece;
 
 		// TODO handle highlight logic.
 		// highlight is false? clicking on your piece generates the highlights.
 		// highlight is true, and the tile is highlighted? (each tile now needs a highlight boolean) then execute the move.
 
-		console.log(highlightedTiles);
-		console.log(tile);
+		// console.log(coord);
+		// console.log(highlightedTiles);
+		// console.log("highlighted: " + highlightedTiles.includes(coord));
 
-		if(!highlightedTiles.includes(tile)){
+		if(!highlightedTiles.includes(coord)){
 			
+			removeHighlights();
+
 			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
-			removeHighlights(); 
+			
 			generateHighlights(boardstate, tile, piece);
+
+		}
+		else {
+			// TODO send this move command to the server. return unless the server deems it valid.
 
 		}
 
@@ -45,16 +56,24 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 }
 
 function removeHighlights(){
-	// TODO!
+	active_coords = [];
+	highlightedTiles.forEach(coords => {
+		var tileDiv = document.getElementById(coords[1]+""+coords[0]);
+		tileDiv.classList.remove("darkHighlighted");
+		tileDiv.classList.remove("lightHighlighted");
+	});
 }
 
 function generateHighlights(boardstate, tile, piece){ // void
 	
 	highlightedTiles = [];
+	active_coords = [piece.row, piece.col];
 	
+	console.log("piece type: " + piece.type);
+
 	if(piece.type == "Pawn"){
 		const whiteDirection = -1;
-		const blackDirection =  1; 
+		const blackDirection =  1;
 		const pieceDirection = piece.color == "Black" ? blackDirection : whiteDirection;
 		const finalRow = piece.color == "Black" ? 7 : 0;
         const starterRow = piece.color == "Black" ? 1 : 6;
@@ -64,8 +83,10 @@ function generateHighlights(boardstate, tile, piece){ // void
 		
 		// advance 1
 		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined){
-			var coordinate = [piece.row + pieceDirection, piece.col];
-			highlightedTiles.push(coordinate);
+			highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
+		}
+		if(row == starterRow && boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined){
+			highlightedTiles.push((piece.row+pieceDirection*2) + "" + piece.col);
 		}
 	}
 
@@ -73,7 +94,13 @@ function generateHighlights(boardstate, tile, piece){ // void
 	for(var index in highlightedTiles){
 		const coordinate = highlightedTiles[index];
 		const tileDiv = document.getElementById(coordinate[1]+""+coordinate[0]);
-		tileDiv.style.backgroundColor = "red";
+		if(tileDiv.classList.contains("darkTile")){
+			tileDiv.classList.add("darkHighlighted");
+		}
+		else {
+			tileDiv.classList.add("lightHighlighted");
+		}
+		
 	}
 
 }
