@@ -63,6 +63,7 @@ def chessGame(gameid):
 
     payload = {
         "wssh": wssh,
+        "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
         "userColor": colors.get(username),

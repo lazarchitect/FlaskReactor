@@ -14,7 +14,7 @@ class ChessHandler(WebSocketHandler):
         pass
 
     def on_message(self, fields):
-        pass
+        print(fields)
 
     def on_close(self):
         pass

@@ -92,7 +92,7 @@ class TttHandler(WebSocketHandler):
         gameId = fields['gameId']
         gameType = fields['gameType']
 
-        if gameType == "ttt":
+        if gameType == "ttt": # TODO THIS CONDITION IS NOT NEEDED.
 
             # possible bug: can client send a non-castable boardIndex field?
             boardIndex = int(fields['boardIndex'])

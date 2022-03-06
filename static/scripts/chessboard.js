@@ -3,9 +3,9 @@ var active_coords = [];
 
 function wsConnect(boardstate, setBoardstate, setYourTurn) {
 	const webSocketServerHost = payload.wssh;
-	const clientSocket = new WebSocket("ws://" + webSocketServerHost + "/ws/chess");
+	const chessSocket = new WebSocket("ws://" + webSocketServerHost + "/ws/chess");
 
-	clientSocket.onmessage = (message) => {
+	chessSocket.onmessage = (message) => {
 
 		const data = JSON.parse(message.data);
 		
@@ -30,14 +30,6 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		const tile = boardstate[row][col]
 		const piece = tile.piece;
 
-		// TODO handle highlight logic.
-		// highlight is false? clicking on your piece generates the highlights.
-		// highlight is true, and the tile is highlighted? (each tile now needs a highlight boolean) then execute the move.
-
-		// console.log(coord);
-		// console.log(highlightedTiles);
-		// console.log("highlighted: " + highlightedTiles.includes(coord));
-
 		if(!highlightedTiles.includes(coord)){
 			
 			removeHighlights();
@@ -49,7 +41,16 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		}
 		else {
 			// TODO send this move command to the server. return unless the server deems it valid.
-
+			const updateObj = {
+				"request": "update", 
+				"gameId": payload.game.id,
+				"player": payload.player,
+				"userId": payload.userId,
+				"src": active_coords[1] +""+ active_coords[0],
+				"dest": tileId
+			}
+			const updateStr = JSON.stringify(updateObj);
+			chessSocket.send(updateStr);
 		}
 
 	};
