@@ -87,3 +87,7 @@ class ChessHandler(WebSocketHandler):
                 "winner": game.winner,
                 "contents": str(self.socketId) + " subscribed to gameId " + gameId
         })
+
+    def wsUpdate(self, fields):
+        print(fields["src"])
+        print(fields["dest"])

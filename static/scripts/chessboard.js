@@ -10,8 +10,21 @@ function wsSubscribe(chessSocket){
 		"gameId": gameId,
 		"username": payload.username
 	};
-	const subscribeJSON = JSON.stringify(subscribeObj);
-	chessSocket.send(subscribeJSON);
+	const subscribeStr = JSON.stringify(subscribeObj);
+	chessSocket.send(subscribeStr);
+}
+
+function wsUpdate(chessSocket, tileId){
+	const updateObj = {
+		"request": "update", 
+		"gameId": payload.game.id,
+		"player": payload.player,
+		"userId": payload.userId,
+		"src": active_coords[1] +""+ active_coords[0],
+		"dest": tileId
+	}
+	const updateStr = JSON.stringify(updateObj);
+	chessSocket.send(updateStr);
 }
 
 function wsConnect(boardstate, setBoardstate, setYourTurn) {
@@ -56,16 +69,7 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		}
 		else {
 			// TODO send this move command to the server. return unless the server deems it valid.
-			const updateObj = {
-				"request": "update", 
-				"gameId": payload.game.id,
-				"player": payload.player,
-				"userId": payload.userId,
-				"src": active_coords[1] +""+ active_coords[0],
-				"dest": tileId
-			}
-			const updateStr = JSON.stringify(updateObj);
-			chessSocket.send(updateStr);
+			wsUpdate(chessSocket, tileId);
 		}
 
 	};
