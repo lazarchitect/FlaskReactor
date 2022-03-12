@@ -61,6 +61,7 @@ class TttHandler(WebSocketHandler):
             "conn": self.ws_connection
         }
 
+        #TODO error response if gameId is not present
         gameId = fields['gameId']
 
         #used for easy search during later deletion
@@ -71,6 +72,7 @@ class TttHandler(WebSocketHandler):
         else:
             clientConnections[gameId].append(connectionDetails)
 
+        #TODO error response if pgdb doesnt find anything
         game = self.pgdb.getTttGame(gameId)
 
         if game.x_player == game.player_turn:
