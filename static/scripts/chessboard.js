@@ -1,9 +1,24 @@
 var highlightedTiles = [];
 var active_coords = [];
 
+const gameId = payload.game.id;
+var yourTurn = payload.yourTurn;
+
+function wsSubscribe(chessSocket){
+	const subscribeObj = {
+		"request": "subscribe", 
+		"gameId": gameId,
+		"username": payload.username
+	};
+	const subscribeJSON = JSON.stringify(subscribeObj);
+	chessSocket.send(subscribeJSON);
+}
+
 function wsConnect(boardstate, setBoardstate, setYourTurn) {
 	const webSocketServerHost = payload.wssh;
 	const chessSocket = new WebSocket("ws://" + webSocketServerHost + "/ws/chess");
+
+	chessSocket.onopen = (() => wsSubscribe(chessSocket));
 
 	chessSocket.onmessage = (message) => {
 
