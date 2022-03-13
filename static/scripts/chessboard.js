@@ -44,21 +44,25 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 			console.log(boardstate);
 		}
 
-		// console.log("Message from server: ", message.data);
 	};
 
 	var board = document.getElementById("board");
 	
 	board.onclick = function(mouseEvent){
 
+
 		if(!payload.yourTurn) return;
 
 		const tileId = mouseEvent.target.id;
-		const row = parseInt(tileId[1]);
 		const col = parseInt(tileId[0]);
+		const row = parseInt(tileId[1]);
 		const coord = row +""+ col;
 		const tile = boardstate[row][col]
 		const piece = tile.piece;
+
+		console.log(highlightedTiles);
+		console.log(active_coords);
+		console.log(coord);
 
 		if(!highlightedTiles.includes(coord)){
 			
@@ -70,8 +74,8 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 
 		}
 		else {
-			// TODO send this move command to the server. return unless the server deems it valid.
 			wsUpdate(chessSocket, tileId);
+			removeHighlights();
 		}
 
 	};
@@ -84,6 +88,7 @@ function removeHighlights(){
 		tileDiv.classList.remove("darkHighlighted");
 		tileDiv.classList.remove("lightHighlighted");
 	});
+	highlightedTiles = [];
 }
 
 function generateHighlights(boardstate, tile, piece){ // void

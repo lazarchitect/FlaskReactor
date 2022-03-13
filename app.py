@@ -97,7 +97,7 @@ def login():
     password = request.form['password']
     password_hash = generateHash(password)
 
-    # TODO there are 2 callouts to the db here, only need 1
+    # TODO performance: there are 2 callouts to the db here, only need 1
     correctLogin = pgdb.checkLogin(username, password_hash)
     if(correctLogin):
         userId = pgdb.getUser(username)[2]

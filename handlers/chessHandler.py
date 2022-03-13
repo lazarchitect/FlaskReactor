@@ -2,6 +2,7 @@ from pgdb import Pgdb
 from FakePgdb import FakePgdb
 from tornado.websocket import WebSocketHandler
 import json, utils
+from datetime import datetime
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -102,27 +103,29 @@ class ChessHandler(WebSocketHandler):
         srcTileId = fields["src"]
         destTileId = fields["dest"]
 
-        srcY = int(srcTileId[0])
-        srcX = int(srcTileId[1])
+        print("src",srcTileId)
+        print("dest",destTileId)
 
-        destY = int(destTileId[0])
-        destX = int(destTileId[1])
+        srcCol, srcRow = (int(srcTileId[0]), int(srcTileId[1]))
+        destCol, destRow = (int(destTileId[0]), int(destTileId[1]))
 
-        print("src", oldBoardstate[srcX][srcY])
-        print("dest", oldBoardstate[destX][destY])
+        print("src",srcTileId)
+        print("dest",destTileId)
 
-        print("MAKING THE MOVE")
-
-        srcTile = oldBoardstate[srcX][srcY]
+        print("OLD BOARDSTATE")
+        utils.printChessboard(oldBoardstate)
 
         newBoardstate = oldBoardstate
 
-        newBoardstate[srcX][srcY] = {}
-        newBoardstate[destX][destY] = srcTile
+        tempTile = newBoardstate[srcRow][srcCol]
+        print(tempTile)
+        newBoardstate[srcRow][srcCol] = {}
+        newBoardstate[destRow][destCol] = tempTile
+
+        newBoardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": tempTile["piece"]["type"], "color": tempTile["piece"]["color"]}}
 
         print("NEW BOARDSTATE")
-        
-        print(newBoardstate)
+        utils.printChessboard(newBoardstate)
 
         message = {
             "command": "updateBoard",
@@ -133,3 +136,4 @@ class ChessHandler(WebSocketHandler):
         self.write_message(message)
 
         # TODO update database for persistent moves
+        self.pgdb.updateChessBoardstate(newBoardstate, datetime.now(), gameId)

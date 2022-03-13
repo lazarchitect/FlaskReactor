@@ -142,7 +142,7 @@ class Pgdb:
 
     def updateChessBoardstate(self, new_boardstate, update_time, gameid):
         query = sql['updateChessBoardstate']
-        values = [new_boardstate, update_time, gameid]
+        values = [Json(new_boardstate), update_time, gameid]
         self.__execute(query, values)
         self.conn.commit()
 
