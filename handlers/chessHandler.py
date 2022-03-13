@@ -89,5 +89,37 @@ class ChessHandler(WebSocketHandler):
         })
 
     def wsUpdate(self, fields):
-        print(fields["src"])
-        print(fields["dest"])
+        
+        gameId = fields["gameId"]
+        
+        game = self.pgdb.getChessGame(gameId)
+        oldBoardstate = game.boardstate
+
+        # TODO VALIDATE MOVE AGAINST EXISTING BOARD 
+        # (https://www.notion.so/noshun/Server-side-chess-move-validation-d89dfc680c8849c19b89fbab2a924367)
+
+        # generate new boardstate
+        srcTileId = fields["src"]
+        destTileId = fields["dest"]
+
+        srcY = int(srcTileId[0])
+        srcX = int(srcTileId[1])
+
+        destY = int(destTileId[0])
+        destX = int(destTileId[1])
+
+        print("src", oldBoardstate[srcX][srcY])
+        print("dest", oldBoardstate[destX][destY])
+
+        print("MAKING THE MOVE")
+
+        srcTile = oldBoardstate[srcX][srcY]
+
+        newBoardstate = oldBoardstate
+
+        newBoardstate[srcX][srcY] = {}
+        newBoardstate[destX][destY] = srcTile
+
+        print("NEW BOARDSTATE")
+        
+        print(newBoardstate)
