@@ -123,3 +123,13 @@ class ChessHandler(WebSocketHandler):
         print("NEW BOARDSTATE")
         
         print(newBoardstate)
+
+        message = {
+            "command": "updateBoard",
+            "newBoardstate": newBoardstate
+        }
+
+        # TODO handle all clientConnections using utils.updateAll()
+        self.write_message(message)
+
+        # TODO update database for persistent moves

@@ -40,9 +40,11 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		if(data.command == "updateBoard"){
 			setBoardstate(data.newBoardstate);
 			setYourTurn(payload.username === data.activePlayer);
+			boardstate = data.newBoardstate;
+			console.log(boardstate);
 		}
 
-		console.log("Message from server: ", message.data);
+		// console.log("Message from server: ", message.data);
 	};
 
 	var board = document.getElementById("board");
