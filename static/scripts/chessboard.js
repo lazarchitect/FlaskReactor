@@ -114,7 +114,9 @@ function generateHighlights(boardstate, tile, piece){ // void
 			highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
 		}
 		// advance 2
-		if(row == starterRow && boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined){
+		if(row == starterRow 
+			&& boardstate[piece.row+pieceDirection][piece.col].piece == undefined
+			&& boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined){
 			highlightedTiles.push((piece.row+pieceDirection*2) + "" + piece.col);
 		}
 		// attack left
