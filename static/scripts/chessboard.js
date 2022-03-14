@@ -32,7 +32,7 @@ function wsUpdate(chessSocket, tileId){
 	chessSocket.send(updateStr);
 }
 
-function wsConnect(boardstate, setBoardstate, setYourTurn) {
+function wsConnect(boardstate, setBoardstate) {
 	const webSocketServerHost = payload.wssh;
 	const chessSocket = new WebSocket("ws://" + webSocketServerHost + "/ws/chess");
 
@@ -44,7 +44,7 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		
 		if(data.command == "updateBoard"){
 			setBoardstate(data.newBoardstate);
-			setYourTurn(payload.username === data.activePlayer);
+			yourTurn = payload.username === data.activePlayer;
 			boardstate = data.newBoardstate;
 		}
 	};
@@ -53,8 +53,7 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 	
 	board.onclick = function(mouseEvent){
 
-
-		if(!payload.yourTurn) return;
+		if(!yourTurn) return;
 
 		const tileId = mouseEvent.target.id;
 		const col = parseInt(tileId[0]);
@@ -228,9 +227,8 @@ function scan(rowOffset, colOffset, row, col, color, boardstate, moveList){
 function Chessboard() {
 	
 	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
-	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn);
 
-	React.useEffect(() => wsConnect(boardstate, setBoardstate, setYourTurn), []);
+	React.useEffect(() => wsConnect(boardstate, setBoardstate), []);
 
 	return (
 		<div id="board">

@@ -22,7 +22,7 @@ sql = {
         "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
         "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
         "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        "updateChessBoardstate": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s WHERE id=%s",
+        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
         "endChessGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s",
 
         # Tic-Tac-Toe
@@ -140,9 +140,9 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchall()
 
-    def updateChessBoardstate(self, new_boardstate, update_time, gameid):
-        query = sql['updateChessBoardstate']
-        values = [Json(new_boardstate), update_time, gameid]
+    def updateChessGame(self, new_boardstate, update_time, active_player, gameid):
+        query = sql['updateChessGame']
+        values = [Json(new_boardstate), update_time, active_player, gameid]
         self.__execute(query, values)
         self.conn.commit()
 

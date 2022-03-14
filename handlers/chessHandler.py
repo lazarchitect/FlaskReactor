@@ -113,13 +113,16 @@ class ChessHandler(WebSocketHandler):
         boardstate[srcRow][srcCol] = {}
         boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor}}
 
+        newActivePlayer = game.white_player if game.player_turn == game.black_player else game.black_player 
+
         message = {
             "command": "updateBoard",
-            "newBoardstate": boardstate
+            "newBoardstate": boardstate,
+            "activePlayer": newActivePlayer
         }
 
         # TODO handle all clientConnections using utils.updateAll()
-        self.write_message(message)
+        utils.updateAll(clientConnections[gameId], message)
 
-        # TODO update database for persistent moves
-        self.pgdb.updateChessBoardstate(boardstate, datetime.now(), gameId)
+
+        self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, gameId)
