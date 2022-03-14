@@ -1,6 +1,11 @@
 var highlightedTiles = [];
 var active_coords = [];
 
+const knightOffsets = [[1,2],[1,-2],[-1,2],[-1,-2],[2,1],[2,-1],[-2,1],[-2,-1]];
+const bishopOffsets = [[1,1],[1,-1],[-1,1],[-1,-1]];
+const rookOffsets = [[0,1],[0,-1],[1,0],[-1,0]];
+const royalOffsets = [[1,1],[1,-1],[-1,1],[-1,-1],[0,1],[0,-1],[1,0],[-1,0]];
+
 const gameId = payload.game.id;
 var yourTurn = payload.yourTurn;
 
@@ -91,6 +96,8 @@ function generateHighlights(boardstate, tile, piece){ // void
 	
 	highlightedTiles = [];
 	active_coords = [piece.row, piece.col];
+
+	const enemyColor = piece.color == "Black" ? "White" : "Black";
 	
 	if(piece.type == "Pawn"){
 		const whiteDirection = -1;
@@ -98,7 +105,6 @@ function generateHighlights(boardstate, tile, piece){ // void
 		const pieceDirection = piece.color == "Black" ? blackDirection : whiteDirection;
 		const finalRow = piece.color == "Black" ? 7 : 0;
         const starterRow = piece.color == "Black" ? 1 : 6;
-		const enemyColor = piece.color == "Black" ? "White" : "Black";
 
 		const row = piece.row;
 		if(row == finalRow) return; // will never happen under promotion
@@ -121,8 +127,24 @@ function generateHighlights(boardstate, tile, piece){ // void
 		if(rightTargetTile != undefined && rightTargetTile.piece != undefined && rightTargetTile.piece.color == enemyColor){
 			highlightedTiles.push((piece.row+pieceDirection) + "" + (piece.col+1));
 		}
-
 	}
+	
+	else if(piece.type == "King"){
+		// TODO later: kings cannot move into a check position
+		royalOffsets.forEach(offset => {
+			const destRow = piece.row+offset[0];
+			const destCol = piece.col + offset[1]; 
+			
+			if(!outOfBounds(destRow, destCol)){
+				const targetTile = boardstate[destRow][destCol];
+				const targetPiece = targetTile.piece;
+				if(targetPiece == undefined || targetPiece.color == enemyColor){
+					highlightedTiles.push(destRow + "" + destCol);
+				}
+			}
+		});
+	}
+
 
 	
 	for(var index in highlightedTiles){
@@ -137,6 +159,10 @@ function generateHighlights(boardstate, tile, piece){ // void
 		
 	}
 
+}
+
+function outOfBounds(row, col){
+	return row < 0 || row > 7 || col < 0 || col > 7;
 }
 
 function Chessboard() {
