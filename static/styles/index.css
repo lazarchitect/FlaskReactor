@@ -44,12 +44,13 @@ body {
 }
 
 .chessRow {
-    width: fit-content;
-    margin-right: 0%;
+    font-size: 0; /* HTML has this weird spacing issue causing empty spaces, removing any font size fixes it */
 }
 
 #board {
-    display: inline-block;
+    display: inline;
+    background-color: black;
+    margin: 0%;
 }
 
 .tile {
@@ -78,7 +79,7 @@ body {
 .pieceImg {
     max-width: 80%;
     max-height: 80%;
-    display: inline-block;
+    display: block;
     margin-left: 10%;
     margin-top: 10%;
     pointer-events: none;
