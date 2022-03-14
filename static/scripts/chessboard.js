@@ -160,6 +160,12 @@ function generateHighlights(boardstate, tile, piece){ // void
 	else if (piece.type == "Rook") {
 		highlightedTiles = sliderMoves(piece, boardstate, rookOffsets);
 	}
+	else if(piece.type == "Bishop") {
+		highlightedTiles = sliderMoves(piece, boardstate, bishopOffsets);
+	}
+	else if(piece.type == "Queen") {
+		highlightedTiles = sliderMoves(piece, boardstate, royalOffsets);
+	}
 
 	
 	for(var index in highlightedTiles){
