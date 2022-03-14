@@ -41,9 +41,7 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 			setBoardstate(data.newBoardstate);
 			setYourTurn(payload.username === data.activePlayer);
 			boardstate = data.newBoardstate;
-			console.log(boardstate);
 		}
-
 	};
 
 	var board = document.getElementById("board");
@@ -56,16 +54,14 @@ function wsConnect(boardstate, setBoardstate, setYourTurn) {
 		const tileId = mouseEvent.target.id;
 		const col = parseInt(tileId[0]);
 		const row = parseInt(tileId[1]);
+
+		if(isNaN(col) || isNaN(row)){console.log("invalid tileId");return;}
+
 		const coord = row +""+ col;
 		const tile = boardstate[row][col]
 		const piece = tile.piece;
-
-		console.log(highlightedTiles);
-		console.log(active_coords);
-		console.log(coord);
-
 		if(!highlightedTiles.includes(coord)){
-			
+
 			removeHighlights();
 
 			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
@@ -96,8 +92,6 @@ function generateHighlights(boardstate, tile, piece){ // void
 	highlightedTiles = [];
 	active_coords = [piece.row, piece.col];
 	
-	console.log("piece type: " + piece.type);
-
 	if(piece.type == "Pawn"){
 		const whiteDirection = -1;
 		const blackDirection =  1;
