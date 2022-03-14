@@ -98,6 +98,7 @@ function generateHighlights(boardstate, tile, piece){ // void
 		const pieceDirection = piece.color == "Black" ? blackDirection : whiteDirection;
 		const finalRow = piece.color == "Black" ? 7 : 0;
         const starterRow = piece.color == "Black" ? 1 : 6;
+		const enemyColor = piece.color == "Black" ? "White" : "Black";
 
 		const row = piece.row;
 		if(row == finalRow) return; // will never happen under promotion
@@ -106,9 +107,21 @@ function generateHighlights(boardstate, tile, piece){ // void
 		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined){
 			highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
 		}
+		// advance 2
 		if(row == starterRow && boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined){
 			highlightedTiles.push((piece.row+pieceDirection*2) + "" + piece.col);
 		}
+		// attack left
+		const leftTargetTile = boardstate[piece.row+pieceDirection][piece.col-1];
+		if(leftTargetTile != undefined && leftTargetTile.piece != undefined && leftTargetTile.piece.color == enemyColor){
+			highlightedTiles.push((piece.row+pieceDirection) + "" + (piece.col-1));
+		}
+		// attack right
+		const rightTargetTile = boardstate[piece.row+pieceDirection][piece.col+1];
+		if(rightTargetTile != undefined && rightTargetTile.piece != undefined && rightTargetTile.piece.color == enemyColor){
+			highlightedTiles.push((piece.row+pieceDirection) + "" + (piece.col+1));
+		}
+
 	}
 
 	
