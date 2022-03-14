@@ -135,7 +135,7 @@ function Chessboard() {
 
 	return (
 		<div id="board">
-			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val}></Row>)}
+			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val}/>)}
 		</div>
 	);		
 }
@@ -152,11 +152,7 @@ function Row(props){
 		darkTile = !darkTile
 	}
 
-	return (
-		<div className="chessRow">
-			{reactTileArray}
-		</div>
-	);
+	return <div className="chessRow">{reactTileArray}</div>;
 }
 
 function Tile(props) {
