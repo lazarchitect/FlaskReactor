@@ -94,46 +94,32 @@ class ChessHandler(WebSocketHandler):
         gameId = fields["gameId"]
         
         game = self.pgdb.getChessGame(gameId)
-        oldBoardstate = game.boardstate
+        boardstate = game.boardstate
 
         # TODO VALIDATE MOVE AGAINST EXISTING BOARD 
         # (https://www.notion.so/noshun/Server-side-chess-move-validation-d89dfc680c8849c19b89fbab2a924367)
 
-        # generate new boardstate
         srcTileId = fields["src"]
         destTileId = fields["dest"]
-
-        print("src",srcTileId)
-        print("dest",destTileId)
 
         srcCol, srcRow = (int(srcTileId[0]), int(srcTileId[1]))
         destCol, destRow = (int(destTileId[0]), int(destTileId[1]))
 
-        print("src",srcTileId)
-        print("dest",destTileId)
+        srcPiece = boardstate[srcRow][srcCol]["piece"]
 
-        print("OLD BOARDSTATE")
-        utils.printChessboard(oldBoardstate)
+        srcType = srcPiece["type"]
+        srcColor = srcPiece["color"]
 
-        newBoardstate = oldBoardstate
-
-        tempTile = newBoardstate[srcRow][srcCol]
-        print(tempTile)
-        newBoardstate[srcRow][srcCol] = {}
-        newBoardstate[destRow][destCol] = tempTile
-
-        newBoardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": tempTile["piece"]["type"], "color": tempTile["piece"]["color"]}}
-
-        print("NEW BOARDSTATE")
-        utils.printChessboard(newBoardstate)
+        boardstate[srcRow][srcCol] = {}
+        boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor}}
 
         message = {
             "command": "updateBoard",
-            "newBoardstate": newBoardstate
+            "newBoardstate": boardstate
         }
 
         # TODO handle all clientConnections using utils.updateAll()
         self.write_message(message)
 
         # TODO update database for persistent moves
-        self.pgdb.updateChessBoardstate(newBoardstate, datetime.now(), gameId)
+        self.pgdb.updateChessBoardstate(boardstate, datetime.now(), gameId)
