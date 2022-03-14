@@ -136,8 +136,7 @@ function generateHighlights(boardstate, tile, piece){ // void
 			const destCol = piece.col + offset[1]; 
 			
 			if(!outOfBounds(destRow, destCol)){
-				const targetTile = boardstate[destRow][destCol];
-				const targetPiece = targetTile.piece;
+				const targetPiece = boardstate[destRow][destCol].piece;
 				if(targetPiece == undefined || targetPiece.color == enemyColor){
 					highlightedTiles.push(destRow + "" + destCol);
 				}
@@ -145,6 +144,22 @@ function generateHighlights(boardstate, tile, piece){ // void
 		});
 	}
 
+	else if(piece.type == "Knight"){
+		knightOffsets.forEach(offset => {
+			const destRow = piece.row+offset[0];
+			const destCol = piece.col + offset[1];
+			if(!outOfBounds(destRow, destCol)){
+				const targetPiece = boardstate[destRow][destCol].piece;
+				if(targetPiece == undefined || targetPiece.color == enemyColor){
+					highlightedTiles.push(destRow + "" + destCol);
+				}
+			}
+		});
+	}
+
+	else if (piece.type == "Rook") {
+		highlightedTiles = sliderMoves(piece, boardstate, rookOffsets);
+	}
 
 	
 	for(var index in highlightedTiles){
@@ -163,6 +178,43 @@ function generateHighlights(boardstate, tile, piece){ // void
 
 function outOfBounds(row, col){
 	return row < 0 || row > 7 || col < 0 || col > 7;
+}
+
+function sliderMoves(piece, boardstate, offsets) {
+	let moveList = [];
+	
+	offsets.forEach(offset => {
+		const rowOffset = offset[0];
+		const colOffset = offset[1];
+		scan(rowOffset, colOffset, piece.row, piece.col, piece.color, boardstate, moveList);
+	});
+	return moveList;
+}
+
+// modify moveList and recurse to the next offset.
+function scan(rowOffset, colOffset, row, col, color, boardstate, moveList){
+	
+	const targetRow = row+rowOffset;
+	const targetCol = col+colOffset;
+
+	console.log(targetRow, targetCol);
+
+    // base case: line has exited the board
+	if(outOfBounds(targetRow, targetCol)) return;
+
+	// base case: there's a piece in the way.
+	const targetPiece = boardstate[targetRow][targetCol].piece;
+	if(targetPiece != undefined){
+		if(targetPiece.color != color){
+			moveList.push(targetRow + "" + targetCol);
+		}
+		return;
+	}
+
+	// empty tile? include and keep going.
+	moveList.push(targetRow + "" + targetCol);
+	scan(rowOffset, colOffset, row+rowOffset, col+colOffset, color, boardstate, moveList);
+
 }
 
 function Chessboard() {
