@@ -113,12 +113,14 @@ class ChessHandler(WebSocketHandler):
         boardstate[srcRow][srcCol] = {}
         boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor}}
 
-        newActivePlayer = game.white_player if game.player_turn == game.black_player else game.black_player 
+        newActivePlayer = game.white_player if game.player_turn == game.black_player else game.black_player
+        otherPlayer     = game.white_player if game.player_turn != game.black_player else game.black_player
 
         message = {
             "command": "updateBoard",
             "newBoardstate": boardstate,
-            "activePlayer": newActivePlayer
+            "activePlayer": newActivePlayer,
+            "otherPlayer": otherPlayer
         }
 
         # TODO handle all clientConnections using utils.updateAll()

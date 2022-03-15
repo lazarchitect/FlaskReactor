@@ -43,9 +43,13 @@ function wsConnect(boardstate, setBoardstate) {
 		const data = JSON.parse(message.data);
 		
 		if(data.command == "updateBoard"){
+			setStatus(determineStatus(payload, data));
 			setBoardstate(data.newBoardstate);
 			yourTurn = payload.username === data.activePlayer;
 			boardstate = data.newBoardstate;
+		}
+		else if(data.command == "info"){
+			setStatus(determineStatus(payload, data));
 		}
 	};
 
@@ -222,6 +226,23 @@ function scan(rowOffset, colOffset, row, col, color, boardstate, moveList){
 	moveList.push(targetRow + "" + targetCol);
 	scan(rowOffset, colOffset, row+rowOffset, col+colOffset, color, boardstate, moveList);
 
+}
+
+function determineStatus(payload, data){
+	let status = "";
+	switch(payload.username){
+		case data.activePlayer:
+			status+="Your turn."; break;
+		case data.otherPlayer:
+			status+="Waiting for opponent..."; break;
+		default:
+			status+= "spectating";
+	}
+	return status;
+}
+
+function setStatus(status){
+	document.getElementById('status').innerHTML = status;
 }
 
 function Chessboard() {
