@@ -18,8 +18,7 @@ from handlers.tttHandler import TttHandler
 from handlers.statHandler import StatHandler
 from handlers.chessHandler import ChessHandler
 
-host = "127.0.0.1"
-port = 5000
+port = 80
 
 try:
     wssh = json.loads(open("wsdetails.json", "r").read())['wssh']
@@ -227,7 +226,7 @@ if __name__ == "__main__":
     )
     application.listen(port)
 
-    print("---running server on " + host + ":" + str(port) + "---")
+    print("---running server on port " + str(port) + "---")
 
     parse_command_line()
     signal(SIGINT, signal_handler)
