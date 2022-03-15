@@ -276,6 +276,7 @@ function Row(props){
 function Tile(props) {
 		
 	const piece = props.data.piece;
+
 	const imagePath = piece == null ? "" : "/static/images/" + piece.color + piece.type + ".png";
 
 	return (
@@ -285,8 +286,10 @@ function Tile(props) {
 			id = {props.tileIndex.toString() + props.rowIndex.toString()} 
 		>
 			{/* tile contents */}
-			<img className="pieceImg" src={imagePath} />
-			
+			{ imagePath != ""
+				? <img className="pieceImg" src={imagePath} />
+				: null
+			}
 		</span>
 	);
 }
