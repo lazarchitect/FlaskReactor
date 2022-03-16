@@ -135,7 +135,7 @@ function generateHighlights(boardstate, tile, piece){ // void
 	}
 	
 	else if(piece.type == "King"){
-		// TODO later: kings cannot move into a check position
+		// TODO: kings cannot move into a check position
 		royalOffsets.forEach(offset => {
 			const destRow = piece.row+offset[0];
 			const destCol = piece.col + offset[1]; 
