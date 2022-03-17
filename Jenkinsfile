@@ -8,7 +8,9 @@ pipeline {
             }
         }
         stage('Echo_hi') {
-            echo 'hi :)'
+            steps {
+                echo 'hi :)'
+            }
         }
 	}
 }
