@@ -7,8 +7,8 @@ pipeline {
                 echo 'Building..'
             }
         }
-        stage("Echo_hi") {
-            echo "hi :)"
+        stage('Echo_hi') {
+            echo 'hi :)'
         }
 	}
 }
