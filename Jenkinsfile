@@ -1,16 +1,20 @@
 pipeline {
-    agent any
-
+    agent {
+        docker {
+            image 'python:3.7.3' 
+        }
+    }
     stages {
-        stage('Build') {
+        stage('Confirm_Details') {
             steps {
-                echo 'Building..'
+                echo "Image details"
+                sh 'python --version'
             }
         }
-        stage('Echo_hi') {
+        stage("Docker_Deploy") {
             steps {
-                echo 'hi :)'
+                echo "stay tuned for updates!"
             }
         }
-	}
+    }
 }
