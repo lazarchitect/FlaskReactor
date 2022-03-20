@@ -8,7 +8,7 @@ pipeline {
         stage('Confirm_Details') {
             steps {
                 echo "Image details"
-                sh 'python --version'
+                sh "python --version"
                 docker ps
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         }
         stage("Docker_Build_New_Image") {
             steps {
-                docker build -t "flaskreactor:latest" .
+                docker build -t "flaskreactor:latest" "."
             }
         }
         stage("Docker_Run_New_Container") {
