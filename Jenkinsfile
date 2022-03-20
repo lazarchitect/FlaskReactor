@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3-buster' 
-        }
-    }
+    agent { dockerfile true }
     stages {
         stage('Confirm_Details') {
             steps {
