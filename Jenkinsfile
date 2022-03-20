@@ -29,7 +29,7 @@ pipeline {
         }
         stage("Docker_Confirm") {
             steps {
-                docker image inspect app
+                docker "image inspect app"
             }
         }
     }
