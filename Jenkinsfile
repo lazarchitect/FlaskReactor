@@ -9,7 +9,7 @@ pipeline {
             steps {
                 echo "Image details"
                 sh "python --version"
-                docker ps
+                docker "ps"
             }
         }
         stage("Docker_Stop_Existing_Container") {
