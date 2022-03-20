@@ -24,7 +24,7 @@ pipeline {
         }
         stage("Docker_Run_New_Container") {
             steps {
-                docker run -d -p 5000:5000 --name app flaskreactor:latest
+                docker run -d -p "5000:5000" --name app "flaskreactor:latest"
             }
         }
         stage("Docker_Confirm") {
