@@ -18,14 +18,17 @@ from handlers.tttHandler import TttHandler
 from handlers.statHandler import StatHandler
 from handlers.chessHandler import ChessHandler
 
-port = 80
-
 try:
-    wssh = json.loads(open("wsdetails.json", "r").read())['wssh']
-except:
+    wsDetails = json.loads(open("wsdetails.json", "r").read())    
+    port = wsDetails['port']
+    host = wsDetails['host']
+    wssh = host + ":" + port
+except FileNotFoundError:
     print("you need to add wsdetails.json for the site to work.")
     exit(1)
-
+except KeyError as ke:
+    print("wsdetails.json file missing a key:", ke.args[0])
+    exit()
 
 app = Flask(__name__)
 
