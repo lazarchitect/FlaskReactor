@@ -14,7 +14,7 @@ pipeline {
         }
         stage("Docker_Stop_Existing_Container") {
             steps {
-                docker stop app
+                docker "stop app"
             }
         }
         stage("Docker_Build_New_Image") {
