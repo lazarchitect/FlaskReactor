@@ -96,8 +96,6 @@ class ChessHandler(WebSocketHandler):
         game = self.pgdb.getChessGame(gameId)
         boardstate = game.boardstate
 
-        # TODO VALIDATE MOVE AGAINST EXISTING BOARD 
-        # (https://www.notion.so/noshun/Server-side-chess-move-validation-d89dfc680c8849c19b89fbab2a924367)
 
         srcTileId = fields["src"]
         destTileId = fields["dest"]
@@ -110,11 +108,34 @@ class ChessHandler(WebSocketHandler):
         srcType = srcPiece["type"]
         srcColor = srcPiece["color"]
 
+        # TODO VALIDATE MOVE AGAINST EXISTING BOARD 
+        # (https://www.notion.so/noshun/Server-side-chess-move-validation-d89dfc680c8849c19b89fbab2a924367)
+
+         
+        # execute the move
         boardstate[srcRow][srcCol] = {}
         boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor}}
 
         newActivePlayer = game.white_player if game.player_turn == game.black_player else game.black_player
         otherPlayer     = game.white_player if game.player_turn != game.black_player else game.black_player
+
+        allyColor = srcColor
+        enemyColor = "Black" if srcColor == "White" else "White"
+
+        allyKingCoords = utils.getKingCoords(boardstate, allyColor)
+        enemyKingCoords = utils.getKingCoords(boardstate, enemyColor)
+
+        allyInCheck = utils.inCheck(boardstate, enemyColor, allyKingCoords)
+        enemyInCheck= utils.inCheck(boardstate, allyColor, enemyKingCoords)
+
+        print("ally in check?", allyInCheck)
+        print("enemy in check?", enemyInCheck)
+
+         # TODO 
+         # check for Check status of both Kings. 
+         # If ally King is now in check, do NOT confirm the move to user or db - send back some kind of error.
+         # Else, indicate to the front end that the enemy player has successfully been put in check. 
+         # also, indicate to the enemy player that they are now in check. How to determine which clientConnection is the enemy player??
 
         message = {
             "command": "updateBoard",
