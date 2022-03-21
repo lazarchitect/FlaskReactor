@@ -1,19 +1,30 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:3.7.3' 
-        }
-    }
+    agent { dockerfile true }
     stages {
         stage('Confirm_Details') {
             steps {
                 echo "Image details"
-                sh 'python --version'
+                sh "python --version"
             }
         }
-        stage("Docker_Deploy") {
+        stage("Docker_Stop_Existing_Container") {
             steps {
-                echo "stay tuned for updates!"
+                docker "stop app"
+            }
+        }
+        stage("Docker_Build_New_Image") {
+            steps {
+                docker "build -t flaskreactor:latest ."
+            }
+        }
+        stage("Docker_Run_New_Container") {
+            steps {
+                docker "run -d -p 5000:5000 --name app flaskreactor:latest"
+            }
+        }
+        stage("Docker_Confirm") {
+            steps {
+                docker "image inspect app"
             }
         }
     }
