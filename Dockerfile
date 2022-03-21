@@ -11,8 +11,8 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY . /app
 
-RUN ["pip3", "install", "-r", "requirements.txt"]
+RUN ["pip", "install", "-r", "requirements.txt"]
 
-ENTRYPOINT ["python3"]
+ENTRYPOINT ["python"]
 
 CMD ["app.py"]
