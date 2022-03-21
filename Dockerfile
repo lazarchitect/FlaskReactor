@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 FROM python
-=======
-FROM ubuntu:16.04
->>>>>>> 1f16c052c9720e5072e13c850356c5c652d4e29f
 
 EXPOSE 5000
 
