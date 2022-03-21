@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 FROM ubuntu:16.04
+=======
+FROM python:3.7-buster
+>>>>>>> 5c5dbccd523eb073121f3530692cc0bb7d915a4e
 
 EXPOSE 5000
 
