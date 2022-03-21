@@ -1,4 +1,4 @@
-FROM python:3-buster
+FROM ubuntu:16.04
 
 EXPOSE 5000
 
@@ -11,8 +11,8 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 COPY . /app
 
-RUN ["pip", "install", "-r", "requirements.txt"]
+RUN ["pip3", "install", "-r", "requirements.txt"]
 
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python3"]
 
 CMD ["app.py"]
