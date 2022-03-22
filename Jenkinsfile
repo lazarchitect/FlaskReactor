@@ -1,5 +1,12 @@
 pipeline {
-    agent { dockerfile true }
+    agent {
+        docker {
+            image "flaskreactor:latest"
+            args "-u root"
+            alwaysPull false
+            reuseNode true
+        }
+    }
     stages {
         stage('Confirm_Details') {
             steps {
