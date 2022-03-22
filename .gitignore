@@ -4,3 +4,6 @@ secret_key.txt
 *.pyc
 python-app.yml
 .vscode/settings.json
+*details.json
+*pat
+

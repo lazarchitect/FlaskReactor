@@ -40,6 +40,7 @@ const SignupArea = (() =>
 const reactRoot = (
 	<div id="reactRoot">
 		<SiteHeader username={null}/>
+		<p>FlaskReactor is a site for playing games online with your friends. Gaming will be free of charge for everyone, forever. Please make an account to get started!</p>
 		<LoginArea/>
 		<br/><br/>
 		<SignupArea/>

@@ -3,7 +3,8 @@
 var reactRoot = (
 	<div id="reactRoot">
         <SiteHeader username={payload.username}/>
-        <Board boardstate={payload.boardstate}/>
+        <Chessboard boardstate={payload.boardstate}/>
+        <p>Status: <span id="status"></span></p>
     </div>
 );
 

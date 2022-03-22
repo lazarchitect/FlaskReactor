@@ -20,11 +20,17 @@ class FakePgdb:
 	def createGame(self, g):
 		pass
 
-	def getGame(self, gameId):
-		return ChessGame.manualCreate("player1", "player2")
+	def getChessGame(self, gameId):
+		return ChessGame.manualCreate("Eddie", "Eddie2")
 
-	def getActiveGames(self, username):
-		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'player1', 'player2', {}, False, None, None, None, 'player1')]
+	def getActiveChessGames(self, username):
+		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')]
+
+	def getTttGames(self, username):
+		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')]
+
+	def getTttGame(self, username):
+		return ('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')
 
 	def updateBoardstate(self, new_boardstate, update_time, gameid):
 		pass

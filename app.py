@@ -4,6 +4,8 @@ from models.TttGame import TttGame
 from flask import Flask, render_template, redirect, request, session
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
+from tornado.options import parse_command_line
+from signal import signal, SIGINT
 from sys import argv
 import tornado
 import random
@@ -12,18 +14,21 @@ from models.ChessGame import ChessGame
 from pgdb import Pgdb
 from FakePgdb import FakePgdb
 from utils import generateId, generateHash
-from handlers.tttHandler import tttHandler
-from handlers.statHandler import statHandler
-
-host = "127.0.0.1"
-port = 5000
+from handlers.tttHandler import TttHandler
+from handlers.statHandler import StatHandler
+from handlers.chessHandler import ChessHandler
 
 try:
-    wssh = json.loads(open("wsdetails.json", "r").read())['wssh']
-except:
+    wsDetails = json.loads(open("wsdetails.json", "r").read())    
+    port = wsDetails['port']
+    host = wsDetails['host']
+    wssh = host + ":" + port
+except FileNotFoundError:
     print("you need to add wsdetails.json for the site to work.")
     exit(1)
-
+except KeyError as ke:
+    print("wsdetails.json file missing a key:", ke.args[0])
+    exit()
 
 app = Flask(__name__)
 
@@ -58,16 +63,24 @@ def homepage():
 @app.route('/games/chess/<gameid>')
 def chessGame(gameid):
     game = pgdb.getChessGame(gameid)
+    username = session.get('username')
+    
+    colors = {game.white_player: "White", game.black_player: "Black"}
 
     payload = {
-        "username": session.get('username'),
-        "boardstate": game.boardstate
+        "wssh": wssh,
+        "game": vars(game),
+        "boardstate": game.boardstate,
+        "username": username,
+        "userColor": colors.get(username),
+        "yourTurn": game.player_turn == session.get('username')
     }
     payload = json.dumps(payload, default=str)
 
-    if(game != None): return render_template("game.html", payload=payload)
+    if(game != None): return render_template("chessGame.html", payload=payload)
 
     else: return render_template("home.html", alert="Game could not be retrieved from database.")
+
 
 @app.route('/games/ttt/<gameid>')
 def tttGame(gameid):
@@ -90,7 +103,7 @@ def login():
     password = request.form['password']
     password_hash = generateHash(password)
 
-    # TODO there are 2 callouts to the db here, only need 1
+    # TODO performance: there are 2 callouts to the db here, only need 1
     correctLogin = pgdb.checkLogin(username, password_hash)
     if(correctLogin):
         userId = pgdb.getUser(username)[2]
@@ -184,6 +197,16 @@ def createGame():
 
     return redirect('/')
 
+is_closing = False
+
+def signal_handler(signum, frame):
+    global is_closing
+    is_closing = True
+    
+def try_exit():
+    if is_closing:
+        tornado.ioloop.IOLoop.instance().stop()
+        
 
 if __name__ == "__main__":
 
@@ -191,23 +214,30 @@ if __name__ == "__main__":
     
     try:
         db_env = argv[1]
-        print("database: " + db_env)
     except IndexError:
-        db_env = "local_db"
+        db_env = "no_db"
+
+    print("connecting to: " + db_env)
     
     pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
 
-    container = WSGIContainer(app)
+    flaskApp = WSGIContainer(app)
     application = Application(
         default_host="flaskreactor.com", 
         handlers=[
-            ("/ws/ttt", tttHandler, dict(db_env=db_env)),
-            ("/ws/stat", statHandler, dict(db_env=db_env)),
-            (".*", FallbackHandler, dict(fallback=container))
+            ("/ws/ttt", TttHandler, dict(db_env=db_env)),
+            ("/ws/stat", StatHandler, dict(db_env=db_env)),
+            ("/ws/chess", ChessHandler, dict(db_env=db_env)),
+            (".*", FallbackHandler, dict(fallback=flaskApp))
         ]
     )
     application.listen(port)
 
-    print("---running server on " + host + ":" + str(port) + "---")
+    print("---running server on port " + str(port) + "---")
+
+    parse_command_line()
+    signal(SIGINT, signal_handler)
+    application.listen(8888)
+    tornado.ioloop.PeriodicCallback(try_exit, 1000).start()
 
     tornado.ioloop.IOLoop.instance().start() #runs until killed

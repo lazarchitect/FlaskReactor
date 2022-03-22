@@ -14,7 +14,7 @@ def deleteConnection(gameId, socketId):
             gameConnectionList.remove(x)
             return
 
-class tttHandler(WebSocketHandler):
+class TttHandler(WebSocketHandler):
 
     def check_origin(self, origin):
         return True
@@ -61,6 +61,7 @@ class tttHandler(WebSocketHandler):
             "conn": self.ws_connection
         }
 
+        #TODO error response if gameId is not present
         gameId = fields['gameId']
 
         #used for easy search during later deletion
@@ -71,6 +72,7 @@ class tttHandler(WebSocketHandler):
         else:
             clientConnections[gameId].append(connectionDetails)
 
+        #TODO error response if pgdb doesnt find anything
         game = self.pgdb.getTttGame(gameId)
 
         if game.x_player == game.player_turn:
@@ -92,7 +94,7 @@ class tttHandler(WebSocketHandler):
         gameId = fields['gameId']
         gameType = fields['gameType']
 
-        if gameType == "ttt":
+        if gameType == "ttt": # TODO THIS CONDITION IS NOT NEEDED.
 
             # possible bug: can client send a non-castable boardIndex field?
             boardIndex = int(fields['boardIndex'])

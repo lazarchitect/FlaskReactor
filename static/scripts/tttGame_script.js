@@ -84,6 +84,10 @@ function setStatus(status){
 	document.getElementById('status').innerHTML = status;
 }
 
+/*
+returns the updated status string,
+which gets displayed to the user at all times.
+*/
 function determineStatus(payload, data){
 	
 	var retval = "";

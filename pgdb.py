@@ -21,8 +21,8 @@ sql = {
         "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games WHERE completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",
         "getCompletedChessGames": "SELECT * FROM " + relation + ".chess_games WHERE completed=true AND (white_player=%s OR black_player=%s)",
         "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
-        "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-        "updateChessBoardstate": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s WHERE id=%s",
+        "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
         "endChessGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s",
 
         # Tic-Tac-Toe
@@ -51,7 +51,7 @@ class Pgdb:
         try:
 
             dbDetails = loads(open("dbdetails.json", "r").read())
-
+            print("real pgdb instantiating.")
             self.conn = connect(
                 host=dbDetails['remote_ip' if db_env=='remote_db' else 'local_ip'],
                 database=dbDetails['database'],
@@ -144,6 +144,7 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchall()
 
+<<<<<<< HEAD
     def getCompletedChessGames(self, username):
         query = sql['getCompletedChessGames']
         values = [username, username]
@@ -153,6 +154,11 @@ class Pgdb:
     def updateChessBoardstate(self, new_boardstate, update_time, gameid):
         query = sql['updateChessBoardstate']
         values = [new_boardstate, update_time, gameid]
+=======
+    def updateChessGame(self, new_boardstate, update_time, active_player, gameid):
+        query = sql['updateChessGame']
+        values = [Json(new_boardstate), update_time, active_player, gameid]
+>>>>>>> bd1e0359e369065c0626b456d0a2b9882de1ff36
         self.__execute(query, values)
         self.conn.commit()
 

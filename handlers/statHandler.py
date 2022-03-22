@@ -4,7 +4,7 @@ from pgdb import Pgdb
 import utils
 import json
 
-class statHandler(WebSocketHandler):
+class StatHandler(WebSocketHandler):
 
 	def initialize(self, db_env):
 		self.pgdb = Pgdb(db_env)
