@@ -144,21 +144,9 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchall()
 
-<<<<<<< HEAD
-    def getCompletedChessGames(self, username):
-        query = sql['getCompletedChessGames']
-        values = [username, username]
-        self.__execute(query, values)
-        return self.cursor.fetchall()
-
-    def updateChessBoardstate(self, new_boardstate, update_time, gameid):
-        query = sql['updateChessBoardstate']
-        values = [new_boardstate, update_time, gameid]
-=======
     def updateChessGame(self, new_boardstate, update_time, active_player, gameid):
         query = sql['updateChessGame']
         values = [Json(new_boardstate), update_time, active_player, gameid]
->>>>>>> bd1e0359e369065c0626b456d0a2b9882de1ff36
         self.__execute(query, values)
         self.conn.commit()
 
