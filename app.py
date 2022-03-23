@@ -10,6 +10,7 @@ from sys import argv
 import tornado
 import random
 import json
+import os
 from models.ChessGame import ChessGame
 from pgdb import Pgdb
 from FakePgdb import FakePgdb
@@ -19,7 +20,7 @@ from handlers.statHandler import StatHandler
 from handlers.chessHandler import ChessHandler
 
 try:
-    wsDetails = json.loads(open("wsdetails.json", "r").read())    
+    wsDetails = json.loads(open("wsdetails.json", "r").read())
     port = wsDetails['port']
     host = wsDetails['host']
     wssh = host + ":" + port
@@ -33,9 +34,9 @@ except KeyError as ke:
 app = Flask(__name__)
 
 try:
-    app.secret_key = open('secret_key.txt', 'r').read()
+    app.secret_key = open('secret_key.txt', 'r').read().encode('utf-8')
 except FileNotFoundError:
-    print("you need to add a file called secret_key.txt, containing a random bytestring, for the app to work.")
+    print("you need to add a file called secret_key.txt, containing a secret (private string) for Flask to run.")
     exit()
 
 @app.route('/')
@@ -50,7 +51,8 @@ def homepage():
         payload = {
             "username": session.get('username'),
             "chessGames": chessGames,
-            "tttGames": tttGames
+            "tttGames": tttGames,
+            "deployVersion": os.environ['DEPLOY_VERSION']
         }
         payload = json.dumps(payload, default=str)
         return render_template("home.html", payload=payload)
@@ -60,7 +62,7 @@ def homepage():
 def chessGame(gameid):
     game = pgdb.getChessGame(gameid)
     username = session.get('username')
-    
+
     colors = {game.white_player: "White", game.black_player: "Black"}
 
     payload = {
@@ -198,23 +200,21 @@ is_closing = False
 def signal_handler(signum, frame):
     global is_closing
     is_closing = True
-    
+
 def try_exit():
     if is_closing:
         tornado.ioloop.IOLoop.instance().stop()
-        
 
 if __name__ == "__main__":
 
     print()
-    
+
     try:
         db_env = argv[1]
     except IndexError:
         db_env = "no_db"
 
     print("connecting to: " + db_env)
-    
     pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
 
     flaskApp = WSGIContainer(app)
