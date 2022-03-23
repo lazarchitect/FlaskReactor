@@ -1,5 +1,6 @@
 from flask import Flask, request
 import docker
+import os
 import hmac
 import hashlib
 from docker.errors import NotFound as NotFoundError
@@ -47,6 +48,7 @@ def redeploy():
         print("old container not found")
 
     print("building new image")
+    os.system("git pull") # runs shell cmd
     (newImage, logs) = client.images.build(path = ".", tag = tag)
 
     print("new image built. Running new container....")
