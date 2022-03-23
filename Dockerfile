@@ -13,6 +13,8 @@ COPY . /app
 
 RUN ["pip", "install", "-r", "requirements.txt"]
 
+RUN ["git", "pull"]
+
 ENTRYPOINT ["python"]
 
 CMD ["app.py"]
