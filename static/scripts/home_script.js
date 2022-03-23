@@ -1,8 +1,8 @@
 /* contains all JS, react or otherwise, that creates and maintains the home.html template. */
 
-// console.log("chessGames: "+ chessGames);
-// console.log("tttGames: "+ tttGames);
-// console.log("username: "+ username)
+var chessGames = payload.chessGames;
+var username = payload.username;
+var tttGames = payload.tttGames;
 
 const GameDiv = styled.div`
 	background-color: #bbb;

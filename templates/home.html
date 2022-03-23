@@ -6,10 +6,7 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         
         <script>
-            var payload = JSON.parse('{{payload | safe}}'); // comes from Flask
-            var chessGames = payload.chessGames;
-            var username = payload.username;
-            var tttGames = payload.tttGames;
+            var payload = JSON.parse('{{payload | safe}}');
         </script>
         
         <!-- Note: when deploying, replace react development files with production ones. -->
