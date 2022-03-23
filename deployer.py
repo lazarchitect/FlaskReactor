@@ -21,7 +21,7 @@ def redeploy():
         digestmod=hashlib.sha256
     ).hexdigest()
 
-    remote_hash = request.headers['X-Hub-Signature-256']
+    remote_hash = request.headers['X-Hub-Signature-256'].split("=")[1]
 
     authenticated = hmac.compare_digest(remote_hash, local_hash)
 
