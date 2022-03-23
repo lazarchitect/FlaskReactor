@@ -4,7 +4,7 @@
 const SiteHeader = ((props) =>
 	<div id="siteHeader">
 		<span id="headerLeft">
-			Welcome to FlaskReactor!
+			Welcome to FlaskReactor! (Version {payload.deployVersion})
 		</span>
 		<span id="headerRight">
 
