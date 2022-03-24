@@ -5,6 +5,7 @@ import hmac
 import hashlib
 from docker.errors import NotFound as NotFoundError
 from sys import argv
+from threading import Thread
 
 deployer = Flask(__name__)
 
@@ -12,21 +13,9 @@ name="app"
 tag ="flaskreactor:latest"
 
 @deployer.route("/github-webhook", methods=["POST"])
-def redeploy():
+def process_webhook():
 
-    secret = open('secret_key.txt', 'r').read().encode('utf-8')
-
-    local_hash = hmac.new(
-        secret,
-        msg=request.data,
-        digestmod=hashlib.sha256
-    ).hexdigest()
-
-    remote_hash = request.headers['X-Hub-Signature-256'].split("=")[1]
-
-    authenticated = hmac.compare_digest(remote_hash, local_hash)
-
-    if not authenticated:
+    if not authenticated(request):
         return "who dis?"
 
     body = request.json
@@ -35,6 +24,26 @@ def redeploy():
     if(ref != "refs/heads/master"):
         return "This is not master branch."
 
+
+    th = Thread(target=redeploy, args=(commitId,)) #comma needed in args to make it iterable
+    th.start()
+
+    return "Triggering Redeploy on commit " + commitId
+
+def authenticated(req):
+    secret = open('secret_key.txt', 'r').read().encode('utf-8')
+
+    local_hash = hmac.new(
+        secret,
+        msg=req.data,
+        digestmod=hashlib.sha256
+    ).hexdigest()
+
+    remote_hash = request.headers['X-Hub-Signature-256'].split("=")[1]
+
+    return hmac.compare_digest(remote_hash, local_hash)
+
+def redeploy(commitId):
     client = docker.from_env()
 
     print("starting redeploy")
@@ -47,16 +56,15 @@ def redeploy():
         pass
         print("old container not found")
 
-    print("building new image")
+    print("Pulling latest code repo changes...")
     os.system("git pull") # runs shell cmd
+
+    print("Building new image")
     (newImage, logs) = client.images.build(path = ".", tag = tag)
 
     print("new image built. Running new container....")
     client.containers.run(newImage, name=name, ports = {5000:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
-
-    return "commit ID" + commitId + " now running." + \
-           "To do:" + \
-           "Return quickly while spawning a thread to do the heavy lifting."
+    print("done. commit " + commitId + " deployed.")
 
 
 if __name__ == "__main__":
