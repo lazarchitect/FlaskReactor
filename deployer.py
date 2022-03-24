@@ -16,19 +16,19 @@ tag ="flaskreactor:latest"
 def process_webhook():
 
     if not authenticated(request):
-        return "who dis?"
+        return "who dis?", 401
 
     body = request.json
     ref = body["ref"]
     commitId = body["after"][0:7]
     if(ref != "refs/heads/master"):
-        return "This is not master branch."
+        return "This is not master branch.", 400
 
 
     th = Thread(target=redeploy, args=(commitId,)) #comma needed in args to make it iterable
     th.start()
 
-    return "Triggering Redeploy on commit " + commitId
+    return "Triggering Redeploy on commit " + commitId, 202
 
 def authenticated(req):
     secret = open('secret_key.txt', 'r').read().encode('utf-8')
@@ -39,8 +39,10 @@ def authenticated(req):
         digestmod=hashlib.sha256
     ).hexdigest()
 
-    remote_hash = request.headers['X-Hub-Signature-256'].split("=")[1]
-
+    try:
+        remote_hash = request.headers['X-Hub-Signature-256'].split("=")[1]
+    except:
+        return False
     return hmac.compare_digest(remote_hash, local_hash)
 
 def redeploy(commitId):
