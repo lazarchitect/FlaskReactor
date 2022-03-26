@@ -134,21 +134,28 @@ class ChessHandler(WebSocketHandler):
         print("ally in check?", allyInCheck)
         print("enemy in check?", enemyInCheck)
 
-         # TODO 
-         # check for Check status of both Kings. 
-         # If ally King is now in check, do NOT confirm the move to user or db - send back some kind of error.
-         # Else, indicate to the front end that the enemy player has successfully been put in check. 
-         # also, indicate to the enemy player that they are now in check. How to determine which clientConnection is the enemy player??
+        whiteInCheck = (allyInCheck and srcColor=="White") or (enemyInCheck and enemyColor=="White")
+        blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")
 
+        if(allyInCheck):
+            #TODO do NOT confirm the move to user or db - send back some kind of error
+            self.write_message({
+                "command": "error",
+                "message": "cannot move into check"
+            })
+            return
+
+        
         message = {
             "command": "updateBoard",
             "newBoardstate": boardstate,
             "activePlayer": newActivePlayer,
-            "otherPlayer": otherPlayer
+            "otherPlayer": otherPlayer,
+            "whiteInCheck": whiteInCheck,
+            "blackInCheck": blackInCheck
         }
 
         # TODO handle all clientConnections using utils.updateAll()
         utils.updateAll(clientConnections[gameId], message)
-
 
         self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, gameId)
