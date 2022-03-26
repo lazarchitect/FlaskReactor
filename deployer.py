@@ -8,7 +8,7 @@ from sys import argv
 from threading import Thread
 import logging
 
-logging.basicConfig(filename='deployment.log', format='%(levelname)s: (%(asctime)s) %(message)s', level=logging.DEBUG)
+logging.basicConfig(filename='logForDeployment.log', format='%(levelname)s: (%(asctime)s) %(message)s', level=logging.DEBUG)
 
 deployer = Flask(__name__)
 
@@ -78,8 +78,8 @@ if __name__ == "__main__":
     port = int(argv[2])
 
     logging.info("Starting Deployer Script.")
-    logging.info("host:", host)
-    logging.info("port:", port)
-    logging.info("Process ID:", os.getpid())
+    logging.info("host: " + host)
+    logging.info("port: " + str(port))
+    logging.info("Process ID: " + str(os.getpid()))
 
     deployer.run(host=argv[1], port=int(argv[2]))
