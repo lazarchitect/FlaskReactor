@@ -34,6 +34,11 @@ except KeyError as ke:
 app = Flask(__name__)
 
 try:
+    appVersion = os.environ['DEPLOY_VERSION']
+except KeyError:
+    appVersion = "DEV"
+
+try:
     app.secret_key = open('secret_key.txt', 'r').read().encode('utf-8')
 except FileNotFoundError:
     print("you need to add a file called secret_key.txt, containing a secret (private string) for Flask to run.")
@@ -52,7 +57,7 @@ def homepage():
             "username": session.get('username'),
             "chessGames": chessGames,
             "tttGames": tttGames,
-            "deployVersion": os.environ['DEPLOY_VERSION']
+            "deployVersion": appVersion
         }
         payload = json.dumps(payload, default=str)
         return render_template("home.html", payload=payload)
