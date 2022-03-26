@@ -6,6 +6,9 @@ import hashlib
 from docker.errors import NotFound as NotFoundError
 from sys import argv
 from threading import Thread
+import logging
+
+logging.basicConfig(filename='deployment.log', format='%(levelname)s: (%(asctime)s) %(message)s', level=logging.DEBUG)
 
 deployer = Flask(__name__)
 
@@ -16,13 +19,13 @@ tag ="flaskreactor:latest"
 def process_webhook():
 
     if not authenticated(request):
-        return "who dis?", 401
+        return "bad hash", 401
 
     body = request.json
     ref = body["ref"]
     commitId = body["after"][0:7]
     if(ref != "refs/heads/master"):
-        return "This is not master branch.", 400
+        return "Not master branch, ignoring", 400
 
 
     th = Thread(target=redeploy, args=(commitId,)) #comma needed in args to make it iterable
@@ -48,26 +51,35 @@ def authenticated(req):
 def redeploy(commitId):
     client = docker.from_env()
 
-    print("starting redeploy")
+    logging.info("starting redeploy")
     try:
         old_container = client.containers.get(name)
         old_container.stop()
         old_container.remove()
-        print("old container stopped and removed")
+        logging.info("old container stopped and removed")
     except NotFoundError:
         pass
-        print("old container not found")
+        logging.warning("old container not found")
 
-    print("Pulling latest code repo changes...")
+    logging.info("Pulling latest code repo changes...")
     os.system("git pull") # runs shell cmd
 
-    print("Building new image")
+    logging.info("Building new image")
     (newImage, logs) = client.images.build(path = ".", tag = tag)
 
-    print("new image built. Running new container....")
+    logging.info("new image built. Running new container....")
     client.containers.run(newImage, name=name, ports = {5000:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
-    print("done. commit " + commitId + " deployed.")
+    logging.info("done. commit " + commitId + " deployed.")
 
 
 if __name__ == "__main__":
+
+    host = argv[1]
+    port = int(argv[2])
+
+    logging.info("Starting Deployer Script.")
+    logging.info("host:", host)
+    logging.info("port:", port)
+    logging.info("Process ID:", os.getpid())
+
     deployer.run(host=argv[1], port=int(argv[2]))
