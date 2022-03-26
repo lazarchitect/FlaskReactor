@@ -51,6 +51,10 @@ function wsConnect(boardstate, setBoardstate) {
 		else if(data.command == "info"){
 			setStatus(determineStatus(payload, data));
 		}
+		else if(data.command == "error"){
+			console.log(data.message)
+			alert(data.message)
+		}
 	};
 
 	var board = document.getElementById("board");
