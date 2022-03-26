@@ -27,7 +27,10 @@ class ChessHandler(WebSocketHandler):
         print("chessSocket opened:", str(self.socketId))
 
     def on_message(self, message):
-        """handler for incoming websocket messages. expect to see this format: message = {"request": "subscribe", "gameId": "whatever", ...}"""
+        """
+        handler for incoming websocket messages.
+        expect to see this format: message = {"request": "some_request", "gameId": "whatever", ...}
+        """
 
         fields = json.loads(message)
         request = fields['request']
