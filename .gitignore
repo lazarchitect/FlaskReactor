@@ -6,4 +6,5 @@ python-app.yml
 .vscode/settings.json
 *details.json
 *pat
+*.log
 
