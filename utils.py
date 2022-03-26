@@ -1,3 +1,4 @@
+from re import T
 from uuid import uuid4
 from hashlib import sha256
 from tornado.websocket import WebSocketClosedError
@@ -6,6 +7,8 @@ import json
 tttSets = [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6)]
 
 knightOffsets = [[1,2],[1,-2],[-1,2],[-1,-2],[2,1],[2,-1],[-2,1],[-2,-1]]
+rookOffsets = [[0,1],[0,-1],[1,0],[-1,0]]
+bishopOffsets = [[1,1],[1,-1],[-1,1],[-1,-1]]
 
 
 def generateId():
@@ -63,6 +66,16 @@ def isPiece(boardstate, coords, pieceType, pieceColor):
     if(piece == None): return False
     return piece.get("type") == pieceType and piece.get("color") == pieceColor
 
+def pieceMatch(piece, pieceColor, pieceType):
+    return piece.get("color") == pieceColor and piece.get("type") == pieceType
+
+def hasPiece(boardstate, coords):
+    piece = boardstate[coords[0]][coords[1]].get("piece")
+    return piece != None
+
+def getPiece(boardstate, coords):
+    return boardstate[coords[0]][coords[1]].get("piece")
+
 def getKingCoords(boardstate, color):
     for row in range(8):
         for col in range(8):
@@ -70,22 +83,45 @@ def getKingCoords(boardstate, color):
                 return (row, col)
     return None #should never happen?
 
+# starting at King to check for check, scans a direction to see the closest piece that way.
+def pieceTowards(boardstate, coords, offset):
+    targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
+    if outOfBounds(targetCoords): 
+        return None
+    if hasPiece(boardstate, targetCoords):
+        return getPiece(boardstate, targetCoords)
+    return pieceTowards(boardstate, targetCoords, offset)
+
 def inCheck(boardstate, enemyColor, kingCoords):
+    
+    # LOOK FOR KNIGHTS
     for offset in knightOffsets:
         knightCoords = (kingCoords[0] + offset[0], kingCoords[1] + offset[1])
-        if(isPiece(boardstate, knightCoords, "Knight", enemyColor)):
+        if isPiece(boardstate, knightCoords, "Knight", enemyColor):
             return True
     
+    # LOOK FOR PAWNS
     pawnDirection = 1 if enemyColor == "White" else -1
     pawnLeftCoords = (kingCoords[0] + pawnDirection, kingCoords[1] - 1)
     pawnRightCoords= (kingCoords[0] + pawnDirection, kingCoords[1] + 1)
-
-    if(isPiece(boardstate, pawnLeftCoords, "Pawn", enemyColor)):
+    if isPiece(boardstate, pawnLeftCoords, "Pawn", enemyColor):
         return True
     if(isPiece(boardstate, pawnRightCoords, "Pawn", enemyColor)):
         return True
 
-    # TODO look around for enemy bishops, queens, and rooks.
+    # LOOK FOR ROOKS/QUEENS
+    for offset in rookOffsets:
+        piece = pieceTowards(boardstate, kingCoords, offset)
+        if piece != None:
+            if pieceMatch(piece, enemyColor, "Rook") or pieceMatch(piece, enemyColor, "Queen"):
+                return True 
+
+    # LOOK FOR BISHOPS/QUEENS
+    for offset in bishopOffsets:
+        piece = pieceTowards(boardstate, kingCoords, offset)
+        if piece != None:
+            if pieceMatch(piece, enemyColor, "Bishop") or pieceMatch(piece, enemyColor, "Queen"):
+                return True
 
     return False
 
