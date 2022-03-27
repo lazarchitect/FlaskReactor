@@ -68,7 +68,7 @@ def redeploy(commitId):
     (newImage, logs) = client.images.build(path = ".", tag = tag)
 
     logging.info("new image built. Running new container....")
-    client.containers.run(newImage, name=name, ports = {5000:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
+    client.containers.run(newImage, name=name, ports = {5000:80}, environment={"DEPLOY_VERSION": commitId}, detach=True)
     logging.info("done. commit " + commitId + " deployed.")
 
 
