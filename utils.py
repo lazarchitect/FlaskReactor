@@ -17,6 +17,16 @@ def generateId():
 def generateHash(password):
     return sha256(password.encode('utf8')).hexdigest()
 
+def updateAll(connections, message):
+    for connectionDetails in connections:
+        try:
+            connectionDetails['conn'].write_message(json.dumps(message))
+        except WebSocketClosedError:
+            pass
+            #print(str(connectionDetails['id']) + " was closed i guess? nvm...")
+
+### TIC TAC TOE ###
+
 def tttTriple(a, b, c):
     return a == b and b == c and a != ''
 
@@ -29,6 +39,8 @@ def tttGameEnded(b):
         return "Tie"
 
     return False
+
+### CHESS ###
 
 def printChessboard(b):
     retval = ""
@@ -46,14 +58,6 @@ def printChessboard(b):
 def pieceCode(p):
     if(p["type"]=="Knight"): return p["color"][0] + "N"
     return p["color"][0] + p["type"][0]
-
-def updateAll(connections, message):
-    for connectionDetails in connections:
-        try:
-            connectionDetails['conn'].write_message(json.dumps(message))
-        except WebSocketClosedError:
-            pass
-            #print(str(connectionDetails['id']) + " was closed i guess? nvm...")
 
 def outOfBounds(coords):
     row = coords[0]
@@ -124,4 +128,3 @@ def inCheck(boardstate, enemyColor, kingCoords):
                 return True
 
     return False
-
