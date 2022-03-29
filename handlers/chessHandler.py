@@ -138,7 +138,7 @@ class ChessHandler(WebSocketHandler):
         blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")
 
         if(allyInCheck):
-            #TODO do NOT confirm the move to user or db - send back some kind of error
+            # do NOT confirm the move to user or to DB
             self.write_message({
                 "command": "error",
                 "message": "cannot move into check"

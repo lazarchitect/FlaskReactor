@@ -69,13 +69,16 @@ def chessGame(gameid):
     username = session.get('username')
 
     colors = {game.white_player: "White", game.black_player: "Black"}
-
+    userColor = colors.get(username)
+    enemyColor = "Black" if userColor is "White" else "White"
+    
     payload = {
         "wssh": wssh,
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
-        "userColor": colors.get(username),
+        "userColor": userColor,
+        "enemyColor": enemyColor,
         "yourTurn": game.player_turn == session.get('username')
     }
     payload = json.dumps(payload, default=str)

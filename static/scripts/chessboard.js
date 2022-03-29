@@ -236,17 +236,29 @@ function determineStatus(payload, data){
 	let status = "";
 	switch(payload.username){
 		case data.activePlayer:
-			status+="Your turn."; break;
+			status += "Your turn. ";
+			if(inCheck(payload.userColor, data.whiteInCheck, data.blackInCheck)){
+				status += "You are in check!"
+			}
+			break;
 		case data.otherPlayer:
-			status+="Waiting for opponent..."; break;
+			status += "Waiting for opponent... ";
+			if(inCheck(payload.enemyColor, data.whiteInCheck, data.blackInCheck)){
+				status += "Opponent is in check!"
+			}
+			break;
 		default:
-			status+= "spectating";
+			status += "spectating. ";
 	}
 	return status;
 }
 
 function setStatus(status){
 	document.getElementById('status').innerHTML = status;
+}
+
+function inCheck(yourColor, whiteInCheck, blackInCheck){
+	return (yourColor=="White" && whiteInCheck) || (yourColor=="Black" && blackInCheck);
 }
 
 function Chessboard() {
