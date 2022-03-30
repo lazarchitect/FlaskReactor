@@ -73,12 +73,15 @@ def isPiece(boardstate, coords, pieceType, pieceColor):
 def pieceMatch(piece, pieceColor, pieceType):
     return piece.get("color") == pieceColor and piece.get("type") == pieceType
 
-def hasPiece(boardstate, coords):
-    piece = boardstate[coords[0]][coords[1]].get("piece")
-    return piece != None
-
 def getPiece(boardstate, coords):
     return boardstate[coords[0]][coords[1]].get("piece")
+
+def hasPiece(boardstate, coords):
+    return getPiece(boardstate, coords) != None
+
+def hasColorPiece(boardstate, coords, color):
+    piece = getPiece(boardstate, coords)
+    return piece != None and piece.get("color") == color
 
 def getKingCoords(boardstate, color):
     for row in range(8):
@@ -128,3 +131,19 @@ def inCheck(boardstate, enemyColor, kingCoords):
                 return True
 
     return False
+
+def canMove(boardstate, coords, color):
+    # TODO see if the piece at coords can make a move.
+    # this will be dependent on type and nearby spaces.
+    # also king cannot move into check.
+    pass
+
+def noLegalMoves(boardstate, color):
+    # determines if player <color> cannot make any moves.
+    for row in range(8):
+        for col in range(8):
+            coords = (row, col)
+            if hasColorPiece(boardstate, coords, color):
+                if canMove(boardstate, coords, color):
+                    return False
+    return True
