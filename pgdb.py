@@ -23,7 +23,7 @@ sql = {
         "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
         "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
-        "endChessGame": "UPDATE " + relation + ".chess_games SET time_ended=%s, completed=%s WHERE id=%s",
+        "endChessGame": "UPDATE " + relation + ".chess_games SET completed=true, time_ended=%s, winner=%s WHERE id=%s",
 
         # Tic-Tac-Toe
         "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
@@ -146,10 +146,10 @@ class Pgdb:
         self.__execute(query, values)
         self.conn.commit()
 
-    def endChessGame(self, end_time, gameid):
+    def endChessGame(self, end_time, winner, gameid):
         query = sql['endChessGame']
         completed = True
-        values = [completed, end_time, gameid]
+        values = [end_time, winner, gameid]
         self.__execute(query, values)
         self.conn.commit()
 

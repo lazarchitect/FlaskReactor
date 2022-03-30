@@ -120,7 +120,7 @@ class ChessHandler(WebSocketHandler):
         boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor}}
 
         newActivePlayer = game.white_player if game.player_turn == game.black_player else game.black_player
-        otherPlayer     = game.white_player if game.player_turn != game.black_player else game.black_player
+        oldActivePlayer = game.white_player if game.player_turn != game.black_player else game.black_player
 
         allyColor = srcColor
         enemyColor = "Black" if srcColor == "White" else "White"
@@ -144,18 +144,38 @@ class ChessHandler(WebSocketHandler):
                 "message": "cannot move into check"
             })
             return
-
         
         message = {
             "command": "updateBoard",
             "newBoardstate": boardstate,
             "activePlayer": newActivePlayer,
-            "otherPlayer": otherPlayer,
+            "otherPlayer": oldActivePlayer,
             "whiteInCheck": whiteInCheck,
             "blackInCheck": blackInCheck
         }
 
-        # TODO handle all clientConnections using utils.updateAll()
         utils.updateAll(clientConnections[gameId], message)
 
         self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, gameId)
+
+        # TODO check if the ENEMY player cannot make any legal moves.
+        # if so, its mate.
+            # if enemyInCheck == true, 
+                # then its checkmate.
+            # else, stalemate.
+            # convey this info to DB and front end.
+            # return
+        if utils.noLegalMoves(boardstate, enemyColor):
+            winner = oldActivePlayer if enemyInCheck else None
+            mate = "Checkmate" if enemyInCheck else "Stalemate"
+            message = {
+                "command": "endGame",
+                "gameEnded": True,
+                "otherPlayer": newActivePlayer,
+                "winner": winner,
+                "mate": mate
+            }
+            
+            utils.updateAll(clientConnections[gameId], message)
+
+            self.pgdb.endChessGame(datetime.now(), winner, gameId)
