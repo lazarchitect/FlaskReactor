@@ -3,6 +3,7 @@ from uuid import uuid4
 from hashlib import sha256
 from tornado.websocket import WebSocketClosedError
 import json
+import copy
 
 tttSets = [(0,1,2),(3,4,5),(6,7,8),(0,3,6),(1,4,7),(2,5,8),(0,4,8),(2,4,6)]
 
@@ -132,18 +133,60 @@ def inCheck(boardstate, enemyColor, kingCoords):
 
     return False
 
-def canMove(boardstate, coords, color):
+def knightCanMove(boardstate, coords, pieceColor):
+    pass
+
+def pawnCanMove(boardstate, coords, pieceColor):
+    pass
+
+def queenCanMove(boardstate, coords, pieceColor):
+    pass
+
+def kingCanMove(boardstate, coords, pieceColor):
+    pass
+
+def rookCanMove(boardstate, coords, pieceColor):
+    enemyColor = "Black" if pieceColor == "White" else "White"
+    
+    newBoardstate = copy.deepcopy(boardstate)
+    newBoardstate[coords[0]][coords[1]] = None
+    if inCheck(newBoardstate, enemyColor, getKingCoords(newBoardstate, pieceColor)):
+        return False
+    
+    for offset in rookOffsets:
+        targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
+        if not outOfBounds(targetCoords) and not hasColorPiece(boardstate, targetCoords, pieceColor):    
+            return True
+    return True
+
+def bishopCanMove(boardstate, coords, pieceColor):
+    pass
+
+def canMove(boardstate, coords, pieceColor):
     # TODO see if the piece at coords can make a move.
     # this will be dependent on type and nearby spaces.
     # also king cannot move into check.
-    pass
+    piece = getPiece(boardstate, coords)
+    type = piece.get("type")
+    if type is "Knight":
+        return knightCanMove(boardstate, coords, pieceColor)
+    elif type is "Pawn":
+        return pawnCanMove(boardstate, coords, pieceColor)
+    elif type is "Rook":
+        return rookCanMove(boardstate, coords, pieceColor) # only need to check adjacent tiles
+    elif type is "Queen":
+        return queenCanMove(boardstate, coords, pieceColor) # only need to check adjacent tiles
+    elif type is "King":
+        return kingCanMove(boardstate, coords, pieceColor)
+    elif type is "Bishop":
+        return bishopCanMove(boardstate, coords, pieceColor) # only need to check adjacent tiles
 
-def noLegalMoves(boardstate, color):
-    # determines if player <color> cannot make any moves.
+def noLegalMoves(boardstate, playerColor):
+    # determines if player <playerColor> cannot make any moves.
     for row in range(8):
         for col in range(8):
             coords = (row, col)
-            if hasColorPiece(boardstate, coords, color):
-                if canMove(boardstate, coords, color):
+            if hasColorPiece(boardstate, coords, playerColor):
+                if canMove(boardstate, coords, playerColor):
                     return False
     return True
