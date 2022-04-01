@@ -104,10 +104,16 @@ def pieceTowards(boardstate, coords, offset):
 
 def inCheck(boardstate, enemyColor, kingCoords):
     
+    # LOOK FOR KINGS
+    for offset in royalOffsets:
+        coords = (kingCoords[0] + offset[0], kingCoords[1] + offset[1])
+        if isPiece(boardstate, coords, "King", enemyColor):
+            return True
+    
     # LOOK FOR KNIGHTS
     for offset in knightOffsets:
-        knightCoords = (kingCoords[0] + offset[0], kingCoords[1] + offset[1])
-        if isPiece(boardstate, knightCoords, "Knight", enemyColor):
+        coords = (kingCoords[0] + offset[0], kingCoords[1] + offset[1])
+        if isPiece(boardstate, coords, "Knight", enemyColor):
             return True
     
     # LOOK FOR PAWNS
