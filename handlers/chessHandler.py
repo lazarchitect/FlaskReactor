@@ -83,11 +83,18 @@ class ChessHandler(WebSocketHandler):
         else:
             otherPlayer = game.white_player
 
+        boardstate = game.boardstate
+        
+        whiteInCheck = utils.inCheck(boardstate, "Black", utils.getKingCoords(boardstate, "White"))
+        blackInCheck = utils.inCheck(boardstate, "White", utils.getKingCoords(boardstate, "Black"))
+
         self.write_message({
                 "command": "info",
                 "gameEnded": game.completed,
                 "activePlayer": game.player_turn,
                 "otherPlayer": otherPlayer,
+                "whiteInCheck": whiteInCheck,
+                "blackInCheck": blackInCheck,
                 "winner": game.winner,
                 "contents": str(self.socketId) + " subscribed to gameId " + gameId
         })
@@ -130,9 +137,6 @@ class ChessHandler(WebSocketHandler):
 
         allyInCheck = utils.inCheck(boardstate, enemyColor, allyKingCoords)
         enemyInCheck= utils.inCheck(boardstate, allyColor, enemyKingCoords)
-
-        print("ally in check?", allyInCheck)
-        print("enemy in check?", enemyInCheck)
 
         whiteInCheck = (allyInCheck and srcColor=="White") or (enemyInCheck and enemyColor=="White")
         blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")

@@ -51,6 +51,9 @@ function wsConnect(boardstate, setBoardstate) {
 		else if(data.command == "info"){
 			setStatus(determineStatus(payload, data));
 		}
+		else if(data.command == "endGame"){
+			setStatus(determineStatus(payload, data))
+		}
 		else if(data.command == "error"){
 			console.log(data.message)
 			alert(data.message)
@@ -234,6 +237,17 @@ function scan(rowOffset, colOffset, row, col, color, boardstate, moveList){
 
 function determineStatus(payload, data){
 	let status = "";
+	if(data.gameEnded){
+		status += "Game over."
+		if(data.winner == null)
+			status += "It's a tie."
+		else if(data.winner == payload.username)
+			status += "You win!"
+		else if(payload.username==data.otherPlayer) 
+			status += "You lose...";
+		else
+			status += "Winner was " + data.winner;
+	}
 	switch(payload.username){
 		case data.activePlayer:
 			status += "Your turn. ";
