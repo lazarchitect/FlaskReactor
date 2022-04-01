@@ -247,6 +247,7 @@ function determineStatus(payload, data){
 			status += "You lose...";
 		else
 			status += "Winner was " + data.winner;
+		return;
 	}
 	switch(payload.username){
 		case data.activePlayer:
