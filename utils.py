@@ -224,13 +224,11 @@ def bishopCanMove(boardstate, coords, pieceColor, enemyColor):
     return False
 
 def canMove(boardstate, coords, pieceColor):
-    enemyColor = "Black" if pieceColor == "White" else "White"
 
-    # TODO see if the piece at coords can make a move.
-    # this will be dependent on type and nearby spaces.
-    # also king cannot move into check.
+    enemyColor = "Black" if pieceColor == "White" else "White"
     piece = getPiece(boardstate, coords)
     type = piece.get("type")
+
     if type == "Knight":
         return knightCanMove(boardstate, coords, pieceColor, enemyColor)
     elif type == "Pawn":
@@ -246,10 +244,17 @@ def canMove(boardstate, coords, pieceColor):
 
 def noLegalMoves(boardstate, playerColor):
     # determines if player <playerColor> cannot make any moves.
-    for row in range(8):
-        for col in range(8):
-            coords = (row, col)
-            if hasColorPiece(boardstate, coords, playerColor):
-                if canMove(boardstate, coords, playerColor):
-                    return False
-    return True
+    enemyColor = "White" if playerColor == "Black" else "Black"
+    if inCheck(boardstate, enemyColor):
+        # TODO only return false on moves which will get you out of check
+        
+        return True
+    
+    else:
+        for row in range(8):
+            for col in range(8):
+                coords = (row, col)
+                if hasColorPiece(boardstate, coords, playerColor):
+                    if canMove(boardstate, coords, playerColor):
+                        return False
+        return True
