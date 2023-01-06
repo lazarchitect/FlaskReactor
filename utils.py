@@ -249,12 +249,11 @@ def noLegalMoves(boardstate, playerColor):
     #     # TODO only return false if you find a move which will get you out of check
         
     #     return True
-    if False: pass # TODO DELETE THIS LINE
-    else:
-        for row in range(8):
-            for col in range(8):
-                coords = (row, col)
-                if hasColorPiece(boardstate, coords, playerColor):
-                    if canMove(boardstate, coords, playerColor):
-                        return False
-        return True
+    
+    for row in range(8):
+        for col in range(8):
+            coords = (row, col)
+            if hasColorPiece(boardstate, coords, playerColor):
+                if canMove(boardstate, coords, playerColor):
+                    return False
+    return True
