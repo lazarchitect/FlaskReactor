@@ -1,7 +1,7 @@
 #!usr/bin/env python
 
 from models.TttGame import TttGame
-from flask import Flask, url_for, render_template, redirect, request, session
+from flask import Flask, send_from_directory, render_template, redirect, request, session
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 from tornado.options import parse_command_line
@@ -208,7 +208,7 @@ def createGame():
 
 @app.route("/.well-known/acme-challenge/<path:filename>")
 def acme_challenge(filename):
-	return send_from_directory("/static/.well-known/acme-challenge", filename)
+	return send_from_directory("static/.well-known/acme-challenge", filename)
 
 
 is_closing = False
