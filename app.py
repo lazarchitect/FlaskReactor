@@ -1,7 +1,7 @@
 #!usr/bin/env python
 
 from models.TttGame import TttGame
-from flask import Flask, render_template, redirect, request, session
+from flask import Flask, url_for, render_template, redirect, request, session
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 from tornado.options import parse_command_line
@@ -66,16 +66,16 @@ def homepage():
 @app.route('/games/chess/<gameid>')
 def chessGame(gameid):
     game = pgdb.getChessGame(gameid)
-    
+
     if game == None:
         return render_template("home.html", alert="Game could not be retrieved from database.")
-    
+
     username = session.get('username')
 
     colors = {game.white_player: "White", game.black_player: "Black"}
     userColor = colors.get(username)
     enemyColor = "Black" if userColor is "White" else "White"
-    
+
     payload = {
         "wssh": wssh,
         "game": vars(game),
@@ -205,6 +205,12 @@ def createGame():
 
     return redirect('/')
 
+
+@app.route("/.well-known/acme-challenge/<path:filename>")
+def acme_challenge(filename):
+	return send_from_directory("/static/.well-known/acme-challenge", filename)
+
+
 is_closing = False
 
 def signal_handler(signum, frame):
@@ -229,7 +235,7 @@ if __name__ == "__main__":
 
     flaskApp = WSGIContainer(app)
     application = Application(
-        default_host="flaskreactor.com", 
+        default_host="flaskreactor.com",
         handlers=[
             ("/ws/ttt", TttHandler, dict(db_env=db_env)),
             ("/ws/stat", StatHandler, dict(db_env=db_env)),
