@@ -74,7 +74,7 @@ def chessGame(gameid):
 
     colors = {game.white_player: "White", game.black_player: "Black"}
     userColor = colors.get(username)
-    enemyColor = "Black" if userColor is "White" else "White"
+    enemyColor = "Black" if userColor == "White" else "White"
 
     payload = {
         "wssh": wssh,
