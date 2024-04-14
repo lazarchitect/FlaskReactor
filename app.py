@@ -230,6 +230,7 @@ if __name__ == "__main__":
     except IndexError:
         db_env = "no_db"
 
+    print("listening for websocket requests to " + wssh)
     print("connecting to: " + db_env)
     pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
 
