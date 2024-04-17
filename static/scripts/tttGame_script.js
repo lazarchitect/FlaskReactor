@@ -1,10 +1,8 @@
 
-
-
 const gameId = payload.game.id;
 var yourTurn = payload.yourTurn;
 
-function wsSubscribe(tttSocket){
+function wsSubscribe(tttSocket) {
 	const subscribeObj = {
 		"request": "subscribe", 
 		"gameId": gameId,
@@ -14,7 +12,7 @@ function wsSubscribe(tttSocket){
 	tttSocket.send(subscribeJSON);
 }
 
-function wsUpdate(tttSocket, boardIndex){
+function wsUpdate(tttSocket, boardIndex) {
 	const updateObj = {
 		"request": "update", 
 		"gameId": gameId, 
@@ -31,8 +29,8 @@ function wsConnect(setBoardstate, setYourTurn) {
 
 	console.log("initializing WS")
 	const wsServerHost = payload.wssh;
-    const tttSocket = new WebSocket("ws://" + wsServerHost + "/ws/ttt")
-	const statSocket=new WebSocket("ws://" + wsServerHost + "/ws/stat")
+    const tttSocket = new WebSocket("wss://" + wsServerHost + "/ws/ttt")
+	const statSocket=new WebSocket("wss://" + wsServerHost + "/ws/stat")
 
 	tttSocket.onopen = (() => wsSubscribe(tttSocket));
 
@@ -46,7 +44,7 @@ function wsConnect(setBoardstate, setYourTurn) {
 
 		}
 
-		else if(data.command == "endGame"){
+		else if(data.command == "endGame") {
 			setStatus(determineStatus(payload, data));
 			setYourTurn(payload.username === data.activePlayer);
 			// call out to server - update this user's stats
@@ -61,11 +59,11 @@ function wsConnect(setBoardstate, setYourTurn) {
 			statSocket.send(message);
 		}
 
-		else if(data.command === "info"){
+		else if(data.command === "info") {
 			setStatus(determineStatus(payload, data));
 		}
 
-		else if(data.command === "error"){
+		else if(data.command === "error") {
 			console.log(data.contents);
 		}
 
@@ -88,12 +86,12 @@ function setStatus(status){
 returns the updated status string,
 which gets displayed to the user at all times.
 */
-function determineStatus(payload, data){
+function determineStatus(payload, data) {
 	
 	var retval = "";
 	if(data.gameEnded){
 		retval+="Game over. ";
-		if(data.winner==null){
+		if(data.winner==null) {
 			retval+="It's a tie.";
 		}
 		else{
@@ -108,7 +106,7 @@ function determineStatus(payload, data){
 		}
 	}
 	else{
-		switch(payload.username){
+		switch(payload.username) {
 			case data.activePlayer:
 				retval+="Your turn."; break;
 			case data.otherPlayer:

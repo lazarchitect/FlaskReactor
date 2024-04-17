@@ -34,7 +34,7 @@ function wsUpdate(chessSocket, tileId){
 
 function wsConnect(boardstate, setBoardstate) {
 	const webSocketServerHost = payload.wssh;
-	const chessSocket = new WebSocket("ws://" + webSocketServerHost + "/ws/chess");
+	const chessSocket = new WebSocket("wss://" + webSocketServerHost + "/ws/chess");
 
 	chessSocket.onopen = (() => wsSubscribe(chessSocket));
 
