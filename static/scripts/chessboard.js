@@ -11,7 +11,7 @@ var yourTurn = payload.yourTurn;
 
 function wsSubscribe(chessSocket){
 	const subscribeObj = {
-		"request": "subscribe", 
+		"request": "subscribe",
 		"gameId": gameId,
 		"username": payload.username
 	};
@@ -21,7 +21,7 @@ function wsSubscribe(chessSocket){
 
 function wsUpdate(chessSocket, tileId){
 	const updateObj = {
-		"request": "update", 
+		"request": "update",
 		"gameId": payload.game.id,
 		"player": payload.player,
 		"userId": payload.userId,
@@ -33,7 +33,7 @@ function wsUpdate(chessSocket, tileId){
 }
 
 function wsConnect(boardstate, setBoardstate) {
-	const webSocketServerHost = payload.wssh;
+	const webSocketServerHost = payload.wsHost;
 	const chessSocket = new WebSocket("wss://" + webSocketServerHost + "/ws/chess");
 
 	chessSocket.onopen = (() => wsSubscribe(chessSocket));
@@ -41,7 +41,7 @@ function wsConnect(boardstate, setBoardstate) {
 	chessSocket.onmessage = (message) => {
 
 		const data = JSON.parse(message.data);
-		
+
 		if(data.command == "updateBoard"){
 			setStatus(determineStatus(payload, data));
 			setBoardstate(data.newBoardstate);
@@ -61,7 +61,7 @@ function wsConnect(boardstate, setBoardstate) {
 	};
 
 	var board = document.getElementById("board");
-	
+
 	board.onclick = function(mouseEvent){
 
 		if(!yourTurn) return;
@@ -80,7 +80,7 @@ function wsConnect(boardstate, setBoardstate) {
 			removeHighlights();
 
 			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
-			
+
 			generateHighlights(boardstate, tile, piece);
 
 		}
@@ -103,12 +103,12 @@ function removeHighlights(){
 }
 
 function generateHighlights(boardstate, tile, piece){ // void
-	
+
 	highlightedTiles = [];
 	active_coords = [piece.row, piece.col];
 
 	const enemyColor = piece.color == "Black" ? "White" : "Black";
-	
+
 	if(piece.type == "Pawn"){
 		const whiteDirection = -1;
 		const blackDirection =  1;
@@ -118,13 +118,13 @@ function generateHighlights(boardstate, tile, piece){ // void
 
 		const row = piece.row;
 		if(row == finalRow) return; // will never happen under promotion
-		
+
 		// advance 1
 		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined){
 			highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
 		}
 		// advance 2
-		if(row == starterRow 
+		if(row == starterRow
 			&& boardstate[piece.row+pieceDirection][piece.col].piece == undefined
 			&& boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined){
 			highlightedTiles.push((piece.row+pieceDirection*2) + "" + piece.col);
@@ -140,13 +140,13 @@ function generateHighlights(boardstate, tile, piece){ // void
 			highlightedTiles.push((piece.row+pieceDirection) + "" + (piece.col+1));
 		}
 	}
-	
+
 	else if(piece.type == "King"){
 		// TODO: kings cannot move into a check position
 		royalOffsets.forEach(offset => {
 			const destRow = piece.row+offset[0];
-			const destCol = piece.col + offset[1]; 
-			
+			const destCol = piece.col + offset[1];
+
 			if(!outOfBounds(destRow, destCol)){
 				const targetPiece = boardstate[destRow][destCol].piece;
 				if(targetPiece == undefined || targetPiece.color == enemyColor){
@@ -179,7 +179,7 @@ function generateHighlights(boardstate, tile, piece){ // void
 		highlightedTiles = sliderMoves(piece, boardstate, royalOffsets);
 	}
 
-	
+
 	for(var index in highlightedTiles){
 		const coordinate = highlightedTiles[index];
 		const tileDiv = document.getElementById(coordinate[1]+""+coordinate[0]);
@@ -189,7 +189,7 @@ function generateHighlights(boardstate, tile, piece){ // void
 		else {
 			tileDiv.classList.add("lightHighlighted");
 		}
-		
+
 	}
 
 }
@@ -200,7 +200,7 @@ function outOfBounds(row, col){
 
 function sliderMoves(piece, boardstate, offsets) {
 	let moveList = [];
-	
+
 	offsets.forEach(offset => {
 		const rowOffset = offset[0];
 		const colOffset = offset[1];
@@ -211,7 +211,7 @@ function sliderMoves(piece, boardstate, offsets) {
 
 // modify moveList and recurse to the next offset.
 function scan(rowOffset, colOffset, row, col, color, boardstate, moveList){
-	
+
 	const targetRow = row+rowOffset;
 	const targetCol = col+colOffset;
 
@@ -277,7 +277,7 @@ function inCheck(yourColor, whiteInCheck, blackInCheck){
 }
 
 function Chessboard() {
-	
+
 	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
 
 	React.useEffect(() => wsConnect(boardstate, setBoardstate), []);
@@ -286,13 +286,13 @@ function Chessboard() {
 		<div id="board">
 			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val}/>)}
 		</div>
-	);		
+	);
 }
 
-function Row(props){	
-		
+function Row(props){
+
 	var darkTile = props.rowIndex % 2 == 0 ? false : true;
-		
+
 	var reactTileArray = []
 	for(var tileIndex = 0; tileIndex < props.tiles.length; tileIndex++) {
 		reactTileArray.push(
@@ -305,16 +305,16 @@ function Row(props){
 }
 
 function Tile(props) {
-		
+
 	const piece = props.data.piece;
 
 	const imagePath = piece == null ? "" : "/static/images/" + piece.color + piece.type + ".png";
 
 	return (
-		<span 
+		<span
 			key = {props.tileIndex.toString() + props.rowIndex.toString()}
 			className = {props.darkTile ? "tile darkTile" : "tile lightTile"}
-			id = {props.tileIndex.toString() + props.rowIndex.toString()} 
+			id = {props.tileIndex.toString() + props.rowIndex.toString()}
 		>
 			{/* tile contents */}
 			{ imagePath != ""

@@ -77,7 +77,7 @@ def chessGame(gameid):
     enemyColor = "Black" if userColor == "White" else "White"
 
     payload = {
-        "wssh": wssh,
+        "wsHost": host,
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
@@ -94,7 +94,7 @@ def chessGame(gameid):
 def tttGame(gameid):
     game = pgdb.getTttGame(gameid)
     payload = {
-        "wssh": wssh,
+        "wsHost": host,
         "game": vars(game),
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
@@ -206,11 +206,6 @@ def createGame():
     return redirect('/')
 
 
-@app.route("/.well-known/acme-challenge/<path:filename>")
-def acme_challenge(filename):
-	return send_from_directory("static/.well-known/acme-challenge", filename)
-
-
 is_closing = False
 
 def signal_handler(signum, frame):
@@ -230,7 +225,7 @@ if __name__ == "__main__":
     except IndexError:
         db_env = "no_db"
 
-    print("listening for websocket requests to " + wssh)
+    print("listening for secure websocket requests to " + wsHost)
     print("connecting to: " + db_env)
     pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
 
