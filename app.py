@@ -1,7 +1,7 @@
 #!usr/bin/env python
 
 from models.TttGame import TttGame
-from flask import Flask, send_from_directory, render_template, redirect, request, session
+from flask import Flask, render_template, redirect, request, session
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 from tornado.options import parse_command_line
@@ -111,7 +111,6 @@ def login():
     password = request.form['password']
     password_hash = generateHash(password)
 
-    # TODO performance: there are 2 callouts to the db here, only need 1
     correctLogin = pgdb.checkLogin(username, password_hash)
     if(correctLogin):
         userId = pgdb.getUser(username)[2]
