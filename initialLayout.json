@@ -28,7 +28,7 @@
         "piece": {
           "row": 0,
           "col": 3,
-          "type": "King",
+          "type": "Queen",
           "color": "Black"
         }
       },
@@ -36,7 +36,7 @@
         "piece": {
           "row": 0,
           "col": 4,
-          "type": "Queen",
+          "type": "King",
           "color": "Black"
         }
       },
@@ -266,7 +266,7 @@
         "piece": {
           "row": 7,
           "col": 3,
-          "type": "King",
+          "type": "Queen",
           "color": "White"
         }
       },
@@ -274,7 +274,7 @@
         "piece": {
           "row": 7,
           "col": 4,
-          "type": "Queen",
+          "type": "King",
           "color": "White"
         }
       },

@@ -23,7 +23,8 @@ try:
     wsDetails = json.loads(open("wsdetails.json", "r").read())
     port = wsDetails['port']
     host = wsDetails['host']
-    wssh = host + ":" + port
+    wsProtocol = wsDetails['protocol']
+
 except FileNotFoundError:
     print("you need to add wsdetails.json for the site to work.")
     exit(1)
@@ -77,7 +78,7 @@ def chessGame(gameid):
     enemyColor = "Black" if userColor == "White" else "White"
 
     payload = {
-        "wsHost": host,
+        "wsUrl": wsProtocol + "://" + host + "/ws/chess",
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
@@ -230,7 +231,7 @@ if __name__ == "__main__":
 
     flaskApp = WSGIContainer(app)
     application = Application(
-        default_host="flaskreactor.com",
+        default_host="flaskreactor.net",
         handlers=[
             ("/ws/ttt", TttHandler, dict(db_env=db_env)),
             ("/ws/stat", StatHandler, dict(db_env=db_env)),

@@ -244,7 +244,7 @@ def canMove(boardstate, coords, pieceColor):
 
 def noLegalMoves(boardstate, playerColor):
     # determines if player <playerColor> cannot make any moves.
-    enemyColor = "White" if playerColor == "Black" else "Black"
+
     # if inCheck(boardstate, enemyColor, getKingCoords(boardstate, playerColor)):
     #     # TODO only return false if you find a move which will get you out of check
         
