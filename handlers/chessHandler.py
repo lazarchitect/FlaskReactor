@@ -118,6 +118,9 @@ class ChessHandler(WebSocketHandler):
         srcType = srcPiece["type"]
         srcColor = srcPiece["color"]
 
+        moveNotation = utils.numberToLetter(srcCol) + srcRow + utils.numberToLetter(destCol) + destRow + "."
+        newNotation = game.notation + moveNotation
+
         # TODO VALIDATE MOVE AGAINST EXISTING BOARD 
         # (https://www.notion.so/noshun/Server-side-chess-move-validation-d89dfc680c8849c19b89fbab2a924367)
 
@@ -160,7 +163,7 @@ class ChessHandler(WebSocketHandler):
 
         utils.updateAll(clientConnections[gameId], message)
 
-        self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, gameId)
+        self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, newNotation, gameId)
 
         # TODO check if the ENEMY player cannot make any legal moves.
         # if so, its mate.

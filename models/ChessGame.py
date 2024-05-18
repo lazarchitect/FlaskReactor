@@ -41,6 +41,7 @@ class ChessGame:
         g.time_ended = record[7]
         g.player_turn = record[8]
         g.winner = record[9]
+        g.notation = record[10]
         return g
 
     def toTuple(self):
