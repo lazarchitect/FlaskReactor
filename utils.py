@@ -262,4 +262,4 @@ def numberToLetter(i):
     # turns a number representing a chessboard column into its corresponding letter.
     if i > 7 or i < 0 : return
     # zero indexed?
-    return 'abcdefgh'.index(i)
+    return 'abcdefgh'[i]

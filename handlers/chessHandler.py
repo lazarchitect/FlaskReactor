@@ -118,7 +118,8 @@ class ChessHandler(WebSocketHandler):
         srcType = srcPiece["type"]
         srcColor = srcPiece["color"]
 
-        moveNotation = utils.numberToLetter(srcCol) + srcRow + utils.numberToLetter(destCol) + destRow + "."
+        moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
+        if (game.notation == None): game.notation = ""
         newNotation = game.notation + moveNotation
 
         # TODO VALIDATE MOVE AGAINST EXISTING BOARD 
