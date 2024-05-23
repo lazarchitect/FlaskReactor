@@ -47,10 +47,16 @@ body {
     font-size: 0; /* HTML has this weird spacing issue causing empty spaces, removing any font size fixes it */
 }
 
-#board {
-    display: inline;
-    background-color: black;
-    margin: 0%;
+#chessPlayArea {
+    display: block;
+    padding-left: 5%;
+    padding-top: 5%;
+}
+
+#tttPlayArea {
+    display: block;
+    padding-left: 5%;
+    padding-top: 5%;
 }
 
 .tile {
@@ -61,11 +67,11 @@ body {
 }
 
 .lightTile {
-    background-color: #E5D0CC;
+    background-color: hsl(25, 30%, 66%);
 }
 
 .darkTile {    
-    background-color: #412234;
+    background-color: #633e07;
 }
 
 .darkHighlighted {
