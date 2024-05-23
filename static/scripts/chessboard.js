@@ -33,7 +33,8 @@ function wsUpdate(chessSocket, tileId){
 }
 
 function wsConnect(boardstate, setBoardstate) {
-	const chessSocket = new WebSocket(payload.wsUrl);
+	const chessSocket = new WebSocket(payload.wsBaseUrl + "/chess");
+	// TODO chess stats?
 
 	chessSocket.onopen = (() => wsSubscribe(chessSocket));
 
