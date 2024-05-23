@@ -24,6 +24,7 @@ try:
     port = wsDetails['port']
     host = wsDetails['host']
     wsProtocol = wsDetails['protocol']
+    wsBaseUrl = wsProtocol + "://" + host + "/ws"
 
 except FileNotFoundError:
     print("you need to add wsdetails.json for the site to work.")
@@ -78,13 +79,14 @@ def chessGame(gameid):
     enemyColor = "Black" if userColor == "White" else "White"
 
     payload = {
-        "wsUrl": wsProtocol + "://" + host + "/ws/chess",
+        "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
         "userColor": userColor,
         "enemyColor": enemyColor,
-        "yourTurn": game.player_turn == session.get('username')
+        "yourTurn": game.player_turn == session.get('username'),
+        "deployVersion": appVersion
     }
     payload = json.dumps(payload, default=str)
 
@@ -95,12 +97,13 @@ def chessGame(gameid):
 def tttGame(gameid):
     game = pgdb.getTttGame(gameid)
     payload = {
-        "wsHost": host,
+        "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
-        "yourTurn": game.player_turn == session.get('username')
+        "yourTurn": game.player_turn == session.get('username'),
+        "deployVersion": appVersion
     }
     payload = json.dumps(payload, default=str)
     return render_template("tttGame.html", payload=payload)
@@ -157,6 +160,8 @@ def logout():
 
 @app.route("/creategame", methods=["POST"])
 def createGame():
+
+    # TODO refactoring: the remainder of this function seems like it should live in its own class
 
     game_type = request.form['gameType']
 

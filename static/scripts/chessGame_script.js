@@ -2,9 +2,12 @@
 
 var reactRoot = (
 	<div id="reactRoot">
-        <SiteHeader username={payload.username}/>
-        <Chessboard boardstate={payload.boardstate}/>
-        <p>Status: <span id="status"></span></p>
+        <SiteHeader version={payload.deployVersion} username={payload.username}/>
+        <div id="chessPlayArea">
+            <Chessboard boardstate={payload.boardstate}/>
+            <p>Status: <span id="status"></span></p>
+        </div>
+        
     </div>
 );
 

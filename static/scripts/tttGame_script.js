@@ -28,9 +28,9 @@ function wsUpdate(tttSocket, boardIndex) {
 function wsConnect(setBoardstate, setYourTurn) {
 
 	console.log("initializing WS")
-	const wsServerHost = payload.wssh;
-    const tttSocket = new WebSocket("wss://" + wsServerHost + "/ws/ttt")
-	const statSocket=new WebSocket("wss://" + wsServerHost + "/ws/stat")
+	
+    const tttSocket = new WebSocket(payload.wsBaseUrl + "/ttt")
+	const statSocket =new WebSocket(payload.wsBaseUrl + "/stat")
 
 	tttSocket.onopen = (() => wsSubscribe(tttSocket));
 
@@ -185,9 +185,13 @@ function TttBoard(){
 
 var rootElem = (
 	<div id="reactRoot">
-		<SiteHeader username={payload.username}/>
-		<TttBoard/>
-		<p>Status: <span id="status"></span></p>
+		{/* TODO could we just call the payload "props" to avoid this double passing down? */}
+		<SiteHeader version={payload.deployVersion} username={payload.username}/>
+
+		<div id="tttPlayArea">
+			<TttBoard/>
+			<p>Status: <span id="status"></span></p>
+		</div>
 	</div>
 );
 
