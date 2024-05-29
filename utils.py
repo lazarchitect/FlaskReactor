@@ -68,7 +68,7 @@ def outOfBounds(coords):
 
 def isPiece(boardstate, coords, pieceType, pieceColor):
     if(outOfBounds(coords)): return False
-    print("\n\n coords:", coords, ". board:", boardstate, "\n\n\n")
+    #print("\n\n coords:", coords, ". board:", boardstate, "\n\n\n")
     piece = boardstate[coords[0]][coords[1]].get("piece")
     if(piece == None): return False
     return piece.get("type") == pieceType and piece.get("color") == pieceColor
