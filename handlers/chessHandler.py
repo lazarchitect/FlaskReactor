@@ -125,6 +125,9 @@ class ChessHandler(WebSocketHandler):
         srcType = srcPiece["type"]
         srcColor = srcPiece["color"]
 
+        blackKingMoved = (srcType == "King" and srcColor == "Black")
+        whiteKingMoved = (srcType == "King" and srcColor == "White")
+
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
         if (game.notation == None): game.notation = ""
         newNotation = game.notation + moveNotation
@@ -171,7 +174,7 @@ class ChessHandler(WebSocketHandler):
 
         utils.updateAll(clientConnections[gameId], message)
 
-        self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, newNotation, gameId)
+        self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, newNotation, blackKingMoved, whiteKingMoved, gameId)
 
         # TODO check if the ENEMY player cannot make any legal moves.
         # if so, its mate.
