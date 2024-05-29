@@ -22,7 +22,7 @@ sql = {
         "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
         "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
         "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s WHERE id=%s",
+        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s WHERE id=%s",
         "endChessGame": "UPDATE " + relation + ".chess_games SET completed=true, time_ended=%s, winner=%s WHERE id=%s",
 
         # Tic-Tac-Toe
@@ -44,12 +44,14 @@ class Pgdb:
 
     def __init__(self, db_env):
 
+        self.dbenv = db_env;
+
         try:
 
             dbDetails = loads(open("dbdetails.json", "r").read())
             print("real pgdb instantiating.")
             self.conn = connect(
-                host=dbDetails['remote_ip' if db_env=='remote_db' else 'local_ip'],
+                host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
                 database=dbDetails['database'],
                 user=dbDetails['user'],
                 password=dbDetails['password']
@@ -81,7 +83,7 @@ class Pgdb:
             #Connection was closed. reset conn and cursor. (this happens due to idle timeouts.)
             dbDetails = loads(open("dbdetails.json", "r").read())
             self.conn = connect(
-                host=dbDetails['local_ip'],
+                host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
                 database=dbDetails['database'],
                 user=dbDetails['user'],
                 password=dbDetails['password']
@@ -141,9 +143,9 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchall()
 
-    def updateChessGame(self, new_boardstate, update_time, active_player, newNotation, gameid):
+    def updateChessGame(self, new_boardstate, update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, gameid):
         query = sql['updateChessGame']
-        values = [Json(new_boardstate), update_time, active_player, newNotation, gameid]
+        values = [Json(new_boardstate), update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, gameid]
         self.__execute(query, values)
         self.conn.commit()
 
