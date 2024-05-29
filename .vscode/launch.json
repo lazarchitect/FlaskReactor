@@ -6,7 +6,7 @@
 	"configurations": [
 		{
 			"name": "FlaskReactor LOCAL DB",
-			"type": "python",
+			"type": "debugpy",
 			"request": "launch",
 			"module": "app",
 			"args": [
@@ -15,7 +15,7 @@
 		},
 		{
 			"name": "FlaskReactor REMOTE DB",
-			"type": "python",
+			"type": "debugpy",
 			"request": "launch",
 			"module": "app",
 			"args": [
@@ -24,7 +24,7 @@
 		},
 		{
 			"name": "FlaskReactor NO DB",
-			"type": "python",
+			"type": "debugpy",
 			"request": "launch",
 			"module": "app",
 			"args": [
