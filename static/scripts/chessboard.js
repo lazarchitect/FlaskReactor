@@ -8,6 +8,8 @@ const royalOffsets = [[1,1],[1,-1],[-1,1],[-1,-1],[0,1],[0,-1],[1,0],[-1,0]];
 
 const gameId = payload.game.id;
 var yourTurn = payload.yourTurn;
+var blackKingMoved = payload.game.blackkingmoved;
+var whiteKingMoved = payload.game.whitekingmoved;
 
 function wsSubscribe(chessSocket){
 	const subscribeObj = {
@@ -45,6 +47,8 @@ function wsConnect(boardstate, setBoardstate) {
 		if(data.command == "updateBoard"){
 			setStatus(determineStatus(payload, data));
 			setBoardstate(data.newBoardstate);
+			blackKingMoved = data.blackKingMoved;
+			whiteKingMoved = data.whiteKingMoved;
 			yourTurn = payload.username === data.activePlayer;
 			boardstate = data.newBoardstate;
 		}
@@ -81,7 +85,7 @@ function wsConnect(boardstate, setBoardstate) {
 
 			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
 
-			generateHighlights(boardstate, tile, piece);
+			generateHighlights(boardstate, piece);
 
 		}
 		else {
@@ -102,7 +106,7 @@ function removeHighlights(){
 	highlightedTiles = [];
 }
 
-function generateHighlights(boardstate, tile, piece){ // void
+function generateHighlights(boardstate, piece){ // void
 
 	highlightedTiles = [];
 	active_coords = [piece.row, piece.col];
@@ -142,6 +146,7 @@ function generateHighlights(boardstate, tile, piece){ // void
 	}
 
 	else if(piece.type == "King"){
+		//TODO #70: kings can castle if they havent moved yet
 		// TODO: kings cannot move into a check position
 		royalOffsets.forEach(offset => {
 			const destRow = piece.row+offset[0];
@@ -280,9 +285,13 @@ function Chessboard() {
 
 	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
 
+	// need useEffect (which triggers after rendering) to ensure the chessboard component
+	// has rendered at least once before the ws connection, which syncs with the chessboard, is made.
+	// note - this only triggers on the first render, due to the empty dependency array. (no dependencies => no ongoing effect)
 	React.useEffect(() => wsConnect(boardstate, setBoardstate), []);
 
 	return (
+		// TODO extract the onClick declaration out of wsConnect? put it here or in its own fn?
 		<div id="board">
 			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val}/>)}
 		</div>
