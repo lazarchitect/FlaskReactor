@@ -29,7 +29,7 @@ class ChessGame:
 
     @staticmethod
     def dbCreate(record):
-        """constructor for PGDB load"""
+        """constructor for loading from PGDB. field names match db column names exactly."""
         g = ChessGame()
         g.id = record[0]
         g.white_player = record[1]
@@ -42,6 +42,8 @@ class ChessGame:
         g.player_turn = record[8]
         g.winner = record[9]
         g.notation = record[10]
+        g.whitekingmoved = record[11]
+        g.blackkingmoved = record[12]
         return g
 
     def toTuple(self):

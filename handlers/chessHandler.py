@@ -118,8 +118,9 @@ class ChessHandler(WebSocketHandler):
         srcType = srcPiece["type"]
         srcColor = srcPiece["color"]
 
-        blackKingMoved = (srcType == "King" and srcColor == "Black")
-        whiteKingMoved = (srcType == "King" and srcColor == "White")
+        # tracks if the Kings have ever moved, for Castling purposes
+        blackKingMoved = (srcType == "King" and srcColor == "Black") or game.blackkingmoved
+        whiteKingMoved = (srcType == "King" and srcColor == "White") or game.whitekingmoved
 
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
         if (game.notation == None): game.notation = ""
@@ -162,7 +163,9 @@ class ChessHandler(WebSocketHandler):
             "activePlayer": newActivePlayer,
             "otherPlayer": oldActivePlayer,
             "whiteInCheck": whiteInCheck,
-            "blackInCheck": blackInCheck
+            "blackInCheck": blackInCheck,
+            "whiteKingMoved": whiteKingMoved,
+            "blackKingMoved": blackKingMoved
         }
 
         utils.updateAll(clientConnections[gameId], message)
