@@ -27,7 +27,7 @@ try:
     wsBaseUrl = wsProtocol + "://" + host + "/ws"
 
 except FileNotFoundError:
-    print("you need to add wsdetails.json for the site to work.")
+    print("you need to add wsdetails.json for the server to run.")
     exit(1)
 except KeyError as ke:
     print("wsdetails.json file missing a key:", ke.args[0])
