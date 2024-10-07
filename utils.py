@@ -147,7 +147,6 @@ def knightCanMove(boardstate, coords, pieceColor, enemyColor):
     if inCheck(newBoardstate, enemyColor, getKingCoords(newBoardstate, pieceColor)):
         return False
 
-    # TODO knight offsets + not outofbounds
     for offset in knightOffsets:
         targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
         if not outOfBounds(targetCoords) and not hasColorPiece(boardstate, targetCoords, pieceColor):    
