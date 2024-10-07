@@ -61,9 +61,16 @@ class TttHandler(WebSocketHandler):
             "conn": self.ws_connection
         }
 
-        #TODO error response if gameId is not present
-        gameId = fields['gameId']
-
+        # gameId is given to the frontend by Flask in the payload
+        try:
+            gameId = fields['gameId']
+        except KeyError:
+            self.write_message({
+            "command": "error",
+            "message": "server did not receive a game ID from the client",
+            "details": str(connectionDetails)
+        })
+        
         #used for easy search during later deletion
         self.gameId = gameId
 
@@ -92,78 +99,75 @@ class TttHandler(WebSocketHandler):
 
     def wsUpdate(self, fields):
         gameId = fields['gameId']
-        gameType = fields['gameType']
 
-        if gameType == "ttt": # TODO THIS CONDITION IS NOT NEEDED.
+        # possible bug: can client send a non-castable boardIndex field?
+        boardIndex = int(fields['boardIndex'])
+        
+        
+        player = fields['player']
+        if player == None:
+            #the player is not logged in
+            self.write_message({
+                "command": "error",
+                "contents": "NOT LOGGED IN YO!! BRUH! WTF?"
+            })
+            return
 
-            # possible bug: can client send a non-castable boardIndex field?
-            boardIndex = int(fields['boardIndex'])
-            
-            
-            player = fields['player']
-            if player == None:
-                #huge issue. the player is not logged in. abort!!!
-                self.write_message({
-                    "command": "error",
-                    "contents": "NOT LOGGED IN YO!! BRUH! WTF?"
-                })
-                return
+        #issue: gameId can be invalid ttt game?
+        tttGame = self.pgdb.getTttGame(gameId)
 
-            #issue: gameId can be invalid ttt game?
-            tttGame = self.pgdb.getTttGame(gameId)
+        if player != tttGame.player_turn:
+            #uhhh what? the requester is not even the active player?
+            self.write_message({
+                "command": "error",
+                "contents": "NOT YOUR TURN!"
+            })
+            return
 
-            if player != tttGame.player_turn:
-                #uhhh what? the requester is not even the active player?
-                self.write_message({
-                    "command": "error",
-                    "contents": "NOT YOUR TURN!"
-                })
-                return
+        if tttGame.x_player == player:
+            otherPlayer = tttGame.o_player
+            piece = 'X'
+        else:
+            otherPlayer = tttGame.x_player
+            piece = 'O'
 
-            if tttGame.x_player == player:
-                otherPlayer = tttGame.o_player
-                piece = 'X'
-            else:
-                otherPlayer = tttGame.x_player
-                piece = 'O'
+        # here, we need to authenticate user currently requesting an update. Session tokens? cookies?
 
-            # here, we need to authenticate user currently requesting an update. Session tokens? cookies?
+        boardstate = tttGame.boardstate
 
-            boardstate = tttGame.boardstate
+        if boardstate[boardIndex] != "":
+            self.write_message({
+                "command": "error",
+                "contents": "that tile is occupied!"
+            })
+            return
 
-            if boardstate[boardIndex] != "":
-                self.write_message({
-                    "command": "error",
-                    "contents": "that tile is occupied!"
-                })
-                return
+        boardstate[boardIndex] = piece
+        
+        last_updated = datetime.now()
 
-            boardstate[boardIndex] = piece
-            
-            last_updated = datetime.now()
+        # 'player' has been verified at this point to match the database record for 'player_turn', 
+        # aka the player currently taking a turn.
+        # pgdb should update that field to the OTHER player now.
+        self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
 
-            # 'player' has been verified at this point to match the database record for 'player_turn', 
-            # aka the player currently taking a turn.
-            # pgdb should update that field to the OTHER player now.
-            self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
+        newActivePlayer = otherPlayer
+        oldActivePlayer = player
 
-            newActivePlayer = otherPlayer
-            oldActivePlayer = player
+        message = {
+            "command": "updateBoard",
+            "newBoardstate": boardstate,
+            "activePlayer": newActivePlayer,
+            "otherPlayer": oldActivePlayer
+        }
 
-            message = {
-                "command": "updateBoard",
-                "newBoardstate": boardstate,
-                "activePlayer": newActivePlayer,
-                "otherPlayer": oldActivePlayer
-            }
+        utils.updateAll(clientConnections[gameId], message)
 
-            utils.updateAll(clientConnections[gameId], message)
+        gameEnded = utils.tttGameEnded(boardstate)
+        winner = oldActivePlayer if (gameEnded == "Win") else None
 
-            gameEnded = utils.tttGameEnded(boardstate)
-            winner = oldActivePlayer if (gameEnded == "Win") else None
-
-            if gameEnded:
-                self.endTttGame(fields, otherPlayer, winner, gameId, player, tttGame)
+        if gameEnded:
+            self.endTttGame(fields, otherPlayer, winner, gameId, player, tttGame)
                 
     def endTttGame(self, fields, otherPlayer, winner, gameId, player, tttGame):
         message = {
@@ -176,24 +180,3 @@ class TttHandler(WebSocketHandler):
         utils.updateAll(clientConnections[gameId], message)
 
         self.pgdb.endTttGame(datetime.now(), winner, gameId)
-
-        # userId = fields['userId']
-        # stat = self.pgdb.getStat(userId)
-
-        # ttt_games_played = stat['ttt_games_played'] + 1
-        # ttt_wins = stat['ttt_wins'] + (1 if winner == player else 0)
-        # ttt_win_percent = ttt_wins/ttt_games_played
-        # ttt_played_x = stat['ttt_played_x'] + (1 if player==tttGame.x_player else 0)
-        # ttt_played_o = stat['ttt_played_o'] + (1 if player==tttGame.o_player else 0)
-        # ttt_won_x = stat['ttt_won_x'] + (1 if winner == player and player==tttGame.x_player else 0)
-        # ttt_won_o = stat['ttt_won_o'] + (1 if winner == player and player==tttGame.o_player else 0)
-
-        # self.pgdb.updateTttStat(
-        #     ttt_games_played,
-        #     ttt_wins,
-        #     ttt_win_percent,
-        #     ttt_played_x,
-        #     ttt_played_o,
-        #     ttt_won_x,
-        #     ttt_won_o,
-        #     userId)
