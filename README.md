@@ -2,7 +2,7 @@ Project to learn ReactJS. The backend is hosted in Flask and the database is Pos
 
 The app is a web-hosted board game site, where you can play against your friends.
 
-Playable website at http://flaskreactor.com
+Playable website at http://flaskreactor.net
 
 BACKGROUND:
 After being frustrated by the "MERN" stack, I decided to change my database of choice to PostgreSQL in order to learn that as well. Turns out Postgres has native JSON handling. It's also just super flexible overall.
