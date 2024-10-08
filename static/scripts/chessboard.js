@@ -145,8 +145,15 @@ function generateHighlights(boardstate, piece){ // void
 		}
 	}
 
+	// possible refactoring: piece and color enums instead of strings?
 	else if(piece.type == "King"){
-		//TODO #70: kings can castle if they havent moved yet
+		if (piece.color == "White") {
+			whiteCastlingMoves(boardstate);
+		}
+		else if (piece.color == "Black") {
+			blackCastlingMoves(boardstate);
+		}
+
 		// TODO: kings cannot move into a check position
 		royalOffsets.forEach(offset => {
 			const destRow = piece.row+offset[0];
@@ -279,6 +286,41 @@ function setStatus(status){
 
 function inCheck(yourColor, whiteInCheck, blackInCheck){
 	return (yourColor=="White" && whiteInCheck) || (yourColor=="Black" && blackInCheck);
+}
+
+// current state of affairs - push this change, merge to master and delete feature branch, fetch latest from master, create new feature branch for issue #77, and re-evaluate current needs
+
+function pieceAt (boardstate, coords) {
+	console.debug(boardstate, coords);
+	let col = parseInt(coords[0]);
+	let row = parseInt(coords[1]);
+	return boardstate[row][col].piece;
+}
+
+function whiteCastlingMoves(boardstate) {
+	// whiteKingCoords = "47"; // row 7, col 4
+	if(!whiteKingMoved) {
+		// TODO: add checks for !whiteKingSideRookMoved and !whiteQueenSideRookMoved	
+		if (pieceAt(boardstate, "57") == undefined && pieceAt(boardstate, "67") == undefined) {
+			highlightedTiles.push("76");
+		}
+		if (pieceAt(boardstate, "37") == undefined && pieceAt(boardstate, "27") == undefined) {
+			highlightedTiles.push("72");
+		}
+	}
+}
+
+function blackCastlingMoves(boardstate) {
+	// blackKingCoords = "40"; // row 7, col 4
+	if(!blackKingMoved) {
+		// TODO: add checks for !blackKingSideRookMoved and !blackQueenSideRookMoved
+		if (pieceAt(boardstate, "50") == undefined && pieceAt(boardstate, "60") == undefined) {
+			highlightedTiles.push("06");
+		}
+		if (pieceAt(boardstate, "30") == undefined && pieceAt(boardstate, "20") == undefined) {
+			highlightedTiles.push("02");
+		}
+	}
 }
 
 function Chessboard() {
