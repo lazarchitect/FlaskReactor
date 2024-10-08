@@ -64,8 +64,15 @@ class ChessHandler(WebSocketHandler):
             "conn": self.ws_connection
         }
 
-        #TODO error response if gameId is not present
-        gameId = fields['gameId']
+        # gameId is given to the frontend by Flask in the payload
+        try:
+            gameId = fields['gameId']
+        except KeyError:
+            self.write_message({
+            "command": "error",
+            "message": "server did not receive a game ID from the client",
+            "details": str(connectionDetails)
+        })
 
         #used for easy search during later deletion
         self.gameId = gameId
@@ -174,7 +181,7 @@ class ChessHandler(WebSocketHandler):
 
         # TODO check if the ENEMY player cannot make any legal moves.
         # if so, its mate.
-            # if enemyInCheck == true, 
+            # if enemyInCheck == true,
                 # then its checkmate.
             # else, stalemate.
             # convey this info to DB and front end.
