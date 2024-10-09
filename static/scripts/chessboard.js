@@ -288,8 +288,6 @@ function inCheck(yourColor, whiteInCheck, blackInCheck){
 	return (yourColor=="White" && whiteInCheck) || (yourColor=="Black" && blackInCheck);
 }
 
-// current state of affairs - push this change, merge to master and delete feature branch, fetch latest from master, create new feature branch for issue #77, and re-evaluate current needs
-
 function pieceAt (boardstate, coords) {
 	console.debug(boardstate, coords);
 	let col = parseInt(coords[0]);
