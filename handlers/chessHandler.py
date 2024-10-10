@@ -129,6 +129,8 @@ class ChessHandler(WebSocketHandler):
         blackKingMoved = (srcType == "King" and srcColor == "Black") or game.blackkingmoved
         whiteKingMoved = (srcType == "King" and srcColor == "White") or game.whitekingmoved
 
+        # TODO for issue 77 - how to uniquely identify rooks? not just by color since each color has 2. does each piece need some kind of ID? based on starting location maybe?
+
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
         if (game.notation == None): game.notation = ""
         newNotation = game.notation + moveNotation

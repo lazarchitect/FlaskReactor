@@ -135,7 +135,7 @@ class Pgdb:
         if(record == None):
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
             return None
-        return ChessGame.dbCreate(record)
+        return ChessGame.dbLoad(record)
 
     def getActiveChessGames(self, username):
         query = sql['getActiveChessGames']
