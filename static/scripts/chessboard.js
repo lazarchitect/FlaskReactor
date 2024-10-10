@@ -10,6 +10,10 @@ const gameId = payload.game.id;
 var yourTurn = payload.yourTurn;
 var blackKingMoved = payload.game.blackkingmoved;
 var whiteKingMoved = payload.game.whitekingmoved;
+var wqr_moved = payload.game.wqr_moved;
+var wkr_moved = payload.game.wkr_moved;
+var bqr_moved = payload.game.bqr_moved;
+var bkr_moved = payload.game.bkr_moved;
 
 function wsSubscribe(chessSocket){
 	const subscribeObj = {

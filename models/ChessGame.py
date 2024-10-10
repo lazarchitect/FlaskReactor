@@ -28,7 +28,7 @@ class ChessGame:
         return g
 
     @staticmethod
-    def dbCreate(record):
+    def dbLoad(record):
         """constructor for loading from PGDB. field names match db column names exactly."""
         g = ChessGame()
         g.id = record[0]
@@ -44,6 +44,10 @@ class ChessGame:
         g.notation = record[10]
         g.whitekingmoved = record[11]
         g.blackkingmoved = record[12]
+        g.wqr_moved = record[13]
+        g.wkr_moved = record[14]
+        g.bqr_moved = record[15]
+        g.bkr_moved = record[16]
         return g
 
     def toTuple(self):
