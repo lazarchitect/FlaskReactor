@@ -40,7 +40,7 @@ function wsUpdate(chessSocket, tileId){
 
 function wsConnect(boardstate, setBoardstate) {
 	const chessSocket = new WebSocket(payload.wsBaseUrl + "/chess");
-	// TODO chess stats?
+	// this is where you might initiate a statSocket as well for db chess stats
 
 	chessSocket.onopen = (() => wsSubscribe(chessSocket));
 
@@ -335,7 +335,6 @@ function Chessboard() {
 	React.useEffect(() => wsConnect(boardstate, setBoardstate), []);
 
 	return (
-		// TODO extract the onClick declaration out of wsConnect? put it here or in its own fn?
 		<div id="board">
 			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val}/>)}
 		</div>
