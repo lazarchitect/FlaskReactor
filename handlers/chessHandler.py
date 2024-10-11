@@ -135,7 +135,7 @@ class ChessHandler(WebSocketHandler):
         if (game.notation == None): game.notation = ""
         newNotation = game.notation + moveNotation
 
-        # TODO VALIDATE MOVE AGAINST EXISTING BOARD 
+        # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD 
         # (https://www.notion.so/noshun/Server-side-chess-move-validation-d89dfc680c8849c19b89fbab2a924367)
 
          
@@ -181,7 +181,8 @@ class ChessHandler(WebSocketHandler):
 
         self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, newNotation, blackKingMoved, whiteKingMoved, gameId)
 
-        # TODO check if the ENEMY player cannot make any legal moves.
+        # related to issues #81 and #82 
+        # check if the ENEMY player cannot make any legal moves.
         # if so, its mate.
             # if enemyInCheck == true,
                 # then its checkmate.
