@@ -185,7 +185,6 @@ function TttBoard(){
 
 var rootElem = (
 	<div id="reactRoot">
-		{/* TODO could we just call the payload "props" to avoid this double passing down? */}
 		<SiteHeader version={payload.deployVersion} username={payload.username}/>
 
 		<div id="tttPlayArea">
