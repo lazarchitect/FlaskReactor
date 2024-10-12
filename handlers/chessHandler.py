@@ -129,7 +129,11 @@ class ChessHandler(WebSocketHandler):
         blackKingMoved = (srcType == "King" and srcColor == "Black") or game.blackkingmoved
         whiteKingMoved = (srcType == "King" and srcColor == "White") or game.whitekingmoved
 
-        # TODO for issue 77 - how to uniquely identify rooks? not just by color since each color has 2. does each piece need some kind of ID? based on starting location maybe?
+        # TODO: #77 - how to uniquely identify rooks? not just by color since each color has 2. does each piece need some kind of ID? based on starting location maybe?
+        # simple solution: instead of ID based on starting position, just give each piece an "ordinal" number based on initial board locations. 
+        # Black rooks would be 1 and 8. White rooks would be 25 and 32. 
+        # Rest of the pieces can get ordinals as well, could come in handy.
+        # then, we just check for ordinal number when evaluating future castling invalidity.
 
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
         if (game.notation == None): game.notation = ""
