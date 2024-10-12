@@ -5,7 +5,8 @@
           "row": 0,
           "col": 0,
           "type": "Rook",
-          "color": "Black"
+          "color": "Black",
+          "id": "br1"
         }
       },
       {
@@ -13,7 +14,8 @@
           "row": 0,
           "col": 1,
           "type": "Knight",
-          "color": "Black"
+          "color": "Black",
+          "id": "bn1"
         }
       },
       {
@@ -21,7 +23,8 @@
           "row": 0,
           "col": 2,
           "type": "Bishop",
-          "color": "Black"
+          "color": "Black",
+          "id": "bb1"
         }
       },
       {
@@ -29,7 +32,8 @@
           "row": 0,
           "col": 3,
           "type": "Queen",
-          "color": "Black"
+          "color": "Black",
+          "id": "bq"
         }
       },
       {
@@ -37,7 +41,8 @@
           "row": 0,
           "col": 4,
           "type": "King",
-          "color": "Black"
+          "color": "Black",
+          "id": "bk"
         }
       },
       {
@@ -45,7 +50,8 @@
           "row": 0,
           "col": 5,
           "type": "Bishop",
-          "color": "Black"
+          "color": "Black",
+          "id": "bb2"
         }
       },
       {
@@ -53,7 +59,8 @@
           "row": 0,
           "col": 6,
           "type": "Knight",
-          "color": "Black"
+          "color": "Black",
+          "id": "bn2"
         }
       },
       {
@@ -61,7 +68,8 @@
           "row": 0,
           "col": 7,
           "type": "Rook",
-          "color": "Black"
+          "color": "Black",
+          "id": "br2"
         }
       }
     ],
@@ -71,7 +79,8 @@
           "row": 1,
           "col": 0,
           "type": "Pawn",
-          "color": "Black"
+          "color": "Black",
+          "id": "bp1"
         }
       },
       {
@@ -79,7 +88,8 @@
           "row": 1,
           "col": 1,
           "type": "Pawn",
-          "color": "Black"
+          "color": "Black",
+          "id": "bp2"
         }
       },
       {
@@ -87,7 +97,8 @@
           "row": 1,
           "col": 2,
           "type": "Pawn",
-          "color": "Black"
+          "color": "Black",
+          "id": "bp3"
         }
       },
       {
@@ -95,7 +106,8 @@
           "row": 1,
           "col": 3,
           "type": "Pawn",
-          "color": "Black"
+          "color": "Black",
+          "id": "bp4"
         }
       },
       {
@@ -103,7 +115,8 @@
           "row": 1,
           "col": 4,
           "type": "Pawn",
-          "color": "Black"
+          "color": "Black",
+          "id": "bp5"
         }
       },
       {
@@ -111,7 +124,8 @@
           "row": 1,
           "col": 5,
           "type": "Pawn",
-          "color": "Black"
+          "color": "Black",
+          "id": "bp6"
         }
       },
       {
@@ -119,7 +133,8 @@
           "row": 1,
           "col": 6,
           "type": "Pawn",
-          "color": "Black"
+          "color": "Black",
+          "id": "bp7"
         }
       },
       {
@@ -127,7 +142,8 @@
           "row": 1,
           "col": 7,
           "type": "Pawn",
-          "color": "Black"
+          "color": "Black",
+          "id": "bp8"
         }
       }
     ],
@@ -177,7 +193,8 @@
           "row": 6,
           "col": 0,
           "type": "Pawn",
-          "color": "White"
+          "color": "White",
+          "id": "wp1"
         }
       },
       {
@@ -185,7 +202,8 @@
           "row": 6,
           "col": 1,
           "type": "Pawn",
-          "color": "White"
+          "color": "White",
+          "id": "wp2"
         }
       },
       {
@@ -193,7 +211,8 @@
           "row": 6,
           "col": 2,
           "type": "Pawn",
-          "color": "White"
+          "color": "White",
+          "id": "wp3"
         }
       },
       {
@@ -201,7 +220,8 @@
           "row": 6,
           "col": 3,
           "type": "Pawn",
-          "color": "White"
+          "color": "White",
+          "id": "wp4"
         }
       },
       {
@@ -209,7 +229,8 @@
           "row": 6,
           "col": 4,
           "type": "Pawn",
-          "color": "White"
+          "color": "White",
+          "id": "wp5"
         }
       },
       {
@@ -217,7 +238,8 @@
           "row": 6,
           "col": 5,
           "type": "Pawn",
-          "color": "White"
+          "color": "White",
+          "id": "wp6"
         }
       },
       {
@@ -225,7 +247,8 @@
           "row": 6,
           "col": 6,
           "type": "Pawn",
-          "color": "White"
+          "color": "White",
+          "id": "wp7"
         }
       },
       {
@@ -233,7 +256,8 @@
           "row": 6,
           "col": 7,
           "type": "Pawn",
-          "color": "White"
+          "color": "White",
+          "id": "wp8"
         }
       }
     ],
@@ -243,7 +267,8 @@
           "row": 7,
           "col": 0,
           "type": "Rook",
-          "color": "White"
+          "color": "White",
+          "id": "wr1"
         }
       },
       {
@@ -251,7 +276,8 @@
           "row": 7,
           "col": 1,
           "type": "Knight",
-          "color": "White"
+          "color": "White",
+          "id": "wn1"
         }
       },
       {
@@ -259,7 +285,8 @@
           "row": 7,
           "col": 2,
           "type": "Bishop",
-          "color": "White"
+          "color": "White",
+          "id": "wb1"
         }
       },
       {
@@ -267,7 +294,8 @@
           "row": 7,
           "col": 3,
           "type": "Queen",
-          "color": "White"
+          "color": "White",
+          "id": "wq"
         }
       },
       {
@@ -275,7 +303,8 @@
           "row": 7,
           "col": 4,
           "type": "King",
-          "color": "White"
+          "color": "White",
+          "id": "wk"
         }
       },
       {
@@ -283,7 +312,8 @@
           "row": 7,
           "col": 5,
           "type": "Bishop",
-          "color": "White"
+          "color": "White",
+          "id": "wb2"
         }
       },
       {
@@ -291,7 +321,8 @@
           "row": 7,
           "col": 6,
           "type": "Knight",
-          "color": "White"
+          "color": "White",
+          "id": "wn2"
         }
       },
       {
@@ -299,7 +330,8 @@
           "row": 7,
           "col": 7,
           "type": "Rook",
-          "color": "White"
+          "color": "White",
+          "id": "wr2"
         }
       }
     ]
