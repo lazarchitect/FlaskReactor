@@ -53,6 +53,9 @@ function wsConnect(boardstate, setBoardstate) {
 			setBoardstate(data.newBoardstate);
 			blackKingMoved = data.blackKingMoved;
 			whiteKingMoved = data.whiteKingMoved;
+
+			// TODO: #77 add rook moved etc
+
 			yourTurn = payload.username === data.activePlayer;
 			boardstate = data.newBoardstate;
 		}
@@ -304,7 +307,9 @@ function whiteCastlingMoves(boardstate) {
 	if(!whiteKingMoved) {
 		// TODO: add checks for !whiteKingSideRookMoved and !whiteQueenSideRookMoved	
 		if (pieceAt(boardstate, "57") == undefined && pieceAt(boardstate, "67") == undefined) {
-			highlightedTiles.push("76");
+			if (!wqr_moved) {
+				highlightedTiles.push("76");
+			}
 		}
 		if (pieceAt(boardstate, "37") == undefined && pieceAt(boardstate, "27") == undefined) {
 			highlightedTiles.push("72");

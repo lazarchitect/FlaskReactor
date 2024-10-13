@@ -1,8 +1,9 @@
+from datetime import datetime
+import json
+from tornado.websocket import WebSocketHandler
 from pgdb import Pgdb
 from FakePgdb import FakePgdb
-from tornado.websocket import WebSocketHandler
-import json, utils
-from datetime import datetime
+import utils
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -40,14 +41,14 @@ class ChessHandler(WebSocketHandler):
 
         elif request == "update":
             self.wsUpdate(fields)
-        
+
     def on_close(self):
         print("chessSocket closed: " + str(self.socketId))
-        
+
         if not hasattr(self, "gameId"):
             print("chessSocket was not subscribed? not sure why this would happen")
             return
-        
+
         deleteConnection(self.gameId, self.socketId)
 
     ###############################
@@ -124,19 +125,19 @@ class ChessHandler(WebSocketHandler):
 
         srcType = srcPiece["type"]
         srcColor = srcPiece["color"]
+        srcId = srcPiece["id"]
 
-        # tracks if the Kings have ever moved, for Castling purposes
-        blackKingMoved = (srcType == "King" and srcColor == "Black") or game.blackkingmoved
-        whiteKingMoved = (srcType == "King" and srcColor == "White") or game.whitekingmoved
-
-        # TODO: #77 - how to uniquely identify rooks? not just by color since each color has 2. does each piece need some kind of ID? based on starting location maybe?
-        # simple solution: instead of ID based on starting position, just give each piece an "ordinal" number based on initial board locations. 
-        # Black rooks would be 1 and 8. White rooks would be 25 and 32. 
-        # Rest of the pieces can get ordinals as well, could come in handy.
-        # then, we just check for ordinal number when evaluating future castling invalidity.
+        # tracks if the Kings and Rooks have ever moved, for castling purposes
+        blackKingMoved = srcId == "bk" or game.blackkingmoved
+        whiteKingMoved = srcId == "wk" or game.whitekingmoved
+        bqrMoved = srcId == "bqr" or game.bqr_moved
+        bkrMoved = srcId == "bkr" or game.bkr_moved
+        wqrMoved = srcId == "wqr" or game.wqr_moved
+        wkrMoved = srcId == "wkr" or game.wkr_moved
 
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
-        if (game.notation == None): game.notation = ""
+        if (game.notation == None): 
+            game.notation = ""
         newNotation = game.notation + moveNotation
 
         # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD 
@@ -162,14 +163,14 @@ class ChessHandler(WebSocketHandler):
         whiteInCheck = (allyInCheck and srcColor=="White") or (enemyInCheck and enemyColor=="White")
         blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")
 
-        if(allyInCheck):
+        if allyInCheck:
             # do NOT confirm the move to user or to DB
             self.write_message({
                 "command": "error",
                 "message": "cannot move into check"
             })
             return
-        
+
         message = {
             "command": "updateBoard",
             "newBoardstate": boardstate,
@@ -178,7 +179,11 @@ class ChessHandler(WebSocketHandler):
             "whiteInCheck": whiteInCheck,
             "blackInCheck": blackInCheck,
             "whiteKingMoved": whiteKingMoved,
-            "blackKingMoved": blackKingMoved
+            "blackKingMoved": blackKingMoved,
+            "bqrMoved": bqrMoved,
+            "bkrMoved": bkrMoved,
+            "wqrMoved": wqrMoved,
+            "wkrMoved": wkrMoved
         }
 
         utils.updateAll(clientConnections[gameId], message)
