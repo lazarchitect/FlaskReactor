@@ -188,9 +188,15 @@ class ChessHandler(WebSocketHandler):
 
         utils.updateAll(clientConnections[gameId], message)
 
-        self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, newNotation, blackKingMoved, whiteKingMoved, gameId)
+        self.pgdb.updateChessGame(
+            boardstate,
+            datetime.now(),
+            newActivePlayer, newNotation,
+            blackKingMoved, whiteKingMoved,
+            bqrMoved, bkrMoved, wqrMoved, wkrMoved,
+            gameId)
 
-        # related to issues #81 and #82 
+        # related to issues #81 and #82
         # check if the ENEMY player cannot make any legal moves.
         # if so, its mate.
             # if enemyInCheck == true,
