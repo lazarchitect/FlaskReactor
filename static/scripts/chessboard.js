@@ -53,8 +53,10 @@ function wsConnect(boardstate, setBoardstate) {
 			setBoardstate(data.newBoardstate);
 			blackKingMoved = data.blackKingMoved;
 			whiteKingMoved = data.whiteKingMoved;
-
-			// TODO: #77 add rook moved etc
+			bqr_moved = data.bqrMoved;
+			bkr_moved = data.bkrMoved;
+			wqr_moved = data.wqrMoved;
+			wkr_moved = data.wkrMoved;
 
 			yourTurn = payload.username === data.activePlayer;
 			boardstate = data.newBoardstate;
