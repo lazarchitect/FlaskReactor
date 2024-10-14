@@ -1,11 +1,14 @@
+"""provides a set of tools for interfacing with FlaskReactor's custom PostGres DataBase (PGDB) instance, 
+containing game data, users, and more."""
+
+from json import loads
 from psycopg2 import connect, InterfaceError, OperationalError
 from psycopg2.extras import DictCursor, Json
-from json import loads
 from models.ChessGame import ChessGame
 from models.TttGame import TttGame
-from models.User import User
-from models.Stats import Stats
-from models.Message import Message
+# from models.User import User
+# from models.Stats import Stats
+# from models.Message import Message
 
 relation = "flaskreactor"
 
@@ -44,11 +47,11 @@ class Pgdb:
 
     def __init__(self, db_env):
 
-        self.dbenv = db_env;
+        self.dbenv = db_env
 
         try:
 
-            dbDetails = loads(open("dbdetails.json", "r").read())
+            dbDetails = loads(open("dbdetails.json", "r", encoding="utf8").read())
             print("real pgdb instantiating.")
             self.conn = connect(
                 host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
@@ -81,7 +84,7 @@ class Pgdb:
             self.cursor.execute(query, values)
         except (InterfaceError, OperationalError):
             #Connection was closed. reset conn and cursor. (this happens due to idle timeouts.)
-            dbDetails = loads(open("dbdetails.json", "r").read())
+            dbDetails = loads(open("dbdetails.json", "r", encoding="utf8").read())
             self.conn = connect(
                 host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
                 database=dbDetails['database'],
@@ -151,7 +154,6 @@ class Pgdb:
 
     def endChessGame(self, end_time, winner, gameid):
         query = sql['endChessGame']
-        completed = True
         values = [end_time, winner, gameid]
         self.__execute(query, values)
         self.conn.commit()
