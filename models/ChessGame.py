@@ -48,6 +48,8 @@ class ChessGame:
         g.wkr_moved = record[14]
         g.bqr_moved = record[15]
         g.bkr_moved = record[16]
+        g.pawn_leapt = record[17]
+        g.pawn_leap_col = record[18]
         return g
 
     def toTuple(self):
