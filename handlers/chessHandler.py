@@ -164,7 +164,7 @@ class ChessHandler(WebSocketHandler):
         blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")
 
         # TODO test this
-        pawnLeapt = (srcType == "Pawn") && (abs(srcRow - destRow) == 2)
+        pawnLeapt = (srcType == "Pawn") and (abs(srcRow - destRow) == 2)
         pawnLeapCol = int(srcCol) if pawnLeapt else -1
 
         if allyInCheck:
