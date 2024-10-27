@@ -234,7 +234,7 @@ if __name__ == "__main__":
 
     flaskApp = WSGIContainer(app)
     application = Application(
-        default_host="flaskreactor.net",
+        default_host=host,
         handlers=[
             ("/ws/ttt", TttHandler, dict(db_env=db_env)),
             ("/ws/stat", StatHandler, dict(db_env=db_env)),
