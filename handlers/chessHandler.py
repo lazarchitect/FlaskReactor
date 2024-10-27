@@ -200,6 +200,7 @@ class ChessHandler(WebSocketHandler):
             newActivePlayer, newNotation,
             blackKingMoved, whiteKingMoved,
             bqrMoved, bkrMoved, wqrMoved, wkrMoved,
+            pawnLeapt, pawnLeapCol,
             gameId)
 
         # related to issues #81 and #82
