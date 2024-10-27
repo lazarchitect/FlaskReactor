@@ -21,7 +21,10 @@ class FakePgdb:
 		pass
 
 	def getChessGame(self, gameId):
-		return ('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')
+		return ChessGame.manualCreate("Eddie", "Eddie2")
+
+	def updateChessGame(self, boardstate, datetime, newActivePlayer, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, gameId):
+		pass
 
 	def getActiveChessGames(self, username):
 		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')]
