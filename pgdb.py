@@ -207,7 +207,5 @@ class Pgdb:
         self.__execute(query, values)
         self.conn.commit()
 
-    ####### HELPER METHODS #########
-
     def userExists(self, username):
         return self.getUser(username) != None

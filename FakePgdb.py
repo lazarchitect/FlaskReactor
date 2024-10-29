@@ -41,7 +41,5 @@ class FakePgdb:
 	def endGame(self, end_time, gameid):
 		pass
 
-	####### HELPER METHODS #########
-
 	def userExists(self, username):
 		return True
