@@ -236,8 +236,6 @@ function scan(rowOffset, colOffset, row, col, color, boardstate, moveList){
 	const targetRow = row+rowOffset;
 	const targetCol = col+colOffset;
 
-	console.log(targetRow, targetCol);
-
     // base case: line has exited the board
 	if(outOfBounds(targetRow, targetCol)) return;
 
@@ -297,12 +295,6 @@ function inCheck(yourColor, whiteInCheck, blackInCheck){
 	return (yourColor=="White" && whiteInCheck) || (yourColor=="Black" && blackInCheck);
 }
 
-function pieceAt (boardstate, coords) {
-	console.debug(boardstate, coords);
-	let col = parseInt(coords[0]);
-	let row = parseInt(coords[1]);
-	return boardstate[row][col].piece;
-}
 
 function whiteCastlingMoves(boardstate) {
 	// whiteKingCoords = "47"; // row 7, col 4
