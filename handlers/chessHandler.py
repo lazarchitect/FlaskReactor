@@ -146,7 +146,7 @@ class ChessHandler(WebSocketHandler):
          
         # execute the move
         boardstate[srcRow][srcCol] = {}
-        boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor}}
+        boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor, "id": srcId}}
 
         newActivePlayer = game.white_player if game.player_turn == game.black_player else game.black_player
         oldActivePlayer = game.white_player if game.player_turn != game.black_player else game.black_player
