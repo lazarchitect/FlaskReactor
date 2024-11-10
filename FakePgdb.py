@@ -21,7 +21,7 @@ class FakePgdb:
 		pass
 
 	def getChessGame(self, gameId):
-		return ('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')
+		return ChessGame.dbLoad(['FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie', None,None,None,None,None,None,None,None,None])
 
 	def getActiveChessGames(self, username):
 		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')]
