@@ -70,7 +70,7 @@ def chessGame(gameid):
     game = pgdb.getChessGame(gameid)
 
     if game == None:
-        return render_template("home.html", alert="Game could not be retrieved from database.")
+        return "game with that ID was not found"#render_template("home.html", alert="Game could not be retrieved from database.")
 
     username = session.get('username')
 
