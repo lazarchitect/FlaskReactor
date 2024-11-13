@@ -1,12 +1,8 @@
-console.log("hello");
 function pieceAt(boardstate, coords) {
-    console.debug(boardstate, coords);
     let col = parseInt(coords[0]);
     let row = parseInt(coords[1]);
     return boardstate[row][col].piece;
 }
-
-pieceAt("d", "57");
 
 function isPiece(boardstate, coords, pieceType, pieceColor) {
     if (outOfBounds(coords)) return false;
