@@ -30,21 +30,6 @@
 			"args": [
 				"no_db"
 			]
-		},
-		{
-			"name": "Docker: Python - Flask",
-			"type": "docker",
-			"request": "launch",
-			"preLaunchTask": "docker-run: debug",
-			"python": {
-				"pathMappings": [
-					{
-						"localRoot": "${workspaceFolder}",
-						"remoteRoot": "/app"
-					}
-				],
-				"projectType": "flask"
-			}
 		}
 	]
 }
