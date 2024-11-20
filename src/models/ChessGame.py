@@ -1,4 +1,4 @@
-import utils
+import src.utils
 import json
 from datetime import datetime
 from psycopg2.extras import UUID_adapter, Json

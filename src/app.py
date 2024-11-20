@@ -1,6 +1,5 @@
 #!usr/bin/env python
 
-from models.TttGame import TttGame
 from flask import Flask, render_template, redirect, request, session
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
@@ -11,15 +10,15 @@ import tornado
 import random
 import json
 import os
-from models.ChessGame import ChessGame
-from pgdb import Pgdb
-from FakePgdb import FakePgdb
-from utils import generateId, generateHash
-from handlers.tttHandler import TttHandler
-from handlers.statHandler import StatHandler
-from handlers.chessHandler import ChessHandler
 
-print(os.getcwd())
+from src.pgdb import Pgdb
+from src.FakePgdb import FakePgdb
+from src.utils import generateId, generateHash
+from src.models.ChessGame import ChessGame
+from src.models.TttGame import TttGame
+from src.handlers.tttHandler import TttHandler
+from src.handlers.statHandler import StatHandler
+from src.handlers.chessHandler import ChessHandler
 
 try:
     wsDetails = json.loads(open("resources/wsdetails.json", "r").read())

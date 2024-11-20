@@ -1,7 +1,7 @@
-from models.ChessGame import ChessGame
-from models.User import User
-from models.Stats import Stats
-from models.Message import Message
+from src.models.ChessGame import ChessGame
+from src.models.User import User
+from src.models.Stats import Stats
+from src.models.Message import Message
 
 class FakePgdb:
 

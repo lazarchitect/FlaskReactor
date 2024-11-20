@@ -4,11 +4,11 @@ containing game data, users, and more."""
 from json import loads
 from psycopg2 import connect, InterfaceError, OperationalError
 from psycopg2.extras import DictCursor, Json
-from models.ChessGame import ChessGame
-from models.TttGame import TttGame
-# from models.User import User
-# from models.Stats import Stats
-# from models.Message import Message
+from src.models.ChessGame import ChessGame
+from src.models.TttGame import TttGame
+# from src.models.User import User
+# from src.models.Stats import Stats
+# from src.models.Message import Message
 
 relation = "flaskreactor"
 
