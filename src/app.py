@@ -22,14 +22,14 @@ from handlers.chessHandler import ChessHandler
 print(os.getcwd())
 
 try:
-    wsDetails = json.loads(open("wsdetails.json", "r").read())
+    wsDetails = json.loads(open("resources/wsdetails.json", "r").read())
     port = wsDetails['port']
     host = wsDetails['host']
     wsProtocol = wsDetails['protocol']
     wsBaseUrl = wsProtocol + "://" + host + "/ws"
 
 except FileNotFoundError:
-    print("you need to add wsdetails.json for the server to run.")
+    print("you need to add resources/wsdetails.json for the server to run.")
     exit(1)
 except KeyError as ke:
     print("wsdetails.json file missing a key:", ke.args[0])
@@ -43,9 +43,9 @@ except KeyError:
     appVersion = "DEV"
 
 try:
-    app.secret_key = open('secret_key.txt', 'r').read().encode('utf-8')
+    app.secret_key = open('resources/secret_key.txt', 'r').read().encode('utf-8')
 except FileNotFoundError:
-    print("you need to add a file called secret_key.txt, containing a secret (private string) for Flask to run.")
+    print("you need to add a file called resources/secret_key.txt, containing a secret (private string) for Flask to run.")
     exit()
 
 @app.route('/')

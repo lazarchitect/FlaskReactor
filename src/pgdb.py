@@ -51,7 +51,7 @@ class Pgdb:
 
         try:
 
-            dbDetails = loads(open("dbdetails.json", "r", encoding="utf8").read())
+            dbDetails = loads(open("resources/dbdetails.json", "r", encoding="utf8").read())
             print("real pgdb instantiating.")
             self.conn = connect(
                 host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
@@ -70,7 +70,7 @@ class Pgdb:
             print("dbdetails.json file missing a key:", ke.args[0])
             exit()
         except FileNotFoundError:
-            print("you need to add a dbdetails.json file to run the app.")
+            print("you need to add a resources/dbdetails.json file to run the app.")
             exit()
 
     def __execute(self, query, values):
