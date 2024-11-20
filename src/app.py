@@ -19,6 +19,8 @@ from handlers.tttHandler import TttHandler
 from handlers.statHandler import StatHandler
 from handlers.chessHandler import ChessHandler
 
+print(os.getcwd())
+
 try:
     wsDetails = json.loads(open("wsdetails.json", "r").read())
     port = wsDetails['port']

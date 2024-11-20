@@ -8,7 +8,7 @@
 			"name": "FlaskReactor LOCAL DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"local_db"
 			]
