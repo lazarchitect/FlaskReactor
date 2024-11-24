@@ -83,7 +83,10 @@ function wsConnect(boardstate, setBoardstate) {
 		const col = parseInt(tileId[0]);
 		const row = parseInt(tileId[1]);
 
-		if(isNaN(col) || isNaN(row)){console.log("invalid tileId");return;}
+		if(isNaN(col) || isNaN(row)) {
+			//console.log("invalid tileId");
+			return;
+		}
 
 		const coord = row +""+ col;
 		const tile = boardstate[row][col]
@@ -115,6 +118,9 @@ function removeHighlights(){
 	highlightedTiles = [];
 }
 
+// TODO for #78: modify this function to adhere to the logic of #78 regarding move legality under check.
+// so we need to make moves only generate highlights if they help escape check status, or do not enter it in the first place.
+// TODO optional: refactor this function to use helper functions from chessUtils.js
 function generateHighlights(boardstate, piece){ // void
 
 	highlightedTiles = [];
@@ -133,23 +139,26 @@ function generateHighlights(boardstate, piece){ // void
 		if(row == finalRow) return; // will never happen under promotion
 
 		// advance 1
-		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined){
+		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined) {
+
+			
+
 			highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
 		}
 		// advance 2
 		if(row == starterRow
 			&& boardstate[piece.row+pieceDirection][piece.col].piece == undefined
-			&& boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined){
+			&& boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined) {
 			highlightedTiles.push((piece.row+pieceDirection*2) + "" + piece.col);
 		}
 		// attack left
 		const leftTargetTile = boardstate[piece.row+pieceDirection][piece.col-1];
-		if(leftTargetTile != undefined && leftTargetTile.piece != undefined && leftTargetTile.piece.color == enemyColor){
+		if(leftTargetTile != undefined && leftTargetTile.piece != undefined && leftTargetTile.piece.color == enemyColor) {
 			highlightedTiles.push((piece.row+pieceDirection) + "" + (piece.col-1));
 		}
 		// attack right
 		const rightTargetTile = boardstate[piece.row+pieceDirection][piece.col+1];
-		if(rightTargetTile != undefined && rightTargetTile.piece != undefined && rightTargetTile.piece.color == enemyColor){
+		if(rightTargetTile != undefined && rightTargetTile.piece != undefined && rightTargetTile.piece.color == enemyColor) {
 			highlightedTiles.push((piece.row+pieceDirection) + "" + (piece.col+1));
 		}
 	}
