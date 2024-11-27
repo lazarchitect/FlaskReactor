@@ -128,6 +128,8 @@ function generateHighlights(boardstate, piece){ // void
 
 	const enemyColor = piece.color == "Black" ? "White" : "Black";
 
+	const allyKingCoords = getKingCoords(boardstate, piece.color);
+
 	if(piece.type == "Pawn"){
 		const whiteDirection = -1;
 		const blackDirection =  1;
@@ -140,9 +142,16 @@ function generateHighlights(boardstate, piece){ // void
 
 		// advance 1
 		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined) {
-
-			
-
+			// if currently in check, only add the highlight if the move escapes check.
+			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
+				let srcCoords = [piece.row, piece.col];
+				let destCoords = [piece.row+pieceDirection, piece.col];
+				let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);		
+				}
+			}
+			else if ()
 			highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
 		}
 		// advance 2
@@ -280,13 +289,13 @@ function determineStatus(payload, data){
 	switch(payload.username){
 		case data.activePlayer:
 			status += "Your turn. ";
-			if(inCheck(payload.userColor, data.whiteInCheck, data.blackInCheck)){
+			if(playerInCheck(payload.userColor, data.whiteInCheck, data.blackInCheck)){
 				status += "You are in check!"
 			}
 			break;
 		case data.otherPlayer:
 			status += "Waiting for opponent... ";
-			if(inCheck(payload.enemyColor, data.whiteInCheck, data.blackInCheck)){
+			if(playerInCheck(payload.enemyColor, data.whiteInCheck, data.blackInCheck)){
 				status += "Opponent is in check!"
 			}
 			break;
@@ -300,7 +309,7 @@ function setStatus(status){
 	document.getElementById('status').innerHTML = status;
 }
 
-function inCheck(yourColor, whiteInCheck, blackInCheck){
+function playerInCheck(yourColor, whiteInCheck, blackInCheck){
 	return (yourColor=="White" && whiteInCheck) || (yourColor=="Black" && blackInCheck);
 }
 

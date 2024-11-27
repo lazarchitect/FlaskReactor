@@ -22,6 +22,17 @@ function isPiece(boardstate, coords, pieceType, pieceColor) {
     return piece.type == pieceType && piece.color == pieceColor
 }
 
+function getKingCoords(boardstate, color) {
+    for(let row = 1; row <= 8; row++) {
+        for (let col = 1; col <= 8; col++) {
+            if(isPiece(boardstate, [row, col], "King", color)) {
+                return (row, col)
+            }
+        }
+    }
+    return None //should never happen?
+}
+
 // recursive fn to scan along a row/col/diag to see if a given piece is in that direction.
 function pieceTowards(boardstate, coords, offset) {
     let targetCoords = [coords[0] + offset[0], coords[1] + offset[1]]; 
@@ -80,3 +91,15 @@ function inCheck(boardstate, enemyColor, kingCoords) {
     return false;
     })
 }   
+
+
+function previewModifiedBoard(boardstate, src, dest) {
+
+    // TODO implement for #78
+
+    // basically just make a deepcopy of the boardstate, 
+    // move the piece at src to the tile dest, replacing anything there,
+    // and return the board copy containing this edit.
+
+
+}
