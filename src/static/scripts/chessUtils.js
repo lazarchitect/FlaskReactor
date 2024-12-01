@@ -92,14 +92,23 @@ function inCheck(boardstate, enemyColor, kingCoords) {
     })
 }   
 
+// generates a deepcopy of the boardstate & moves the piece at src to the tile dest, replacing anything there;
+// returns the board copy containing this modification
+function previewModifiedBoard(boardstate, srcCoords, destCoords) {
 
-function previewModifiedBoard(boardstate, src, dest) {
+    let deepcopy = structuredClone(boardstate);
 
-    // TODO implement for #78
+    let srcRow = srcCoords[0];
+    let srcCol = srcCoords[1];
+    let destRow = destCoords[0];
+    let destCol = destCoords[1];
 
-    // basically just make a deepcopy of the boardstate, 
-    // move the piece at src to the tile dest, replacing anything there,
-    // and return the board copy containing this edit.
+    // gonna be a lot of these
+    console.log("deepCopy: " + JSON.stringify(deepcopy));
+
+    deepcopy[destRow][destCol] = deepcopy[srcRow][srcCol]; // does this  work??
+
+    return deepcopy;
 
 
 }

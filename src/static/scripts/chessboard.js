@@ -151,8 +151,15 @@ function generateHighlights(boardstate, piece){ // void
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);		
 				}
 			}
-			else if ()
-			highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
+			else {
+				let srcCoords = [piece.row, piece.col];
+				let destCoords = [piece.row+pieceDirection, piece.col];
+				let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
+				}
+			}
+			
 		}
 		// advance 2
 		if(row == starterRow
