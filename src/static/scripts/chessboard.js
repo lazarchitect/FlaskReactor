@@ -142,19 +142,19 @@ function generateHighlights(boardstate, piece){ // void
 
 		// advance 1
 		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined) {
+
+			let srcCoords = [piece.row, piece.col];
+			let destCoords = [piece.row+pieceDirection, piece.col];
+			let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+
 			// if currently in check, only add the highlight if the move escapes check.
 			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
-				let srcCoords = [piece.row, piece.col];
-				let destCoords = [piece.row+pieceDirection, piece.col];
-				let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
 				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);		
 				}
 			}
+			// if not currently in check, add any highlight EXCEPT those that introduce check.
 			else {
-				let srcCoords = [piece.row, piece.col];
-				let destCoords = [piece.row+pieceDirection, piece.col];
-				let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
 				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
 				}
@@ -163,19 +163,68 @@ function generateHighlights(boardstate, piece){ // void
 		}
 		// advance 2
 		if(row == starterRow
-			&& boardstate[piece.row+pieceDirection][piece.col].piece == undefined
-			&& boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined) {
+				&& boardstate[piece.row+pieceDirection][piece.col].piece == undefined
+				&& boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined) {
+
+			let srcCoords = [piece.row, piece.col];
+			let destCoords = [piece.row+(pieceDirection*2), piece.col];
+			let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+
+			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
+				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+					highlightedTiles.push((piece.row+(pieceDirection*2)) + ""  + piece.col);		
+				}
+			}
+			else {
+				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
+				}
+			}
+				
 			highlightedTiles.push((piece.row+pieceDirection*2) + "" + piece.col);
-		}
+
+		
+			}
 		// attack left
 		const leftTargetTile = boardstate[piece.row+pieceDirection][piece.col-1];
 		if(leftTargetTile != undefined && leftTargetTile.piece != undefined && leftTargetTile.piece.color == enemyColor) {
-			highlightedTiles.push((piece.row+pieceDirection) + "" + (piece.col-1));
+
+			let srcCoords = [piece.row, piece.col];
+			let destCoords = [piece.row + pieceDirection, piece.col - 1];
+			let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+
+			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
+				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col - 1);		
+				}
+			}
+			else {
+				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col - 1);
+				}
+			}
+
+
 		}
 		// attack right
 		const rightTargetTile = boardstate[piece.row+pieceDirection][piece.col+1];
 		if(rightTargetTile != undefined && rightTargetTile.piece != undefined && rightTargetTile.piece.color == enemyColor) {
-			highlightedTiles.push((piece.row+pieceDirection) + "" + (piece.col+1));
+
+			let srcCoords = [piece.row, piece.col];
+			let destCoords = [piece.row + pieceDirection, piece.col + 1];
+			let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+
+			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
+				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);		
+				}
+			}
+			else {
+				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);
+				}
+			}
+
 		}
 	}
 
@@ -195,7 +244,26 @@ function generateHighlights(boardstate, piece){ // void
 
 			if(!outOfBounds(destRow, destCol)){
 				const targetPiece = boardstate[destRow][destCol].piece;
-				if(targetPiece == undefined || targetPiece.color == enemyColor){
+				if(targetPiece == undefined || targetPiece.color == enemyColor) {
+
+					// TODO much of this modifiedBoardstate check logic can be encapsulated and refactored into a callable function. 
+					// just need to pass in a bunch of params but its still better IMO
+					
+					let srcCoords = [piece.row, piece.col];
+					let destCoords = [piece.row + pieceDirection, piece.col + 1];
+					let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+
+					if (inCheck(boardstate, enemyColor, allyKingCoords)) {
+						if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+							highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);		
+						}
+					}
+					else {
+						if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+							highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);
+						}
+					}
+					
 					highlightedTiles.push(destRow + "" + destCol);
 				}
 			}
