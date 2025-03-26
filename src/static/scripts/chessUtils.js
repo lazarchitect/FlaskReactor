@@ -1,3 +1,6 @@
+// collection of helper functions for front-end logic to support chess gameplay
+
+// returns a Piece Object like Piece{color: "Black", type: "Knight" ....}
 function pieceAt(boardstate, coords) {
     let col = parseInt(coords[0]);
     let row = parseInt(coords[1]);
