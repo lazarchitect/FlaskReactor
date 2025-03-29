@@ -1,25 +1,36 @@
 'use strict';
 
 function QuadTile (props) {
-    // console.log(index);
-    // console.log(jk);
-    return <div key={props[0]} className={"quadTile"}></div>
+
+    console.log(props.tileData);
+
+    if (props.tileData.piece !== null) { // undefined?
+        // TODO display piece (torus) if piece data is present 
+    }
+
+    return <div className="quadTile">
+        {
+            if (props.s == "2")
+        }
+    </div>
 }
 
 
-function QuadRow() {
+function QuadRow(props) {
     let tileArray = [];
-    for (let i = 0; i < 10; i++) {
-        tileArray.push(<QuadTile props={[i, 2]}></QuadTile>);
+    for (let tileIndex = 0; tileIndex < 10; tileIndex++) {
+        tileArray.push(<QuadTile key={tileIndex} tileData={props.rowData[tileIndex]}></QuadTile>);
     }
     return tileArray;
 }
 
-function QuadBoard(boardstate){
+function QuadBoard(props){
+
+    console.log(props);
     
     let rowArray = [];
-    for (let i = 0; i < 8; i++) {
-        rowArray.push(<QuadRow key={i}></QuadRow>);
+    for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
+        rowArray.push(<QuadRow key={rowIndex} rowData={props.boardstate[rowIndex]}></QuadRow>);
     }
     
     return (
