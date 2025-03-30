@@ -1,7 +1,7 @@
-from models.ChessGame import ChessGame
-from models.User import User
-from models.Stats import Stats
-from models.Message import Message
+from src.models.ChessGame import ChessGame
+from src.models.User import User
+from src.models.Stats import Stats
+from src.models.Message import Message
 
 class FakePgdb:
 
@@ -21,10 +21,7 @@ class FakePgdb:
 		pass
 
 	def getChessGame(self, gameId):
-		return ChessGame.manualCreate("Eddie", "Eddie2")
-
-	def updateChessGame(self, boardstate, datetime, newActivePlayer, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, pawnLeapt, pawnLeapCol, gameId):
-		pass
+		return ChessGame.dbLoad(['FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie', None,None,None,None,None,None,None,None,None])
 
 	def getActiveChessGames(self, username):
 		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')]
@@ -40,6 +37,8 @@ class FakePgdb:
 
 	def endGame(self, end_time, gameid):
 		pass
+
+	####### HELPER METHODS #########
 
 	def userExists(self, username):
 		return True

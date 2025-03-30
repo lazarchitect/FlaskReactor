@@ -1,5 +1,5 @@
-import utils
 
+# TODO: unused?
 class User:
 
     def __init__(self):
