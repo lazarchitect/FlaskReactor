@@ -163,6 +163,10 @@ class ChessHandler(WebSocketHandler):
         whiteInCheck = (allyInCheck and srcColor=="White") or (enemyInCheck and enemyColor=="White")
         blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")
 
+        # TODO test this
+        pawnLeapt = (srcType == "Pawn") and (abs(srcRow - destRow) == 2)
+        pawnLeapCol = int(srcCol) if pawnLeapt else -1
+
         if allyInCheck:
             # do NOT confirm the move to user or to DB
             self.write_message({
@@ -183,7 +187,9 @@ class ChessHandler(WebSocketHandler):
             "bqrMoved": bqrMoved,
             "bkrMoved": bkrMoved,
             "wqrMoved": wqrMoved,
-            "wkrMoved": wkrMoved
+            "wkrMoved": wkrMoved,
+            "pawnLeapt": pawnLeapt,
+            "pawnLeapCol": pawnLeapCol
         }
 
         utils.updateAll(clientConnections[gameId], message)
@@ -194,6 +200,7 @@ class ChessHandler(WebSocketHandler):
             newActivePlayer, newNotation,
             blackKingMoved, whiteKingMoved,
             bqrMoved, bkrMoved, wqrMoved, wkrMoved,
+            pawnLeapt, pawnLeapCol,
             gameId)
 
         # related to issues #81 and #82

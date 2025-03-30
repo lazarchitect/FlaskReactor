@@ -25,6 +25,15 @@ class ChessGame:
         g.time_ended = None
         g.player_turn = white_player
         g.winner = None
+        g.notation = ""
+        g.whitekingmoved = False
+        g.blackkingmoved = False
+        g.wqr_moved = False
+        g.wkr_moved = False
+        g.bqr_moved = False
+        g.bkr_moved = False
+        g.pawn_leapt = False
+        g.pawn_leap_col = -1
         return g
 
     @staticmethod
@@ -48,6 +57,8 @@ class ChessGame:
         g.wkr_moved = record[14]
         g.bqr_moved = record[15]
         g.bkr_moved = record[16]
+        g.pawn_leapt = record[17]
+        g.pawn_leap_col = record[18]
         return g
 
     def toTuple(self):
