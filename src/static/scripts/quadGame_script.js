@@ -1,18 +1,20 @@
 'use strict';
 
+function torusClick() {
+    console.log("Hello, World!");
+}
+
+function Torus (props) {
+    return <img className="torus" src="/static/images/quadradius/torus_default.png" onClick={torusClick}></img>
+}
+
 function QuadTile (props) {
 
-    console.log(props.tileData);
-
-    if (props.tileData.piece !== null) { // undefined?
-        // TODO display piece (torus) if piece data is present 
+    if (props.tileData.piece != undefined) {
+        return <div className="quadTile"><Torus piece={props.tileData.piece}></Torus></div> 
     }
 
-    return <div className="quadTile">
-        {
-            if (props.s == "2")
-        }
-    </div>
+    return <div className="quadTile"></div>
 }
 
 
@@ -25,8 +27,6 @@ function QuadRow(props) {
 }
 
 function QuadBoard(props){
-
-    console.log(props);
     
     let rowArray = [];
     for (let rowIndex = 0; rowIndex < 8; rowIndex++) {

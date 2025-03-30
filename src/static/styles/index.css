@@ -129,6 +129,7 @@ body {
 #quadboard {
     display: grid;
     grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(8, 1fr);
     margin-top: 4%;
     margin-left: 8%;
     width: 512px;
@@ -145,4 +146,11 @@ body {
     width: 1fr;
     height: 1fr;
     border: 1px solid slategray;
+}
+
+.torus {
+    width: 80%;
+    height: 80%;
+    margin-left: 5%;
+    margin-top: 10%;
 }

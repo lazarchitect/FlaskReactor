@@ -101,7 +101,7 @@ def quadGame(gameid):
         "deployVersion": "DEV",
         # "wsBaseUrl": wsBaseUrl,
         # "game": vars(game),
-        "boardstate": json.loads(open('initialQuadLayout.json', 'r').read())
+        "boardstate": json.loads(open('resources/initialQuadLayout.json', 'r').read())
         # "username": session.get('username'), #can be null if not logged in
         # "userId": session.get('userId'),
         # "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
