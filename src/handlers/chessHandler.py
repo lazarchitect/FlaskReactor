@@ -1,9 +1,9 @@
 from datetime import datetime
 import json
 from tornado.websocket import WebSocketHandler
-from pgdb import Pgdb
-from FakePgdb import FakePgdb
-import utils
+from src.pgdb import Pgdb
+from src.FakePgdb import FakePgdb
+import src.utils as utils
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -146,7 +146,7 @@ class ChessHandler(WebSocketHandler):
          
         # execute the move
         boardstate[srcRow][srcCol] = {}
-        boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor}}
+        boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor, "id": srcId}}
 
         newActivePlayer = game.white_player if game.player_turn == game.black_player else game.black_player
         oldActivePlayer = game.white_player if game.player_turn != game.black_player else game.black_player

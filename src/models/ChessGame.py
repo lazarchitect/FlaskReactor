@@ -1,4 +1,4 @@
-import utils
+import src.utils
 import json
 from datetime import datetime
 from psycopg2.extras import UUID_adapter, Json
@@ -18,7 +18,7 @@ class ChessGame:
         g.id = utils.generateId()
         g.white_player = white_player
         g.black_player = black_player
-        g.boardstate = json.loads(open('initialLayout.json', 'r').read())
+        g.boardstate = json.loads(open('resources/initialLayout.json', 'r').read())
         g.completed = False
         g.time_started = datetime.now()
         g.last_move = g.time_started

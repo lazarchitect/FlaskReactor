@@ -4,11 +4,11 @@ containing game data, users, and more."""
 from json import loads
 from psycopg2 import connect, InterfaceError, OperationalError
 from psycopg2.extras import DictCursor, Json
-from models.ChessGame import ChessGame
-from models.TttGame import TttGame
-# from models.User import User
-# from models.Stats import Stats
-# from models.Message import Message
+from src.models.ChessGame import ChessGame
+from src.models.TttGame import TttGame
+# from src.models.User import User
+# from src.models.Stats import Stats
+# from src.models.Message import Message
 
 relation = "flaskreactor"
 
@@ -25,7 +25,7 @@ sql = {
         "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
         "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
         "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s, blackkingmoved=%s, whitekingmoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s, pawn_leapt=%s, pawn_leap_col=%s WHERE id=%s",
+        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s WHERE id=%s",
         "endChessGame": "UPDATE " + relation + ".chess_games SET completed=true, time_ended=%s, winner=%s WHERE id=%s",
 
         # Tic-Tac-Toe
@@ -51,7 +51,7 @@ class Pgdb:
 
         try:
 
-            dbDetails = loads(open("dbdetails.json", "r", encoding="utf8").read())
+            dbDetails = loads(open("resources/dbdetails.json", "r", encoding="utf8").read())
             print("real pgdb instantiating.")
             self.conn = connect(
                 host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
@@ -70,7 +70,7 @@ class Pgdb:
             print("dbdetails.json file missing a key:", ke.args[0])
             exit()
         except FileNotFoundError:
-            print("you need to add a dbdetails.json file to run the app.")
+            print("you need to add a resources/dbdetails.json file to run the app.")
             exit()
 
     def __execute(self, query, values):
@@ -146,9 +146,9 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchall()
 
-    def updateChessGame(self, new_boardstate, update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, pawnLeapt, pawnLeapCol, gameid):
+    def updateChessGame(self, new_boardstate, update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, gameid):
         query = sql['updateChessGame']
-        values = [Json(new_boardstate), update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, pawnLeapt, pawnLeapCol, gameid]
+        values = [Json(new_boardstate), update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, gameid]
         self.__execute(query, values)
         self.conn.commit()
 
@@ -206,6 +206,8 @@ class Pgdb:
         values = [ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id]
         self.__execute(query, values)
         self.conn.commit()
+
+    ####### HELPER METHODS #########
 
     def userExists(self, username):
         return self.getUser(username) != None

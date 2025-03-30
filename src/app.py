@@ -1,6 +1,5 @@
 #!usr/bin/env python
 
-from models.TttGame import TttGame
 from flask import Flask, render_template, redirect, request, session
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
@@ -11,23 +10,25 @@ import tornado
 import random
 import json
 import os
-from models.ChessGame import ChessGame
-from pgdb import Pgdb
-from FakePgdb import FakePgdb
-from utils import generateId, generateHash
-from handlers.tttHandler import TttHandler
-from handlers.statHandler import StatHandler
-from handlers.chessHandler import ChessHandler
+
+from src.pgdb import Pgdb
+from src.FakePgdb import FakePgdb
+from src.utils import generateId, generateHash
+from src.models.ChessGame import ChessGame
+from src.models.TttGame import TttGame
+from src.handlers.tttHandler import TttHandler
+from src.handlers.statHandler import StatHandler
+from src.handlers.chessHandler import ChessHandler
 
 try:
-    wsDetails = json.loads(open("wsdetails.json", "r").read())
+    wsDetails = json.loads(open("resources/wsdetails.json", "r").read())
     port = wsDetails['port']
     host = wsDetails['host']
     wsProtocol = wsDetails['protocol']
     wsBaseUrl = wsProtocol + "://" + host + "/ws"
 
 except FileNotFoundError:
-    print("you need to add wsdetails.json for the server to run.")
+    print("you need to add resources/wsdetails.json for the server to run.")
     exit(1)
 except KeyError as ke:
     print("wsdetails.json file missing a key:", ke.args[0])
@@ -41,9 +42,9 @@ except KeyError:
     appVersion = "DEV"
 
 try:
-    app.secret_key = open('secret_key.txt', 'r').read().encode('utf-8')
+    app.secret_key = open('resources/secret_key.txt', 'r').read().encode('utf-8')
 except FileNotFoundError:
-    print("you need to add a file called secret_key.txt, containing a secret (private string) for Flask to run.")
+    print("you need to add a file called resources/secret_key.txt, containing a secret (private string) for Flask to run.")
     exit()
 
 @app.route('/')
@@ -70,7 +71,7 @@ def chessGame(gameid):
     game = pgdb.getChessGame(gameid)
 
     if game == None:
-        return render_template("home.html", alert="Game could not be retrieved from database.")
+        return "game with that ID was not found"#render_template("home.html", alert="Game could not be retrieved from database.")
 
     username = session.get('username')
 

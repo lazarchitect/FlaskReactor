@@ -8,7 +8,7 @@
 			"name": "FlaskReactor LOCAL DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"local_db"
 			]
@@ -30,21 +30,6 @@
 			"args": [
 				"no_db"
 			]
-		},
-		{
-			"name": "Docker: Python - Flask",
-			"type": "docker",
-			"request": "launch",
-			"preLaunchTask": "docker-run: debug",
-			"python": {
-				"pathMappings": [
-					{
-						"localRoot": "${workspaceFolder}",
-						"remoteRoot": "/app"
-					}
-				],
-				"projectType": "flask"
-			}
 		}
 	]
 }
