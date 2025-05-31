@@ -17,7 +17,7 @@
 			"name": "FlaskReactor REMOTE DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"remote_db"
 			]
@@ -26,7 +26,7 @@
 			"name": "FlaskReactor NO DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"no_db"
 			]
