@@ -1,13 +1,5 @@
 'use strict';
 
-function torusClick() {
-    console.log("Hello, World!");
-}
-
-function Torus (props) {
-    return <img className="torus" src="/static/images/quadradius/torus_default.png" onClick={torusClick}></img>
-}
-
 function QuadTile (props) {
 
     if (props.tileData.piece != undefined) {

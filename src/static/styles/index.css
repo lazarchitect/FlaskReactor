@@ -146,9 +146,18 @@ body {
     width: 1fr;
     height: 1fr;
     border: 1px solid slategray;
+    /* position: relative; */
 }
 
 .torus {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.torusImg{
     /* torii default to a light green (01FF00) but should be programatically changed to the user's preferred color */
     width: 80%;
     height: 80%;
