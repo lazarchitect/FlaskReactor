@@ -4,23 +4,16 @@
         <link rel="stylesheet" href="/static/styles/index.css">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         
-        <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-        <script src="/static/scripts/ReactStuff/React.js"></script>
-        <script src="/static/scripts/ReactStuff/ReactDom.js"></script>
-        <script src="/static/scripts/ReactStuff/Babel.js"></script>
-        <script src="/static/scripts/ReactStuff/ReactIS.js"></script> <!--Do we even use this???-->
-        <script src="/static/scripts/ReactStuff/StyledComponents.js"></script>
-        
         <script>
             var payload = JSON.parse('{{payload | safe}}'); // comes from Flask
         </script>
 
-        <script type="text/jsx" src="/static/scripts/CommonComponents.js"></script>
-        <script type="text/jsx" src="/static/scripts/Torus.js"></script>
-        <script type="text/jsx" src="/static/scripts/quadGame_script.js"></script>
+        <script type="text/javascript" src="/static/scripts/dist/CommonComponents.js" defer ></script>
+        <script type="text/javascript" src="/static/scripts/dist/Torus.js"            defer ></script>
+        <script type="text/javascript" src="/static/scripts/dist/quadGame_script.js"  defer ></script>
     </head>
 
     <body>
-        <div id = "root"></div> <!-- react root -->
+        <div id = "root"></div>
     </body>
 </html>

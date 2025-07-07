@@ -146,11 +146,10 @@ body {
     width: 1fr;
     height: 1fr;
     border: 1px solid slategray;
-    /* position: relative; */
 }
 
 .torus {
-    position: absolute;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;

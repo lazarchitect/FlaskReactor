@@ -1,5 +1,12 @@
 'use strict';
 
+import React from 'react'; // do I need this?    yes
+import { createRoot } from 'react-dom/client';
+import { SiteHeader } from './CommonComponents';
+import { Torus } from './Torus';
+
+<div />
+
 function QuadTile (props) {
 
     if (props.tileData.piece != undefined) {
@@ -32,8 +39,9 @@ function QuadBoard(props){
     )
 }
 
-var reactRoot = (
-	<div id="reactRoot">
+var page = (
+	<div id="reactRoot" onMouseMove={(e) => console.log(e.clientX, e.clientY)}>
+
         {/* top of the page */}
         <SiteHeader version={payload.deployVersion} username={payload.username}/>
         
@@ -46,6 +54,6 @@ var reactRoot = (
     </div>
 );
 
-var rootDiv = document.getElementById("root");
-
-ReactDOM.render(reactRoot, rootDiv);
+var rootElement = document.getElementById("root");
+var reactRoot = createRoot(rootElement);
+reactRoot.render(page);

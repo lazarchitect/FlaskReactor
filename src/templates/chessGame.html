@@ -5,21 +5,14 @@
         <link rel="stylesheet" href="/static/styles/index.css">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         
-        <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
-        <script src="/static/scripts/ReactStuff/React.js"></script>
-        <script src="/static/scripts/ReactStuff/ReactDom.js"></script>
-        <script src="/static/scripts/ReactStuff/Babel.js"></script>
-        <script src="/static/scripts/ReactStuff/ReactIS.js"></script> <!--Do we even use this???-->
-        <script src="/static/scripts/ReactStuff/StyledComponents.js"></script>
-        
         <script>
             var payload = JSON.parse('{{payload | safe}}'); // comes from Flask
         </script>
             
-        <script type="text/jsx" src="/static/scripts/CommonComponents.js"></script>
-        <script type="text/javascript" src="/static/scripts/chessUtils.js"></script>
-        <script type="text/jsx" src="/static/scripts/chessboard.js"></script>
-        <script type="text/jsx" src="/static/scripts/chessGame_script.js"></script>
+        <script type="text/javascript" src="/static/scripts/dist/CommonComponents.js" defer ></script>
+        <script type="text/javascript" src="/static/scripts/dist/chessUtils.js" defer ></script>
+        <script type="text/javascript" src="/static/scripts/dist/chessboard.js" defer ></script>
+        <script type="text/javascript" src="/static/scripts/dist/chessGame_script.js" defer ></script>
 
     </head>
 

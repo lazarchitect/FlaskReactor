@@ -1,6 +1,11 @@
 'use strict';
 
-var reactRoot = (
+import React from 'react'; // do I need this?
+import { createRoot } from 'react-dom/client';
+import { SiteHeader } from './CommonComponents';
+import {Chessboard} from './chessboard';
+
+var page = (
 	<div id="reactRoot">
         <SiteHeader version={payload.deployVersion} username={payload.username}/>
         <div id="chessPlayArea">
@@ -11,6 +16,4 @@ var reactRoot = (
     </div>
 );
 
-var rootDiv = document.getElementById("root");
-
-ReactDOM.render(reactRoot, rootDiv);
+createRoot(document.getElementById('root')).render(page);

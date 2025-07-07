@@ -1,12 +1,15 @@
 
+import React from 'react';
 
-function Torus (props) {
+
+export function Torus (props) {
     
     const [position, setPosition] = React.useState({x:0, y:0});
     const [dragStart, setDragStart] = React.useState({x:0, y:0});
     const [isDragging, setIsDragging] = React.useState(false);
     
-    return <div 
+    return <div
+            id = {{}}
             className="torus"
             style={{
                 cursor: "move",
@@ -19,7 +22,8 @@ function Torus (props) {
                 setDragStart({x: e.clientX, y: e.clientY});
             }}
             onMouseUp={(e) => setIsDragging(false)}
-
+            /* ALERT! MOUSE UP WILL ONLY TRIGGER IF YOU MOUSEUP _WHILE_ OVER THE DIV! 
+            SO YOU NEED TO TRACK MOUSE EVENTS OF THE WHOLE PAGE..? */
 
             onMouseMove={(e) => {
 
@@ -31,8 +35,8 @@ function Torus (props) {
                 console.log("position:" + position.x + " " + position.y);
 
                 setPosition({
-                    x: dragStart.x - e.clientX,
-                    y: dragStart.y - e.clientY
+                    x: e.clientX - dragStart.x, // always bounces back to origin since mouseDown sets dragstart to client, so this evals to 0,0
+                    y: e.clientY - dragStart.y 
                 });
                 // console.log(position);
             }}

@@ -1,3 +1,8 @@
+
+'use strict';
+
+import React from 'react'; // do I need this?    yes
+
 var highlightedTiles = [];
 var active_coords = [];
 
@@ -14,6 +19,7 @@ var wqr_moved = payload.game.wqr_moved;
 var wkr_moved = payload.game.wkr_moved;
 var bqr_moved = payload.game.bqr_moved;
 var bkr_moved = payload.game.bkr_moved;
+
 
 function wsSubscribe(chessSocket){
 	const subscribeObj = {
@@ -417,7 +423,9 @@ function blackCastlingMoves(boardstate) {
 	}
 }
 
-function Chessboard() {
+export function Chessboard() {
+
+	console.log(payload.boardstate);
 
 	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
 
@@ -468,3 +476,4 @@ function Tile(props) {
 		</span>
 	);
 }
+

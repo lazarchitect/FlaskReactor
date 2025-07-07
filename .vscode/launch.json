@@ -29,7 +29,8 @@
 			"module": "src.app",
 			"args": [
 				"no_db"
-			]
+			],
+			"preLaunchTask": "webpack build"
 		}
 	]
 }

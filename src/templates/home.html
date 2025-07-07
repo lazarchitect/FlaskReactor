@@ -8,16 +8,9 @@
         <script>
             var payload = JSON.parse('{{payload | safe}}');
         </script>
-        
-        <!-- Note: when deploying, replace react development files with production ones. -->
-        <script src="/static/scripts/ReactStuff/React.js"></script>
-        <script src="/static/scripts/ReactStuff/ReactDom.js"></script>
-        <script src="/static/scripts/ReactStuff/Babel.js"></script>
-        <script src="/static/scripts/ReactStuff/ReactIS.js"></script>
-        <script src="/static/scripts/ReactStuff/StyledComponents.js"></script>
 
-        <script type="text/jsx" src="/static/scripts/CommonComponents.js"></script>
-        <script type="text/jsx" src="/static/scripts/home_script.js"></script>
+        <script type="text/javascript" src="/static/scripts/dist/CommonComponents.js"defer ></script>
+        <script type="text/javascript" src="/static/scripts/dist/home_script.js" defer ></script>
 
     </head>
 

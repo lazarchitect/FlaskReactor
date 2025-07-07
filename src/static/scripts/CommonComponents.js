@@ -1,7 +1,8 @@
 
+import React from 'react';
+// import { createRoot } from 'react-dom/client';
 
-
-const SiteHeader = ((props) =>
+export function SiteHeader (props) {
 	<div id="siteHeader">
 		<span id="headerLeft">
 			Welcome to FlaskReactor! (Version {props.version})
@@ -23,4 +24,4 @@ const SiteHeader = ((props) =>
 		
 	</div>
 
-);
+};

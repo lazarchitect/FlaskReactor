@@ -1,4 +1,8 @@
+'use strict';
 
+import React from 'react'; // do I need this?
+import { createRoot } from 'react-dom/client';
+import { SiteHeader } from './CommonComponents';
 
 const LoginArea = (() =>
 	<div>
@@ -37,7 +41,7 @@ const SignupArea = (() =>
 );
 
 
-const reactRoot = (
+const page = (
 	<div id="reactRoot">
 		<SiteHeader username={null}/>
 		<p>FlaskReactor is a site for playing games online with your friends. Gaming will be free of charge for everyone, forever. Please make an account to get started!</p>
@@ -47,6 +51,6 @@ const reactRoot = (
 	</div>
 );
 
-const rootDiv = document.getElementById("root");
-
-ReactDOM.render(reactRoot, rootDiv);
+var rootElement = document.getElementById("root");
+var reactRoot = createRoot(rootElement);
+reactRoot.render(page);
