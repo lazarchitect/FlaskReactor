@@ -1,26 +1,26 @@
+'use strict';
 
+import React from 'react';
 
-
-const SiteHeader = ((props) =>
-	<div id="siteHeader">
-		<span id="headerLeft">
-			Welcome to FlaskReactor! (Version {props.version})
-		</span>
-		<span id="headerRight">
-
-			<span id="headerUsername">
-				{props.username === null ? <a href="/">Log in / Sign up</a> : props.username}
+export function SiteHeader (props) {
+	return (
+		<div id="siteHeader">
+			<span id="headerLeft">
+				Welcome to FlaskReactor! (Version {props.version})
 			</span>
+			<span id="headerRight">
 
-			{props.username != null ? 
-				<form id="logout" action="/logout" method="POST">
-					<input type="submit" value="Log Out"/>
-				</form>
-			: null }
+				<span id="headerUsername">
+					{props.username === null ? <a href="/">Log in / Sign up</a> : props.username}
+				</span>
 
-		</span>
-		
-		
-	</div>
+				{props.username != null ? 
+					<form id="logout" action="/logout" method="POST">
+						<input type="submit" value="Log Out"/>
+					</form>
+				: null }
 
-);
+			</span>
+		</div>
+	);
+};

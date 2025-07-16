@@ -167,6 +167,7 @@ class Pgdb:
         record = self.cursor.fetchone()
         if(record == None):
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+            return None
         return TttGame.dbCreate(record)
 
     def getTttGames(self, username):

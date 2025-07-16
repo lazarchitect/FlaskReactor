@@ -1,5 +1,12 @@
 /* contains all JS, react or otherwise, that creates and maintains the home.html template. */
 
+'use strict';
+
+import React from 'react'; // do I need this?
+import { createRoot } from 'react-dom/client';
+import { SiteHeader } from './CommonComponents';
+import styled  from 'styled-components';
+
 var chessGames = payload.chessGames;
 var username = payload.username;
 var tttGames = payload.tttGames;
@@ -36,7 +43,7 @@ const gameTypes = ["Chess", "Tic-Tac-Toe"];
 
 const jsxGT = gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>);
 
-var rootElem = (
+var page = (
 
 	<div id="reactRoot">
 		<SiteHeader version={payload.deployVersion} username={payload.username}/>
@@ -58,12 +65,9 @@ var rootElem = (
 
 		TicTacToe Games: {TTTGameList}
 
-
 	</div>
-
 );
 
-
-var rootDiv = document.getElementById("root");
-
-ReactDOM.render(rootElem, rootDiv)
+let rootElement = document.getElementById('root');
+let reactRoot = createRoot(rootElement);
+reactRoot.render(page);

@@ -83,8 +83,11 @@ class ChessHandler(WebSocketHandler):
         else:
             clientConnections[gameId].append(connectionDetails)
 
-        #TODO error response if pgdb doesnt find anything
         game = self.pgdb.getChessGame(gameId)
+
+        if game == None:
+            pass
+            #TODO handle possible error if pgdb doesnt find anything.
 
         if game.white_player == game.player_turn:
             otherPlayer = game.black_player
@@ -163,7 +166,7 @@ class ChessHandler(WebSocketHandler):
         whiteInCheck = (allyInCheck and srcColor=="White") or (enemyInCheck and enemyColor=="White")
         blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")
 
-        # TODO test this
+        # TODO test this as part of en passant logic
         pawnLeapt = (srcType == "Pawn") and (abs(srcRow - destRow) == 2)
         pawnLeapCol = int(srcCol) if pawnLeapt else -1
 

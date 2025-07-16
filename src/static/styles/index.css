@@ -126,5 +126,40 @@ body {
     background-color: grey;
 }
 
+#quadboard {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    margin-top: 4%;
+    margin-left: 8%;
+    width: 512px;
+    height: 512px;
+    border: 3px solid black;
+}
 
+.quadTile {
+    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this file */
+    background-size: 100% 100%;
+    background-color: red;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 1fr;
+    height: 1fr;
+    border: 1px solid slategray;
+}
 
+.torus {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.torusImg{
+    /* torii default to a light green (01FF00) but should be programatically changed to the user's preferred color */
+    width: 80%;
+    height: 80%;
+    margin-left: 5%;
+    margin-top: 10%;
+}

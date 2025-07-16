@@ -8,3 +8,5 @@ python-app.yml
 *details.json
 *pat
 *.log
+node_modules
+**/dist

@@ -93,6 +93,26 @@ def chessGame(gameid):
 
     return render_template("chessGame.html", payload=payload)
 
+@app.route("/games/quadradius/<gameid>")
+def quadGame(gameid):
+    # TODO: configure database storage of quadradius objects
+    #game = pgdb.getQuadGame(gameId)
+    payload = {
+        "deployVersion": "DEV",
+        # "wsBaseUrl": wsBaseUrl,
+        # "game": vars(game),
+        "boardstate": json.loads(open('resources/initialQuadLayout.json', 'r').read())
+        # "username": session.get('username'), #can be null if not logged in
+        # "userId": session.get('userId'),
+        # "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
+        # "yourTurn": game.player_turn == session.get('username')
+    }
+
+    # print(payload)
+
+    payload = json.dumps(payload, default=str)
+    return render_template("quadGame.html", payload=payload)
+
 
 @app.route('/games/ttt/<gameid>')
 def tttGame(gameid):

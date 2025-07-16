@@ -11,25 +11,28 @@
 			"module": "src.app",
 			"args": [
 				"local_db"
-			]
+			],
+			"preLaunchTask": "webpack build"
 		},
 		{
 			"name": "FlaskReactor REMOTE DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"remote_db"
-			]
+			],
+			"preLaunchTask": "webpack build"
 		},
 		{
 			"name": "FlaskReactor NO DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"no_db"
-			]
+			],
+			"preLaunchTask": "webpack build"
 		}
 	]
 }
