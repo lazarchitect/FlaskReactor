@@ -6,7 +6,6 @@ import React from 'react'; // do I need this?
 import { createRoot } from 'react-dom/client';
 import { SiteHeader } from './CommonComponents';
 import styled  from 'styled-components';
-import react from 'react';
 
 var chessGames = payload.chessGames;
 var username = payload.username;
@@ -66,9 +65,7 @@ var page = (
 
 		TicTacToe Games: {TTTGameList}
 
-
 	</div>
-
 );
 
 let rootElement = document.getElementById('root');
