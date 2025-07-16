@@ -12,6 +12,7 @@ var page = (
             <Chessboard boardstate={payload.boardstate}/>
             <p>Status: <span id="status"></span></p>
         </div>
+        <MessageBox/>
         
     </div>
 );

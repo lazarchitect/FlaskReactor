@@ -19,6 +19,7 @@ from src.models.TttGame import TttGame
 from src.handlers.tttHandler import TttHandler
 from src.handlers.statHandler import StatHandler
 from src.handlers.chessHandler import ChessHandler
+from src.handlers.messageHandler import MessageHandler
 
 try:
     wsDetails = json.loads(open("resources/wsdetails.json", "r").read())
@@ -49,6 +50,8 @@ except FileNotFoundError:
 
 @app.route('/')
 def homepage():
+
+    print(session)
 
     if(session.get('loggedIn') == False or session.get('loggedIn') == None):
         return render_template("splash.html")
@@ -95,7 +98,7 @@ def chessGame(gameid):
 
 @app.route("/games/quadradius/<gameid>")
 def quadGame(gameid):
-    # TODO: configure database storage of quadradius objects
+    # TODO: configure database storage of quadradius objects (seems like a whole issue itself)
     #game = pgdb.getQuadGame(gameId)
     payload = {
         "deployVersion": "DEV",
@@ -177,6 +180,8 @@ def logout():
     session['loggedIn'] = False
     if 'username' in session:
         del session['username']
+    if 'userId' in session:
+        del session['userId']
     return redirect("/")
 
 @app.route("/creategame", methods=["POST"])
@@ -257,10 +262,11 @@ if __name__ == "__main__":
     application = Application(
         default_host=host,
         handlers=[
-            ("/ws/ttt", TttHandler, dict(db_env=db_env)),
-            ("/ws/stat", StatHandler, dict(db_env=db_env)),
-            ("/ws/chess", ChessHandler, dict(db_env=db_env)),
-            (".*", FallbackHandler, dict(fallback=flaskApp))
+            ("/ws/ttt",     TttHandler,      dict(db_env=db_env)),
+            ("/ws/stat",    StatHandler,     dict(db_env=db_env)),
+            ("/ws/chess",   ChessHandler,    dict(db_env=db_env)),
+            ("/ws/message", MessageHandler,  dict(db_env=db_env)),
+            (".*",          FallbackHandler, dict(fallback=flaskApp))
         ]
     )
     application.listen(port)
