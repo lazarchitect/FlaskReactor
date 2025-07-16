@@ -1,23 +1,20 @@
-
 const path = require("path");
 const glob = require('glob');
 
-
 module.exports = {
-    entry: () => {
-        const entries = {};
-        glob.sync("./src/**/*.js").forEach(file => {
-            const name = file.replace("src\\static\\scripts\\", "").replace(".js", "");
-            if(!name.includes("dist\\")) {
-              entries[name] = "./" + file;
-            }
-        });
-        // console.log(entries);
-        return entries
-    },
-    mode: "development",
+  entry: () => {
+      const entries = {};
+      glob.sync("./src/**/*.js").forEach(file => {
+          const name = file.replace("src\\static\\scripts\\", "").replace(".js", "");
+          if(!name.includes("dist\\")) {
+            entries[name] = "./" + file;
+          }
+      });
+      return entries
+  },
+  mode: "development",
   resolve: {
-    fallback: { "fs": false }
+    extensions: ['.js', '.jsx']
   },
   output: { 
     path: path.resolve("src/static/scripts", "dist"),
@@ -36,5 +33,5 @@ module.exports = {
         },
       },
     ],
-  },
+  }
 };
