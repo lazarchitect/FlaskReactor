@@ -63,7 +63,6 @@ def pieceCode(p):
 
 def outOfBounds(coords):
     row, col = coords
-    print("is this out of bounds? " + row + " " + col)
     return row < 0 or row > 7 or col < 0 or col > 7
 
 def isPiece(boardstate, coords, pieceType, pieceColor):
