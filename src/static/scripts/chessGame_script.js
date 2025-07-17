@@ -2,8 +2,8 @@
 
 import React from 'react'; // do I need this?
 import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './CommonComponents';
-import {Chessboard} from './chessboard';
+import { SiteHeader, MessageBox } from './CommonComponents';
+import { Chessboard } from './chessboard';
 
 var page = (
 	<div id="reactRoot">

@@ -25,7 +25,7 @@ sql = {
         "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
         "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
         "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s WHERE id=%s",
+        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s, pawn_leapt=%s, pawn_leap_col=%s WHERE id=%s",
         "endChessGame": "UPDATE " + relation + ".chess_games SET completed=true, time_ended=%s, winner=%s WHERE id=%s",
 
         # Tic-Tac-Toe
