@@ -139,6 +139,11 @@ def login():
     password = request.form['password']
     password_hash = generateHash(password)
 
+    #TODO getUser before checkLogin so we can say user does not exist
+    userExists = pgdb.getUser(username) != None
+    if not userExists:
+        return "User " + username + " does not exist."
+
     correctLogin = pgdb.checkLogin(username, password_hash)
     if(correctLogin):
         userId = pgdb.getUser(username)[2]
