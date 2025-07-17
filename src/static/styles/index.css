@@ -163,3 +163,27 @@ body {
     margin-left: 5%;
     margin-top: 10%;
 }
+
+#messagebox { /* abstract container */
+    position: fixed;
+    width: 292px; /* 300 minus border offsets */
+    height: 400px;
+    right: 10%;
+    bottom: 0%;
+}
+
+#messagebox-main {
+    background-color: black;
+    height: 90%;
+    border: 10px solid black;
+}
+
+#messagebox-base {
+    background-color: #DDDDDD;
+    outline: 4px solid #633e07;
+    position: absolute;
+    width: 100%;
+    height: 10%;
+    bottom: 0%;
+    
+}

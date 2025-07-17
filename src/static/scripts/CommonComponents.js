@@ -25,8 +25,24 @@ export function SiteHeader (props) {
 	);
 };
 
+// possible enhancement - disable chat entirely for users who opt out
 export function MessageBox (props) {
 	return (
-		<div>Hello, Perld.</div>
+		<div id="messagebox">
+			
+			<div id="messagebox-main">
+
+			</div>
+			<div id="messagebox-base" 
+					onClick={() => {
+						let currentVis = document.getElementById('messagebox-main').style.visibility;
+						let newVis = currentVis == 'hidden' ? 'visible' : 'hidden';
+						document.getElementById('messagebox-main').style.visibility = newVis;
+						
+						}}>
+				<p><span id='chatbox-indicator'>Expand</span> Chatbox</p>
+			</div>
+
+		</div>
 	);
 }
