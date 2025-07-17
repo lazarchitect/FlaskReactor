@@ -4,6 +4,7 @@ containing game data, users, and more."""
 from json import loads
 from psycopg2 import connect, InterfaceError, OperationalError
 from psycopg2.extras import DictCursor, Json
+from psycopg2.errors import InFailedSqlTransaction
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
 # from src.models.User import User
@@ -94,6 +95,10 @@ class Pgdb:
             self.cursor = self.conn.cursor(cursor_factory=DictCursor)
             self.__execute(query, values)
 
+        except InFailedSqlTransaction: # type: ignore
+            self.conn.rollback()
+
+
     ###### DB QUERY METHODS ######
 
     ### General
@@ -146,9 +151,9 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchall()
 
-    def updateChessGame(self, new_boardstate, update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, gameid):
+    def updateChessGame(self, new_boardstate, update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, pawnLeapt, pawnLeapCol, gameid):
         query = sql['updateChessGame']
-        values = [Json(new_boardstate), update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, gameid]
+        values = [Json(new_boardstate), update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, pawnLeapt, pawnLeapCol, gameid]
         self.__execute(query, values)
         self.conn.commit()
 
