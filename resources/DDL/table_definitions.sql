@@ -34,3 +34,21 @@ create table flaskreactor.tictactoe_games (
     player_turn text,
     winner text
 );
+
+create table flaskreactor.users (
+    name text,
+    email text,
+    id text,
+    password_hash text
+);
+
+create table flaskreactor.stats (
+        userId text,
+        ttt_games_played integer,
+        ttt_wins integer,
+        ttt_win_percent integer,
+        ttt_played_white integer,
+        ttt_played_black integer,
+        ttt_won_white integer,
+        ttt_won_black integer
+);
