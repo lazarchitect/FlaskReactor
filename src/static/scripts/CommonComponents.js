@@ -24,3 +24,9 @@ export function SiteHeader (props) {
 		</div>
 	);
 };
+
+export function MessageBox (props) {
+	return (
+		<div>Hello, Perld.</div>
+	);
+}
