@@ -55,7 +55,7 @@ class ChessHandler(WebSocketHandler):
     ## Message Handler functions ##
     ###############################
 
-    def wsSubscribe(self, fields):
+    def wsSubscribe(self, fields): #TODO - should be called like 'handleSubscribe'
 
         if self.socketId == None: 
             print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')

@@ -140,8 +140,7 @@ def login():
     password_hash = generateHash(password)
 
     #TODO getUser before checkLogin so we can say user does not exist
-    userExists = pgdb.getUser(username) != None
-    if not userExists:
+    if not pgdb.userExists(username):
         return "User " + username + " does not exist."
 
     correctLogin = pgdb.checkLogin(username, password_hash)
