@@ -471,4 +471,3 @@ function Tile(props) {
 		</span>
 	);
 }
-

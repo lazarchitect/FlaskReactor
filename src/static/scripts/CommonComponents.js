@@ -25,39 +25,52 @@ export function SiteHeader (props) {
 	);
 };
 
+// TODO #32 - build wsSubscrbe for the message websocket, manage chat log state with react and update on WB receive.
+
+function MessageBoxLog(props) {
+	
+	return (
+		<textarea id="messagebox-log" readOnly></textarea>
+	);
+}
+
+function MessageBoxInput(props) {
+	return (
+		<textarea id="messagebox-input" rows='2' maxLength='68' required 
+			onKeyDown={(event) => {
+				if (event.key == 'Enter') {
+					form.submit();
+					// TODO:
+					// send off message to Message websocket
+					// add user message to message crawl
+					// await receival of any messages coming in from websocket, to add to crawl as well.
+				}
+		}}>
+		</textarea>
+	);
+}
+
 // possible enhancement - disable chat entirely for users who opt out
 export function MessageBox (props) {
 	return (
 		<div id="messagebox">
 			
 			<div id="messagebox-main" style={{visibility: 'hidden'}}>
-				<form type='submit' method='post'>
-					<textarea id="messagebox-textarea" readOnly></textarea>
-					<textarea id="messagebox-input" rows='2' maxLength='68' required 
-					onKeyDown={(e) => {
-						console.log(e);
-						if (e.key == 'Enter') {
-							form.submit();
-							// TODO:
-							// send off message to Message websocket
-							// add user message to message crawl
-							// await receival of any messages coming in from websocket, to add to crawl as well.
-						}
-					}}>
-							
-					</textarea>
-				</form>
+
+				<MessageBoxLog/>
+				<MessageBoxInput/>
+				
 			</div>
 
 			<div id="messagebox-base">
-				<span id='messagebox-text'>Chatbox</span>
+				<span id='messagebox-label'>Chatbox</span>
 				<span id='messagebox-indicator'
 					onClick={() => {
 						let currentVis = document.getElementById('messagebox-main').style.visibility;
 						let newVis = currentVis == 'hidden' ? 'visible' : 'hidden';
 						let newText = currentVis == 'hidden' ? 'Hide' : 'Expand';
 						document.getElementById('messagebox-main').style.visibility = newVis;
-						document.getElementById('chatbox-indicator').innerText = newText;
+						document.getElementById('messagebox-indicator').innerText = newText;
 					}}>
 					Expand</span>
 			</div>

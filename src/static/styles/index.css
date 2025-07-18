@@ -164,9 +164,9 @@ body {
     margin-top: 10%;
 }
 
-#messagebox { /* abstract container */
+#messagebox { /* overall container */
     position: fixed;
-    width: 250px; /* 300 minus border offsets */
+    width: 250px;
     height: 400px;
     right: 10%;
     bottom: 0%;
@@ -174,18 +174,21 @@ body {
 
 /* possible improvement - make it slide up and down for show/hide */
 #messagebox-main {
-    height: 50%;
+    height: 100%;
+    background-color: purple;
 }
 
-#messagebox-textarea {
-    height: 90%;
+#messagebox-log {
+    height: 78.4%; /* crazy... */
     width: 100%;
     resize: none;
 }
 
 #messagebox-input{
+    position: relative;
     width: 100%;
     resize: none;
+    bottom: 1%;
 }
 
 #messagebox-base {
@@ -197,7 +200,7 @@ body {
     bottom: 0%;    
 }
 
-#messagebox-text {
+#messagebox-label {
     position: absolute;
     top: 30%;
     left: 10%;
