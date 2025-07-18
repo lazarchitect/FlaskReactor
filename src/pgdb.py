@@ -38,8 +38,10 @@ sql = {
 
         # Stats
         "getStat": "SELECT * FROM " + relation + ".stats WHERE userid=%s",
-        "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s"
+        "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s",
 
+        # Messages
+        "createMessage": f"INSERT INTO {relation}.messages (gameId, content) VALUES (%s, %s)"
 
     }
 
@@ -210,6 +212,14 @@ class Pgdb:
     def updateTttStat(self, ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id):
         query = sql['updateTttStat']
         values = [ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id]
+        self.__execute(query, values)
+        self.conn.commit()
+
+    ### Messages
+
+    def createMessage(self, gameId, content):
+        query = sql['createMessage']
+        values = [gameId, content]
         self.__execute(query, values)
         self.conn.commit()
 

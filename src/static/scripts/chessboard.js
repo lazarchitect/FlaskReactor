@@ -44,6 +44,7 @@ function wsUpdate(chessSocket, tileId){
 function wsConnect(boardstate, setBoardstate) {
 	const chessSocket = new WebSocket(payload.wsBaseUrl + "/chess");
 	// this is where you might initiate a statSocket as well for db chess stats
+	// EDIT: why would stats need a websocket? it doesnt need to update on the fly. HTTP would suffice methinks?
 
 	chessSocket.onopen = (() => wsSubscribe(chessSocket));
 

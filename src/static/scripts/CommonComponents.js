@@ -27,8 +27,40 @@ export function SiteHeader (props) {
 
 // TODO #32 - build wsSubscrbe for the message websocket, manage chat log state with react and update on WB receive.
 
+function wsSubscribe (messageSocket) {
+
+	console.log("message Socket opening.");
+	console.log(messageSocket);
+
+
+	messageSocket.send(
+		JSON.stringify({
+			"request": "subscribe",
+			"gameId": payload.game.id,
+			"username": payload.username
+		})
+	);
+}
+
+function wsConnect() {
+
+	console.log(payload.wsBaseUrl);
+
+	let messageSocket = new WebSocket(payload.wsBaseUrl + "/message");
+
+	messageSocket.onopen = (() => wsSubscribe(messageSocket));
+
+	messageSocket.onmessage = (message) => {
+		console.log(message);
+	}
+}
+
 function MessageBoxLog(props) {
 	
+	let [chatLog, setChatLog] = React.useState(); // initial value can be blank, logs sent later during subscribe
+
+	React.useEffect(() => wsConnect(chatLog, setChatLog), []);
+
 	return (
 		<textarea id="messagebox-log" readOnly></textarea>
 	);
