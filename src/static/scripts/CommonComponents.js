@@ -29,10 +29,6 @@ export function SiteHeader (props) {
 
 function wsSubscribe (messageSocket) {
 
-	console.log("message Socket opening.");
-	console.log(messageSocket);
-
-
 	messageSocket.send(
 		JSON.stringify({
 			"request": "subscribe",
@@ -44,15 +40,19 @@ function wsSubscribe (messageSocket) {
 
 function wsConnect() {
 
-	console.log(payload.wsBaseUrl);
+	const messageSocket = new WebSocket(payload.wsBaseUrl + "/message");
 
-	let messageSocket = new WebSocket(payload.wsBaseUrl + "/message");
-
-	messageSocket.onopen = (() => wsSubscribe(messageSocket));
+	messageSocket.onopen = (() => 
+		// TODO possible improvement - limit chat connection to only players (not spectators)
+		wsSubscribe(messageSocket)
+	);
 
 	messageSocket.onmessage = (message) => {
-		console.log(message);
+		const messageData = JSON.parse(message.data);
+		console.log(messageData);
+		// TODO add message contents to chat log via setChatLog
 	}
+
 }
 
 function MessageBoxLog(props) {
@@ -68,17 +68,7 @@ function MessageBoxLog(props) {
 
 function MessageBoxInput(props) {
 	return (
-		<textarea id="messagebox-input" rows='2' maxLength='68' required 
-			onKeyDown={(event) => {
-				if (event.key == 'Enter') {
-					form.submit();
-					// TODO:
-					// send off message to Message websocket
-					// add user message to message crawl
-					// await receival of any messages coming in from websocket, to add to crawl as well.
-				}
-		}}>
-		</textarea>
+		<textarea value='' id="messagebox-input" rows='2' maxLength='68' required />
 	);
 }
 
@@ -89,7 +79,8 @@ export function MessageBox (props) {
 			
 			<div id="messagebox-main" style={{visibility: 'hidden'}}>
 
-				<MessageBoxLog/>
+				<MessageBoxLog/> 
+				{/* TODO REACT NEEDS TO MANAGE THE STATE OF THE CHAT LOG */}
 				<MessageBoxInput/>
 				
 			</div>

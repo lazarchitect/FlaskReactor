@@ -41,7 +41,8 @@ sql = {
         "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s",
 
         # Messages
-        "createMessage": f"INSERT INTO {relation}.messages (gameId, content) VALUES (%s, %s)"
+        "createMessage": f"INSERT INTO {relation}.messages (gameid, content) VALUES (%s, %s)",
+        "getMessages": f"SELECT index, userid, content FROM {relation}.messages WHERE gameid=%s"
 
     }
 
@@ -55,7 +56,6 @@ class Pgdb:
         try:
 
             dbDetails = loads(open("resources/dbdetails.json", "r", encoding="utf8").read())
-            print("real pgdb instantiating.")
             self.conn = connect(
                 host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
                 database=dbDetails['database'],
@@ -222,6 +222,12 @@ class Pgdb:
         values = [gameId, content]
         self.__execute(query, values)
         self.conn.commit()
+
+    def getMessages(self, gameId):
+        query = sql['getMessages']
+        values = [gameId]
+        self.__execute(query, values)
+        return self.cursor.fetchall()
 
     ####### HELPER METHODS #########
 
