@@ -2,6 +2,8 @@
 
 import React from 'react';
 
+let chatLogGlobal = [];
+
 export function SiteHeader (props) {
 	return (
 		<div id="siteHeader">
@@ -25,8 +27,6 @@ export function SiteHeader (props) {
 	);
 };
 
-// TODO #32 - build wsSubscrbe for the message websocket, manage chat log state with react and update on WB receive.
-
 function wsSubscribe (messageSocket) {
 
 	messageSocket.send(
@@ -44,12 +44,25 @@ function wsConnect(chatLog, setChatLog) {
 
 	messageSocket.onopen = (() => 
 		// TODO possible improvement - limit chat connection to only players (not spectators)
+		// by passing in username through props and checking
 		wsSubscribe(messageSocket)
 	);
 
 	messageSocket.onmessage = (messageEvent) => {
-		console.log(messageEvent);
-		setChatLog(JSON.parse(messageEvent.data).messages);
+		
+		let data = JSON.parse(messageEvent.data);
+
+		if (data.command == "initialize") {
+			// setChatLog(data.chats); // dont care
+			chatLogGlobal = data.chats;
+			updateChatLog();
+			console.log("chat log initial value set.");
+		}
+
+		else if (data.command == "append") {
+			chatLogGlobal.push(data.chat);
+			updateChatLog();
+		}
 	}
 
 	let inputField = document.getElementById('messagebox-input');
@@ -76,9 +89,15 @@ function wsConnect(chatLog, setChatLog) {
 	
 }
 
+function updateChatLog() {
+	document.getElementById('messagebox-log').value = outputCleanChatLog(chatLogGlobal);
+}
+
 function outputCleanChatLog(chatLog) {
 
 	let retval = "";
+
+	console.log("trying to update chat log as:" + chatLog.toString());
 
 	chatLog.forEach(chat => {
 		retval += chat[1] + ":" + chat[2] + "\n";
@@ -90,11 +109,9 @@ function outputCleanChatLog(chatLog) {
 
 function MessageBoxLog(props) {
 	
-	let [chatLog, setChatLog] = React.useState(); // initial value can be blank, logs received later during subscribe
+	let [chatLog, setChatLog] = React.useState([]); // initial value can be blank, logs received later during subscribe
 
 	React.useEffect(() => wsConnect(chatLog, setChatLog), []);
-
-	console.log(chatLog);
 
 	return (
 		<textarea id="messagebox-log" readOnly 

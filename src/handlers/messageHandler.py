@@ -45,11 +45,13 @@ class MessageHandler(WebSocketHandler):
 
         print(fields)
         
+        index = 0 #  doesnt matter
+        username = fields['username']
+        message = fields['message']
+
         responseToClient = {
-            "command": "update", 
-            # TODO change command to 'append' 
-            # and write client side logic for appending a chat message to the log.
-            "messages": fields['message']
+            "command": "append",
+            "chat": [index, username, message]
         }
 
         gameId = fields['gameId']
@@ -99,6 +101,6 @@ class MessageHandler(WebSocketHandler):
         })
 
         self.write_message({
-            "command": "update",
-            "messages": messages
+            "command": "initialize",
+            "chats": messages
         })

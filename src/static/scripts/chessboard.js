@@ -48,9 +48,9 @@ function wsConnect(boardstate, setBoardstate) {
 
 	chessSocket.onopen = (() => wsSubscribe(chessSocket));
 
-	chessSocket.onmessage = (message) => {
+	chessSocket.onmessage = (messageEvent) => {
 
-		const data = JSON.parse(message.data);
+		const data = JSON.parse(messageEvent.data);
 
 		if(data.command == "updateBoard"){
 			setStatus(determineStatus(payload, data));
