@@ -38,7 +38,7 @@ function wsSubscribe (messageSocket) {
 	);
 }
 
-function wsConnect() {
+function wsConnect(chatLog, setChatLog) {
 
 	const messageSocket = new WebSocket(payload.wsBaseUrl + "/message");
 
@@ -47,28 +47,69 @@ function wsConnect() {
 		wsSubscribe(messageSocket)
 	);
 
-	messageSocket.onmessage = (message) => {
-		const messageData = JSON.parse(message.data);
-		console.log(messageData);
-		// TODO add message contents to chat log via setChatLog
+	messageSocket.onmessage = (messageEvent) => {
+		console.log(messageEvent);
+		setChatLog(JSON.parse(messageEvent.data).messages);
 	}
+
+	let inputField = document.getElementById('messagebox-input');
+
+	inputField.addEventListener("keydown", (event) => {
+		if (event.key == "Enter") {
+
+			event.preventDefault();
+	
+			let trimmedInput = inputField.value.trim();
+
+			if (trimmedInput.length != 0) {
+				messageSocket.send(JSON.stringify({
+					"request": "update",
+					"gameId": payload.game.id,
+					"username": payload.username,
+					"message": trimmedInput
+				}));
+
+				inputField.value = '';
+			}
+		}
+	});
+	
+}
+
+function outputCleanChatLog(chatLog) {
+
+	let retval = "";
+
+	chatLog.forEach(chat => {
+		retval += chat[1] + ":" + chat[2] + "\n";
+	});
+
+	return retval;
 
 }
 
 function MessageBoxLog(props) {
 	
-	let [chatLog, setChatLog] = React.useState(); // initial value can be blank, logs sent later during subscribe
+	let [chatLog, setChatLog] = React.useState(); // initial value can be blank, logs received later during subscribe
 
 	React.useEffect(() => wsConnect(chatLog, setChatLog), []);
 
+	console.log(chatLog);
+
 	return (
-		<textarea id="messagebox-log" readOnly></textarea>
+		<textarea id="messagebox-log" readOnly 
+			value={
+				// chatLog will be null on render, and thats ok
+				chatLog == null ? "" : outputCleanChatLog(chatLog)
+			}
+		>
+		</textarea>
 	);
 }
 
 function MessageBoxInput(props) {
 	return (
-		<textarea value='' id="messagebox-input" rows='2' maxLength='68' required />
+		<textarea id="messagebox-input" form="messagebox-form" rows="2" ></textarea>
 	);
 }
 
@@ -80,7 +121,6 @@ export function MessageBox (props) {
 			<div id="messagebox-main" style={{visibility: 'hidden'}}>
 
 				<MessageBoxLog/> 
-				{/* TODO REACT NEEDS TO MANAGE THE STATE OF THE CHAT LOG */}
 				<MessageBoxInput/>
 				
 			</div>

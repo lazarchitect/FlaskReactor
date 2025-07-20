@@ -6,7 +6,7 @@ from src.FakePgdb import FakePgdb
 
 clientConnections = dict()
 
-def deleteConnection(gameId, socketId): #uuuhhh why is gameId required here.
+def deleteConnection(gameId, socketId):
     gameConnectionList = clientConnections[gameId]
     for x in gameConnectionList:
         if x['id'] == socketId:
@@ -29,7 +29,7 @@ class MessageHandler(WebSocketHandler):
 
     def on_message(self, message):
 
-        fields = json.loads(message); # message structure comes in as JSON from frontend
+        fields = json.loads(message) # message structure comes in as JSON from frontend
         request = fields['request']
 
         if request == "subscribe":
@@ -43,24 +43,20 @@ class MessageHandler(WebSocketHandler):
 
     def handleUpdate(self, fields):
 
-        connectionDetails = {
-            "id": self.socketId,
-            "conn": self.ws_connection
+        print(fields)
+        
+        responseToClient = {
+            "command": "update", 
+            # TODO change command to 'append' 
+            # and write client side logic for appending a chat message to the log.
+            "messages": fields['message']
         }
 
-        # TODO update all listeners with the new message (just the two players.)
+        gameId = fields['gameId']
 
-        # gameId is given to the frontend by Flask in the payload
-        try:
-            gameId = fields['gameId']
-        except KeyError:
-            self.write_message({
-            "command": "error",
-            "message": "server did not receive a game ID from the client",
-            "details": str(connectionDetails)
-        })
+        utils.updateAll(clientConnections[fields['gameId']], responseToClient)
             
-        self.pgdb.createMessage(gameId, fields['content'])
+        self.pgdb.createMessage(gameId, fields['message'], fields['username'])
 
 
     def handleSubscribe(self, fields):
@@ -96,8 +92,6 @@ class MessageHandler(WebSocketHandler):
         if messages == None:
             pass
             #TODO handle possible error if pgdb doesnt find anything.
-
-        # TODO which player is this? message contents might differ based on that info
 
         self.write_message({
             "command": "info",

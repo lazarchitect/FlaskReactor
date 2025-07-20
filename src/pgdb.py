@@ -41,8 +41,8 @@ sql = {
         "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s",
 
         # Messages
-        "createMessage": f"INSERT INTO {relation}.messages (gameid, content) VALUES (%s, %s)",
-        "getMessages": f"SELECT index, userid, content FROM {relation}.messages WHERE gameid=%s"
+        "createMessage": f"INSERT INTO {relation}.messages (gameid, content, username) VALUES (%s, %s, %s)",
+        "getMessages": f"SELECT index, username, content FROM {relation}.messages WHERE gameid=%s"
 
     }
 
@@ -217,9 +217,9 @@ class Pgdb:
 
     ### Messages
 
-    def createMessage(self, gameId, content):
+    def createMessage(self, gameId, content, username):
         query = sql['createMessage']
-        values = [gameId, content]
+        values = [gameId, content, username]
         self.__execute(query, values)
         self.conn.commit()
 

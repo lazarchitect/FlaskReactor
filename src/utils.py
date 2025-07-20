@@ -1,4 +1,3 @@
-from re import T
 from uuid import uuid4
 from hashlib import sha256
 from tornado.websocket import WebSocketClosedError
