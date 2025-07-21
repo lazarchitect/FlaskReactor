@@ -91,10 +91,6 @@ class MessageHandler(WebSocketHandler):
 
         messages = self.pgdb.getMessages(gameId)
 
-        if messages == None:
-            pass
-            #TODO handle possible error if pgdb doesnt find anything.
-
         self.write_message({
             "command": "info",
             "contents": str(self.socketId) + " subscribed to gameId " + gameId

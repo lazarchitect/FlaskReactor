@@ -90,17 +90,20 @@ function wsConnect(chatLog, setChatLog) {
 }
 
 function updateChatLog() {
-	document.getElementById('messagebox-log').value = outputCleanChatLog(chatLogGlobal);
+	document.getElementById('messagebox-log').value = buildFormattedChatLog(chatLogGlobal);
 }
 
-function outputCleanChatLog(chatLog) {
+/**
+ * returns a single concatenated string containing full formatted chat log
+ */
+function buildFormattedChatLog(chatLog) {
 
 	let retval = "";
 
 	console.log("trying to update chat log as:" + chatLog.toString());
 
 	chatLog.forEach(chat => {
-		retval += chat[1] + ":" + chat[2] + "\n";
+		retval += chat[1] + ": " + chat[2] + "\n";
 	});
 
 	return retval;
@@ -117,7 +120,7 @@ function MessageBoxLog(props) {
 		<textarea id="messagebox-log" readOnly 
 			value={
 				// chatLog will be null on render, and thats ok
-				chatLog == null ? "" : outputCleanChatLog(chatLog)
+				chatLog == null ? "" : buildFormattedChatLog(chatLog)
 			}
 		>
 		</textarea>
@@ -130,16 +133,13 @@ function MessageBoxInput(props) {
 	);
 }
 
-// possible enhancement - disable chat entirely for users who opt out
+// TODO possible enhancement - disable chat entirely for users who opt out
 export function MessageBox (props) {
 	return (
 		<div id="messagebox">
-			
 			<div id="messagebox-main" style={{visibility: 'hidden'}}>
-
 				<MessageBoxLog/> 
-				<MessageBoxInput/>
-				
+				<MessageBoxInput/>		
 			</div>
 
 			<div id="messagebox-base">

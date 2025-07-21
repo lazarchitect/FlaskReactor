@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react'; // do I need this?
+import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
 import { SiteHeader, MessageBox } from './CommonComponents';
 import { Chessboard } from './chessboard';

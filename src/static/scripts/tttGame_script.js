@@ -1,6 +1,8 @@
+import React from 'react'; // used by Webpack
+import { createRoot } from 'react-dom/client';
+import { SiteHeader, MessageBox } from './CommonComponents';
 
 const gameId = payload.game.id;
-var yourTurn = payload.yourTurn;
 
 function wsSubscribe(tttSocket) {
 	const subscribeObj = {
@@ -157,7 +159,6 @@ function TttBoardRow(props){
 
 function TttBoard(){
 
-	// payload.game.boardstate = ['X', 'X', 'O', 'O', 'X', 'X', 'O', 'X', 'O'];
 	const [boardstate, setBoardstate] = React.useState(payload.game.boardstate);
 
 	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn); 
@@ -175,7 +176,7 @@ function TttBoard(){
 				<rect x="50" y="330" width="400" height="12" rx="5"/>
 			</svg>
 			<div id="tttBoardData">
-				<TttBoardRow yourTurn={yourTurn} row={0} values={boardstate.slice(0,3)} /><br/>
+				<TttBoardRow yourTurn={yourTurn} row={0} values={boardstate.slice(0,3)}/><br/>
 				<TttBoardRow yourTurn={yourTurn} row={1} values={boardstate.slice(3,6)}/><br/>
 				<TttBoardRow yourTurn={yourTurn} row={2} values={boardstate.slice(6,9)}/><br/>
 			</div>
@@ -183,7 +184,7 @@ function TttBoard(){
 	)
 }
 
-var rootElem = (
+var page = (
 	<div id="reactRoot">
 		<SiteHeader version={payload.deployVersion} username={payload.username}/>
 
@@ -191,9 +192,8 @@ var rootElem = (
 			<TttBoard/>
 			<p>Status: <span id="status"></span></p>
 		</div>
+		<MessageBox/>
 	</div>
 );
 
-var rootDiv = document.getElementById("root");
-
-ReactDOM.render(rootElem, rootDiv);
+createRoot(document.getElementById('root')).render(page);

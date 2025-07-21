@@ -120,6 +120,8 @@ def quadGame(gameid):
 @app.route('/games/ttt/<gameid>')
 def tttGame(gameid):
     game = pgdb.getTttGame(gameid)
+    if game == None: 
+        return "No game found with that ID."
     payload = {
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
@@ -139,7 +141,6 @@ def login():
     password = request.form['password']
     password_hash = generateHash(password)
 
-    #TODO getUser before checkLogin so we can say user does not exist
     if not pgdb.userExists(username):
         return "User " + username + " does not exist."
 

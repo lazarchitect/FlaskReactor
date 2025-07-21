@@ -26,13 +26,13 @@ create table flaskreactor.tictactoe_games (
     id text PRIMARY KEY,
     x_player text,
     o_player text,
-    boardstate character[],
     completed boolean,
     time_started timestamp,
     last_move timestamp,
     time_ended timestamp,
     player_turn text,
-    winner text
+    winner text,
+    boardstate "char"[],
 );
 
 create table flaskreactor.users (

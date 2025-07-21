@@ -1,5 +1,5 @@
+from src.utils import generateId
 
-# TODO: unused?
 class User:
 
     def __init__(self):
@@ -10,7 +10,7 @@ class User:
         u = User()
         u.username = username
         u.email = None
-        u.userId = utils.generateId()
+        u.userId = generateId()
         u.password_hash = password_hash
         return u
 
