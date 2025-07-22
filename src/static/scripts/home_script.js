@@ -27,16 +27,40 @@ function openGame(gameId, gameType){
 }
 
 // chessGames comes from Flask -> html script
-var chessGameList = chessGames.map((game) => 
-	<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "chess")}>
-		{"Vs. " + (game[1] === username ? game[2] : game[1])}
-	</GameDiv>
+var activeChessGames = chessGames.map((game) => 
+
+	game[4] == false ?
+
+		<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "chess")}>
+			{"Vs. " + (game[1] === username ? game[2] : game[1])}
+		</GameDiv>
+	: ""
 );
 
-var TTTGameList = tttGames.map((game) => 
-	<GameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "ttt")}>
-		{"Vs. " + (game[1] === username ? game[2] : game[1])}
-	</GameDiv>
+var activeTTTGames = tttGames.map((game) => {
+
+	let completed = game[3];
+	
+	if (!completed) {
+		return (<GameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "ttt")}>
+				{"Vs. " + (game[1] === username ? game[2] : game[1])}
+			</GameDiv>);
+	}
+	return "";
+	}
+);
+
+var completedTTTGames = tttGames.map((game) => {
+
+	let completed = game[3];
+	
+	if (completed) {
+		return (<GameDiv className="tttGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "ttt")}>
+				{"Vs. " + (game[1] === username ? game[2] : game[1])}
+			</GameDiv>);
+	}
+	return "";
+	}
 );
 
 const gameTypes = ["Chess", "Tic-Tac-Toe"]; 
@@ -61,9 +85,17 @@ var page = (
 			<input type="submit" value="Create"/>
 		</form>
 
-		Chess Games: {chessGameList}
+		<h4>Chess Games:</h4> {activeChessGames}
 
-		TicTacToe Games: {TTTGameList}
+		View Past Games? <input type="checkbox" id="viewPastChessGames"/>
+
+		<h4>TicTacToe Games:</h4> {activeTTTGames}
+
+		View Past Games? <input type="checkbox" id="viewPastTttGames"/>
+
+		{document.getElementById('viewPastTttGames').checked ? completedTTTGames : ""}
+
+		// TODO react should manage the state of the games divs and we call setState when the checkboxes are clicked 
 
 	</div>
 );
