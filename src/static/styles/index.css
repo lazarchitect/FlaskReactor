@@ -43,6 +43,10 @@ body {
     font-size: large;
 }
 
+#pastTttGames {
+    visibility: hidden;
+}
+
 .chessRow {
     font-size: 0; /* HTML has this weird spacing issue causing empty spaces, removing any font size fixes it */
 }
