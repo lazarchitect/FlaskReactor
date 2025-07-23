@@ -1,16 +1,19 @@
 
 from tornado.websocket import WebSocketHandler
 from src.pgdb import Pgdb
-import src.utils
+from src.utils import generateId
 import json
 
 class StatHandler(WebSocketHandler):
+
+	def check_origin(self, origin):
+		return True
 
 	def initialize(self, db_env):
 		self.pgdb = Pgdb(db_env)
 
 	def open(self):
-		self.socketId = "socket"+ str(utils.generateId())[:8]
+		self.socketId = "socket"+ str(generateId())[:8]
 		print("statSocket opened:", str(self.socketId))
 
 	def on_message(self, message):

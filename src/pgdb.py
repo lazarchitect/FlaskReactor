@@ -4,6 +4,7 @@ containing game data, users, and more."""
 from json import loads
 from psycopg2 import connect, InterfaceError, OperationalError
 from psycopg2.extras import DictCursor, Json
+from psycopg2.errors import InFailedSqlTransaction
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
 # from src.models.User import User
@@ -25,20 +26,23 @@ sql = {
         "getActiveChessGames": "SELECT * FROM " + relation + ".chess_games where completed=false AND (white_player=%s OR black_player=%s) ORDER BY last_move DESC",  
         "getChessGame": "SELECT * FROM " + relation + ".chess_games WHERE id=%s",
         "createChessGame": "INSERT INTO " + relation + ".chess_games (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s WHERE id=%s",
+        "updateChessGame": "UPDATE " + relation + ".chess_games SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s, pawn_leapt=%s, pawn_leap_col=%s WHERE id=%s",
         "endChessGame": "UPDATE " + relation + ".chess_games SET completed=true, time_ended=%s, winner=%s WHERE id=%s",
 
         # Tic-Tac-Toe
         "getTTTGames": "SELECT * FROM " + relation + ".tictactoe_games where (x_player=%s OR o_player=%s)",
         "getTttGame":"SELECT * FROM " + relation + ".tictactoe_games where id=%s",
-        "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        "createTttGame": "INSERT INTO " + relation + ".tictactoe_games  (id, x_player, o_player, completed, time_started, last_move, time_ended, player_turn, winner, boardstate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         "updateTttGame": "UPDATE " + relation + ".tictactoe_games SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
         "endTttGame": "UPDATE " + relation + ".tictactoe_games SET completed=true, time_ended=%s, player_turn='', winner=%s WHERE id=%s",
 
         # Stats
         "getStat": "SELECT * FROM " + relation + ".stats WHERE userid=%s",
-        "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s"
+        "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s",
 
+        # Messages
+        "createMessage": f"INSERT INTO {relation}.messages (gameid, content, username) VALUES (%s, %s, %s)",
+        "getMessages": f"SELECT index, username, content FROM {relation}.messages WHERE gameid=%s"
 
     }
 
@@ -52,7 +56,6 @@ class Pgdb:
         try:
 
             dbDetails = loads(open("resources/dbdetails.json", "r", encoding="utf8").read())
-            print("real pgdb instantiating.")
             self.conn = connect(
                 host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
                 database=dbDetails['database'],
@@ -93,6 +96,10 @@ class Pgdb:
             )
             self.cursor = self.conn.cursor(cursor_factory=DictCursor)
             self.__execute(query, values)
+
+        except InFailedSqlTransaction: # type: ignore
+            self.conn.rollback()
+
 
     ###### DB QUERY METHODS ######
 
@@ -146,9 +153,9 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchall()
 
-    def updateChessGame(self, new_boardstate, update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, gameid):
+    def updateChessGame(self, new_boardstate, update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, pawnLeapt, pawnLeapCol, gameid):
         query = sql['updateChessGame']
-        values = [Json(new_boardstate), update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, gameid]
+        values = [Json(new_boardstate), update_time, active_player, newNotation, blackKingMoved, whiteKingMoved, bqrMoved, bkrMoved, wqrMoved, wkrMoved, pawnLeapt, pawnLeapCol, gameid]
         self.__execute(query, values)
         self.conn.commit()
 
@@ -184,7 +191,7 @@ class Pgdb:
 
     def updateTttGame(self, boardstate, last_updated, otherPlayer, gameId):
         query = sql['updateTttGame']
-        values = [Json(boardstate), last_updated, otherPlayer, gameId]
+        values = [boardstate, last_updated, otherPlayer, gameId]
         self.__execute(query, values)
         self.conn.commit()
 
@@ -207,6 +214,20 @@ class Pgdb:
         values = [ttt_games_played, ttt_wins, ttt_win_percent, ttt_played_x, ttt_played_o, ttt_won_x, ttt_won_o, user_id]
         self.__execute(query, values)
         self.conn.commit()
+
+    ### Messages
+
+    def createMessage(self, gameId, content, username):
+        query = sql['createMessage']
+        values = [gameId, content, username]
+        self.__execute(query, values)
+        self.conn.commit()
+
+    def getMessages(self, gameId):
+        query = sql['getMessages']
+        values = [gameId]
+        self.__execute(query, values)
+        return self.cursor.fetchall()
 
     ####### HELPER METHODS #########
 

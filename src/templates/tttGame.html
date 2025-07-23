@@ -1,20 +1,15 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
         <link rel="stylesheet" href="/static/styles/index.css">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
         <script>var payload = JSON.parse('{{ payload | safe}}');</script>
             
-        <script type="text/javascript" src="/static/scripts/CommonComponents.js" defer ></script>
-        <script type="text/javascript" src="/static/scripts/tttGame_script.js" defer ></script>
-
+        <script type="text/javascript" src="/static/scripts/dist/tttGame_script.js" defer ></script>
     </head>
 
     <body>
-
         <div id="root"></div>
-
     </body>
 </html>

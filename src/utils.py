@@ -1,4 +1,3 @@
-from re import T
 from uuid import uuid4
 from hashlib import sha256
 from tornado.websocket import WebSocketClosedError
@@ -63,7 +62,6 @@ def pieceCode(p):
 
 def outOfBounds(coords):
     row, col = coords
-    print("is this out of bounds? " + row + " " + col)
     return row < 0 or row > 7 or col < 0 or col > 7
 
 def isPiece(boardstate, coords, pieceType, pieceColor):
