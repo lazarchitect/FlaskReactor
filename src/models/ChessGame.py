@@ -1,4 +1,4 @@
-import src.utils
+from src.utils import generateId
 import json
 from datetime import datetime
 from psycopg2.extras import UUID_adapter, Json
@@ -15,7 +15,7 @@ class ChessGame:
     def manualCreate(white_player, black_player):
         """constructor for creation from user-input values."""
         g = ChessGame()
-        g.id = utils.generateId()
+        g.id = generateId()
         g.white_player = white_player
         g.black_player = black_player
         g.boardstate = json.loads(open('resources/initialLayout.json', 'r').read())

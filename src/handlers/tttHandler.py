@@ -82,8 +82,10 @@ class TttHandler(WebSocketHandler):
         game = self.pgdb.getTttGame(gameId)
 
         if game == None:
-            pass
-            #TODO error response if pgdb doesnt find anything
+            self.write_message({
+                "command": "error",
+                "contents": "game with ID '" + gameId + "' not found in database." 
+            })
 
         if game.x_player == game.player_turn:
             otherPlayer = game.o_player

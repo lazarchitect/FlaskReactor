@@ -1,9 +1,9 @@
 'use strict';
 
-import React from 'react'; // do I need this?
+import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './CommonComponents';
-import {Chessboard} from './chessboard';
+import { SiteHeader, MessageBox } from './CommonComponents';
+import { Chessboard } from './chessboard';
 
 var page = (
 	<div id="reactRoot">
@@ -12,6 +12,7 @@ var page = (
             <Chessboard boardstate={payload.boardstate}/>
             <p>Status: <span id="status"></span></p>
         </div>
+        <MessageBox/>
         
     </div>
 );

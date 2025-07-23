@@ -6,11 +6,6 @@ import React from 'react'; // do I need this?    yes
 var highlightedTiles = [];
 var active_coords = [];
 
-const knightOffsets = [[1,2],[1,-2],[-1,2],[-1,-2],[2,1],[2,-1],[-2,1],[-2,-1]];
-const bishopOffsets = [[1,1],[1,-1],[-1,1],[-1,-1]];
-const rookOffsets = [[0,1],[0,-1],[1,0],[-1,0]];
-const royalOffsets = [[1,1],[1,-1],[-1,1],[-1,-1],[0,1],[0,-1],[1,0],[-1,0]];
-
 const gameId = payload.game.id;
 var yourTurn = payload.yourTurn;
 var blackKingMoved = payload.game.blackkingmoved;
@@ -20,6 +15,8 @@ var wkr_moved = payload.game.wkr_moved;
 var bqr_moved = payload.game.bqr_moved;
 var bkr_moved = payload.game.bkr_moved;
 
+import * as chessUtils from './chessUtils';
+import * as chessConsts from './chessConsts';
 
 function wsSubscribe(chessSocket){
 	const subscribeObj = {
@@ -47,12 +44,13 @@ function wsUpdate(chessSocket, tileId){
 function wsConnect(boardstate, setBoardstate) {
 	const chessSocket = new WebSocket(payload.wsBaseUrl + "/chess");
 	// this is where you might initiate a statSocket as well for db chess stats
+	// EDIT: why would stats need a websocket? it doesnt need to update on the fly. HTTP would suffice methinks?
 
 	chessSocket.onopen = (() => wsSubscribe(chessSocket));
 
-	chessSocket.onmessage = (message) => {
+	chessSocket.onmessage = (messageEvent) => {
 
-		const data = JSON.parse(message.data);
+		const data = JSON.parse(messageEvent.data);
 
 		if(data.command == "updateBoard"){
 			setStatus(determineStatus(payload, data));
@@ -134,7 +132,7 @@ function generateHighlights(boardstate, piece){ // void
 
 	const enemyColor = piece.color == "Black" ? "White" : "Black";
 
-	const allyKingCoords = getKingCoords(boardstate, piece.color);
+	const allyKingCoords = chessUtils.getKingCoords(boardstate, piece.color);
 
 	if(piece.type == "Pawn"){
 		const whiteDirection = -1;
@@ -151,17 +149,17 @@ function generateHighlights(boardstate, piece){ // void
 
 			let srcCoords = [piece.row, piece.col];
 			let destCoords = [piece.row+pieceDirection, piece.col];
-			let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+			let modifiedBoardstate = chessUtils.previewModifiedBoard(boardstate, srcCoords, destCoords);
 
 			// if currently in check, only add the highlight if the move escapes check.
-			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
-				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+			if (chessUtils.inCheck(boardstate, enemyColor, allyKingCoords)) {
+				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);		
 				}
 			}
 			// if not currently in check, add any highlight EXCEPT those that introduce check.
 			else {
-				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
 				}
 			}
@@ -174,15 +172,15 @@ function generateHighlights(boardstate, piece){ // void
 
 			let srcCoords = [piece.row, piece.col];
 			let destCoords = [piece.row+(pieceDirection*2), piece.col];
-			let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+			let modifiedBoardstate = chessUtils.previewModifiedBoard(boardstate, srcCoords, destCoords);
 
-			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
-				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+			if (chessUtils.inCheck(boardstate, enemyColor, allyKingCoords)) {
+				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row+(pieceDirection*2)) + ""  + piece.col);		
 				}
 			}
 			else {
-				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col);
 				}
 			}
@@ -197,15 +195,15 @@ function generateHighlights(boardstate, piece){ // void
 
 			let srcCoords = [piece.row, piece.col];
 			let destCoords = [piece.row + pieceDirection, piece.col - 1];
-			let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+			let modifiedBoardstate = chessUtils.previewModifiedBoard(boardstate, srcCoords, destCoords);
 
-			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
-				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+			if (chessUtils.inCheck(boardstate, enemyColor, allyKingCoords)) {
+				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col - 1);		
 				}
 			}
 			else {
-				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col - 1);
 				}
 			}
@@ -218,15 +216,15 @@ function generateHighlights(boardstate, piece){ // void
 
 			let srcCoords = [piece.row, piece.col];
 			let destCoords = [piece.row + pieceDirection, piece.col + 1];
-			let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+			let modifiedBoardstate = chessUtils.previewModifiedBoard(boardstate, srcCoords, destCoords);
 
-			if (inCheck(boardstate, enemyColor, allyKingCoords)) {
-				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+			if (chessUtils.inCheck(boardstate, enemyColor, allyKingCoords)) {
+				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);		
 				}
 			}
 			else {
-				if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
+				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
 					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);
 				}
 			}
@@ -244,7 +242,7 @@ function generateHighlights(boardstate, piece){ // void
 		}
 
 		// TODO: kings cannot move into a check position
-		royalOffsets.forEach(offset => {
+		chessConsts.ROYAL_OFFSETS.forEach(offset => {
 			const destRow = piece.row+offset[0];
 			const destCol = piece.col + offset[1];
 
@@ -257,7 +255,7 @@ function generateHighlights(boardstate, piece){ // void
 					
 					let srcCoords = [piece.row, piece.col];
 					let destCoords = [piece.row + pieceDirection, piece.col + 1];
-					let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
+					let modifiedBoardstate = chessUtils.previewModifiedBoard(boardstate, srcCoords, destCoords);
 
 					if (inCheck(boardstate, enemyColor, allyKingCoords)) {
 						if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
@@ -277,7 +275,7 @@ function generateHighlights(boardstate, piece){ // void
 	}
 
 	else if(piece.type == "Knight"){
-		knightOffsets.forEach(offset => {
+		chessConsts.KNIGHT_OFFSETS.forEach(offset => {
 			const destRow = piece.row+offset[0];
 			const destCol = piece.col + offset[1];
 			if(!outOfBounds(destRow, destCol)){
@@ -290,13 +288,13 @@ function generateHighlights(boardstate, piece){ // void
 	}
 
 	else if (piece.type == "Rook") {
-		highlightedTiles = sliderMoves(piece, boardstate, rookOffsets);
+		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.ROOK_OFFSETS);
 	}
 	else if(piece.type == "Bishop") {
-		highlightedTiles = sliderMoves(piece, boardstate, bishopOffsets);
+		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.BISHOP_OFFSETS);
 	}
 	else if(piece.type == "Queen") {
-		highlightedTiles = sliderMoves(piece, boardstate, royalOffsets);
+		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.ROYAL_OFFSETS);
 	}
 
 
@@ -399,12 +397,12 @@ function whiteCastlingMoves(boardstate) {
 	// whiteKingCoords = "47"; // row 7, col 4
 	if(!whiteKingMoved) {
 		// TODO: add checks for !whiteKingSideRookMoved and !whiteQueenSideRookMoved	
-		if (pieceAt(boardstate, "57") == undefined && pieceAt(boardstate, "67") == undefined) {
+		if (chessUtils.getPiece(boardstate, "57") == undefined && chessUtils.getPiece(boardstate, "67") == undefined) {
 			if (!wqr_moved) {
-				highlightedTiles.push("76");
+				highlightedTiles.push("76"); // TODO refactor magic numbers
 			}
 		}
-		if (pieceAt(boardstate, "37") == undefined && pieceAt(boardstate, "27") == undefined) {
+		if (chessUtils.getPiece(boardstate, "37") == undefined && chessUtils.getPiece(boardstate, "27") == undefined) {
 			highlightedTiles.push("72");
 		}
 	}
@@ -414,18 +412,16 @@ function blackCastlingMoves(boardstate) {
 	// blackKingCoords = "40"; // row 7, col 4
 	if(!blackKingMoved) {
 		// TODO: add checks for !blackKingSideRookMoved and !blackQueenSideRookMoved
-		if (pieceAt(boardstate, "50") == undefined && pieceAt(boardstate, "60") == undefined) {
+		if (chessUtils.getPiece(boardstate, "50") == undefined && chessUtils.getPiece(boardstate, "60") == undefined) {
 			highlightedTiles.push("06");
 		}
-		if (pieceAt(boardstate, "30") == undefined && pieceAt(boardstate, "20") == undefined) {
+		if (chessUtils.getPiece(boardstate, "30") == undefined && chessUtils.getPiece(boardstate, "20") == undefined) {
 			highlightedTiles.push("02");
 		}
 	}
 }
 
 export function Chessboard() {
-
-	console.log(payload.boardstate);
 
 	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
 
@@ -476,4 +472,3 @@ function Tile(props) {
 		</span>
 	);
 }
-

@@ -81,8 +81,8 @@ var page = (
 			</select>
 			<br/>
 			
-			Opponent Username: <input type="text" name="opponent"/> 
-			<input type="submit" value="Create"/>
+			Opponent Username: <input type="text" name="opponent" required /> 
+			<input type="submit" value="Create" />
 		</form>
 
 		<h4>Chess Games:</h4> {activeChessGames}

@@ -37,10 +37,10 @@ class ChessHandler(WebSocketHandler):
         request = fields['request']
 
         if request == "subscribe":
-            self.wsSubscribe(fields)
+            self.handleSubscribe(fields)
 
         elif request == "update":
-            self.wsUpdate(fields)
+            self.handleUpdate(fields)
 
     def on_close(self):
         print("chessSocket closed: " + str(self.socketId))
@@ -55,7 +55,7 @@ class ChessHandler(WebSocketHandler):
     ## Message Handler functions ##
     ###############################
 
-    def wsSubscribe(self, fields):
+    def handleSubscribe(self, fields):
 
         if self.socketId == None: 
             print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
@@ -110,7 +110,7 @@ class ChessHandler(WebSocketHandler):
                 "contents": str(self.socketId) + " subscribed to gameId " + gameId
         })
 
-    def wsUpdate(self, fields):
+    def handleUpdate(self, fields):
         
         gameId = fields["gameId"]
         

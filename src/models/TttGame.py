@@ -1,4 +1,4 @@
-import src.utils
+from src.utils import generateId
 import random
 from datetime import datetime
 from psycopg2.extras import UUID_adapter, Json
@@ -15,7 +15,7 @@ class TttGame:
     def manualCreate(x_player, o_player):
         """constructor for creation from user-input values."""
         g = TttGame()
-        g.id = utils.generateId()
+        g.id = generateId()
         g.x_player = x_player
         g.o_player = o_player
         g.boardstate = ['','','','','','','','',''] # 9 empty spaces
@@ -34,13 +34,13 @@ class TttGame:
         g.id = record[0]
         g.x_player = record[1]
         g.o_player = record[2]
-        g.boardstate = record[3]
-        g.completed = record[4]
-        g.time_started = record[5]
-        g.last_move = record[6]
-        g.time_ended = record[7]
-        g.player_turn = record[8]
-        g.winner = record[9]
+        g.completed = record[3]
+        g.time_started = record[4]
+        g.last_move = record[5]
+        g.time_ended = record[6]
+        g.player_turn = record[7]
+        g.winner = record[8]
+        g.boardstate = record[9]
         return g
 
     def toTuple(self):
@@ -49,11 +49,11 @@ class TttGame:
             UUID_adapter(self.id), 
             self.x_player, 
             self.o_player, 
-            Json(self.boardstate),
             self.completed, 
             self.time_started, 
             self.last_move, 
             self.time_ended,
             self.player_turn,
-            self.winner
+            self.winner,
+            Json(self.boardstate)
         )
