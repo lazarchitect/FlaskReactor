@@ -4,7 +4,9 @@ secret_key.txt
 *.pyc
 python-app.yml
 .vscode/settings.json
+.vscode/tasks.json
 *details.json
 *pat
 *.log
-
+node_modules
+**/dist

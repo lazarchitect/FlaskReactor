@@ -8,43 +8,31 @@
 			"name": "FlaskReactor LOCAL DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"local_db"
-			]
+			],
+			"preLaunchTask": "webpack build"
 		},
 		{
 			"name": "FlaskReactor REMOTE DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"remote_db"
-			]
+			],
+			"preLaunchTask": "webpack build"
 		},
 		{
 			"name": "FlaskReactor NO DB",
 			"type": "debugpy",
 			"request": "launch",
-			"module": "app",
+			"module": "src.app",
 			"args": [
 				"no_db"
-			]
-		},
-		{
-			"name": "Docker: Python - Flask",
-			"type": "docker",
-			"request": "launch",
-			"preLaunchTask": "docker-run: debug",
-			"python": {
-				"pathMappings": [
-					{
-						"localRoot": "${workspaceFolder}",
-						"remoteRoot": "/app"
-					}
-				],
-				"projectType": "flask"
-			}
+			],
+			"preLaunchTask": "webpack build"
 		}
 	]
 }

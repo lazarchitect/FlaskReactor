@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        
+        <link rel="stylesheet" href="/static/styles/index.css">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        
+        <script>
+            var payload = JSON.parse('{{payload | safe}}'); // comes from Flask
+        </script>
+            
+        <script type="text/javascript" src="/static/scripts/dist/chessGame_script.js" defer ></script>
+
+    </head>
+
+    <body><div id="root"></div></body>
+</html>

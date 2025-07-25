@@ -1,0 +1,234 @@
+
+html {
+    height: 100%;
+}
+
+body {
+    background-color: #5ba7af;
+    margin: 0%;
+    height: 100%;
+}
+
+#root {
+    height: 100%
+}
+
+#reactRoot {
+    height: 100%;
+}
+
+#siteHeader {
+    background-color: mediumaquamarine;
+    height: 10%;
+    width: 100vw;
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#headerLeft {
+    padding-left: 2%;
+    font-size: x-large;
+}
+
+#headerRight {
+    padding-right: 5%;
+    display: flex;
+    align-items: center;
+}
+
+#headerUsername {
+    min-width: 65%;
+    font-size: large;
+}
+
+#pastTttGames {
+    visibility: hidden;
+    position: absolute;
+}
+
+#pastChessGames {
+    visibility: hidden;
+    position: absolute;
+}
+
+.chessRow {
+    font-size: 0; /* HTML has this weird spacing issue causing empty spaces, removing any font size fixes it */
+}
+
+#chessPlayArea {
+    display: block;
+    padding-left: 5%;
+    padding-top: 5%;
+}
+
+#tttPlayArea {
+    display: block;
+    padding-left: 5%;
+    padding-top: 5%;
+}
+
+.tile {
+    width: 60px;
+    height: 60px;
+    position: relative;
+    display: inline-block;
+}
+
+.lightTile {
+    background-color: hsl(25, 30%, 66%);
+}
+
+.darkTile {    
+    background-color: #633e07;
+}
+
+.darkHighlighted {
+    background-color: blue;
+}
+
+.lightHighlighted {
+    background-color: orange;
+}
+
+.pieceImg {
+    max-width: 80%;
+    max-height: 80%;
+    display: block;
+    margin-left: 10%;
+    margin-top: 10%;
+    pointer-events: none;
+}
+
+#createGameDiv {
+    border: 3px solid blue;
+    padding: 1em;
+}
+
+
+
+#tttBoard {
+    height: 500px;
+    width: 500px;
+    background-color: cadetblue;
+    overflow: hidden;
+    position: relative;
+}
+
+#octothorpe {
+    position: relative;
+}
+
+.tttCell{
+    overflow: hidden;
+    
+    /* positioning */
+    position: absolute;
+    width: 70px;
+    height: 70px;
+
+    /* debug */
+    /* border: 1px solid indianred;     */
+}
+
+.activeTttCell:hover{
+    background-color: grey;
+}
+
+#quadboard {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    margin-top: 4%;
+    margin-left: 8%;
+    width: 512px;
+    height: 512px;
+    border: 3px solid black;
+}
+
+.quadTile {
+    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this file */
+    background-size: 100% 100%;
+    background-color: red;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 1fr;
+    height: 1fr;
+    border: 1px solid slategray;
+}
+
+.torus {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.torusImg{
+    /* torii default to a light green (01FF00) but should be programatically changed to the user's preferred color */
+    width: 80%;
+    height: 80%;
+    margin-left: 5%;
+    margin-top: 10%;
+}
+
+#messagebox { /* overall container */
+    position: fixed;
+    width: 250px;
+    height: 400px;
+    right: 10%;
+    bottom: 0%;
+}
+
+/* possible improvement - make it slide up and down for show/hide */
+#messagebox-main {
+    height: 100%;
+    background-color: purple;
+}
+
+#messagebox-log {
+    height: 78.4%; /* crazy... */
+    width: 100%;
+    resize: none;
+}
+
+#messagebox-input{
+    position: relative;
+    width: 100%;
+    resize: none;
+    bottom: 1%;
+}
+
+#messagebox-base {
+    background-color: #DDDDDD;
+    outline: 4px solid #633e07;
+    position: absolute;
+    width: 100%;
+    height: 10%;
+    bottom: 0%;    
+}
+
+#messagebox-label {
+    position: absolute;
+    top: 30%;
+    left: 10%;
+}
+
+#messagebox-indicator {
+    display: inline-block;
+    position: absolute;
+    top: 25%;
+    right: 10%;
+    background-color: #3333dd;
+    color: white;
+    text-align: center;
+    width: 30%;
+    border: 2px solid white;
+    border-radius: 15% / 50%;
+}
+
+#messagebox-indicator:hover {
+    box-shadow: 2px 2px black;
+}
