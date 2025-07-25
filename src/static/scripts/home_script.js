@@ -38,10 +38,16 @@ function ChessGameList (props) {
 
 function ChessGames (props) {
 
+	React.useEffect(() => enableOnClick("Chess"), []);
+
 	return (
 		<div>
 			<h4>Chess Games:</h4>			
 			<ChessGameList completed={false}/>
+			Show Past Games? <input type="checkbox" id="viewPastChessGames"/>
+			<div id="pastChessGames">
+				<ChessGameList completed={true}/>
+			</div>
 		</div>
 	);
 }
@@ -57,16 +63,24 @@ function TttGameList (props) {
 	);
 }
 
-function enableOnClick() {
-	document.getElementById('viewPastTttGames').onclick = (() => {
-		let currentVisbility = document.getElementById("pastTttGames").style.visibility;
-		document.getElementById("pastTttGames").style.visibility = (currentVisbility == 'visible' ? 'hidden' : 'visible');
+function enableOnClick(gamemode) {
+	document.getElementById("viewPast"+gamemode+"Games").onclick = (() => {
+
+		let pastGames = document.getElementById("past"+gamemode+"Games");
+
+		let currentVisbility = pastGames.style.visibility;
+		let newVisibility = (currentVisbility == 'visible' ? 'hidden' : 'visible');
+		pastGames.style.visibility = newVisibility;
+
+		let currentPosition = pastGames.style.position;
+		let newPosition = (currentPosition == 'static' ? 'absolute' : 'static');
+		pastGames.style.position = newPosition;
 	});
 }
 
 function TttGames (props) {
 
-	React.useEffect(() => enableOnClick(), []);
+	React.useEffect(() => enableOnClick("Ttt"), []);
 
 	return (
 		<div>

@@ -45,6 +45,12 @@ body {
 
 #pastTttGames {
     visibility: hidden;
+    position: absolute;
+}
+
+#pastChessGames {
+    visibility: hidden;
+    position: absolute;
 }
 
 .chessRow {
