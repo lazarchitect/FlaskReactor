@@ -2,7 +2,7 @@
 
 'use strict';
 
-import React, { StrictMode } from 'react'; // do I need this?
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { SiteHeader } from './CommonComponents';
 import styled from 'styled-components';
@@ -119,8 +119,6 @@ var page = (
 
 		<ChessGames/>
 		<TttGames/>
-
-		{/* TODO react should manage the state of the games divs and we call setState when the checkboxes are clicked  */}
 
 	</div>
 );
