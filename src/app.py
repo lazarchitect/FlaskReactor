@@ -57,7 +57,7 @@ def homepage():
         return render_template("splash.html")
 
     else: # user is logged in
-        chessGames = pgdb.getActiveChessGames(session.get('username'))
+        chessGames = pgdb.getChessGames(session.get('username'))
         tttGames = pgdb.getTttGames(session.get('username'))
         payload = {
             "username": session.get('username'),

@@ -55,5 +55,5 @@ class TttGame:
             self.time_ended,
             self.player_turn,
             self.winner,
-            Json(self.boardstate)
+            self.boardstate
         )
