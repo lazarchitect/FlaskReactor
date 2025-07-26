@@ -190,9 +190,6 @@ class ChessHandler(WebSocketHandler):
             "whiteInCheck": whiteInCheck,
             "blackInCheck": blackInCheck,
             "whiteKingMoved": whiteKingMoved,
-<<<<<<< HEAD:handlers/chessHandler.py
-            "blackKingMoved": blackKingMoved
-=======
             "blackKingMoved": blackKingMoved,
             "bqrMoved": bqrMoved,
             "bkrMoved": bkrMoved,
@@ -200,14 +197,10 @@ class ChessHandler(WebSocketHandler):
             "wkrMoved": wkrMoved,
             "pawnLeapt": pawnLeapt,
             "pawnLeapCol": pawnLeapCol
->>>>>>> origin:src/handlers/chessHandler.py
         }
 
         utils.updateAll(clientConnections[gameId], message)
 
-<<<<<<< HEAD:handlers/chessHandler.py
-        self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, newNotation, blackKingMoved, whiteKingMoved, gameId)
-=======
         self.pgdb.updateChessGame(
             boardstate,
             datetime.now(),
@@ -216,7 +209,6 @@ class ChessHandler(WebSocketHandler):
             bqrMoved, bkrMoved, wqrMoved, wkrMoved,
             pawnLeapt, pawnLeapCol,
             gameId)
->>>>>>> origin:src/handlers/chessHandler.py
 
         # related to issues #81 and #82
         # check if the ENEMY player cannot make any legal moves.
