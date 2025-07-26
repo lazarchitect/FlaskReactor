@@ -191,7 +191,12 @@ def logout():
 
 @app.route("/creategame", methods=["POST"])
 def createGame():
-    
+
+    # TODO refactoring:
+    # bad input handling can be handled outside this file
+    # game_type should be a match/case statement with subfunctions in other files
+    # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
+
     game_type = request.form['gameType']
 
     opponent_name = request.form['opponent']
