@@ -138,6 +138,10 @@ class ChessHandler(WebSocketHandler):
         wqrMoved = srcId == "wqr" or game.wqr_moved
         wkrMoved = srcId == "wkr" or game.wkr_moved
 
+        # tracks if the Kings have ever moved, for Castling purposes
+        blackKingMoved = (srcType == "King" and srcColor == "Black") or game.blackkingmoved
+        whiteKingMoved = (srcType == "King" and srcColor == "White") or game.whitekingmoved
+
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
         if (game.notation == None): 
             game.notation = ""
@@ -186,6 +190,9 @@ class ChessHandler(WebSocketHandler):
             "whiteInCheck": whiteInCheck,
             "blackInCheck": blackInCheck,
             "whiteKingMoved": whiteKingMoved,
+<<<<<<< HEAD:handlers/chessHandler.py
+            "blackKingMoved": blackKingMoved
+=======
             "blackKingMoved": blackKingMoved,
             "bqrMoved": bqrMoved,
             "bkrMoved": bkrMoved,
@@ -193,10 +200,14 @@ class ChessHandler(WebSocketHandler):
             "wkrMoved": wkrMoved,
             "pawnLeapt": pawnLeapt,
             "pawnLeapCol": pawnLeapCol
+>>>>>>> origin:src/handlers/chessHandler.py
         }
 
         utils.updateAll(clientConnections[gameId], message)
 
+<<<<<<< HEAD:handlers/chessHandler.py
+        self.pgdb.updateChessGame(boardstate, datetime.now(), newActivePlayer, newNotation, blackKingMoved, whiteKingMoved, gameId)
+=======
         self.pgdb.updateChessGame(
             boardstate,
             datetime.now(),
@@ -205,6 +216,7 @@ class ChessHandler(WebSocketHandler):
             bqrMoved, bkrMoved, wqrMoved, wkrMoved,
             pawnLeapt, pawnLeapCol,
             gameId)
+>>>>>>> origin:src/handlers/chessHandler.py
 
         # related to issues #81 and #82
         # check if the ENEMY player cannot make any legal moves.

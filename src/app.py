@@ -191,7 +191,9 @@ def logout():
 
 @app.route("/creategame", methods=["POST"])
 def createGame():
-    
+
+    # TODO refactoring: the remainder of this function seems like it should live in its own class
+
     game_type = request.form['gameType']
 
     opponent_name = request.form['opponent']
