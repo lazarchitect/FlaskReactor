@@ -138,10 +138,6 @@ class ChessHandler(WebSocketHandler):
         wqrMoved = srcId == "wqr" or game.wqr_moved
         wkrMoved = srcId == "wkr" or game.wkr_moved
 
-        # tracks if the Kings have ever moved, for Castling purposes
-        blackKingMoved = (srcType == "King" and srcColor == "Black") or game.blackkingmoved
-        whiteKingMoved = (srcType == "King" and srcColor == "White") or game.whitekingmoved
-
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
         if (game.notation == None): 
             game.notation = ""
