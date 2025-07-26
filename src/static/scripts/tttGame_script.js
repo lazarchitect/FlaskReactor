@@ -186,20 +186,13 @@ function TttBoard(){
 
 var page = (
 	<div id="reactRoot">
-<<<<<<< HEAD:static/scripts/tttGame_script.js
-		{/* TODO could we just call the payload "props" to avoid this double passing down? */}
-=======
->>>>>>> origin:src/static/scripts/tttGame_script.js
 		<SiteHeader version={payload.deployVersion} username={payload.username}/>
 
 		<div id="tttPlayArea">
 			<TttBoard/>
 			<p>Status: <span id="status"></span></p>
 		</div>
-<<<<<<< HEAD:static/scripts/tttGame_script.js
-=======
 		<MessageBox/>
->>>>>>> origin:src/static/scripts/tttGame_script.js
 	</div>
 );
 
