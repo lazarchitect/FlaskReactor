@@ -456,7 +456,18 @@ function Tile(props) {
 
 	const piece = props.data.piece;
 
-	const imagePath = piece == null ? "" : "/static/images/" + piece.color + piece.type + ".png";
+	// TODO remove debug
+	console.debug(piece);
+
+	let imagePath = "";
+	
+	if (piece != null) {
+		imagePath = "/static/images/" + piece.color + piece.type + ".png";
+
+		if (piece.type == "Bishop" && piece.color == "Black") {
+			imagePath = "/static/svg/" + piece.color + piece.type + ".svg";
+		}
+	}
 
 	return (
 		<span
@@ -465,10 +476,7 @@ function Tile(props) {
 			id = {props.tileIndex.toString() + props.rowIndex.toString()}
 		>
 			{/* tile contents */}
-			{ imagePath != ""
-				? <img className="pieceImg" src={imagePath} />
-				: null
-			}
+			<img className="pieceImg" src={imagePath} />
 		</span>
 	);
 }
