@@ -3,6 +3,7 @@ import json
 import src.utils as utils
 from src.pgdb import Pgdb
 from src.FakePgdb import FakePgdb
+from flask import session
 
 clientConnections = dict()
 
@@ -35,6 +36,14 @@ class MessageHandler(WebSocketHandler):
         if request == "subscribe":
             self.handleSubscribe(fields)
         
+        # after subscribing, we should be authenticating
+        elif fields.get('ws_token') != self.ws_token:
+            self.write_message({
+                "command": "error",
+                "message": "auth error! invalid ws_token for user"
+            })
+            return
+
         elif request == "update":
             self.handleUpdate(fields)
 
@@ -76,13 +85,24 @@ class MessageHandler(WebSocketHandler):
             gameId = fields['gameId']
         except KeyError:
             self.write_message({
-            "command": "error",
-            "message": "server did not receive a game ID from the client",
-            "details": str(connectionDetails)
-        })
+                "command": "error",
+                "message": "server did not receive a game ID from the client",
+                "details": str(connectionDetails)
+            })
+            return
 
         #used for easy search during later deletion
         self.gameId = gameId
+
+        if 'ws_token' not in fields:
+            self.write_message({
+                "command": "error",
+                "message": "server did not receive a ws_token from the client",
+                "details": str(connectionDetails)
+            })
+            return
+        
+        self.ws_token = fields['ws_token']
 
         if gameId not in clientConnections:
             clientConnections[gameId] = [connectionDetails]

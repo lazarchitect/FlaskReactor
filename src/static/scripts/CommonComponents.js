@@ -33,7 +33,8 @@ function wsSubscribe (messageSocket) {
 		JSON.stringify({
 			"request": "subscribe",
 			"gameId": payload.game.id,
-			"username": payload.username
+			"username": payload.username,
+			"ws_token": payload.ws_token
 		})
 	);
 }
@@ -63,6 +64,9 @@ function wsConnect(chatLog, setChatLog) {
 			chatLogGlobal.push(data.chat);
 			updateChatLog();
 		}
+		else if (data.command == "error") {
+			alert(data.message);
+		}
 	}
 
 	let inputField = document.getElementById('messagebox-input');
@@ -79,7 +83,8 @@ function wsConnect(chatLog, setChatLog) {
 					"request": "update",
 					"gameId": payload.game.id,
 					"username": payload.username,
-					"message": trimmedInput
+					"message": trimmedInput,
+					"ws_token": payload.ws_token
 				}));
 
 				inputField.value = '';
