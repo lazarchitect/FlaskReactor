@@ -87,6 +87,7 @@ def chessGame(gameid):
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
+        "ws_token": session.get('ws_token'),
         "userColor": userColor,
         "enemyColor": enemyColor,
         "yourTurn": game.player_turn == session.get('username'),
