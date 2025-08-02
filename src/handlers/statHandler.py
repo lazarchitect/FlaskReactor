@@ -21,6 +21,9 @@ class StatHandler(WebSocketHandler):
 		request = fields['request']
 		gameType = fields['gameType']
 
+		if request == "subscribe":
+			self.wsSubscribe(fields)
+
 		if request == "updateStat":
 
 			if gameType == "ttt":
@@ -28,6 +31,21 @@ class StatHandler(WebSocketHandler):
 
 	def on_close(self):
 		pass
+
+	def wsSubscribe(self, fields):
+
+		if 'ws_token' not in fields:
+			self.write_message({
+                "command": "error",
+                "message": "server did not receive a ws_token from the client",
+                # "details": str(connectionDetails)
+            })
+			return
+        
+        # used for authentication during updates
+		self.ws_token = fields['ws_token']
+
+		#TODO build out broadcast logic here. Players and spectators should know immediately when stats change
 
 	def updateTttStat(self, fields):
 		gameId = fields['gameId']

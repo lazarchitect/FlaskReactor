@@ -32,6 +32,7 @@ function wsSubscribe (messageSocket) {
 	messageSocket.send(
 		JSON.stringify({
 			"request": "subscribe",
+			"ws_token": payload.ws_token,
 			"gameId": payload.game.id,
 			"username": payload.username,
 			"ws_token": payload.ws_token
@@ -81,6 +82,7 @@ function wsConnect(chatLog, setChatLog) {
 			if (trimmedInput.length != 0) {
 				messageSocket.send(JSON.stringify({
 					"request": "update",
+					"ws_token": payload.ws_token,
 					"gameId": payload.game.id,
 					"username": payload.username,
 					"message": trimmedInput,

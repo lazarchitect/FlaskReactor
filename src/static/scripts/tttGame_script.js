@@ -6,7 +6,8 @@ const gameId = payload.game.id;
 
 function wsSubscribe(tttSocket) {
 	const subscribeObj = {
-		"request": "subscribe", 
+		"request": "subscribe",
+		"ws_token": payload.ws_token,
 		"gameId": gameId,
 		"username": payload.username
 	};
@@ -17,6 +18,7 @@ function wsSubscribe(tttSocket) {
 function wsUpdate(tttSocket, boardIndex) {
 	const updateObj = {
 		"request": "update", 
+		"ws_token": payload.ws_token,
 		"gameId": gameId, 
 		"gameType": "ttt", 
 		"player": payload.username, 
@@ -51,7 +53,8 @@ function wsConnect(setBoardstate, setYourTurn) {
 			setYourTurn(payload.username === data.activePlayer);
 			// call out to server - update this user's stats
 			const messageObj = {
-				"request": "updateStat", 
+				"request": "updateStat",
+				"ws_token": payload.ws_token,
 				"gameType": "ttt",
 				"gameId": gameId,
 				"userId": payload.userId,
