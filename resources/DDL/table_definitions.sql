@@ -39,7 +39,8 @@ create table flaskreactor.users (
     name text,
     email text,
     id text,
-    password_hash text
+    password_hash text,
+    ws_token text
 );
 
 create table flaskreactor.stats (

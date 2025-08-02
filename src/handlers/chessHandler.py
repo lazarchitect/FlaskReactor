@@ -39,6 +39,14 @@ class ChessHandler(WebSocketHandler):
         if request == "subscribe":
             self.handleSubscribe(fields)
 
+        # after subscribing, we should be authenticating
+        elif fields.get('ws_token') != self.ws_token:
+            self.write_message({
+                "command": "error",
+                "message": "auth error! invalid ws_token for user"
+            })
+            return
+
         elif request == "update":
             self.handleUpdate(fields)
 
@@ -70,11 +78,23 @@ class ChessHandler(WebSocketHandler):
             gameId = fields['gameId']
         except KeyError:
             self.write_message({
-            "command": "error",
-            "message": "server did not receive a game ID from the client",
-            "details": str(connectionDetails)
-        })
-
+                "command": "error",
+                "message": "server did not receive a game ID from the client",
+                "details": str(connectionDetails)
+            })
+            return
+        
+        if 'ws_token' not in fields:
+            self.write_message({
+                "command": "error",
+                "message": "server did not receive a ws_token from the client",
+                "details": str(connectionDetails)
+            })
+            return
+        
+        # used for authentication during updates
+        self.ws_token = fields['ws_token']
+        
         #used for easy search during later deletion
         self.gameId = gameId
 

@@ -22,7 +22,8 @@ function wsSubscribe(chessSocket){
 	const subscribeObj = {
 		"request": "subscribe",
 		"gameId": gameId,
-		"username": payload.username
+		"username": payload.username,
+		"ws_token": payload.ws_token
 	};
 	const subscribeStr = JSON.stringify(subscribeObj);
 	chessSocket.send(subscribeStr);
@@ -31,6 +32,7 @@ function wsSubscribe(chessSocket){
 function wsUpdate(chessSocket, tileId){
 	const updateObj = {
 		"request": "update",
+		"ws_token": payload.ws_token,
 		"gameId": payload.game.id,
 		"player": payload.player,
 		"userId": payload.userId,
