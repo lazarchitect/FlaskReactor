@@ -3,6 +3,7 @@ import src.utils as utils
 from src.pgdb import Pgdb
 from tornado.websocket import WebSocketHandler
 import json
+from flask import session
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -34,6 +35,14 @@ class TttHandler(WebSocketHandler):
 
         if request == "subscribe":
             self.wsSubscribe(fields)
+
+        # after subscribing, we should be authenticating
+        elif fields.get('ws_token') != self.ws_token:
+            self.write_message({
+                "command": "error",
+                "message": "auth error! invalid ws_token for user"
+            })
+            return
 
         elif request == "update":
             self.wsUpdate(fields)
@@ -70,6 +79,16 @@ class TttHandler(WebSocketHandler):
             "message": "server did not receive a game ID from the client",
             "details": str(connectionDetails)
         })
+            
+        if utils.hasNoContent(fields.get('ws_token', None)):
+            self.write_message({
+                "command": "error",
+                "message": "server did not receive a ws_token from the client",
+                "details": str(connectionDetails)
+            })
+            return
+        
+        self.ws_token = fields['ws_token']
         
         #used for easy search during later deletion
         self.gameId = gameId

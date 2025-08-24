@@ -16,7 +16,7 @@ relation = "flaskreactor"
 sql = {
 
         #General
-        "createUser": "INSERT INTO " + relation + ".users (name, password_hash, email, id) VALUES (%s, %s, %s, %s)",
+        "createUser": "INSERT INTO " + relation + ".users (name, password_hash, email, id, ws_token) VALUES (%s, %s, %s, %s, %s)",
         "createStat": "INSERT INTO " + relation + ".stats (userid) VALUES (%s)",
         "getUser": "SELECT * FROM " + relation + ".users WHERE name=%s",
         "checkLogin": "SELECT * FROM " + relation + ".users WHERE name=%s AND password_hash=%s",
@@ -117,9 +117,9 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchone() != None
 
-    def createUser(self, username, password_hash, email, userid):
+    def createUser(self, username, password_hash, email, userid, ws_token):
         query = sql['createUser']
-        values = [username, password_hash, email, userid]
+        values = [username, password_hash, email, userid, ws_token]
         self.__execute(query, values)
         self.conn.commit()
 

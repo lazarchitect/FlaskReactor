@@ -87,6 +87,7 @@ def chessGame(gameid):
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
+        "ws_token": session.get('ws_token'),
         "userColor": userColor,
         "enemyColor": enemyColor,
         "yourTurn": game.player_turn == session.get('username'),
@@ -125,6 +126,7 @@ def tttGame(gameid):
     payload = {
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
+        "ws_token": session.get('ws_token'),
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
@@ -144,12 +146,14 @@ def login():
     if not pgdb.userExists(username):
         return "User " + username + " does not exist."
 
-    correctLogin = pgdb.checkLogin(username, password_hash)
+    correctLogin = pgdb.checkLogin(username, password_hash) # TODO we query the DB three times here, can we improve?
     if(correctLogin):
-        userId = pgdb.getUser(username)[2]
+        user_details = pgdb.getUser(username)
+        userId = user_details[2] # TODO build a User object instead of relying on the array returned from pgdb
         session['loggedIn'] = True
         session['username'] = username
         session['userId'] = userId
+        session['ws_token'] = user_details[4]
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -172,12 +176,14 @@ def signup():
     password_hash = generateHash(password)
 
     userid = str(generateId())
+    ws_token = str(generateId())[:8]
 
-    pgdb.createUser(username, password_hash, email, userid)
+    pgdb.createUser(username, password_hash, email, userid, ws_token)
     pgdb.createStat(userid)
 
     session['loggedIn'] = True
     session['username'] = request.form['username']
+    session['ws_token'] = ws_token
     return redirect('/')
 
 @app.route("/logout", methods=["POST"])
@@ -187,6 +193,8 @@ def logout():
         del session['username']
     if 'userId' in session:
         del session['userId']
+    if 'ws_token' in session:
+        del session['ws_token']
     return redirect("/")
 
 @app.route("/creategame", methods=["POST"])
