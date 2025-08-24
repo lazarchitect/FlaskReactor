@@ -18,6 +18,10 @@ def generateId():
 def generateHash(password):
     return sha256(password.encode('utf8')).hexdigest()
 
+# checks for missing element or zero meaningful data
+def hasNoContent(string):
+    return string == None or len(string.strip() == 0) 
+
 def updateAll(connections, message):
     for connectionDetails in connections:
         try:

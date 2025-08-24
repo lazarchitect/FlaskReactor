@@ -126,6 +126,7 @@ def tttGame(gameid):
     payload = {
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
+        "ws_token": session.get('ws_token'),
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,

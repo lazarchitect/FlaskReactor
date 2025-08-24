@@ -80,7 +80,7 @@ class TttHandler(WebSocketHandler):
             "details": str(connectionDetails)
         })
             
-        if 'ws_token' not in fields:
+        if utils.hasNoContent(fields.get('ws_token', None)):
             self.write_message({
                 "command": "error",
                 "message": "server did not receive a ws_token from the client",
