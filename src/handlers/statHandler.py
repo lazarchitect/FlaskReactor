@@ -1,7 +1,7 @@
 
 from tornado.websocket import WebSocketHandler
 from src.pgdb import Pgdb
-from src.utils import generateId
+import src.utils as utils
 import json
 
 class StatHandler(WebSocketHandler):
@@ -13,7 +13,7 @@ class StatHandler(WebSocketHandler):
 		self.pgdb = Pgdb(db_env)
 
 	def open(self):
-		self.socketId = "socket"+ str(generateId())[:8]
+		self.socketId = "socket"+ str(utils.generateId())[:8]
 		print("statSocket opened:", str(self.socketId))
 
 	def on_message(self, message):
@@ -32,9 +32,9 @@ class StatHandler(WebSocketHandler):
 	def on_close(self):
 		pass
 
-	def wsSubscribe(self, fields):
+	def wsSubscribe(self, fields: dict):
 
-		if 'ws_token' not in fields:
+		if utils.hasNoContent(fields.get('ws_token')):
 			self.write_message({
                 "command": "error",
                 "message": "server did not receive a ws_token from the client",

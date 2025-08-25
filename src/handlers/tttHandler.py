@@ -60,7 +60,7 @@ class TttHandler(WebSocketHandler):
     ## Message Handler functions ##
     ###############################
 
-    def wsSubscribe(self, fields):
+    def wsSubscribe(self, fields: dict):
 
         if self.socketId == None: 
             print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
@@ -80,7 +80,7 @@ class TttHandler(WebSocketHandler):
             "details": str(connectionDetails)
         })
             
-        if utils.hasNoContent(fields.get('ws_token', None)):
+        if utils.hasNoContent(fields.get('ws_token')):
             self.write_message({
                 "command": "error",
                 "message": "server did not receive a ws_token from the client",
