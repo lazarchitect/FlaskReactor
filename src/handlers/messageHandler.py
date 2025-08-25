@@ -70,7 +70,7 @@ class MessageHandler(WebSocketHandler):
         self.pgdb.createMessage(gameId, fields['message'], fields['username'])
 
 
-    def handleSubscribe(self, fields):
+    def handleSubscribe(self, fields: dict):
 
         if self.socketId == None: 
             print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
@@ -94,7 +94,7 @@ class MessageHandler(WebSocketHandler):
         #used for easy search during later deletion
         self.gameId = gameId
 
-        if 'ws_token' not in fields:
+        if utils.hasNoContent(fields.get('ws_token')):
             self.write_message({
                 "command": "error",
                 "message": "server did not receive a ws_token from the client",

@@ -63,7 +63,7 @@ class ChessHandler(WebSocketHandler):
     ## Message Handler functions ##
     ###############################
 
-    def handleSubscribe(self, fields):
+    def handleSubscribe(self, fields: dict):
 
         if self.socketId == None: 
             print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
@@ -84,7 +84,7 @@ class ChessHandler(WebSocketHandler):
             })
             return
         
-        if 'ws_token' not in fields:
+        if utils.hasNoContent(fields.get('ws_token')):
             self.write_message({
                 "command": "error",
                 "message": "server did not receive a ws_token from the client",
