@@ -79,8 +79,8 @@ def chessGame(gameid):
     username = session.get('username')
 
     colors = {game.white_player: "White", game.black_player: "Black"}
-    userColor = colors.get(username)
-    enemyColor = "Black" if userColor == "White" else "White"
+    userColor = colors.get(username) # defaults to None if user is not a player (not logged in, other acct, etc)
+    enemyColor = "Black" if userColor == "White" else ("White" if userColor == "Black" else None)
 
     payload = {
         "wsBaseUrl": wsBaseUrl,

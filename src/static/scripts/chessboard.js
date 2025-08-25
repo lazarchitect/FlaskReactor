@@ -1,7 +1,7 @@
 
 'use strict';
 
-import React from 'react'; // do I need this?    yes
+import React from 'react';
 
 var highlightedTiles = [];
 var active_coords = [];
