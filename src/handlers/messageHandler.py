@@ -100,9 +100,15 @@ class MessageHandler(WebSocketHandler):
                 "message": "server did not receive a ws_token from the client",
                 "details": str(connectionDetails)
             })
-            return
+            return #non-players should not have chat log access. 
+            
+        # TODO add an elif here. We need to validate who the user is as well
+        # we can use a pdgb call to get the game based on gameId and see if this user (username in fields) is one of the players
+        # we also need to check their ws_token (stored in pgdb users) is correct (this is the magic sauce) 
         
-        self.ws_token = fields['ws_token']
+        else:
+            # used for authentication during updates
+            self.ws_token = fields['ws_token']
 
         if gameId not in clientConnections:
             clientConnections[gameId] = [connectionDetails]

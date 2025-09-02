@@ -30,8 +30,6 @@ function wsUpdate(tttSocket, boardIndex) {
 }
 
 function wsConnect(setBoardstate, setYourTurn) {
-
-	console.log("initializing WS")
 	
     const tttSocket = new WebSocket(payload.wsBaseUrl + "/ttt")
 	const statSocket =new WebSocket(payload.wsBaseUrl + "/stat")
@@ -61,7 +59,7 @@ function wsConnect(setBoardstate, setYourTurn) {
 				"username": payload.username
 			};
 			const message = JSON.stringify(messageObj);
-			statSocket.send(message);
+			statSocket.send(message); // TODO wouldnt this send stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
 		}
 
 		else if(data.command === "info") {

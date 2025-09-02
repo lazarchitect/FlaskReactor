@@ -82,13 +82,14 @@ class TttHandler(WebSocketHandler):
             
         if utils.hasNoContent(fields.get('ws_token')):
             self.write_message({
-                "command": "error",
+                "command": "info",
                 "message": "server did not receive a ws_token from the client",
                 "details": str(connectionDetails)
             })
-            return
         
-        self.ws_token = fields['ws_token']
+        else:
+            # used for authentication during updates
+            self.ws_token = fields['ws_token']
         
         #used for easy search during later deletion
         self.gameId = gameId

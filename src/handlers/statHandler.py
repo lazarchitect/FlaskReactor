@@ -42,8 +42,9 @@ class StatHandler(WebSocketHandler):
             })
 			return
         
-        # used for authentication during updates
-		self.ws_token = fields['ws_token']
+		else:
+			# used for authentication during updates
+			self.ws_token = fields['ws_token']
 
 		#TODO build out broadcast logic here. Players and spectators should know immediately when stats change
 

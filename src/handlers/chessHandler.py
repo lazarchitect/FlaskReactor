@@ -75,7 +75,7 @@ class ChessHandler(WebSocketHandler):
 
         # gameId is given to the frontend by Flask in the payload
         try:
-            gameId = fields['gameId']
+            gameId = fields['gameId'] # TODO can utilize hasNoContent here
         except KeyError:
             self.write_message({
                 "command": "error",
@@ -86,14 +86,14 @@ class ChessHandler(WebSocketHandler):
         
         if utils.hasNoContent(fields.get('ws_token')):
             self.write_message({
-                "command": "error",
+                "command": "info",
                 "message": "server did not receive a ws_token from the client",
                 "details": str(connectionDetails)
             })
-            return
         
-        # used for authentication during updates
-        self.ws_token = fields['ws_token']
+        else:
+            # used for authentication during updates
+            self.ws_token = fields['ws_token']
         
         #used for easy search during later deletion
         self.gameId = gameId
