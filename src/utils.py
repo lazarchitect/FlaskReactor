@@ -20,7 +20,7 @@ def generateHash(password):
 
 # checks for missing element or zero meaningful data
 def hasNoContent(string):
-    return string == None or len(string.strip() == 0) 
+    return string == None or len(string.strip()) == 0 
 
 def updateAll(connections, message):
     for connectionDetails in connections:
