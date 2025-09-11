@@ -268,13 +268,13 @@ if __name__ == "__main__":
     print()
 
     try:
-        db_env = argv[1]
+        db_env = os.environ.get("db_env")
     except IndexError:
-        db_env = "no_db"
+        db_env = "none"
 
     print("listening for secure websocket requests to " + host)
     print("connecting to: " + db_env)
-    pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
+    pgdb = Pgdb() if db_env != "none" else FakePgdb()
 
     flaskApp = WSGIContainer(app)
     application = Application(

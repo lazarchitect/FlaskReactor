@@ -9,9 +9,10 @@
 			"type": "debugpy",
 			"request": "launch",
 			"module": "src.app",
-			"args": [
-				"local_db"
-			],
+			"env": {"db_env": "local"},
+			// "args": [
+			// 	"local_db"
+			// ],
 			"preLaunchTask": "webpack build"
 		},
 		{
@@ -19,9 +20,10 @@
 			"type": "debugpy",
 			"request": "launch",
 			"module": "src.app",
-			"args": [
-				"remote_db"
-			],
+			"env": {"db_env": "remote"},
+			// "args": [
+			// 	"remote_db"
+			// ],
 			"preLaunchTask": "webpack build"
 		},
 		{
@@ -29,9 +31,10 @@
 			"type": "debugpy",
 			"request": "launch",
 			"module": "src.app",
-			"args": [
-				"no_db"
-			],
+			"env": {"db_env": "none"},
+			// "args": [
+			// 	"no_db"
+			// ],
 			"preLaunchTask": "webpack build"
 		}
 	]

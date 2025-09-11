@@ -1,6 +1,7 @@
 """provides a set of tools for interfacing with FlaskReactor's custom PostGres DataBase (PGDB) instance, 
 containing game data, users, and more."""
 
+import os
 from json import loads
 from psycopg2 import connect, InterfaceError, OperationalError
 from psycopg2.extras import DictCursor, Json
@@ -49,15 +50,15 @@ sql = {
 class Pgdb:
     """interacts with a PostgreSQL database of Flaskreactor users and games, for CRUD operations on records."""
 
-    def __init__(self, db_env):
+    def __init__(self):
 
-        self.dbenv = db_env
+        self.dbenv = os.environ.get("db_env", default="local")
 
         try:
 
             dbDetails = loads(open("resources/dbdetails.json", "r", encoding="utf8").read())
             self.conn = connect(
-                host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
+                host=dbDetails['remote_ip' if self.dbenv=='remote' else 'local_ip'],
                 database=dbDetails['database'],
                 user=dbDetails['user'],
                 password=dbDetails['password']
