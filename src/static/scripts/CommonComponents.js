@@ -34,6 +34,7 @@ function wsSubscribe (messageSocket) {
 			"request": "subscribe",
 			"ws_token": payload.ws_token,
 			"gameId": payload.game.id,
+			"gameType": payload.game_type,
 			"username": payload.username,
 			"ws_token": payload.ws_token
 		})
@@ -45,8 +46,6 @@ function wsConnect(chatLog, setChatLog) {
 	const messageSocket = new WebSocket(payload.wsBaseUrl + "/message");
 
 	messageSocket.onopen = (() => 
-		// TODO possible improvement - limit chat connection to only players (not spectators)
-		// by passing in username through props and checking
 		wsSubscribe(messageSocket)
 	);
 
