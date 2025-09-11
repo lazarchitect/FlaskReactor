@@ -59,7 +59,7 @@ function wsConnect(setBoardstate, setYourTurn) {
 				"username": payload.username
 			};
 			const message = JSON.stringify(messageObj);
-			statSocket.send(message); // TODO wouldnt this send stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
+			statSocket.send(message); // TODO wouldnt this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
 		}
 
 		else if(data.command === "info") {
