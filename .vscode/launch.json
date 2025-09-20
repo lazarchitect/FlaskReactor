@@ -13,6 +13,8 @@
 			// "args": [
 			// 	"local_db"
 			// ],
+
+			"sudo": true, //could cause issues on windows?
 			"preLaunchTask": "webpack build"
 		},
 		{
@@ -24,6 +26,7 @@
 			// "args": [
 			// 	"remote_db"
 			// ],
+			"sudo": true, //could cause issues on windows?
 			"preLaunchTask": "webpack build"
 		},
 		{
@@ -35,6 +38,7 @@
 			// "args": [
 			// 	"no_db"
 			// ],
+			"sudo": true, //could cause issues on windows?
 			"preLaunchTask": "webpack build"
 		}
 	]
