@@ -9,6 +9,7 @@
 			"type": "debugpy",
 			"request": "launch",
 			"module": "src.app",
+			"sudo": true, //could cause issues on windows?
 			"args": [
 				"local_db"
 			],
@@ -19,6 +20,7 @@
 			"type": "debugpy",
 			"request": "launch",
 			"module": "src.app",
+			"sudo": true, //could cause issues on windows?
 			"args": [
 				"remote_db"
 			],
@@ -29,6 +31,7 @@
 			"type": "debugpy",
 			"request": "launch",
 			"module": "src.app",
+			"sudo": true, //could cause issues on windows?
 			"args": [
 				"no_db"
 			],
