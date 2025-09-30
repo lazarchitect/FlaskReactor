@@ -3,10 +3,10 @@ from src.models.User import User
 from src.models.Stats import Stats
 from src.models.Message import Message
 
-class FakePgdb:
+class FakePgdb: #implements pdgbClient (?)
 
 	def getUser(self, username):
-		return ('JSmith11', 'john.smith@aol.com', '38298dd7-e30d-42d7-8c3a-94483dfc4af3', 'shtjteykyjthehu6w57')
+		return ('JSmith11', 'john.smith@aol.com', '38298dd7-e30d-42d7-8c3a-94483dfc4af3', 'shtjteykyjthehu6w57', 'wstokenbutfake')
 
 	def checkLogin(self, username, password_hash):
 		return True
@@ -20,10 +20,16 @@ class FakePgdb:
 	def createGame(self, g):
 		pass
 
+	def createChessGame(self, g):
+		pass
+
 	def getChessGame(self, gameId):
 		return ChessGame.dbLoad(['FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', [], False, None, None, None, 'Eddie', None,None,None,None,None,None,None,None,None, -1])
 
 	def getActiveChessGames(self, username):
+		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')]
+
+	def getChessGames(self, username):
 		return [('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'Eddie', 'Eddie2', {}, False, None, None, None, 'Eddie')]
 
 	def getTttGames(self, username):
