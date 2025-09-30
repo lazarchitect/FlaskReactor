@@ -20,8 +20,8 @@ class ChessHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self, db_env):
-        self.pgdb = Pgdb(db_env) if db_env != "no_db" else MockPgdb()
+    def initialize(self):
+        self.pgdb = Pgdb()
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]

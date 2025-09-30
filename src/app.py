@@ -12,7 +12,7 @@ import json
 import os
 
 from src.pgdb import Pgdb
-from src.FakePgdb import FakePgdb
+from src.MockPgdb import MockPgdb
 from src.utils import generateId, generateHash
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
@@ -265,29 +265,21 @@ def try_exit():
 
 if __name__ == "__main__":
 
-    print()
-
-    try:
-        db_env = os.environ.get("db_env")
-    except IndexError:
-        db_env = "none"
-
-    print("listening for secure websocket requests to " + host)
-    print("connecting to: " + db_env)
-    pgdb = Pgdb() if db_env != "none" else FakePgdb()
+    pgdb = Pgdb() # just a bit cleaner
 
     flaskApp = WSGIContainer(app)
     application = Application(
         default_host=host,
         handlers=[
-            ("/ws/ttt",     TttHandler,      dict(db_env=db_env)),
-            ("/ws/stat",    StatHandler,     dict(db_env=db_env)),
-            ("/ws/chess",   ChessHandler,    dict(db_env=db_env)),
-            ("/ws/message", MessageHandler,  dict(db_env=db_env)),
+            ("/ws/ttt",     TttHandler    ),
+            ("/ws/stat",    StatHandler   ),
+            ("/ws/chess",   ChessHandler  ),
+            ("/ws/message", MessageHandler),
             (".*",          FallbackHandler, dict(fallback=flaskApp))
         ]
     )
     application.listen(port)
+    print("listening for secure websocket requests to " + host)
 
     print("---running server on port " + str(port) + "---")
 
