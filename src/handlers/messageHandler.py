@@ -2,7 +2,7 @@ from tornado.websocket import WebSocketHandler
 import json
 import src.utils as utils
 from src.pgdb import Pgdb
-from src.FakePgdb import FakePgdb
+from src.MockPgdb import MockPgdb
 from flask import session
 
 clientConnections = dict()
@@ -22,7 +22,7 @@ class MessageHandler(WebSocketHandler):
         return True
 
     def initialize(self, db_env):
-        self.pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
+        self.pgdb = Pgdb(db_env) if db_env != "no_db" else MockPgdb()
     
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]

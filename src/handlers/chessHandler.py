@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from tornado.websocket import WebSocketHandler
 from src.pgdb import Pgdb
-from src.FakePgdb import FakePgdb
+from src.MockPgdb import MockPgdb
 import src.utils as utils
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
@@ -21,7 +21,7 @@ class ChessHandler(WebSocketHandler):
         return True
 
     def initialize(self, db_env):
-        self.pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
+        self.pgdb = Pgdb(db_env) if db_env != "no_db" else MockPgdb()
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]

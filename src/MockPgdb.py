@@ -3,7 +3,7 @@ from src.models.User import User
 from src.models.Stats import Stats
 from src.models.Message import Message
 
-class FakePgdb:
+class MockPgdb:
 
 	def getUser(self, username):
 		return ('JSmith11', 'john.smith@aol.com', '38298dd7-e30d-42d7-8c3a-94483dfc4af3', 'shtjteykyjthehu6w57', 'wstokenbutfake')
