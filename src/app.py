@@ -129,6 +129,7 @@ def tttGame(gameid):
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
+        "players": [game.x_player, game.o_player],
         "yourTurn": game.player_turn == session.get('username'),
         "deployVersion": appVersion
     }
