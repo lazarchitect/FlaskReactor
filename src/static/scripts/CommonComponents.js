@@ -106,8 +106,6 @@ function buildFormattedChatLog(chatLog) {
 
 	let retval = "";
 
-	console.log("trying to update chat log as:" + chatLog.toString());
-
 	chatLog.forEach(chat => {
 		retval += chat[1] + ": " + chat[2] + "\n";
 	});
@@ -142,7 +140,7 @@ function MessageBoxInput(props) {
 // TODO possible enhancement - disable chat entirely for users who opt out
 export function MessageBox (props) {
 	return (
-		<div id="messagebox">
+		<div id="messagebox" style={{visibility: props.visible}}>
 			<div id="messagebox-main" style={{visibility: 'hidden'}}>
 				<MessageBoxLog/> 
 				<MessageBoxInput/>		

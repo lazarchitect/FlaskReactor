@@ -5,14 +5,12 @@ from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 from tornado.options import parse_command_line
 from signal import signal, SIGINT
-from sys import argv
 import tornado
 import random
 import json
 import os
 
 from src.pgdb import Pgdb
-from src.MockPgdb import MockPgdb
 from src.utils import generateId, generateHash
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
@@ -87,6 +85,7 @@ def chessGame(gameid):
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
+        "players": [game.white_player, game.black_player], 
         "ws_token": session.get('ws_token'),
         "userColor": userColor,
         "enemyColor": enemyColor,
