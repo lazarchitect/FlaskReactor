@@ -57,7 +57,7 @@ class Pgdb:
         
         if not self._instance: # first time instantiating
             
-            self.dbenv = os.environ.get("db_env", default="local")
+            self.dbenv = os.environ.get("db_env", default="remote")
             print("connecting to environment:",self.dbenv)
 
             if self.dbenv == "none": # dev only!
