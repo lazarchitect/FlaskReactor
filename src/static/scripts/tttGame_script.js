@@ -186,7 +186,6 @@ function TttBoard(){
 }
 
 var isPlayer = payload.players.includes(payload.username);
-var messageBoxVisible = isPlayer ? "visible" : "hidden";
 
 var page = (
 	<div id="reactRoot">
@@ -196,7 +195,7 @@ var page = (
 			<TttBoard/>
 			<p>Status: <span id="status"></span></p>
 		</div>
-		<MessageBox visible={messageBoxVisible}/>
+		{isPlayer && <MessageBox/>}
 	</div>
 );
 
