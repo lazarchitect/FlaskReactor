@@ -59,7 +59,7 @@ function wsConnect(setBoardstate, setYourTurn) {
 				"username": payload.username
 			};
 			const message = JSON.stringify(messageObj);
-			statSocket.send(message); // TODO wouldnt this send stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
+			statSocket.send(message); // TODO wouldnt this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
 		}
 
 		else if(data.command === "info") {
@@ -185,6 +185,9 @@ function TttBoard(){
 	)
 }
 
+var isPlayer = payload.players.includes(payload.username);
+var messageBoxVisible = isPlayer ? "visible" : "hidden";
+
 var page = (
 	<div id="reactRoot">
 		<SiteHeader version={payload.deployVersion} username={payload.username}/>
@@ -193,7 +196,7 @@ var page = (
 			<TttBoard/>
 			<p>Status: <span id="status"></span></p>
 		</div>
-		<MessageBox/>
+		<MessageBox visible={messageBoxVisible}/>
 	</div>
 );
 

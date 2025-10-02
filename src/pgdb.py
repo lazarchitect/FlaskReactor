@@ -1,15 +1,15 @@
 """provides a set of tools for interfacing with FlaskReactor's custom PostGres DataBase (PGDB) instance, 
 containing game data, users, and more."""
 
+import os
 from json import loads
 from psycopg2 import connect, InterfaceError, OperationalError
 from psycopg2.extras import DictCursor, Json
 from psycopg2.errors import InFailedSqlTransaction
+
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
-# from src.models.User import User
-# from src.models.Stats import Stats
-# from src.models.Message import Message
+from src.MockPgdb import MockPgdb
 
 relation = "flaskreactor"
 
@@ -49,15 +49,33 @@ sql = {
 class Pgdb:
     """interacts with a PostgreSQL database of Flaskreactor users and games, for CRUD operations on records."""
 
-    def __init__(self, db_env):
+    _instance = None
 
-        self.dbenv = db_env
+    # overriding new in order to use a Singleton approach, no need to reinstatiate for every Handler that comes up
+    # and also to allow for MockPgdb to be used without impacting code in any other file
+    def __new__(self):
+        
+        if not self._instance: # first time instantiating
+            
+            self.dbenv = os.environ.get("db_env", default="local")
+            print("connecting to environment:",self.dbenv)
+
+            if self.dbenv == "none": # dev only!
+                print('setting DB client to MockPgdb')
+                self._instance = MockPgdb()
+            else:
+                self._instance = super().__new__(self)
+        
+        return self._instance
+
+        # whats the difference between new and init? When does init get called?
+
+    def __init__(self):
 
         try:
-
             dbDetails = loads(open("resources/dbdetails.json", "r", encoding="utf8").read())
             self.conn = connect(
-                host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
+                host=dbDetails['remote_ip' if self.dbenv=='remote' else 'local_ip'],
                 database=dbDetails['database'],
                 user=dbDetails['user'],
                 password=dbDetails['password']
@@ -105,11 +123,11 @@ class Pgdb:
 
     ### General
     
-    def getUser(self, username):
+    def getUser(self, username: str):
         query = sql['getUser']
         values = [username]
         self.__execute(query, values)
-        return self.cursor.fetchone()
+        return self.cursor.fetchone() # TODO use User.dbLoad() here and return that instead, see getChessGame below
 
     def checkLogin(self, username, password_hash):
         query = sql['checkLogin']

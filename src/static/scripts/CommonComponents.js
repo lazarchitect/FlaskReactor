@@ -34,6 +34,7 @@ function wsSubscribe (messageSocket) {
 			"request": "subscribe",
 			"ws_token": payload.ws_token,
 			"gameId": payload.game.id,
+			"game_type": payload.game_type,
 			"username": payload.username,
 			"ws_token": payload.ws_token
 		})
@@ -42,11 +43,11 @@ function wsSubscribe (messageSocket) {
 
 function wsConnect(chatLog, setChatLog) {
 
+	// TODO return immediately if user is not one of the players
+
 	const messageSocket = new WebSocket(payload.wsBaseUrl + "/message");
 
 	messageSocket.onopen = (() => 
-		// TODO possible improvement - limit chat connection to only players (not spectators)
-		// by passing in username through props and checking
 		wsSubscribe(messageSocket)
 	);
 
@@ -67,6 +68,9 @@ function wsConnect(chatLog, setChatLog) {
 		}
 		else if (data.command == "error") {
 			alert(data.message);
+		}
+		else if (data.command == "info") {
+			console.log(data);
 		}
 	}
 
@@ -107,8 +111,6 @@ function buildFormattedChatLog(chatLog) {
 
 	let retval = "";
 
-	console.log("trying to update chat log as:" + chatLog.toString());
-
 	chatLog.forEach(chat => {
 		retval += chat[1] + ": " + chat[2] + "\n";
 	});
@@ -140,7 +142,7 @@ function MessageBoxInput(props) {
 	);
 }
 
-// TODO possible enhancement - disable chat entirely for users who opt out
+// TODO possible enhancement - disable chat entirely for users who opt out. User settings is down the line
 export function MessageBox (props) {
 	return (
 		<div id="messagebox">
