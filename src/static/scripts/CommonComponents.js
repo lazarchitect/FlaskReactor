@@ -34,7 +34,7 @@ function wsSubscribe (messageSocket) {
 			"request": "subscribe",
 			"ws_token": payload.ws_token,
 			"gameId": payload.game.id,
-			"gameType": payload.game_type,
+			"game_type": payload.game_type,
 			"username": payload.username,
 			"ws_token": payload.ws_token
 		})
@@ -42,6 +42,8 @@ function wsSubscribe (messageSocket) {
 }
 
 function wsConnect(chatLog, setChatLog) {
+
+	// TODO return immediately if user is not one of the players
 
 	const messageSocket = new WebSocket(payload.wsBaseUrl + "/message");
 
@@ -66,6 +68,9 @@ function wsConnect(chatLog, setChatLog) {
 		}
 		else if (data.command == "error") {
 			alert(data.message);
+		}
+		else if (data.command == "info") {
+			console.log(data);
 		}
 	}
 
@@ -137,10 +142,10 @@ function MessageBoxInput(props) {
 	);
 }
 
-// TODO possible enhancement - disable chat entirely for users who opt out
+// TODO possible enhancement - disable chat entirely for users who opt out. User settings is down the line
 export function MessageBox (props) {
 	return (
-		<div id="messagebox" style={{visibility: props.visible}}>
+		<div id="messagebox">
 			<div id="messagebox-main" style={{visibility: 'hidden'}}>
 				<MessageBoxLog/> 
 				<MessageBoxInput/>		

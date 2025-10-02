@@ -6,7 +6,6 @@ import { SiteHeader, MessageBox } from './CommonComponents';
 import { Chessboard } from './chessboard';
 
 var isPlayer = payload.players.includes(payload.username);
-var messageBoxVisible = isPlayer ? "visible" : "hidden";
 
 var page = (
 	<div id="reactRoot">
@@ -15,7 +14,8 @@ var page = (
             <Chessboard boardstate={payload.boardstate}/>
             <p>Status: <span id="status"></span></p>
         </div>
-        <MessageBox visible={messageBoxVisible}/>
+        
+        {isPlayer && <MessageBox/>}
         
     </div>
 );

@@ -123,11 +123,11 @@ class Pgdb:
 
     ### General
     
-    def getUser(self, username):
+    def getUser(self, username: str):
         query = sql['getUser']
         values = [username]
         self.__execute(query, values)
-        return self.cursor.fetchone()
+        return self.cursor.fetchone() # TODO use User.dbLoad() here and return that instead, see getChessGame below
 
     def checkLogin(self, username, password_hash):
         query = sql['checkLogin']

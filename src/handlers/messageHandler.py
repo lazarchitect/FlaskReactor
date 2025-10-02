@@ -1,8 +1,8 @@
 from tornado.websocket import WebSocketHandler
 import json
+from src.models.User import User
 import src.utils as utils
 from src.pgdb import Pgdb
-from src.MockPgdb import MockPgdb
 from flask import session
 
 clientConnections = dict()
@@ -37,7 +37,7 @@ class MessageHandler(WebSocketHandler):
             self.handleSubscribe(fields)
         
         # after subscribing, we should be authenticating
-        elif fields.get('ws_token') != self.ws_token:
+        elif hasattr(self, "ws_token") == False or fields.get('ws_token') != self.ws_token:
             self.write_message({
                 "command": "error",
                 "message": "auth error! invalid ws_token for user"
@@ -96,19 +96,34 @@ class MessageHandler(WebSocketHandler):
 
         if utils.hasNoContent(fields.get('ws_token')):
             self.write_message({
-                "command": "error",
+                "command": "info",
                 "message": "server did not receive a ws_token from the client",
                 "details": str(connectionDetails)
             })
-            return #non-players should not have chat log access. 
+            return #non-logged in viewers should not have chat log access. 
             
-        # TODO add an elif here. We need to validate who the user is as well
+ 
+        # TODO non-players should not have chat log access. We need to validate who the user is as well
         # we can use a pdgb call to get the game based on gameId and see if this user (username in fields) is one of the players
         # we also need to check their ws_token (stored in pgdb users) is correct (this is the magic sauce) 
-        
-        else:
-            # used for authentication during updates
-            self.ws_token = fields['ws_token']
+        match(fields['game_type']):
+            case "chess":
+                game = self.pgdb.getChessGame(gameId)
+                if fields['username'] not in [game.black_player, game.white_player]:
+                    print("debug: user is not a player")
+                    return # non-players should not have chat log access.
+            # TODO: TTT handling
+            case _:
+                print("game type ", fields['game_type'], "not supported for chat")
+                return # invalid game type
+
+        user = self.pgdb.getUser(fields['username'])
+        if (fields['ws_token'] != User.dbLoad(user).ws_token):
+            print("debug: this user is claiming to have a different WS token? malicious?")
+            return #this guy's a phony!
+
+        # used for authentication during updates
+        self.ws_token = fields['ws_token']
 
         if gameId not in clientConnections:
             clientConnections[gameId] = [connectionDetails]

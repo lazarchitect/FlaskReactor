@@ -85,6 +85,7 @@ def chessGame(gameid):
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
+        "game_type": "chess", # field used by shared code
         "players": [game.white_player, game.black_player], 
         "ws_token": session.get('ws_token'),
         "userColor": userColor,
