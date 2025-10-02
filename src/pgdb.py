@@ -68,8 +68,6 @@ class Pgdb:
         
         return self._instance
 
-        # whats the difference between new and init? When does init get called?
-
     def __init__(self):
 
         try:
