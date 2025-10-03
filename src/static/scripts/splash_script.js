@@ -9,10 +9,10 @@ const LoginArea = (() =>
 		<h1>Log In</h1>
 		<form action="/login" method="POST">
 			<label>Username:</label>
-			<input type="text" id="username" name="username"/>
+			<input type="text" id="username" name="username" autoComplete="username"/>
 			<br/><br/><br/>
 			<label>Password:</label>
-			<input type="password" name="password"/>
+			<input type="password" name="password" autoComplete='current-password'/>
 			<br/>
 			<input type="submit" value="Submit"/>
 		</form>
@@ -24,16 +24,16 @@ const SignupArea = (() =>
 		<h1>Sign Up</h1>
 		<form action="/signup" method="POST">
 			<label>Username:</label>
-			<input type="text" name="username"/>
+			<input type="text" name="username" autoComplete="username"/>
 			<br/>
 			<label>Password:</label>
-			<input type="password" name="password"/>
+			<input type="password" name="password" autoComplete="new-password"/>
 			<br/>
 			<label>Repeat Password:</label>
-			<input type="password" name="password_repeat"/>
+			<input type="password" name="password_repeat" autoComplete="new-password"/>
 			<br/>
 			<label>Email (optional):</label>
-			<input type="text" name="email"/>
+			<input type="text" name="email" autoComplete="email"/>
 			<br/>
 			<input type="submit" value="Submit"/>
 		</form>
