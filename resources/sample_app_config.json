@@ -1,0 +1,25 @@
+{
+    "README": "this is a sample structure of the app config. Put details in app_config.json, structured the same as this file, to run the app.",
+    
+    "version": "0.5.0",
+
+    "host": "127.0.0.1",
+    "port": 80,
+
+    "websocket": {
+        "protocol": "ws",
+        "NOTE": "change protocol to 'wss' for prod secure server"
+    },
+
+    "postgres": {
+        "env": "set this to 'remote', 'local', or 'none' for pointing to the Postgres instance you want to run in",
+        "remote_ip": "IP Address of PostgreSQL instance",
+        "local_ip": "IP Address of this machine or LAN instance for local testing",
+        "database": "name of PG database running on instance",
+        "user": "account username to connect with",
+        "password": "user's private password"
+    },
+
+    "secret_key": "randomized value used for Flask session verification"
+    
+}

@@ -19,32 +19,28 @@ from src.handlers.statHandler import StatHandler
 from src.handlers.chessHandler import ChessHandler
 from src.handlers.messageHandler import MessageHandler
 
-try:
-    wsDetails = json.loads(open("resources/wsdetails.json", "r").read())
-    port = wsDetails['port']
-    host = wsDetails['host']
-    wsProtocol = wsDetails['protocol']
-    wsBaseUrl = wsProtocol + "://" + host + "/ws"
-
-except FileNotFoundError:
-    print("you need to add resources/wsdetails.json for the server to run.")
-    exit(1)
-except KeyError as ke:
-    print("wsdetails.json file missing a key:", ke.args[0])
-    exit()
-
 app = Flask(__name__)
 
 try:
-    appVersion = os.environ['DEPLOY_VERSION']
-except KeyError:
-    appVersion = "DEV"
+    config = json.loads(open("resources/app_config.json", "r").read())
+    host = config['host']
+    port = config['port']
+    wsProtocol = config['websocket']['protocol']
+    wsBaseUrl = wsProtocol + "://" + host + "/ws"
+    app.secret_key = config['secret_key']
+    pgdb = Pgdb(config['postgres'])
+
+except FileNotFoundError:
+    print("you need to add resources/app_config.json for the server to run.")
+    exit()
+except KeyError as ke:
+    print("app_config missing a key:", ke.args[0])
+    exit()
 
 try:
-    app.secret_key = open('resources/secret_key.txt', 'r').read().encode('utf-8')
-except FileNotFoundError:
-    print("you need to add a file called resources/secret_key.txt, containing a secret (private string) for Flask to run.")
-    exit()
+    appVersion = os.environ['DEPLOY_VERSION'] # TODO should be called deployVersion
+except KeyError:
+    appVersion = "DEV"
 
 @app.route('/')
 def homepage():
@@ -265,8 +261,6 @@ def try_exit():
         tornado.ioloop.IOLoop.instance().stop()
 
 if __name__ == "__main__":
-
-    pgdb = Pgdb() # just a bit cleaner
 
     flaskApp = WSGIContainer(app)
     application = Application(

@@ -14,8 +14,7 @@ node_modules
 .idea
 
 #App Config Files
-secret_key.txt
-*details.json
+app_config.json
 *pat
 
 # Misc

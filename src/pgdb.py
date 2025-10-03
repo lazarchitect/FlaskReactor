@@ -53,14 +53,19 @@ class Pgdb:
 
     # overriding new in order to use a Singleton approach, no need to reinstatiate for every Handler that comes up
     # and also to allow for MockPgdb to be used without impacting code in any other file
-    def __new__(self):
+    def __new__(self, postgres_config):
         
         if not self._instance: # first time instantiating
             
-            self.dbenv = os.environ.get("db_env", default="remote")
-            print("connecting to environment:",self.dbenv)
+            env = postgres_config['env']
+            if env not in ['local', 'remote', 'none']: 
+                print('Invalid postgres env value in app_config:', env)
+                exit()
 
-            if self.dbenv == "none": # dev only!
+            self.db_env = env  
+            print("connecting to environment:",self.db_env)
+
+            if self.db_env == "none": # dev only!
                 print('setting DB client to MockPgdb')
                 self._instance = MockPgdb()
             else:
@@ -68,15 +73,16 @@ class Pgdb:
         
         return self._instance
 
-    def __init__(self):
+    def __init__(self, postgres_config):
+
+        self.config = postgres_config
 
         try:
-            dbDetails = loads(open("resources/dbdetails.json", "r", encoding="utf8").read())
             self.conn = connect(
-                host=dbDetails['remote_ip' if self.dbenv=='remote' else 'local_ip'],
-                database=dbDetails['database'],
-                user=dbDetails['user'],
-                password=dbDetails['password']
+                host     = self.config['local_ip' if self.db_env=='local' else 'remote_ip'],
+                database = self.config['database'],
+                user     = self.config['user'],
+                password = self.config['password']
             )
 
             self.cursor = self.conn.cursor(cursor_factory=DictCursor)
@@ -86,10 +92,7 @@ class Pgdb:
             exit()
 
         except KeyError as ke:
-            print("dbdetails.json file missing a key:", ke.args[0])
-            exit()
-        except FileNotFoundError:
-            print("you need to add a resources/dbdetails.json file to run the app.")
+            print("app_config missing a key: postgres ->", ke.args[0])
             exit()
 
     def __execute(self, query, values):
@@ -103,12 +106,11 @@ class Pgdb:
             self.cursor.execute(query, values)
         except (InterfaceError, OperationalError):
             #Connection was closed. reset conn and cursor. (this happens due to idle timeouts.)
-            dbDetails = loads(open("dbdetails.json", "r", encoding="utf8").read())
             self.conn = connect(
-                host=dbDetails['remote_ip' if self.dbenv=='remote_db' else 'local_ip'],
-                database=dbDetails['database'],
-                user=dbDetails['user'],
-                password=dbDetails['password']
+                host     = self.config['remote_ip' if self.db_env=='remote' else 'local_ip'],
+                database = self.config['database'],
+                user     = self.config['user'],
+                password = self.config['password']
             )
             self.cursor = self.conn.cursor(cursor_factory=DictCursor)
             self.__execute(query, values)
