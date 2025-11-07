@@ -185,13 +185,7 @@ def signup():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    session['loggedIn'] = False
-    if 'username' in session:
-        del session['username']
-    if 'userId' in session:
-        del session['userId']
-    if 'ws_token' in session:
-        del session['ws_token']
+    session.clear()
     return redirect("/")
 
 @app.route("/creategame", methods=["POST"])
