@@ -9,6 +9,7 @@ from psycopg2.errors import InFailedSqlTransaction
 
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
+from src.models.QuadradiusGame import QuadradiusGame
 from src.MockPgdb import MockPgdb
 
 relation = "flaskreactor"
@@ -20,6 +21,11 @@ sql = {
         "createStat": "INSERT INTO " + relation + ".stats (userid) VALUES (%s)",
         "getUser": "SELECT * FROM " + relation + ".users WHERE name=%s",
         "checkLogin": "SELECT * FROM " + relation + ".users WHERE name=%s AND password_hash=%s",
+
+        # Quadradius
+        "createQuadradiusGame": "INSERT INTO " + relation + ".quadradius_games (id, player1, player2, player1_color, player2_color, boardstate, completed) values (%s, %s, %s, %s, %s, %s, %s)",
+        "getQuadradiusGames": "SELECT * FROM " + relation + ".quadradius_games WHERE player1 = %s OR player2 = %s",
+        "getQuadradiusGame": "SELECT * FROM " + relation + ".quadradius_games WHERE id = %s",
 
         # Chess
         "getCompletedChessGames": "SELECT * FROM " + relation + ".chess_games where completed=true AND (white_player=%s OR black_player=%s)",
@@ -146,6 +152,31 @@ class Pgdb:
         values = [str(userId)]
         self.__execute(query, values) 
         self.conn.commit()
+
+
+    ### Quadradius
+
+    def createQuadradiusGame(self, g):
+        query = sql['createQuadradiusGame']
+        values = g.toTuple()
+        self.__execute(query, values)
+        self.conn.commit()
+
+    def getQuadradiusGames(self, username):
+        query = sql['getQuadradiusGames']
+        values = (username, username)
+        self.__execute(query, values)
+        return self.cursor.fetchall()
+
+    def getQuadradiusGame(self, gameId):
+        query = sql['getQuadradiusGame']
+        values = (gameId,)
+        self.__execute(query, values)
+        record = self.cursor.fetchone()
+        if (record == None):
+            print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+            return None
+        return QuadradiusGame.dbLoad(record)
 
     ### Chess
 
