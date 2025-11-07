@@ -21,8 +21,8 @@ class MessageHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self):
-        self.pgdb = Pgdb()
+    def initialize(self, pgdb):
+        self.pgdb = pgdb
     
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
@@ -112,10 +112,14 @@ class MessageHandler(WebSocketHandler):
                 if fields['username'] not in [game.black_player, game.white_player]:
                     print("debug: user is not a player")
                     return # non-players should not have chat log access.
-            # TODO: TTT handling
+            case "ttt":
+                game = self.pgdb.getTttGame(gameId)
+                if fields['username'] not in [game.x_player, game.o_player]:
+                    print("debug: user is not a player")
+                    return
             case _:
-                print("game type ", fields['game_type'], "not supported for chat")
-                return # invalid game type
+                print("game type ", fields['game_type'], "invalid or not currently supported for messages")
+                return
 
         user = self.pgdb.getUser(fields['username'])
         if (fields['ws_token'] != User.dbLoad(user).ws_token):

@@ -81,7 +81,7 @@ def chessGame(gameid):
         "game": vars(game),
         "boardstate": game.boardstate,
         "username": username,
-        "game_type": "chess", # field used by shared code
+        "game_type": "chess", # field used by common component
         "players": [game.white_player, game.black_player], 
         "ws_token": session.get('ws_token'),
         "userColor": userColor,
@@ -123,6 +123,7 @@ def tttGame(gameid):
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
         "ws_token": session.get('ws_token'),
+        "game_type": "ttt", # field used by common component 
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
@@ -260,11 +261,11 @@ if __name__ == "__main__":
     application = Application(
         default_host=host,
         handlers=[
-            ("/ws/ttt",     TttHandler    ),
-            ("/ws/stat",    StatHandler   ),
-            ("/ws/chess",   ChessHandler  ),
-            ("/ws/message", MessageHandler),
-            (".*",          FallbackHandler, dict(fallback=flaskApp))
+            ("/ws/ttt",     TttHandler,      {"pgdb": pgdb}),
+            ("/ws/stat",    StatHandler,     {"pgdb": pgdb}),
+            ("/ws/chess",   ChessHandler,    {"pgdb": pgdb}),
+            ("/ws/message", MessageHandler,  {"pgdb": pgdb}),
+            (".*",          FallbackHandler, {"fallback": flaskApp})
         ]
     )
     application.listen(port)

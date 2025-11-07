@@ -20,8 +20,8 @@ class TttHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self):
-        self.pgdb = Pgdb()
+    def initialize(self, pgdb):
+        self.pgdb = pgdb
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
