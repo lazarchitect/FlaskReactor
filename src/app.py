@@ -41,7 +41,10 @@ except KeyError as ke:
 try:
     deployVersion = os.environ['DEPLOY_VERSION']
 except KeyError:
-    deployVersion = "DEV"
+    deployVersion = "Local"
+
+with app.test_request_context():
+    session.clear()
 
 @app.route('/')
 def homepage():
