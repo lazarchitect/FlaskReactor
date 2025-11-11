@@ -11,11 +11,11 @@ var page = (
 	<div id="reactRoot">
         <SiteHeader version={payload.deployVersion} username={payload.username}/>
         <div id="chessPlayArea">
-            <Chessboard boardstate={payload.boardstate}/>
+            <Chessboard />
             <p>Status: <span id="status"></span></p>
         </div>
         
-        {isPlayer && <MessageBox/>}
+        {isPlayer && <MessageBox />}
         
     </div>
 );
