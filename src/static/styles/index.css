@@ -142,7 +142,7 @@ body {
     grid-template-rows: repeat(8, 12.5%);
     margin-top: 4%;
     margin-left: 8%;
-    width: 512px;
+    width: 640px;
     height: 512px;
     border: 3px solid black;
 }
@@ -159,19 +159,16 @@ body {
 }
 
 .torus {
+    background-image: url('../images/quadradius/torus_default.png');
+    background-size: 92% 92%; /* visual image populates in the background of the div element */
+    height: 92%; /* torus element itself should fill most of the tile div containing it */
+    width: 92%;
+    top: 4.5%; /* specific proportions used to line up with tile art */
+    left: 1%;
+    background-repeat: no-repeat;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-}
-
-.torusImg{
-    /* torii default to a light green (01FF00) but should be programatically changed to the user's preferred color */
-    width: 80%;
-    height: 80%;
-    margin-left: 5%;
-    margin-top: 10%;
+    border-radius: 50%;
+    z-index: 2;
 }
 
 #messagebox { /* overall container */
