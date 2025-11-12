@@ -108,7 +108,7 @@ def quadGame(gameId):
         "deployVersion": deployVersion,
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
-        "boardstate": json.loads(open('resources/initialQuadLayout.json', 'r').read()), # TODO pull from game object instead
+        "boardstate": json.loads(open('resources/initialQuadLayout.json', 'r').read()), # TODO quad development: pull from game object instead
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId')
         # "yourTurn": game.player_turn == session.get('username') # TODO this has not been added in the db yet
@@ -198,7 +198,7 @@ def logout():
 @app.route("/creategame", methods=["POST"])
 def createGame():
 
-    # TODO refactoring:
+    # TODO refactoring /creategame into smaller subroutines
     # bad input handling can be handled outside this file
     # game_type should be a match/case statement with subfunctions in other files
     # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
