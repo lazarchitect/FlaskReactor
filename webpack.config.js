@@ -8,7 +8,7 @@ module.exports = {
   entry: () => {
       const entries = {};
       glob.sync("./src/**/*.js").forEach(file => {
-        const name = file.replace(scriptsDir, "").replace(".js", ""); // FILE SEPARATORS ACT DIFFERENTLY ON DIFFERENT OS. HANDLE THIS    
+        const name = file.replace(scriptsDir, "").replace(".js", "");   
         if(!name.includes("dist")) {
             entries[name] = "./" + file;
         }

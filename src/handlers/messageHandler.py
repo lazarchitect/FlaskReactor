@@ -103,9 +103,7 @@ class MessageHandler(WebSocketHandler):
             return #non-logged in viewers should not have chat log access. 
             
  
-        # TODO non-players should not have chat log access. We need to validate who the user is as well
-        # we can use a pdgb call to get the game based on gameId and see if this user (username in fields) is one of the players
-        # we also need to check their ws_token (stored in pgdb users) is correct (this is the magic sauce) 
+        # non-players should not have chat log access
         match(fields['game_type']):
             case "chess":
                 game = self.pgdb.getChessGame(gameId)
@@ -121,6 +119,7 @@ class MessageHandler(WebSocketHandler):
                 print("game type ", fields['game_type'], "invalid or not currently supported for messages")
                 return
 
+        # authenticate user by checking if the provided ws_token matches what's in the DB 
         user = self.pgdb.getUser(fields['username'])
         if (fields['ws_token'] != User.dbLoad(user).ws_token):
             print("debug: this user is claiming to have a different WS token? malicious?")

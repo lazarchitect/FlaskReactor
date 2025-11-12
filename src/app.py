@@ -14,6 +14,7 @@ from src.pgdb import Pgdb
 from src.utils import generateId, generateHash
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
+from src.models.QuadradiusGame import QuadradiusGame
 from src.handlers.tttHandler import TttHandler
 from src.handlers.statHandler import StatHandler
 from src.handlers.chessHandler import ChessHandler
@@ -38,9 +39,12 @@ except KeyError as ke:
     exit()
 
 try:
-    appVersion = os.environ['DEPLOY_VERSION'] # TODO should be called deployVersion
+    deployVersion = os.environ['DEPLOY_VERSION']
 except KeyError:
-    appVersion = "DEV"
+    deployVersion = "Local"
+
+with app.test_request_context():
+    session.clear()
 
 @app.route('/')
 def homepage():
@@ -51,21 +55,25 @@ def homepage():
         return render_template("splash.html")
 
     else: # user is logged in
+
+        # TODO this is getting repetitive, any way to optimize?
         chessGames = pgdb.getChessGames(session.get('username'))
         tttGames = pgdb.getTttGames(session.get('username'))
+        quadradiusGames = pgdb.getQuadradiusGames(session.get('username'))
         payload = {
             "username": session.get('username'),
             "chessGames": chessGames,
             "tttGames": tttGames,
-            "deployVersion": appVersion
+            "quadradiusGames": quadradiusGames,
+            "deployVersion": deployVersion
         }
         payload = json.dumps(payload, default=str)
         return render_template("home.html", payload=payload)
 
 
-@app.route('/games/chess/<gameid>')
-def chessGame(gameid):
-    game = pgdb.getChessGame(gameid)
+@app.route('/games/chess/<gameId>')
+def chessGame(gameId):
+    game = pgdb.getChessGame(gameId)
 
     if game == None:
         return "game with that ID was not found"#render_template("home.html", alert="Game could not be retrieved from database.")
@@ -87,25 +95,23 @@ def chessGame(gameid):
         "userColor": userColor,
         "enemyColor": enemyColor,
         "yourTurn": game.player_turn == session.get('username'),
-        "deployVersion": appVersion
+        "deployVersion": deployVersion
     }
     payload = json.dumps(payload, default=str)
 
     return render_template("chessGame.html", payload=payload)
 
-@app.route("/games/quadradius/<gameid>")
-def quadGame(gameid):
-    # TODO: configure database storage of quadradius objects (seems like a whole issue itself)
-    #game = pgdb.getQuadGame(gameId)
+@app.route("/games/quadradius/<gameId>")
+def quadGame(gameId):
+    game = pgdb.getQuadradiusGame(gameId)
     payload = {
-        "deployVersion": "DEV",
-        # "wsBaseUrl": wsBaseUrl,
-        # "game": vars(game),
-        "boardstate": json.loads(open('resources/initialQuadLayout.json', 'r').read())
-        # "username": session.get('username'), #can be null if not logged in
-        # "userId": session.get('userId'),
-        # "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
-        # "yourTurn": game.player_turn == session.get('username')
+        "deployVersion": deployVersion,
+        "wsBaseUrl": wsBaseUrl,
+        "game": vars(game),
+        "boardstate": json.loads(open('resources/initialQuadLayout.json', 'r').read()), # TODO quad development: pull from game object instead
+        "username": session.get('username'), #can be null if not logged in
+        "userId": session.get('userId')
+        # "yourTurn": game.player_turn == session.get('username') # TODO this has not been added in the db yet
     }
 
     # print(payload)
@@ -114,9 +120,9 @@ def quadGame(gameid):
     return render_template("quadGame.html", payload=payload)
 
 
-@app.route('/games/ttt/<gameid>')
-def tttGame(gameid):
-    game = pgdb.getTttGame(gameid)
+@app.route('/games/ttt/<gameId>')
+def tttGame(gameId):
+    game = pgdb.getTttGame(gameId)
     if game == None: 
         return "No game found with that ID."
     payload = {
@@ -129,7 +135,7 @@ def tttGame(gameid):
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
         "players": [game.x_player, game.o_player],
         "yourTurn": game.player_turn == session.get('username'),
-        "deployVersion": appVersion
+        "deployVersion": deployVersion
     }
     payload = json.dumps(payload, default=str)
     return render_template("tttGame.html", payload=payload)
@@ -192,7 +198,7 @@ def logout():
 @app.route("/creategame", methods=["POST"])
 def createGame():
 
-    # TODO refactoring:
+    # TODO refactoring /creategame into smaller subroutines
     # bad input handling can be handled outside this file
     # game_type should be a match/case statement with subfunctions in other files
     # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
@@ -241,6 +247,12 @@ def createGame():
         game = TttGame.manualCreate(x_player, o_player)
 
         pgdb.createTttGame(game)
+
+    elif game_type == "Quadradius":
+        players = [session['username'], opponent_name]
+        random.shuffle(players)
+        game = QuadradiusGame.manualCreate(players[0], players[1])
+        pgdb.createQuadradiusGame(game)
 
     return redirect('/')
 

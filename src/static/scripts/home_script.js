@@ -1,4 +1,4 @@
-/* contains all JS, react or otherwise, that creates and maintains the home.html template. */
+/* Script to build the home.html template. */
 
 'use strict';
 
@@ -7,8 +7,10 @@ import { createRoot } from 'react-dom/client';
 import { SiteHeader } from './CommonComponents';
 import styled from 'styled-components';
 
-var chessGames = payload.chessGames;
 var username = payload.username;
+
+var quadradiusGames = payload.quadradiusGames;
+var chessGames = payload.chessGames;
 var tttGames = payload.tttGames;
 
 const GameDiv = styled.div`
@@ -24,6 +26,32 @@ const GameDiv = styled.div`
 
 function openGame(gameId, gameType){
 	window.location.href = "/games/" + gameType + "/" + gameId;
+}
+
+function QuadradiusGameList (props) {
+	return quadradiusGames
+	.filter(game => game[6] == props.completed)
+	.map(game => 
+		<GameDiv className="quadradiusGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "quadradius")}>
+			{"Vs. " + (game[1] === username ? game[2] : game[1])}
+		</GameDiv>
+	);
+}
+
+function QuadradiusGames (props) {
+
+	React.useEffect(() => enableOnClick("Quadradius"), []);
+
+	return (
+		<div>
+			<h4>Quadradius Games:</h4>			
+			<QuadradiusGameList completed={false}/>
+			Show Past Games? <input type="checkbox" id="viewPastQuadradiusGames"/>
+			<div id="pastQuadradiusGames">
+				<QuadradiusGameList completed={true}/>
+			</div>
+		</div>
+	);
 }
 
 function ChessGameList (props) {
@@ -96,7 +124,7 @@ function TttGames (props) {
 
 
 
-const gameTypes = ["Chess", "Tic-Tac-Toe"]; 
+const gameTypes = ["Chess", "Tic-Tac-Toe", "Quadradius"]; 
 
 const jsxGT = gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>);
 
@@ -117,6 +145,7 @@ var page = (
 			<input type="submit" value="Create"/>
 		</form>
 
+		<QuadradiusGames/>
 		<ChessGames/>
 		<TttGames/>
 
