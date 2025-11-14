@@ -39,7 +39,7 @@ function QuadRow({ rowIndex, rowData }) {
 
 function QuadBoard(){
 
-    const [boardstate, setBoardstate] = React.useState(payload.boardstate);
+    const [boardstate, setBoardstate] = React.useState(payload.game.boardstate);
 
     const [{isOver, _}, dropRef] = useDrop(() => ({
         accept: 'Torus',
@@ -103,7 +103,7 @@ var page = (
         {/* rest of the page */}
         <div id="quadPlayArea"> 
             <DndProvider backend={HTML5Backend}>
-                <QuadBoard boardstate={payload.boardstate}/>
+                <QuadBoard />
             </DndProvider>
             <p>Status: <span id="status"></span></p>
         </div>

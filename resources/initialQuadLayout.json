@@ -2,7 +2,7 @@
     [
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -11,7 +11,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -20,7 +20,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -29,7 +29,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -38,7 +38,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -47,7 +47,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -56,7 +56,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -65,7 +65,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -74,7 +74,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -83,7 +83,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -94,7 +94,7 @@
     [
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -103,7 +103,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -112,7 +112,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -121,7 +121,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -130,7 +130,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -139,7 +139,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -148,7 +148,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -157,7 +157,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -166,7 +166,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -175,7 +175,7 @@
         },
         {
             "torus": { 
-                "color": "blue",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -185,12 +185,12 @@
     ],
     [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
     [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
-    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation`": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
+    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
     [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
     [
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -199,7 +199,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -208,7 +208,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -217,7 +217,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -226,7 +226,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -235,7 +235,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -244,7 +244,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -253,7 +253,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -262,7 +262,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -271,7 +271,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -282,7 +282,7 @@
     [
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -291,7 +291,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -300,7 +300,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -309,7 +309,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -318,7 +318,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -327,7 +327,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -336,7 +336,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -345,7 +345,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -354,7 +354,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
@@ -363,7 +363,7 @@
         },
         {
             "torus": { 
-                "color": "red",
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []

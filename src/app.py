@@ -108,7 +108,6 @@ def quadGame(gameId):
         "deployVersion": deployVersion,
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
-        "boardstate": json.loads(open('resources/initialQuadLayout.json', 'r').read()), # TODO quad development: pull from game object instead
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId')
         # "yourTurn": game.player_turn == session.get('username') # TODO this has not been added in the db yet

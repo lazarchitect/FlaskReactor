@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useDrag } from 'react-dnd';
+import { TorusCoreGradient } from './quadUtils';
 
 export function Torus ({ torus, row, col }) {
     
@@ -14,25 +15,27 @@ export function Torus ({ torus, row, col }) {
         }),
         []
     );
-
-    // TODO edit torus image based on team color (and eventually, powerups).
-    // can use SVG for this? or <canvas> pixel manipulation for the colors / adding elements, layers, etc
-    
     
     return <div className='torus' style={{cursor: "move", opacity: opacity}} ref={dragRef}>
-        <TorusSVG />
+        <TorusSVG color={torus.color}/>
     </div>;
 }
 
 
-function TorusSVG () {
+function TorusSVG ({ color }) {
+
+    let isPlayer1Torus = color == payload.game.player1_color;
+    let colorGradientId = "torusCoreGradient" + (isPlayer1Torus ? "1" : "2");
+    let colorGradientVal = "url(#" + colorGradientId + ")";
 
     return (
         <svg className='torusSVG' version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <circle className='torusSVGCircle' />
+            <TorusCoreGradient id="torusCoreGradient1" color={payload.game.player1_color} />
+            <TorusCoreGradient id="torusCoreGradient2" color={payload.game.player2_color} />
+            <circle className='torusSVGBody' />
             <path className='torusSVGPath torusSVGPathTop' />
             <path className='torusSVGPath torusSVGPathBottom' />
+            <circle className='torusSVGCore' fill={colorGradientVal} />
         </svg>
     );
-
 }
