@@ -2,6 +2,17 @@
 
 create schema if not EXISTS flaskreactor;
 
+create table flaskreactor.quadradius_games (
+    id text PRIMARY KEY,
+    player1 text,
+    player2 text,
+    player1_color text,
+    player2_color text,
+    boardstate JSON,
+    completed boolean
+    -- todo add time_started, last_move, time_ended, and winner fields here, in QuadGame class file, and in DB itself.
+);
+
 create table flaskreactor.chess_games (
     id text PRIMARY KEY,
     white_player text,
