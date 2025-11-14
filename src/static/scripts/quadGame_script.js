@@ -41,7 +41,7 @@ function QuadBoard(){
 
     const [boardstate, setBoardstate] = React.useState(payload.game.boardstate);
 
-    const [{isOver, _}, dropRef] = useDrop(() => ({
+    const [{isOver, _}, dropRef, dropPreviewRef] = useDrop(() => ({ // TODO have the torus display on drop target hologram when hovering the drop
         accept: 'Torus',
         collect: (monitor) => ({
             isOver: monitor.isOver(),
