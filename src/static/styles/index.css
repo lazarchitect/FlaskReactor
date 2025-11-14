@@ -159,16 +159,44 @@ body {
 }
 
 .torus {
-    background-image: url('../images/quadradius/torus_default.png');
-    background-size: 92% 92%; /* visual image populates in the background of the div element */
-    height: 92%; /* torus element itself should fill most of the tile div containing it */
-    width: 92%;
-    top: 4.5%; /* specific proportions used to line up with tile art */
-    left: 1%;
+    height: 82%;
+    width: 78%;
+    top: 6.5%; /* specific proportions used to line up with tile art */
+    left: 4.5%;
     background-repeat: no-repeat;
     position: relative;
     border-radius: 50%;
     z-index: 2;
+}
+
+.torusSVG {
+    object-view-box: 0 0 50 50;
+    height: 100%;
+    width: 100%;
+}
+
+.torusSVGCircle {
+    fill: rgb(150, 150, 150);
+    cx: 50%; /*cx and cy dictate location of circle's origin */
+    cy: 50%;
+    r: 47%; /* radius */
+}
+
+.torusSVGPath {
+    fill: transparent;
+    stroke: black;
+    stroke-width: 3px;
+    stroke-opacity: 1;
+}
+
+/* A rx ry x-axis-rotation large-arc-flag sweep-flag x y */
+
+.torusSVGPathTop {
+    d: path("M 6,26 C 6,15 15,6 24,6");
+}
+
+.torusSVGPathBottom {
+    d: path("M 24,45 C 31,45 43,38 43,26");
 }
 
 #messagebox { /* overall container */
