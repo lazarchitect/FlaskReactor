@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useDrag } from 'react-dnd';
 import { TorusCoreGradient } from './quadUtils';
 
@@ -24,14 +24,22 @@ export function Torus ({ torus, row, col }) {
 
 function TorusSVG ({ color }) {
 
+    let [hover, setHover] = useState(false);
+
     let isPlayer1Torus = color == payload.game.player1_color;
-    let colorGradientId = "torusCoreGradient" + (isPlayer1Torus ? "1" : "2");
+    let colorGradientId = "torusCore" + (hover ? "Hover" : "") + "Gradient" + (isPlayer1Torus ? "1" : "2");
     let colorGradientVal = "url(#" + colorGradientId + ")";
 
     return (
-        <svg className='torusSVG' version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <svg className='torusSVG' 
+        onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} 
+        version="1.1" xmlns="http://www.w3.org/2000/svg">
+
             <TorusCoreGradient id="torusCoreGradient1" color={payload.game.player1_color} />
             <TorusCoreGradient id="torusCoreGradient2" color={payload.game.player2_color} />
+            <TorusCoreGradient id="torusCoreHoverGradient1" color={payload.game.player1_color + "_highlight"} />
+            <TorusCoreGradient id="torusCoreHoverGradient2" color={payload.game.player2_color + "_highlight"} />
+
             <circle className='torusSVGBody' />
             <path className='torusSVGPath torusSVGPathTop' />
             <path className='torusSVGPath torusSVGPathBottom' />

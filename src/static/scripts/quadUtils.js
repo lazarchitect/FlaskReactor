@@ -3,15 +3,15 @@ import React from "react";
 
 // TODO move to QuadConsts?
 const playerColors = {
-    "red": ["#e72424ff", "#6e0b0bff"], 
-    "blue": ["#0000ff", "#191983ff"],
-    "green": ["#0fda41ff", "#08681cff"],
-    "cyan": ["#33cef5ff", "#038596ff"],
-    "pink": ["#d87debff", "#b409caff"],
-    "purple": ["#6f00ffff", "#550b80ff"],
-    "teal": ["#36ddd5ff", "#036370ff"],
-    "yellow": ["#cbe635ff", "#90a000ff"],
-    "orange": ["#eeb03dff", "#a76d02ff"]
+    "red": ["#e72424ff", "#6e0b0bff"], "red_highlight": ["#FF0000", "#CC0000"],
+    "blue": ["#0000ff", "#191983ff"], "blue_highlight": ["#4444FF", "#0000FF"],
+    "green": ["#0fda41ff", "#08681cff"], "green_highlight": [],
+    "cyan": ["#33cef5ff", "#038596ff"],  "cyan_highlight": [],
+    "pink": ["#d87debff", "#b409caff"],  "pink_highlight": [],
+    "purple": ["#6f00ffff", "#550b80ff"],  "purple_highlight": [],
+    "teal": ["#36ddd5ff", "#036370ff"],  "teal_highlight": [],
+    "yellow": ["#cbe635ff", "#90a000ff"],  "yellow_highlight": [],
+    "orange": ["#eeb03dff", "#a76d02ff"],  "orange_highlight": []
 
     // can add more colors (bronze?) or like, dual colors, or other gradient types
 };
