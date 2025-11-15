@@ -181,7 +181,10 @@ def signup():
     userid = str(generateId())
     ws_token = str(generateId())[:8]
 
-    pgdb.createUser(username, password_hash, email, userid, ws_token)
+    quad_color_pref = "red" # initial defaults
+    quad_color_backup = "blue"
+
+    pgdb.createUser(username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup)
     pgdb.createStat(userid)
 
     session['loggedIn'] = True
@@ -202,9 +205,11 @@ def createGame():
     # game_type should be a match/case statement with subfunctions in other files
     # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
 
+    player_name = session['username']
+
     game_type = request.form['gameType']
 
-    opponent_name = request.form['opponent']
+    opponent_name = request.form['opponent'].strip()
 
     if(session.get('loggedIn') == False):
         return "not logged in?"#shouldnt happen
@@ -212,7 +217,7 @@ def createGame():
     if(opponent_name == ""):
         return "enter a name, doofbury."
 
-    if(session.get('username') == opponent_name):
+    if(player_name == opponent_name):
         return "you can't vs yourself, bubso."
 
     opponentExists = pgdb.userExists(opponent_name)
@@ -223,12 +228,12 @@ def createGame():
         color = random.choice(['white', 'black'])
 
         if(color == "white"):
-            white_player = session.get('username')
+            white_player = player_name
             black_player = opponent_name
 
         else:
             white_player = opponent_name
-            black_player = session.get('username')
+            black_player = player_name
 
         game = ChessGame.manualCreate(white_player, black_player)
 
@@ -237,10 +242,10 @@ def createGame():
     elif game_type == "Tic-Tac-Toe":
         role = random.choice(['X', 'O'])
         if(role == 'X'):
-            x_player = session.get('username')
+            x_player = player_name
             o_player = opponent_name
         else:
-            o_player = session.get('username')
+            o_player = player_name
             x_player = opponent_name
 
         game = TttGame.manualCreate(x_player, o_player)
@@ -248,9 +253,27 @@ def createGame():
         pgdb.createTttGame(game)
 
     elif game_type == "Quadradius":
-        players = [session['username'], opponent_name]
+
+        playerColorPrefs = pgdb.getPreferredColors(player_name)
+        opponentColorPrefs = pgdb.getPreferredColors(opponent_name)
+        
+        if playerColorPrefs[0] != opponentColorPrefs[0]:
+            player_color = playerColorPrefs[0]
+            opponent_color = opponentColorPrefs[0]
+        else:
+            if random.choice([1, 2]) == 1:
+                player_color = playerColorPrefs[0]
+                opponent_color = opponentColorPrefs[1]
+            else:
+                player_color = playerColorPrefs[1]
+                opponent_color = opponentColorPrefs[0]
+
+        players = [[player_name, player_color], [opponent_name, opponent_color]]
         random.shuffle(players)
-        game = QuadradiusGame.manualCreate(players[0], players[1])
+
+        print(players)
+
+        game = QuadradiusGame.manualCreate(players[0][0], players[1][0], players[0][1], players[1][1]) # users will later be able to choose their preferred color and a backup
         pgdb.createQuadradiusGame(game)
 
     return redirect('/')
