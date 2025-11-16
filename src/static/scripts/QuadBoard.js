@@ -10,7 +10,7 @@ export function QuadBoard(){
 
     const [{isOver}, dropRef] = useDrop(() => ({
         accept: 'Torus',
-        collect: (monitor, props) => ({
+        collect: (monitor) => ({
             isOver: monitor.isOver()
         }),
         drop: ((item, monitor) => {

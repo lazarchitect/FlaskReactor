@@ -7,7 +7,7 @@ import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { SiteHeader } from './CommonComponents';
-import { QuadBoard } from './Quadboard';
+import { QuadBoard } from './QuadBoard';
 
 var page = (
 	<div id="reactRoot">
