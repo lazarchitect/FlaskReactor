@@ -40,14 +40,8 @@ export function QuadBoard(){
                return;
             }
 
-            console.log("dragged torus: " + JSON.stringify(item.torus));
-            console.log("targetTile torus: " + JSON.stringify(targetTile.torus));
-
-            delete boardstate[dropRow][dropCol].torus;
-            boardstate[dropRow][dropCol].torus = item.torus;
-            delete boardstate[item.dragRow][item.dragCol].torus;
-
-            console.log(boardstate);
+            targetTile.torus = sourceTile.torus;
+            delete sourceTile.torus;
 
             setBoardstate(boardstate);
 

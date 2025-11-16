@@ -17,6 +17,3 @@ export function QuadTile ({ rowIndex, columnIndex, tileData }) {
 
     return <div id={tileId} className="quadTile"></div>;
 }
-
-
-
