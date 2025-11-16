@@ -27,7 +27,7 @@ function TorusSVG ({ color }) {
     let [hover, setHover] = useState(false);
 
     let isPlayer1Torus = color == payload.game.player1_color;
-    let colorGradientId = "torusCore" + (hover ? "Hover" : "") + "Gradient" + (isPlayer1Torus ? "1" : "2");
+    let colorGradientId = "torusCoreGradient" + (isPlayer1Torus ? "1" : "2") + (hover ? "Highlight" : "");
     let colorGradientVal = "url(#" + colorGradientId + ")";
 
     return (
@@ -35,10 +35,12 @@ function TorusSVG ({ color }) {
         onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} 
         version="1.1" xmlns="http://www.w3.org/2000/svg">
 
-            <TorusCoreGradient id="torusCoreGradient1" color={payload.game.player1_color} />
-            <TorusCoreGradient id="torusCoreGradient2" color={payload.game.player2_color} />
-            <TorusCoreGradient id="torusCoreHoverGradient1" color={payload.game.player1_color + "_highlight"} />
-            <TorusCoreGradient id="torusCoreHoverGradient2" color={payload.game.player2_color + "_highlight"} />
+            <defs>
+                <TorusCoreGradient id="torusCoreGradient1" color={payload.game.player1_color} />
+                <TorusCoreGradient id="torusCoreGradient2" color={payload.game.player2_color} />
+                <TorusCoreGradient id="torusCoreGradient1Highlight" color={payload.game.player1_color + "Highlight"} />
+                <TorusCoreGradient id="torusCoreGradient2Highlight" color={payload.game.player2_color + "Highlight"} />
+            </defs>
 
             <circle className='torusSVGBody' />
             <path className='torusSVGPath torusSVGPathTop' />
