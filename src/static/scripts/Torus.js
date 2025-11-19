@@ -16,7 +16,7 @@ export function Torus ({ torus, row, col }) {
         []
     );
     
-    return <div className='torus' style={{cursor: "move", opacity: opacity}} ref={dragRef}>
+    return <div className='torus' style={{cursor: "grab", opacity: opacity}} ref={dragRef}>
         <TorusSVG color={torus.color}/>
     </div>;
 }
