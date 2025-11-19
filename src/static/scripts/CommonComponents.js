@@ -8,7 +8,7 @@ export function SiteHeader (props) {
 	return (
 		<div id="siteHeader">
 			<span id="headerLeft">
-				Welcome to FlaskReactor! (Version {props.version})
+				<a href="/">FlaskReactor</a> (Version {props.version})
 			</span>
 			<span id="headerRight">
 

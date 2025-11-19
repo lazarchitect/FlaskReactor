@@ -4,56 +4,58 @@ create schema if not EXISTS flaskreactor;
 
 create table flaskreactor.quadradius_games (
     id text PRIMARY KEY,
-    player1 text,
-    player2 text,
-    player1_color text,
-    player2_color text,
-    boardstate JSON,
-    completed boolean
+    player1 text NOT NULL,
+    player2 text NOT NULL,
+    player1_color text NOT NULL,
+    player2_color text NOT NULL,
+    boardstate JSON NOT NULL,
+    completed boolean NOT NULL
     -- todo add time_started, last_move, time_ended, and winner fields here, in QuadGame class file, and in DB itself.
 );
 
 create table flaskreactor.chess_games (
     id text PRIMARY KEY,
-    white_player text,
-    black_player text,
-    boardstate JSON,
-    completed boolean,
-    time_started timestamp,
+    white_player text NOT NULL,
+    black_player text NOT NULL,
+    boardstate JSON NOT NULL,
+    completed boolean NOT NULL,
+    time_started timestamp NOT NULL,
     last_move timestamp,
     time_ended timestamp,
-    player_turn text, -- username of active player
+    player_turn text NOT NULL, -- username of active player
     winner text, 
     notation text,
-    whitekingmoved boolean,
-    blackkingmoved boolean,
-    wqr_moved boolean,
-    wkr_moved boolean,
-    bqr_moved boolean,
-    bkr_moved boolean,
+    whitekingmoved boolean NOT NULL,
+    blackkingmoved boolean NOT NULL,
+    wqr_moved boolean NOT NULL,
+    wkr_moved boolean NOT NULL,
+    bqr_moved boolean NOT NULL,
+    bkr_moved boolean NOT NULL,
     pawn_leapt boolean,
     pawn_leap_col int
 );
 
 create table flaskreactor.tictactoe_games (
     id text PRIMARY KEY,
-    x_player text,
-    o_player text,
+    x_player text NOT NULL,
+    o_player text NOT NULL,
     completed boolean,
-    time_started timestamp,
+    time_started timestamp NOT NULL,
     last_move timestamp,
     time_ended timestamp,
-    player_turn text,
+    player_turn text NOT NULL,
     winner text,
-    boardstate char[]
+    boardstate char[] NOT NULL
 );
 
 create table flaskreactor.users (
-    name text,
+    name text NOT NULL,
     email text,
-    id text,
-    password_hash text,
-    ws_token text
+    id text  NOT NULL,
+    password_hash text NOT NULL,
+    ws_token text NOT NULL,
+    quad_color_pref text NOT NULL,
+    quad_color_backup text NOT NULL;
 );
 
 create table flaskreactor.stats (

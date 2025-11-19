@@ -17,7 +17,7 @@ relation = "flaskreactor"
 sql = {
 
         #General
-        "createUser": "INSERT INTO " + relation + ".users (name, password_hash, email, id, ws_token) VALUES (%s, %s, %s, %s, %s)",
+        "createUser": "INSERT INTO " + relation + ".users (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup) VALUES (%s, %s, %s, %s, %s, %s, %s)",
         "createStat": "INSERT INTO " + relation + ".stats (userid) VALUES (%s)",
         "getUser": "SELECT * FROM " + relation + ".users WHERE name=%s",
         "checkLogin": "SELECT * FROM " + relation + ".users WHERE name=%s AND password_hash=%s",
@@ -26,6 +26,7 @@ sql = {
         "createQuadradiusGame": "INSERT INTO " + relation + ".quadradius_games (id, player1, player2, player1_color, player2_color, boardstate, completed) values (%s, %s, %s, %s, %s, %s, %s)",
         "getQuadradiusGames": "SELECT * FROM " + relation + ".quadradius_games WHERE player1 = %s OR player2 = %s",
         "getQuadradiusGame": "SELECT * FROM " + relation + ".quadradius_games WHERE id = %s",
+        "getPreferredColors": "SELECT quad_color_pref, quad_color_backup FROM " + relation + ".users where name=%s",
 
         # Chess
         "getCompletedChessGames": "SELECT * FROM " + relation + ".chess_games where completed=true AND (white_player=%s OR black_player=%s)",
@@ -141,9 +142,9 @@ class Pgdb:
         self.__execute(query, values)
         return self.cursor.fetchone() != None
 
-    def createUser(self, username, password_hash, email, userid, ws_token):
+    def createUser(self, username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup):
         query = sql['createUser']
-        values = [username, password_hash, email, userid, ws_token]
+        values = [username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup]
         self.__execute(query, values)
         self.conn.commit()
 
@@ -178,6 +179,12 @@ class Pgdb:
             return None
         return QuadradiusGame.dbLoad(record)
 
+    def getPreferredColors(self, user):
+        query = sql['getPreferredColors']
+        values = (user,)
+        self.__execute(query, values)
+        return self.cursor.fetchone()
+        
     ### Chess
 
     def createChessGame(self, g):

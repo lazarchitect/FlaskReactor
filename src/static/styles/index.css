@@ -175,11 +175,12 @@ body {
     width: 100%;
 }
 
-.torusSVGCircle {
+.torusSVGBody {
     fill: rgb(150, 150, 150);
     cx: 50%; /*cx and cy dictate location of circle's origin */
     cy: 50%;
     r: 47%; /* radius */
+    /* TODO why is radius not 50% ? maybe .torus width should be lower? */
 }
 
 .torusSVGPath {
@@ -197,6 +198,12 @@ body {
 
 .torusSVGPathBottom {
     d: path("M 24,45 C 31,45 43,38 43,26");
+}
+
+.torusSVGCore {
+    cx: 50%;
+    cy: 50%;
+    r: 20%;
 }
 
 #messagebox { /* overall container */

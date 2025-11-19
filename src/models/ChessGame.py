@@ -18,7 +18,7 @@ class ChessGame:
         g.id = generateId()
         g.white_player = white_player
         g.black_player = black_player
-        g.boardstate = json.loads(open('resources/initialLayout.json', 'r').read())
+        g.boardstate = json.loads(open('resources/initialChessLayout.json', 'r').read())
         g.completed = False
         g.time_started = datetime.now()
         g.last_move = g.time_started
