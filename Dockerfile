@@ -8,6 +8,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 # Turns off buffering for easier container logging
 ENV PYTHONUNBUFFERED=1
 
+# tells Docker to look in the right places for custom modules
+ENV PYTHONPATH=/app
+
 WORKDIR /app
 COPY . /app
 
