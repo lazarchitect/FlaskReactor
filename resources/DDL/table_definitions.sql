@@ -1,6 +1,13 @@
 
+-- to spin a new FlaskReactor DB using the latest changes:
+-- create a database called 'test', run the following command alone, and then run the rest of the file.
 
-create schema if not EXISTS flaskreactor;
+DROP DATABASE IF EXISTS postgres WITH (FORCE);
+
+-- following line will delete all data, use with intent
+--drop schema if exists flaskreactor cascade;
+
+create schema flaskreactor;
 
 create table flaskreactor.quadradius_games (
     id text PRIMARY KEY,
@@ -25,12 +32,12 @@ create table flaskreactor.chess_games (
     player_turn text NOT NULL, -- username of active player
     winner text, 
     notation text,
-    whitekingmoved boolean NOT NULL,
-    blackkingmoved boolean NOT NULL,
-    wqr_moved boolean NOT NULL,
-    wkr_moved boolean NOT NULL,
-    bqr_moved boolean NOT NULL,
-    bkr_moved boolean NOT NULL,
+    whitekingmoved boolean NOT NULL DEFAULT false,
+    blackkingmoved boolean NOT NULL DEFAULT false,
+    wqr_moved boolean NOT NULL DEFAULT false,
+    wkr_moved boolean NOT NULL DEFAULT false,
+    bqr_moved boolean NOT NULL DEFAULT false,
+    bkr_moved boolean NOT NULL DEFAULT false,
     pawn_leapt boolean,
     pawn_leap_col int
 );
@@ -55,7 +62,7 @@ create table flaskreactor.users (
     password_hash text NOT NULL,
     ws_token text NOT NULL,
     quad_color_pref text NOT NULL,
-    quad_color_backup text NOT NULL;
+    quad_color_backup text NOT NULL
 );
 
 create table flaskreactor.stats (
@@ -75,7 +82,5 @@ create table flaskreactor.messages (
     content text NOT NULL,
     username text NOT NULL
 );
-
-DROP DATABASE IF EXISTS postgres WITH (FORCE);
 
 -- you will need to edit pg_hba.conf to use method 'password' or 'trust' for local ipv4 and 6 connections. adding a new entry does not work AFAIK.
