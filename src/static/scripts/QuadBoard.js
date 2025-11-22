@@ -15,23 +15,8 @@ export function QuadBoard(){
         }),
         drop: ((item, monitor) => {
 
-
-            // TODO extract to helper method?
-            let rec = document.getElementById("quadboard").getBoundingClientRect();
-            let mousePos = monitor.getClientOffset();
-            let boardStartX = rec.left + window.scrollX;
-            let boardStartY = rec.top + window.scrollY;
-            
-            let [boardClickX, boardClickY] = [mousePos.x - boardStartX, mousePos.y - boardStartY];
-
-            let cellWidth = rec.width / 10;
-            let dropCol = Math.floor(boardClickX / cellWidth);
-
-            let cellHeight = rec.height / 8;
-            let dropRow = Math.floor(boardClickY / cellHeight);
-
-            let targetTile = boardstate[dropRow][dropCol];
             let sourceTile = boardstate[item.dragRow][item.dragCol];
+            let targetTile = tileAtMouse(boardstate, monitor.getClientOffset());
 
             if (
                 ("torus" in targetTile && targetTile.torus.color == item.torus.color) // target is occupied with ally 
@@ -45,7 +30,17 @@ export function QuadBoard(){
 
             setBoardstate(boardstate);
 
-        })
+        }),
+        hover: (item, monitor) => {
+
+            let hoverTile = tileAtMouse(boardstate, monitor.getClientOffset());
+            let hoveredTileTorus = hoverTile.torus;
+            if (hoveredTileTorus != undefined && hoveredTileTorus != null) {
+                // preview torus drop if valid move
+            }
+
+            // console.log(tileAtMouse(boardstate, monitor.getClientOffset()));
+        }
     }));
     
     let rowArray = [];
@@ -69,4 +64,21 @@ function QuadRow({ rowIndex, rowData }) {
     return tileArray;
 }
 
+// could split up into coordsAtMouse and tileAtCoords
+function tileAtMouse(boardstate, mousePos) {
+    let rec = document.getElementById("quadboard").getBoundingClientRect();
+    let boardStartX = rec.left + window.scrollX;
+    let boardStartY = rec.top + window.scrollY;
+    
+    let [boardClickX, boardClickY] = [mousePos.x - boardStartX, mousePos.y - boardStartY];
 
+    let cellHeight = rec.height / 8;
+    let dropRow = Math.floor(boardClickY / cellHeight);
+
+    let cellWidth = rec.width / 10;
+    let dropCol = Math.floor(boardClickX / cellWidth);
+
+    return boardstate[dropRow][dropCol];
+
+
+}
