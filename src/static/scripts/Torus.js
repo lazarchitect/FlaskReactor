@@ -13,7 +13,7 @@ export function Torus ({ torus, row, col }) {
                 opacity: monitor.isDragging() ? 0.6 : 1
             })
         }),
-        []
+        [torus] // react drag systems update their own records when this changes
     );
     
     return <div className='torus' style={{cursor: "grab", opacity: opacity}} ref={dragRef}>
