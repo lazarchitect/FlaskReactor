@@ -169,6 +169,11 @@ body {
     z-index: 2;
 }
 
+.previewTorus {
+    height: 50px;
+    width: 50px;
+}
+
 .torusSVG {
     object-view-box: 0 0 50 50;
     height: 100%;

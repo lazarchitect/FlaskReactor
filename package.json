@@ -10,7 +10,8 @@
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.1.0",
-    "styled-components": "^6.1.19"
+    "styled-components": "^6.1.19",
+    "use-sound": "^5.0.0"
   },
   "scripts": {
     "build": "webpack"
