@@ -17,9 +17,16 @@ const playerColors = {
 };
 
 
-export function TorusCoreGradient ({ color, id }) {
+export function TorusCoreLinearGradient ({ color, id }) {
     return <linearGradient id={id} x1="0" x2="1" y1="0" y2="1">
             <stop className="stop1" offset="0%" stopColor={playerColors[color][0]} />
             <stop className="stop2" offset="100%" stopColor={playerColors[color][1]} />
         </linearGradient>;
+}
+
+export function TorusCoreRadialGradient ({ color, id }) {
+    return <radialGradient id={id} >
+            <stop className="stop1" offset="0%" stopColor={playerColors[color][0]} />
+            <stop className="stop2" offset="100%" stopColor={playerColors[color][1]} />
+        </radialGradient>;
 }

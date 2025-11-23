@@ -8,6 +8,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { SiteHeader } from './CommonComponents';
 import { QuadBoard } from './QuadBoard';
+import { TorusDragLayer } from './TorusDragLayer';
 
 var page = (
 	<div id="reactRoot">
@@ -19,6 +20,7 @@ var page = (
         <div id="quadPlayArea"> 
             <DndProvider backend={HTML5Backend}>
                 <QuadBoard />
+                <TorusDragLayer />
             </DndProvider>
             <p>Status: <span id="status"></span></p>
         </div>
