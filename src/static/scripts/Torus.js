@@ -1,7 +1,8 @@
 
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
-import { TorusCoreGradient } from './quadUtils';
+import { TorusSVG } from './TorusSVG';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 
 export function Torus ({ torus, row, col }) {
     
@@ -22,30 +23,13 @@ export function Torus ({ torus, row, col }) {
 }
 
 
-function TorusSVG ({ color }) {
-
-    let [hover, setHover] = useState(false);
-
-    let isPlayer1Torus = color == payload.game.player1_color;
-    let colorGradientId = "torusCoreGradient" + (isPlayer1Torus ? "1" : "2") + (hover ? "Highlight" : "");
-    let colorGradientVal = "url(#" + colorGradientId + ")";
-
-    return (
-        <svg className='torusSVG' 
-        onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} 
-        version="1.1" xmlns="http://www.w3.org/2000/svg">
-
-            <defs>
-                <TorusCoreGradient id="torusCoreGradient1" color={payload.game.player1_color} />
-                <TorusCoreGradient id="torusCoreGradient2" color={payload.game.player2_color} />
-                <TorusCoreGradient id="torusCoreGradient1Highlight" color={payload.game.player1_color + "Highlight"} />
-                <TorusCoreGradient id="torusCoreGradient2Highlight" color={payload.game.player2_color + "Highlight"} />
-            </defs>
-
-            <circle className='torusSVGBody' />
-            <path className='torusSVGPath torusSVGPathTop' />
-            <path className='torusSVGPath torusSVGPathBottom' />
-            <circle className='torusSVGCore' fill={colorGradientVal} />
-        </svg>
+    // following code removes default browser Torus image during drag. 
+    useEffect(
+        () => {dragPreview(getEmptyImage(), { captureDraggingState: false });}, 
+        [dragPreview]
     );
+
+    return <div className='torus' style={{ cursor: "grab", opacity: opacity }} ref={dragRef}>
+        <TorusSVG color={torus.color} isRadiating={false}/>
+    </div>;
 }
