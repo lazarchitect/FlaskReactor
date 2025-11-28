@@ -8,7 +8,7 @@ module.exports = {
   entry: () => {
       const entries = {};
       glob.sync("./src/**/*.js").forEach(file => {
-        const name = file.replace(scriptsDir, "").replace(".js", "");   
+        const name = file.replace(scriptsDir, "").replace(".js", "");
         if(!name.includes("dist")) {
             entries[name] = "./" + file;
         }
@@ -19,7 +19,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  output: { 
+  output: {
     path: path.resolve("src/static/scripts", "dist"),
     clean: true
   },
