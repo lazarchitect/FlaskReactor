@@ -27,6 +27,11 @@ export function TorusDragLayer (props) {
 		height: "100%",
 	};
 
+	if (item.torus == undefined) {
+		console.log(JSON.stringify(item));
+		return;
+	}
+
 	return (
 		<div style={layerStyles}>
 			<DragTorus color={item.torus.color} dragStyles={dragStyles} />

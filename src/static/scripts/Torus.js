@@ -32,7 +32,7 @@ export function Torus ({ torus, row, col }) {
 
     // following code removes default browser Torus image during drag. 
     useEffect(
-        () => {dragPreview(getEmptyImage(), { captureDraggingState: false });}, 
+        () => {dragPreview(getEmptyImage(), { captureDraggingState: true });}, // possibly causing a bit of lag?
         [dragPreview]
     );
 
