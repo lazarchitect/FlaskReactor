@@ -128,7 +128,7 @@ def tttGame(gameId):
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
         "ws_token": session.get('ws_token'),
-        "game_type": "ttt", # field used by common component 
+        "game_type": "ttt", # field used by common component
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
@@ -256,7 +256,7 @@ def createGame():
 
         playerColorPrefs = pgdb.getPreferredColors(player_name)
         opponentColorPrefs = pgdb.getPreferredColors(opponent_name)
-        
+
         if playerColorPrefs[0] != opponentColorPrefs[0]:
             player_color = playerColorPrefs[0]
             opponent_color = opponentColorPrefs[0]
