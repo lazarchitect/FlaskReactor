@@ -240,12 +240,15 @@ body {
     width: 40%;
     border: 2px solid white;
     border-radius: 15% / 50%;
+}
+
+#chatbox-indicator:hover {
     box-shadow: 2px 2px black;
 }
 
 #chatbox-indicator:active {
     box-shadow: none;
-    top: 22%;
+    top: 22;
     right: 6%;
 }
 
