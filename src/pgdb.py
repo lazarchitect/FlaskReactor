@@ -3,9 +3,10 @@ containing game data, users, and more."""
 
 import os
 from json import loads
-from psycopg2 import connect, InterfaceError, OperationalError
-from psycopg2.extras import DictCursor, Json
-from psycopg2.errors import InFailedSqlTransaction
+from psycopg import connect, InterfaceError, OperationalError
+from psycopg.rows import dict_row
+from psycopg.types.json import Json
+from psycopg.errors import InFailedSqlTransaction
 
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
@@ -87,12 +88,12 @@ class Pgdb:
         try:
             self.conn = connect(
                 host     = self.config['local_ip' if self.db_env=='local' else 'remote_ip'],
-                database = self.config['database'],
+                dbname   = self.config['database'],
                 user     = self.config['user'],
                 password = self.config['password']
             )
 
-            self.cursor = self.conn.cursor(cursor_factory=DictCursor)
+            self.cursor = self.conn.cursor(row_factory=dict_row)
 
         except OperationalError as oe:
             print(oe)
@@ -119,7 +120,7 @@ class Pgdb:
                 user     = self.config['user'],
                 password = self.config['password']
             )
-            self.cursor = self.conn.cursor(cursor_factory=DictCursor)
+            self.cursor = self.conn.cursor(row_factory=dict_row)
             self.__execute(query, values)
 
         except InFailedSqlTransaction: # type: ignore
@@ -135,6 +136,7 @@ class Pgdb:
         values = [username]
         self.__execute(query, values)
         return self.cursor.fetchone() # TODO use User.dbLoad() here and return that instead, see getChessGame below
+        # BIG CHANGE - psycopg 3 now returns this as a key-value dict instead of a tuple!
 
     def checkLogin(self, username, password_hash):
         query = sql['checkLogin']

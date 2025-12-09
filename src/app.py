@@ -152,11 +152,11 @@ def login():
     correctLogin = pgdb.checkLogin(username, password_hash) # TODO we query the DB three times here, can we improve?
     if(correctLogin):
         user_details = pgdb.getUser(username)
-        userId = user_details[2] # TODO build a User object instead of relying on the array returned from pgdb
+        userId = user_details['id'] # TODO build a User object instead of relying on the array returned from pgdb
         session['loggedIn'] = True
         session['username'] = username
         session['userId'] = userId
-        session['ws_token'] = user_details[4]
+        session['ws_token'] = user_details['ws_token']
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
