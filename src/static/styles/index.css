@@ -195,8 +195,6 @@ body {
     stroke-opacity: 1;
 }
 
-/* A rx ry x-axis-rotation large-arc-flag sweep-flag x y */
-
 .torusSVGPathTop {
     d: path("M 6,26 C 6,15 15,6 24,6");
 }
