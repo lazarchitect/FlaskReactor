@@ -4,7 +4,7 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
 import styled from 'styled-components';
 
 var username = payload.username;

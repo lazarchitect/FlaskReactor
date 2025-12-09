@@ -2,10 +2,12 @@
 
 import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
-import { SiteHeader, MessageBox } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
+import { Chatbox } from './commonComponents/Chatbox';
 import { Chessboard } from './chessboard';
 
-var isPlayer = payload.players.includes(payload.username);
+
+let isPlayer = payload.players.includes(payload.username);
 
 var page = (
 	<div id="reactRoot">
@@ -15,7 +17,7 @@ var page = (
             <p>Status: <span id="status"></span></p>
         </div>
         
-        {isPlayer && <MessageBox />}
+        {isPlayer && <Chatbox expanded={false} />}
         
     </div>
 );

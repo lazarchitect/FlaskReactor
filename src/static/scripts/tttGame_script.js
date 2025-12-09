@@ -1,6 +1,7 @@
 import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
-import { SiteHeader, MessageBox } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
+import { Chatbox } from './commonComponents/Chatbox';
 
 const gameId = payload.game.id;
 
@@ -195,7 +196,7 @@ var page = (
 			<TttBoard/>
 			<p>Status: <span id="status"></span></p>
 		</div>
-		{isPlayer && <MessageBox/>}
+		{isPlayer && <Chatbox/>}
 	</div>
 );
 

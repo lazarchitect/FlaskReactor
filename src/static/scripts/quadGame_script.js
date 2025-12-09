@@ -6,7 +6,8 @@ import { createRoot } from 'react-dom/client';
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { SiteHeader } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
+import { Chatbox } from './commonComponents/Chatbox';
 import { QuadBoard } from './QuadBoard';
 import { TorusDragLayer } from './TorusDragLayer';
 
@@ -24,7 +25,7 @@ var page = (
             </DndProvider>
             <p>Status: <span id="status"></span></p>
         </div>
-        
+        <Chatbox />
     </div>
 );
 
