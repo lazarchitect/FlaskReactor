@@ -17,7 +17,7 @@ export function Chatbox ( {expanded} ) {
     const [currentlyExpanded, setCurrentlyExpanded] = useState(expanded);
     
     const [chatLog, setChatLog] = useState("null");
-    React.useEffect(() => wsConnect(setChatLog), []); // initializes chat connection, pulls chats
+    React.useEffect(() => chatSocketConnect(setChatLog), []); // initializes chat connection, pulls chats
 
 
     return (
@@ -49,20 +49,18 @@ export function Chatbox ( {expanded} ) {
 
 
 
-// TODO rename to "wsChatConnect" or something to specify which socket type this is
-function wsConnect(setChatLog) {
+function chatSocketConnect(setChatLog) {
 
     // TODO return immediately if user is not one of the players
 
-    // TODO AS WELL rename _ALL_ references to "Message" to "Chat", since socket 'messages' are keyword defined
-    chatSocket = new WebSocket(payload.wsBaseUrl + "/message");
+    chatSocket = new WebSocket(payload.wsBaseUrl + "/chat");
 
-    chatSocket.onopen = (() => 
-        wsSubscribe()
-    );
+    chatSocket.onopen = (() => chatSocketSubscribe());
 
     chatSocket.onmessage = (messageEvent) => {
-        
+
+        console.log(messageEvent.data);
+
         let data = JSON.parse(messageEvent.data);
 
         if (data.command === "initialize") {
@@ -73,20 +71,21 @@ function wsConnect(setChatLog) {
 
         else if (data.command === "append") {
             chatLogGlobal.push(data.chat);
+            console.log(chatLogGlobal);
             setChatLog(buildFormattedChatLog(chatLogGlobal));
         }
         else if (data.command === "error") {
             alert(data.message);
         }
         else if (data.command === "info") {
-            console.log(data.contents);
+            // console.log(data.content);
         }
     }
 
 }
 
 
-function wsSubscribe () {
+function chatSocketSubscribe () {
 
     chatSocket.send(
         JSON.stringify({
@@ -105,7 +104,7 @@ function buildFormattedChatLog(chatLog) {
     let retval = "";
 
     chatLog.forEach(chat => {
-        retval += chat[1] + ": " + chat[2] + "\n";
+        retval += chat['username'] + ": " + chat['content'] + "\n";
     });
 
     return retval;
@@ -145,7 +144,7 @@ function ChatBoxInput() {
                     "ws_token": payload.ws_token,
                     "gameId": payload.game.id,
                     "username": payload.username,
-                    "message": trimmedInput,
+                    "content": trimmedInput,
                 }));
 
                 inputField.value = '';

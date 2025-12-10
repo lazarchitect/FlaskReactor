@@ -3,9 +3,10 @@ containing game data, users, and more."""
 
 import os
 from json import loads
-from psycopg2 import connect, InterfaceError, OperationalError
-from psycopg2.extras import DictCursor, Json
-from psycopg2.errors import InFailedSqlTransaction
+from psycopg import connect, InterfaceError, OperationalError
+from psycopg.rows import dict_row
+from psycopg.types.json import Json
+from psycopg.errors import InFailedSqlTransaction
 
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
@@ -47,9 +48,10 @@ sql = {
         "getStat": "SELECT * FROM " + relation + ".stats WHERE userid=%s",
         "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s",
 
-        # Messages
-        "createMessage": f"INSERT INTO {relation}.messages (gameid, content, username) VALUES (%s, %s, %s)",
-        "getMessages": f"SELECT index, username, content FROM {relation}.messages WHERE gameid=%s"
+        # Chats
+        # TODO change table name in database to 'chats'
+        "createChat": f"INSERT INTO {relation}.messages (gameid, content, username) VALUES (%s, %s, %s)",
+        "getChats": f"SELECT index, username, content FROM {relation}.messages WHERE gameid=%s"
 
     }
 
@@ -87,12 +89,12 @@ class Pgdb:
         try:
             self.conn = connect(
                 host     = self.config['local_ip' if self.db_env=='local' else 'remote_ip'],
-                database = self.config['database'],
+                dbname   = self.config['database'],
                 user     = self.config['user'],
                 password = self.config['password']
             )
 
-            self.cursor = self.conn.cursor(cursor_factory=DictCursor)
+            self.cursor = self.conn.cursor(row_factory=dict_row)
 
         except OperationalError as oe:
             print(oe)
@@ -119,7 +121,7 @@ class Pgdb:
                 user     = self.config['user'],
                 password = self.config['password']
             )
-            self.cursor = self.conn.cursor(cursor_factory=DictCursor)
+            self.cursor = self.conn.cursor(row_factory=dict_row)
             self.__execute(query, values)
 
         except InFailedSqlTransaction: # type: ignore
@@ -135,6 +137,7 @@ class Pgdb:
         values = [username]
         self.__execute(query, values)
         return self.cursor.fetchone() # TODO use User.dbLoad() here and return that instead, see getChessGame below
+        # BIG CHANGE - psycopg 3 now returns this as a key-value dict instead of a tuple!
 
     def checkLogin(self, username, password_hash):
         query = sql['checkLogin']
@@ -173,11 +176,11 @@ class Pgdb:
         query = sql['getQuadradiusGame']
         values = (gameId,)
         self.__execute(query, values)
-        record = self.cursor.fetchone()
-        if (record == None):
+        gameDict = self.cursor.fetchone()
+        if gameDict is None:
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
             return None
-        return QuadradiusGame.dbLoad(record)
+        return QuadradiusGame.dbLoad(gameDict)
 
     def getPreferredColors(self, user):
         query = sql['getPreferredColors']
@@ -215,9 +218,9 @@ class Pgdb:
         self.__execute(query, values)
         self.conn.commit()
 
-    def endChessGame(self, end_time, winner, gameid):
+    def endChessGame(self, end_time, winner, gameId):
         query = sql['endChessGame']
-        values = [end_time, winner, gameid]
+        values = [end_time, winner, gameId]
         self.__execute(query, values)
         self.conn.commit()
 
@@ -231,7 +234,7 @@ class Pgdb:
         if(record == None):
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
             return None
-        return TttGame.dbCreate(record)
+        return TttGame.dbLoad(record)
 
     def getTttGames(self, username):
         query = sql["getTTTGames"]
@@ -271,16 +274,16 @@ class Pgdb:
         self.__execute(query, values)
         self.conn.commit()
 
-    ### Messages
+    ### Chat
 
-    def createMessage(self, gameId, content, username):
-        query = sql['createMessage']
+    def createChat(self, gameId, content, username):
+        query = sql['createChat']
         values = [gameId, content, username]
         self.__execute(query, values)
         self.conn.commit()
 
-    def getMessages(self, gameId):
-        query = sql['getMessages']
+    def getChats(self, gameId):
+        query = sql['getChats']
         values = [gameId]
         self.__execute(query, values)
         return self.cursor.fetchall()
@@ -288,4 +291,4 @@ class Pgdb:
     ####### HELPER METHODS #########
 
     def userExists(self, username):
-        return self.getUser(username) != None
+        return self.getUser(username) is not None

@@ -14,7 +14,7 @@ def deleteConnection(gameId, socketId):
             gameConnectionList.remove(x)
             return
 
-class MessageHandler(WebSocketHandler):
+class ChatHandler(WebSocketHandler):
 
     # this is required because Flask/Tornado will reject unspecified
     # connections as Forbidden unless we allow it explicitly    
@@ -54,20 +54,20 @@ class MessageHandler(WebSocketHandler):
 
         print(fields)
         
-        index = 0 #  doesnt matter
+        index = 0 # doesnt matter, but we could set it to max(indexes so far)
         username = fields['username']
-        message = fields['message']
+        content = fields['content']
 
         responseToClient = {
             "command": "append",
-            "chat": [index, username, message]
+            "chat": {"index": index, "username": username, "content": content}
         }
 
         gameId = fields['gameId']
 
         utils.updateAll(clientConnections[fields['gameId']], responseToClient)
             
-        self.pgdb.createMessage(gameId, fields['message'], fields['username'])
+        self.pgdb.createChat(gameId, fields['content'], fields['username'])
 
 
     def handleSubscribe(self, fields: dict):
@@ -101,22 +101,34 @@ class MessageHandler(WebSocketHandler):
                 "details": str(connectionDetails)
             })
             return #non-logged in viewers should not have chat log access. 
-            
- 
+
         # non-players should not have chat log access
-        match(fields['game_type']):
+        username = fields.get('username', None)
+        if utils.hasNoContent(username):
+            self.write_message({
+                "command": "info",
+                "message": "server did not receive a username from the client",
+                "details": str(connectionDetails)
+            })
+
+        match(fields.get('game_type', None)):
             case "chess":
                 game = self.pgdb.getChessGame(gameId)
-                if fields['username'] not in [game.black_player, game.white_player]:
+                if username not in [game.black_player, game.white_player]:
                     print("debug: user is not a player")
                     return # non-players should not have chat log access.
             case "ttt":
                 game = self.pgdb.getTttGame(gameId)
-                if fields['username'] not in [game.x_player, game.o_player]:
+                if username not in [game.x_player, game.o_player]:
+                    print("debug: user is not a player")
+                    return
+            case "quadradius":
+                game = self.pgdb.getQuadradiusGame(gameId)
+                if username not in [game.player1, game.player2]:
                     print("debug: user is not a player")
                     return
             case _:
-                print("game type ", fields['game_type'], "invalid or not currently supported for messages")
+                print("received game type", fields.get('game_type', None), "invalid or not currently supported for messages")
                 return
 
         # authenticate user by checking if the provided ws_token matches what's in the DB 
@@ -133,7 +145,7 @@ class MessageHandler(WebSocketHandler):
         else:
             clientConnections[gameId].append(connectionDetails)
 
-        messages = self.pgdb.getMessages(gameId)
+        chats = self.pgdb.getChats(gameId)
 
         self.write_message({
             "command": "info",
@@ -142,5 +154,5 @@ class MessageHandler(WebSocketHandler):
 
         self.write_message({
             "command": "initialize",
-            "chats": messages
+            "chats": chats
         })

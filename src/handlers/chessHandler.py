@@ -1,8 +1,6 @@
 from datetime import datetime
 import json
 from tornado.websocket import WebSocketHandler
-from src.pgdb import Pgdb
-from src.MockPgdb import MockPgdb
 import src.utils as utils
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
@@ -105,7 +103,7 @@ class ChessHandler(WebSocketHandler):
 
         game = self.pgdb.getChessGame(gameId)
 
-        if game == None:
+        if game is None:
             pass
             #TODO handle possible error if pgdb doesnt find anything.
 

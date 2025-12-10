@@ -6,10 +6,9 @@ import { SiteHeader } from './commonComponents/SiteHeader';
 import { Chatbox } from './commonComponents/Chatbox';
 import { Chessboard } from './chessboard';
 
-
 let isPlayer = payload.players.includes(payload.username);
 
-var page = (
+let page = (
 	<div id="reactRoot">
         <SiteHeader version={payload.deployVersion} username={payload.username}/>
         <div id="chessPlayArea">
