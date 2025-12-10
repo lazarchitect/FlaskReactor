@@ -1,28 +1,35 @@
 
+# not used anywhere... yet
 class Stats:
 
-    """bare minimum"""
-    def __init__(self, userId):
-        self.userId = userId
-        self.games_played = 0
-        self.wins = 0
-        self.win_percent = 0
-        self.played_white = 0
-        self.played_black = 0
-        self.won_white = 0
-        self.won_black = 0
+    def __init__(self):
+        pass
 
+    @staticmethod
+    def manualCreate(userId):
+        s = Stats()
+        s.userId = userId
+        s.games_played = 0
+        s.wins = 0
+        s.win_percent = 0
+        s.played_white = 0
+        s.played_black = 0
+        s.won_white = 0
+        s.won_black = 0
+        return s
 
-    """pgdb instatiation"""
-    def __init__(self, record):
-        self.userId = record[0]
-        self.games_played = record[1]
-        self.wins = record[2]
-        self.win_percent = record[3]
-        self.played_white = record[4]
-        self.played_black = record[5]
-        self.won_white = record[6]
-        self.won_black = record[7]
+    @staticmethod
+    def dbLoad(statsDict):
+        s = Stats()
+        s.userId = statsDict['userId']
+        s.games_played = statsDict['games_played']
+        s.wins = statsDict['wins']
+        s.win_percent = statsDict['win_percent']
+        s.played_white = statsDict['played_white']
+        s.played_black = statsDict['played_black']
+        s.won_white = statsDict['won_white']
+        s.won_black = statsDict['won_black']
+        return s
 
     def toTuple(self):
         return (self.userId, self.games_played, self.wins, self.win_percent, 

@@ -19,7 +19,7 @@ export function QuadBoard(){
             let targetTile = tileAtCoords(boardstate, coordsAtMouse(monitor.getClientOffset()));
 
             if (
-                ("torus" in targetTile && targetTile.torus.color == item.torus.color) // target is occupied with ally 
+                ("torus" in targetTile && targetTile.torus.color === item.torus.color) // target is occupied with ally
                 || (targetTile === sourceTile) // cant drop to same location.
             ) {
                return;

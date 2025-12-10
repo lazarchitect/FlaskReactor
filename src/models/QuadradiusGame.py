@@ -1,8 +1,7 @@
-from src.utils import generateId
-import json
-from datetime import datetime
-from psycopg2.extras import UUID_adapter, Json
 
+import json
+from src.utils import generateId
+from psycopg.types.json import Json
 
 class QuadradiusGame:
     def __init__(self):
@@ -24,25 +23,24 @@ class QuadradiusGame:
         # TODO add more fields like various time stamps, winner, active player, and any other data, add in database as well
         return g
 
-    def dbLoad(record):
+    @staticmethod
+    def dbLoad(gameDict):
         g = QuadradiusGame()
-        g.id = record[0]
-        g.player1 = record[1]
-        g.player2 = record[2]
-        g.player1_color = record[3]
-        g.player2_color = record[4]
-        g.boardstate = record[5]
-        g.completed = record[6]
+        g.id = gameDict['id']
+        g.player1 = gameDict['player1']
+        g.player2 = gameDict['player2']
+        g.player1_color = gameDict['player1_color']
+        g.player2_color = gameDict['player2_color']
+        g.boardstate = gameDict['boardstate']
+        g.completed = gameDict['completed']
         return g
 
     def toTuple(self):
         """creates a database-friendly format of the object."""
         return (
-            UUID_adapter(self.id), 
-            self.player1,
-            self.player2,
-            self.player1_color,
-            self.player2_color, 
+            self.id,
+            self.player1, self.player2,
+            self.player1_color, self.player2_color,
             Json(self.boardstate), 
             self.completed
         )

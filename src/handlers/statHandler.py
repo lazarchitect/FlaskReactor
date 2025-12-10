@@ -58,6 +58,7 @@ class StatHandler(WebSocketHandler):
 		tttGame = self.pgdb.getTttGame(gameId)
 		winner = tttGame.winner
 
+        # TODO this is broken now apparently. create ticket for adding full stats functionality to TTT and Chess?
 		ttt_games_played = stat['ttt_games_played'] + 1
 		ttt_wins = stat['ttt_wins'] + (1 if winner == username else 0)
 		ttt_win_percent = ttt_wins/ttt_games_played

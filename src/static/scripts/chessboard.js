@@ -18,7 +18,7 @@ let bkr_moved = payload.game.bkr_moved;
 import * as chessUtils from './chessUtils';
 import * as chessConsts from './chessConsts';
 
-function wsSubscribe(chessSocket){
+function chessSocketSubscribe(chessSocket){
 	const subscribeObj = {
 		"request": "subscribe",
 		"gameId": gameId,
@@ -29,7 +29,7 @@ function wsSubscribe(chessSocket){
 	chessSocket.send(subscribeStr);
 }
 
-function wsUpdate(chessSocket, tileId){
+function chessSocketUpdate(chessSocket, tileId){
 	const updateObj = {
 		"request": "update",
 		"ws_token": payload.ws_token,
@@ -43,12 +43,12 @@ function wsUpdate(chessSocket, tileId){
 	chessSocket.send(updateStr);
 }
 
-function wsConnect(boardstate, setBoardstate) {
+function chessSocketConnect(boardstate, setBoardstate) {
 	const chessSocket = new WebSocket(payload.wsBaseUrl + "/chess");
 	// this is where you might initiate a statSocket as well for db chess stats
 	// EDIT: why would stats need a websocket? it doesnt need to update on the fly. HTTP would suffice methinks?
 
-	chessSocket.onopen = (() => wsSubscribe(chessSocket));
+	chessSocket.onopen = (() => chessSocketSubscribe(chessSocket));
 
 	chessSocket.onmessage = (messageEvent) => {
 
@@ -107,7 +107,7 @@ function wsConnect(boardstate, setBoardstate) {
 
 		}
 		else {
-			wsUpdate(chessSocket, tileId);
+			chessSocketUpdate(chessSocket, tileId);
 			removeHighlights();
 		}
 
@@ -254,7 +254,9 @@ function generateHighlights(boardstate, piece){ // void
 
 					// TODO much of this modifiedBoardstate check logic can be encapsulated and refactored into a callable function. 
 					// just need to pass in a bunch of params but its still better IMO
-					
+
+
+                    // TODO BUG pieceDirection IS NOT DEFINED HERE?
 					let srcCoords = [piece.row, piece.col];
 					let destCoords = [piece.row + pieceDirection, piece.col + 1];
 					let modifiedBoardstate = chessUtils.previewModifiedBoard(boardstate, srcCoords, destCoords);
@@ -430,7 +432,7 @@ export function Chessboard() {
 	// need useEffect (which triggers after rendering) to ensure the chessboard component
 	// has rendered at least once before the ws connection, which syncs with the chessboard, is made.
 	// note - this only triggers on the first render, due to the empty dependency array. (no dependencies => no ongoing effect)
-	React.useEffect(() => wsConnect(boardstate, setBoardstate), []);
+	React.useEffect(() => chessSocketConnect(boardstate, setBoardstate), []);
 
 	return (
 		<div id="board">

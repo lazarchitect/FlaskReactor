@@ -48,9 +48,10 @@ sql = {
         "getStat": "SELECT * FROM " + relation + ".stats WHERE userid=%s",
         "updateTttStat": "UPDATE " + relation + ".stats SET ttt_games_played=%s, ttt_wins=%s, ttt_win_percent=%s, ttt_played_x=%s, ttt_played_o=%s, ttt_won_x=%s, ttt_won_o=%s WHERE userid=%s",
 
-        # Messages
-        "createMessage": f"INSERT INTO {relation}.messages (gameid, content, username) VALUES (%s, %s, %s)",
-        "getMessages": f"SELECT index, username, content FROM {relation}.messages WHERE gameid=%s"
+        # Chats
+        # TODO change table name in database to 'chats'
+        "createChat": f"INSERT INTO {relation}.messages (gameid, content, username) VALUES (%s, %s, %s)",
+        "getChats": f"SELECT index, username, content FROM {relation}.messages WHERE gameid=%s"
 
     }
 
@@ -175,11 +176,11 @@ class Pgdb:
         query = sql['getQuadradiusGame']
         values = (gameId,)
         self.__execute(query, values)
-        record = self.cursor.fetchone()
-        if (record == None):
+        gameDict = self.cursor.fetchone()
+        if gameDict is None:
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
             return None
-        return QuadradiusGame.dbLoad(record)
+        return QuadradiusGame.dbLoad(gameDict)
 
     def getPreferredColors(self, user):
         query = sql['getPreferredColors']
@@ -217,9 +218,9 @@ class Pgdb:
         self.__execute(query, values)
         self.conn.commit()
 
-    def endChessGame(self, end_time, winner, gameid):
+    def endChessGame(self, end_time, winner, gameId):
         query = sql['endChessGame']
-        values = [end_time, winner, gameid]
+        values = [end_time, winner, gameId]
         self.__execute(query, values)
         self.conn.commit()
 
@@ -233,7 +234,7 @@ class Pgdb:
         if(record == None):
             print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
             return None
-        return TttGame.dbCreate(record)
+        return TttGame.dbLoad(record)
 
     def getTttGames(self, username):
         query = sql["getTTTGames"]
@@ -273,16 +274,16 @@ class Pgdb:
         self.__execute(query, values)
         self.conn.commit()
 
-    ### Messages
+    ### Chat
 
-    def createMessage(self, gameId, content, username):
-        query = sql['createMessage']
+    def createChat(self, gameId, content, username):
+        query = sql['createChat']
         values = [gameId, content, username]
         self.__execute(query, values)
         self.conn.commit()
 
-    def getMessages(self, gameId):
-        query = sql['getMessages']
+    def getChats(self, gameId):
+        query = sql['getChats']
         values = [gameId]
         self.__execute(query, values)
         return self.cursor.fetchall()
@@ -290,4 +291,4 @@ class Pgdb:
     ####### HELPER METHODS #########
 
     def userExists(self, username):
-        return self.getUser(username) != None
+        return self.getUser(username) is not None

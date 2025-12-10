@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <title>Flask Reactor</title>
         
         <link rel="stylesheet" href="/static/styles/index.css">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
@@ -9,7 +10,6 @@
             var payload = JSON.parse('{{payload | safe}}');
         </script>
 
-        <!-- <script type="text/javascript" src="/static/scripts/dist/CommonComponents.js" defer ></script> -->
         <script type="text/javascript" src="/static/scripts/dist/home_script.js" defer ></script>
 
     </head>
