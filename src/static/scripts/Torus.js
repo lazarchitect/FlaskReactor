@@ -32,10 +32,11 @@ export function Torus ({ torus, row, col }) {
 
     // following code removes default browser Torus image during drag. 
     useEffect(
-        () => {dragPreview(getEmptyImage(), { captureDraggingState: false });}, 
+        () => {dragPreview(getEmptyImage(), { captureDraggingState: true });}, // possibly causing a bit of lag?
         [dragPreview]
     );
 
+    // TODO BUG: these draggable Tori are rendered ON TOP of the chat box even with z-index modified.
     return <div className='torus' style={{ cursor: "grab", opacity: opacity }} ref={dragRef}>
         <TorusSVG color={torus.color} isRadiating={false}/>
     </div>;

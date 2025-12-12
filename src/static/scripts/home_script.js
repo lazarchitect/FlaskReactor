@@ -3,18 +3,18 @@
 'use strict';
 
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './CommonComponents';
+import {createRoot} from 'react-dom/client';
+import {SiteHeader} from './commonComponents/SiteHeader';
 import styled from 'styled-components';
 
-var username = payload.username;
+const username = payload.username;
 
-var quadradiusGames = payload.quadradiusGames;
-var chessGames = payload.chessGames;
-var tttGames = payload.tttGames;
+const quadradiusGames = payload.quadradiusGames;
+const chessGames = payload.chessGames;
+const tttGames = payload.tttGames;
 
 const GameDiv = styled.div`
-	background-color: #bbb;
+	background-color: peachpuff;
 	margin: 10px;
 	text-align: center;
 	padding: 10px 0;
@@ -28,17 +28,17 @@ function openGame(gameId, gameType){
 	window.location.href = "/games/" + gameType + "/" + gameId;
 }
 
-function QuadradiusGameList (props) {
-	return quadradiusGames
-	.filter(game => game[6] == props.completed)
+function QuadradiusGameList ({completed}) {
+    return quadradiusGames
+	.filter(game => game.completed === completed)
 	.map(game => 
-		<GameDiv className="quadradiusGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "quadradius")}>
-			{"Vs. " + (game[1] === username ? game[2] : game[1])}
+		<GameDiv className="quadradiusGame" tabIndex={"0"} key={game['id']} onClick={() => openGame(game['id'], "quadradius")}>
+			{"Vs. " + (game.player1 === username ? game.player2 : game.player1)}
 		</GameDiv>
 	);
 }
 
-function QuadradiusGames (props) {
+function QuadradiusGames () {
 
 	React.useEffect(() => enableOnClick("Quadradius"), []);
 
@@ -54,17 +54,17 @@ function QuadradiusGames (props) {
 	);
 }
 
-function ChessGameList (props) {
+function ChessGameList ({completed}) {
 	return chessGames
-	.filter(game => game[4] == props.completed)
-	.map(game => 
-		<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "chess")}>
-			{"Vs. " + (game[1] === username ? game[2] : game[1])}
+	.filter(game => game.completed === completed)
+	.map(game =>
+		<GameDiv className="chessGame" tabIndex={"0"} key={game.id} onClick={() => openGame(game.id, "chess")}>
+			{"Vs. " + (game.white_player === username ? game.black_player : game.white_player)}
 		</GameDiv>
 	);
 }
 
-function ChessGames (props) {
+function ChessGames () {
 
 	React.useEffect(() => enableOnClick("Chess"), []);
 
@@ -80,13 +80,13 @@ function ChessGames (props) {
 	);
 }
 
-function TttGameList (props) {
+function TttGameList ({completed}) {
 	return tttGames
-	.filter(game => game[3] == props.completed)
+	.filter(game => game['completed'] === completed)
 	.map(game => 
 
-		<GameDiv tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "ttt")}>
-			{"Vs. " + (game[1] === username ? game[2] : game[1])}
+		<GameDiv tabIndex={"0"} key={game['id']} onClick={() => openGame(game['id'], "ttt")}>
+			{"Vs. " + (game['x_player'] === username ? game['o_player'] : game['x_player'])}
 		</GameDiv>
 	);
 }
@@ -96,17 +96,15 @@ function enableOnClick(gamemode) {
 
 		let pastGames = document.getElementById("past"+gamemode+"Games");
 
-		let currentVisbility = pastGames.style.visibility;
-		let newVisibility = (currentVisbility == 'visible' ? 'hidden' : 'visible');
-		pastGames.style.visibility = newVisibility;
+		let currentVisibility = pastGames.style.visibility;
+        pastGames.style.visibility = (currentVisibility === 'visible' ? 'hidden' : 'visible');
 
 		let currentPosition = pastGames.style.position;
-		let newPosition = (currentPosition == 'static' ? 'absolute' : 'static');
-		pastGames.style.position = newPosition;
+        pastGames.style.position = (currentPosition === 'static' ? 'absolute' : 'static');
 	});
 }
 
-function TttGames (props) {
+function TttGames () {
 
 	React.useEffect(() => enableOnClick("Ttt"), []);
 

@@ -16,10 +16,10 @@ export function QuadBoard(){
         drop: ((item, monitor) => {
 
             let sourceTile = boardstate[item.dragRow][item.dragCol];
-            let targetTile = tileAtMouse(boardstate, monitor.getClientOffset());
+            let targetTile = tileAtCoords(boardstate, coordsAtMouse(monitor.getClientOffset()));
 
             if (
-                ("torus" in targetTile && targetTile.torus.color == item.torus.color) // target is occupied with ally 
+                ("torus" in targetTile && targetTile.torus.color === item.torus.color) // target is occupied with ally
                 || (targetTile === sourceTile) // cant drop to same location.
             ) {
                return;
@@ -33,13 +33,22 @@ export function QuadBoard(){
         }),
         hover: (item, monitor) => {
 
-            let hoverTile = tileAtMouse(boardstate, monitor.getClientOffset());
-            let hoveredTileTorus = hoverTile.torus;
-            if (hoveredTileTorus != undefined && hoveredTileTorus != null) {
-                // preview torus drop if valid move
+            let {row, col} = coordsAtMouse(monitor.getClientOffset());
+            
+            if (row > 7 || row < 0 || col > 9 || col < 0) { // out of bounds hover
+                return;
             }
 
-            // console.log(tileAtMouse(boardstate, monitor.getClientOffset()));
+            let sourceTile = boardstate[item.dragRow][item.dragCol];
+            let hoveredTile = tileAtCoords(boardstate, {row, col});
+
+            if (!("torus" in hoveredTile)) {
+                // TODO build out logic to temporarily display after-drop Torus while hovering a valid tile. Move drop logic to quadTile?
+                // hoveredTile.torus = sourceTile.torus;
+                // hoveredTile.torus.preview = true;
+                // setBoardstate(boardstate);
+            }
+
         }
     }));
     
@@ -64,8 +73,7 @@ function QuadRow({ rowIndex, rowData }) {
     return tileArray;
 }
 
-// could split up into coordsAtMouse and tileAtCoords
-function tileAtMouse(boardstate, mousePos) {
+function coordsAtMouse(mousePos) {
     let rec = document.getElementById("quadboard").getBoundingClientRect();
     let boardStartX = rec.left + window.scrollX;
     let boardStartY = rec.top + window.scrollY;
@@ -73,12 +81,14 @@ function tileAtMouse(boardstate, mousePos) {
     let [boardClickX, boardClickY] = [mousePos.x - boardStartX, mousePos.y - boardStartY];
 
     let cellHeight = rec.height / 8;
-    let dropRow = Math.floor(boardClickY / cellHeight);
+    let row = Math.floor(boardClickY / cellHeight);
 
     let cellWidth = rec.width / 10;
-    let dropCol = Math.floor(boardClickX / cellWidth);
+    let col = Math.floor(boardClickX / cellWidth);
 
-    return boardstate[dropRow][dropCol];
+    return {row: row, col: col};
+}
 
-
+function tileAtCoords(boardstate, coords) {
+    return boardstate[coords.row][coords.col];
 }

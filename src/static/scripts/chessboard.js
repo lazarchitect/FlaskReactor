@@ -3,22 +3,22 @@
 
 import React from 'react';
 
-var highlightedTiles = [];
-var active_coords = [];
+let highlightedTiles = [];
+let active_coords = [];
 
 const gameId = payload.game.id;
-var yourTurn = payload.yourTurn;
-var blackKingMoved = payload.game.blackkingmoved;
-var whiteKingMoved = payload.game.whitekingmoved;
-var wqr_moved = payload.game.wqr_moved;
-var wkr_moved = payload.game.wkr_moved;
-var bqr_moved = payload.game.bqr_moved;
-var bkr_moved = payload.game.bkr_moved;
+let yourTurn = payload.yourTurn;
+let blackKingMoved = payload.game.blackkingmoved;
+let whiteKingMoved = payload.game.whitekingmoved;
+let wqr_moved = payload.game.wqr_moved;
+let wkr_moved = payload.game.wkr_moved;
+let bqr_moved = payload.game.bqr_moved;
+let bkr_moved = payload.game.bkr_moved;
 
 import * as chessUtils from './chessUtils';
 import * as chessConsts from './chessConsts';
 
-function wsSubscribe(chessSocket){
+function chessSocketSubscribe(chessSocket){
 	const subscribeObj = {
 		"request": "subscribe",
 		"gameId": gameId,
@@ -29,7 +29,7 @@ function wsSubscribe(chessSocket){
 	chessSocket.send(subscribeStr);
 }
 
-function wsUpdate(chessSocket, tileId){
+function chessSocketUpdate(chessSocket, tileId){
 	const updateObj = {
 		"request": "update",
 		"ws_token": payload.ws_token,
@@ -43,18 +43,18 @@ function wsUpdate(chessSocket, tileId){
 	chessSocket.send(updateStr);
 }
 
-function wsConnect(boardstate, setBoardstate) {
+function chessSocketConnect(boardstate, setBoardstate) {
 	const chessSocket = new WebSocket(payload.wsBaseUrl + "/chess");
 	// this is where you might initiate a statSocket as well for db chess stats
 	// EDIT: why would stats need a websocket? it doesnt need to update on the fly. HTTP would suffice methinks?
 
-	chessSocket.onopen = (() => wsSubscribe(chessSocket));
+	chessSocket.onopen = (() => chessSocketSubscribe(chessSocket));
 
 	chessSocket.onmessage = (messageEvent) => {
 
 		const data = JSON.parse(messageEvent.data);
 
-		if(data.command == "updateBoard"){
+		if(data.command === "updateBoard"){
 			setStatus(determineStatus(payload, data));
 			setBoardstate(data.newBoardstate);
 			blackKingMoved = data.blackKingMoved;
@@ -67,13 +67,13 @@ function wsConnect(boardstate, setBoardstate) {
 			yourTurn = payload.username === data.activePlayer;
 			boardstate = data.newBoardstate;
 		}
-		else if(data.command == "info"){
+		else if(data.command === "info"){
 			setStatus(determineStatus(payload, data));
 		}
-		else if(data.command == "endGame"){
+		else if(data.command === "endGame"){
 			setStatus(determineStatus(payload, data))
 		}
-		else if(data.command == "error"){
+		else if(data.command === "error"){
 			console.log(data.message)
 			alert(data.message)
 		}
@@ -90,7 +90,7 @@ function wsConnect(boardstate, setBoardstate) {
 		const row = parseInt(tileId[1]);
 
 		if(isNaN(col) || isNaN(row)) {
-			//console.log("invalid tileId");
+			// invalid tileId
 			return;
 		}
 
@@ -107,7 +107,7 @@ function wsConnect(boardstate, setBoardstate) {
 
 		}
 		else {
-			wsUpdate(chessSocket, tileId);
+			chessSocketUpdate(chessSocket, tileId);
 			removeHighlights();
 		}
 
@@ -136,18 +136,18 @@ function generateHighlights(boardstate, piece){ // void
 
 	const allyKingCoords = chessUtils.getKingCoords(boardstate, piece.color);
 
-	if(piece.type == "Pawn"){
+	if(piece.type === "Pawn"){
 		const whiteDirection = -1;
 		const blackDirection =  1;
-		const pieceDirection = piece.color == "Black" ? blackDirection : whiteDirection;
-		const finalRow = piece.color == "Black" ? 7 : 0;
-        const starterRow = piece.color == "Black" ? 1 : 6;
+		const pieceDirection = piece.color === "Black" ? blackDirection : whiteDirection;
+		const finalRow = piece.color === "Black" ? 7 : 0;
+        const starterRow = piece.color === "Black" ? 1 : 6;
 
 		const row = piece.row;
-		if(row == finalRow) return; // will never happen under promotion
+		if(row === finalRow) return; // will never happen under promotion
 
 		// advance 1
-		if(boardstate[piece.row+pieceDirection][piece.col].piece == undefined) {
+		if(boardstate[piece.row+pieceDirection][piece.col].piece === undefined) {
 
 			let srcCoords = [piece.row, piece.col];
 			let destCoords = [piece.row+pieceDirection, piece.col];
@@ -168,9 +168,9 @@ function generateHighlights(boardstate, piece){ // void
 			
 		}
 		// advance 2
-		if(row == starterRow
-				&& boardstate[piece.row+pieceDirection][piece.col].piece == undefined
-				&& boardstate[piece.row+(pieceDirection*2)][piece.col].piece == undefined) {
+		if(row === starterRow
+				&& boardstate[piece.row+pieceDirection][piece.col].piece === undefined
+				&& boardstate[piece.row+(pieceDirection*2)][piece.col].piece === undefined) {
 
 			let srcCoords = [piece.row, piece.col];
 			let destCoords = [piece.row+(pieceDirection*2), piece.col];
@@ -193,7 +193,7 @@ function generateHighlights(boardstate, piece){ // void
 			}
 		// attack left
 		const leftTargetTile = boardstate[piece.row+pieceDirection][piece.col-1];
-		if(leftTargetTile != undefined && leftTargetTile.piece != undefined && leftTargetTile.piece.color == enemyColor) {
+		if(leftTargetTile !== undefined && leftTargetTile.piece !== undefined && leftTargetTile.piece.color === enemyColor) {
 
 			let srcCoords = [piece.row, piece.col];
 			let destCoords = [piece.row + pieceDirection, piece.col - 1];
@@ -214,7 +214,7 @@ function generateHighlights(boardstate, piece){ // void
 		}
 		// attack right
 		const rightTargetTile = boardstate[piece.row+pieceDirection][piece.col+1];
-		if(rightTargetTile != undefined && rightTargetTile.piece != undefined && rightTargetTile.piece.color == enemyColor) {
+		if(rightTargetTile !== undefined && rightTargetTile.piece !== undefined && rightTargetTile.piece.color === enemyColor) {
 
 			let srcCoords = [piece.row, piece.col];
 			let destCoords = [piece.row + pieceDirection, piece.col + 1];
@@ -235,11 +235,11 @@ function generateHighlights(boardstate, piece){ // void
 	}
 
 	// possible refactoring: piece and color enums instead of strings?
-	else if(piece.type == "King"){
-		if (piece.color == "White") {
+	else if(piece.type === "King"){
+		if (piece.color === "White") {
 			whiteCastlingMoves(boardstate);
 		}
-		else if (piece.color == "Black") {
+		else if (piece.color === "Black") {
 			blackCastlingMoves(boardstate);
 		}
 
@@ -250,11 +250,13 @@ function generateHighlights(boardstate, piece){ // void
 
 			if(!outOfBounds(destRow, destCol)){
 				const targetPiece = boardstate[destRow][destCol].piece;
-				if(targetPiece == undefined || targetPiece.color == enemyColor) {
+				if(targetPiece === undefined || targetPiece.color === enemyColor) {
 
 					// TODO much of this modifiedBoardstate check logic can be encapsulated and refactored into a callable function. 
 					// just need to pass in a bunch of params but its still better IMO
-					
+
+
+                    // TODO BUG pieceDirection IS NOT DEFINED HERE?
 					let srcCoords = [piece.row, piece.col];
 					let destCoords = [piece.row + pieceDirection, piece.col + 1];
 					let modifiedBoardstate = chessUtils.previewModifiedBoard(boardstate, srcCoords, destCoords);
@@ -276,26 +278,26 @@ function generateHighlights(boardstate, piece){ // void
 		});
 	}
 
-	else if(piece.type == "Knight"){
+	else if(piece.type === "Knight"){
 		chessConsts.KNIGHT_OFFSETS.forEach(offset => {
 			const destRow = piece.row+offset[0];
 			const destCol = piece.col + offset[1];
 			if(!outOfBounds(destRow, destCol)){
 				const targetPiece = boardstate[destRow][destCol].piece;
-				if(targetPiece == undefined || targetPiece.color == enemyColor){
+				if(targetPiece === undefined || targetPiece.color === enemyColor){
 					highlightedTiles.push(destRow + "" + destCol);
 				}
 			}
 		});
 	}
 
-	else if (piece.type == "Rook") {
+	else if (piece.type === "Rook") {
 		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.ROOK_OFFSETS);
 	}
-	else if(piece.type == "Bishop") {
+	else if(piece.type === "Bishop") {
 		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.BISHOP_OFFSETS);
 	}
-	else if(piece.type == "Queen") {
+	else if(piece.type === "Queen") {
 		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.ROYAL_OFFSETS);
 	}
 
@@ -340,8 +342,8 @@ function scan(rowOffset, colOffset, row, col, color, boardstate, moveList){
 
 	// base case: there's a piece in the way.
 	const targetPiece = boardstate[targetRow][targetCol].piece;
-	if(targetPiece != undefined){
-		if(targetPiece.color != color){
+	if(targetPiece !== undefined){
+		if(targetPiece.color !== color){
 			moveList.push(targetRow + "" + targetCol);
 		}
 		return;
@@ -359,9 +361,9 @@ function determineStatus(payload, data){
 		status += "Game over."
 		if(data.winner == null)
 			status += "It's a tie."
-		else if(data.winner == payload.username)
+		else if(data.winner === payload.username)
 			status += "You win!"
-		else if(payload.username==data.otherPlayer) 
+		else if(payload.username===data.otherPlayer)
 			status += "You lose...";
 		else
 			status += "Winner was " + data.winner;
@@ -391,7 +393,7 @@ function setStatus(status){
 }
 
 function playerInCheck(yourColor, whiteInCheck, blackInCheck){
-	return (yourColor=="White" && whiteInCheck) || (yourColor=="Black" && blackInCheck);
+	return (yourColor==="White" && whiteInCheck) || (yourColor==="Black" && blackInCheck);
 }
 
 
@@ -399,12 +401,12 @@ function whiteCastlingMoves(boardstate) {
 	// whiteKingCoords = "47"; // row 7, col 4
 	if(!whiteKingMoved) {
 		// TODO: add checks for !whiteKingSideRookMoved and !whiteQueenSideRookMoved	
-		if (chessUtils.getPiece(boardstate, "57") == undefined && chessUtils.getPiece(boardstate, "67") == undefined) {
+		if (chessUtils.getPiece(boardstate, "57") === undefined && chessUtils.getPiece(boardstate, "67") === undefined) {
 			if (!wqr_moved) {
 				highlightedTiles.push("76"); // TODO refactor magic numbers
 			}
 		}
-		if (chessUtils.getPiece(boardstate, "37") == undefined && chessUtils.getPiece(boardstate, "27") == undefined) {
+		if (chessUtils.getPiece(boardstate, "37") === undefined && chessUtils.getPiece(boardstate, "27") === undefined) {
 			highlightedTiles.push("72");
 		}
 	}
@@ -414,10 +416,10 @@ function blackCastlingMoves(boardstate) {
 	// blackKingCoords = "40"; // row 7, col 4
 	if(!blackKingMoved) {
 		// TODO: add checks for !blackKingSideRookMoved and !blackQueenSideRookMoved
-		if (chessUtils.getPiece(boardstate, "50") == undefined && chessUtils.getPiece(boardstate, "60") == undefined) {
+		if (chessUtils.getPiece(boardstate, "50") === undefined && chessUtils.getPiece(boardstate, "60") === undefined) {
 			highlightedTiles.push("06");
 		}
-		if (chessUtils.getPiece(boardstate, "30") == undefined && chessUtils.getPiece(boardstate, "20") == undefined) {
+		if (chessUtils.getPiece(boardstate, "30") === undefined && chessUtils.getPiece(boardstate, "20") === undefined) {
 			highlightedTiles.push("02");
 		}
 	}
@@ -430,7 +432,7 @@ export function Chessboard() {
 	// need useEffect (which triggers after rendering) to ensure the chessboard component
 	// has rendered at least once before the ws connection, which syncs with the chessboard, is made.
 	// note - this only triggers on the first render, due to the empty dependency array. (no dependencies => no ongoing effect)
-	React.useEffect(() => wsConnect(boardstate, setBoardstate), []);
+	React.useEffect(() => chessSocketConnect(boardstate, setBoardstate), []);
 
 	return (
 		<div id="board">
@@ -441,10 +443,10 @@ export function Chessboard() {
 
 function Row(props){
 
-	var darkTile = props.rowIndex % 2 == 0 ? false : true;
+    let darkTile = props.rowIndex % 2 !== 0;
 
-	var reactTileArray = []
-	for(var tileIndex = 0; tileIndex < props.tiles.length; tileIndex++) {
+    let reactTileArray = []
+	for(let tileIndex = 0; tileIndex < props.tiles.length; tileIndex++) {
 		reactTileArray.push(
 			<Tile key={tileIndex} darkTile={darkTile} rowIndex={props.rowIndex} tileIndex={tileIndex} data={props.tiles[tileIndex]}/>
 		)
@@ -467,9 +469,8 @@ function Tile(props) {
 			id = {props.tileIndex.toString() + props.rowIndex.toString()}
 		>
 			{/* tile contents */}
-			{ imagePath != ""
-				? <img className="pieceImg" src={imagePath} />
-				: null
+			{ imagePath !== "" &&
+                <img src={imagePath} className="pieceImg"/>
 			}
 		</span>
 	);

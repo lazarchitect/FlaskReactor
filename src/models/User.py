@@ -6,23 +6,24 @@ class User:
         pass
 
     @staticmethod
-    def manualCreate(username, password_hash):
+    def manualCreate(name, password_hash):
         u = User()
-        u.username = username
+        u.name = name
         u.email = None
         u.userId = generateId()
         u.password_hash = password_hash
         return u
 
     @staticmethod
-    def dbLoad(record):
+    def dbLoad(userDict):
         u = User()
-        u.username = record[0]
-        u.email = record[1]
-        u.userId = record[2]
-        u.password_hash = record[3]
-        u.ws_token = record[4]
+        u.name = userDict['name']
+        u.email = userDict['email']
+        u.id = userDict['id']
+        u.password_hash = userDict['password_hash']
+        u.ws_token = userDict['ws_token']
+        # TODO quadradius color prefs and other prefs later
         return u
         
     def toTuple(self):
-        return (self.username, self.email, self.userId, self.password_hash, self.ws_token)
+        return (self.name, self.email, self.userId, self.password_hash, self.ws_token)

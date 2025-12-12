@@ -18,7 +18,7 @@ from src.models.QuadradiusGame import QuadradiusGame
 from src.handlers.tttHandler import TttHandler
 from src.handlers.statHandler import StatHandler
 from src.handlers.chessHandler import ChessHandler
-from src.handlers.messageHandler import MessageHandler
+from src.handlers.chatHandler import ChatHandler
 
 app = Flask(__name__)
 
@@ -109,7 +109,9 @@ def quadGame(gameId):
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
         "username": session.get('username'), #can be null if not logged in
-        "userId": session.get('userId')
+        "userId": session.get('userId'),
+        "game_type": "quadradius",
+        "ws_token": session.get('ws_token')
         # "yourTurn": game.player_turn == session.get('username') # TODO this has not been added in the db yet
     }
 
@@ -122,7 +124,7 @@ def quadGame(gameId):
 @app.route('/games/ttt/<gameId>')
 def tttGame(gameId):
     game = pgdb.getTttGame(gameId)
-    if game == None: 
+    if game is None:
         return "No game found with that ID."
     payload = {
         "wsBaseUrl": wsBaseUrl,
@@ -131,6 +133,7 @@ def tttGame(gameId):
         "game_type": "ttt", # field used by common component
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
+        # TODO next three lines are not explicitly needed, they are already in "game"
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
         "players": [game.x_player, game.o_player],
         "yourTurn": game.player_turn == session.get('username'),
@@ -152,11 +155,11 @@ def login():
     correctLogin = pgdb.checkLogin(username, password_hash) # TODO we query the DB three times here, can we improve?
     if(correctLogin):
         user_details = pgdb.getUser(username)
-        userId = user_details[2] # TODO build a User object instead of relying on the array returned from pgdb
+        userId = user_details['id'] # TODO build a User object instead of relying on the array returned from pgdb
         session['loggedIn'] = True
         session['username'] = username
         session['userId'] = userId
-        session['ws_token'] = user_details[4]
+        session['ws_token'] = user_details['ws_token']
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -257,16 +260,17 @@ def createGame():
         playerColorPrefs = pgdb.getPreferredColors(player_name)
         opponentColorPrefs = pgdb.getPreferredColors(opponent_name)
 
-        if playerColorPrefs[0] != opponentColorPrefs[0]:
-            player_color = playerColorPrefs[0]
-            opponent_color = opponentColorPrefs[0]
+        # TODO use .get(str, default) (and make the field name better?)
+        if playerColorPrefs['quad_color_pref'] != opponentColorPrefs['quad_color_pref']:
+            player_color = playerColorPrefs['quad_color_pref']
+            opponent_color = opponentColorPrefs['quad_color_pref']
         else:
-            if random.choice([1, 2]) == 1:
-                player_color = playerColorPrefs[0]
-                opponent_color = opponentColorPrefs[1]
+            if random.choice(["Heads", "Tails"]) == "Heads":
+                player_color = playerColorPrefs['quad_color_pref']
+                opponent_color = opponentColorPrefs['quad_color_backup']
             else:
-                player_color = playerColorPrefs[1]
-                opponent_color = opponentColorPrefs[0]
+                player_color = playerColorPrefs['quad_color_backup']
+                opponent_color = opponentColorPrefs['quad_color_pref']
 
         players = [[player_name, player_color], [opponent_name, opponent_color]]
         random.shuffle(players)
@@ -296,9 +300,9 @@ if __name__ == "__main__":
         default_host=host,
         handlers=[
             ("/ws/ttt",     TttHandler,      {"pgdb": pgdb}),
+            ("/ws/chat",    ChatHandler,     {"pgdb": pgdb}),
             ("/ws/stat",    StatHandler,     {"pgdb": pgdb}),
             ("/ws/chess",   ChessHandler,    {"pgdb": pgdb}),
-            ("/ws/message", MessageHandler,  {"pgdb": pgdb}),
             (".*",          FallbackHandler, {"fallback": flaskApp})
         ]
     )

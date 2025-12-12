@@ -195,8 +195,6 @@ body {
     stroke-opacity: 1;
 }
 
-/* A rx ry x-axis-rotation large-arc-flag sweep-flag x y */
-
 .torusSVGPathTop {
     d: path("M 6,26 C 6,15 15,6 24,6");
 }
@@ -211,61 +209,70 @@ body {
     r: 20%;
 }
 
-#messagebox { /* overall container */
+#chatbox { /* overall container */
     position: fixed;
-    width: 250px;
-    height: 400px;
     right: 10%;
     bottom: 0%;
+    width: 15%;
+    height: 6%;
 }
 
-/* possible improvement - make it slide up and down for show/hide */
-#messagebox-main {
+#chatbox-base {
     height: 100%;
-    background-color: purple;
-}
-
-#messagebox-log {
-    height: 78.4%; /* crazy... */
-    width: 100%;
-    resize: none;
-}
-
-#messagebox-input{
-    position: relative;
-    width: 100%;
-    resize: none;
-    bottom: 1%;
-}
-
-#messagebox-base {
     background-color: #DDDDDD;
     outline: 4px solid #633e07;
-    position: absolute;
-    width: 100%;
-    height: 10%;
-    bottom: 0%;    
 }
 
-#messagebox-label {
-    position: absolute;
-    top: 30%;
+#chatbox-label {
+    position: relative;
+    width: 1fr;
     left: 10%;
+    top: 25%;
 }
 
-#messagebox-indicator {
-    display: inline-block;
+#chatbox-indicator {
     position: absolute;
-    top: 25%;
-    right: 10%;
+    top: 20%;
+    right: 8%;
     background-color: #3333dd;
     color: white;
     text-align: center;
-    width: 30%;
+    width: 40%;
     border: 2px solid white;
     border-radius: 15% / 50%;
 }
 
-#messagebox-indicator:hover {
+#chatbox-indicator:hover {
     box-shadow: 2px 2px black;
 }
+
+#chatbox-indicator:active {
+    box-shadow: none;
+    top: 22;
+    right: 6%;
+}
+
+/* possible improvement - make it slide up and down for show/hide */
+#chatbox-text-area {
+    position: absolute;
+    right: 1%;
+    top: -800%;
+    width: 100%;
+    height: 800%;
+}
+
+#chatbox-log {
+    position: relative;
+    height: 85.5%;
+    width: 100%;
+    resize: none;
+}
+
+#chatbox-input{
+    position: relative;
+    top: -1.2%;
+    height: 10%;
+    width: 100%;
+    resize: none;
+}
+

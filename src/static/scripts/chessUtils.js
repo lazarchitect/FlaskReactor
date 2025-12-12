@@ -10,7 +10,7 @@ export function getPiece(boardstate, coords) {
 }
 
 export function pieceMatch(piece, pieceColor, pieceType) {
-    return piece.color == pieceColor && piece.type == pieceType
+    return piece.color === pieceColor && piece.type == pieceType
 }
 
 export function hasPiece(boardstate, coords) { 
@@ -27,19 +27,18 @@ export function isPiece(boardstate, coords, pieceType, pieceColor) {
     if (outOfBounds(coords)) return false;
     const piece = getPiece(boardstate, coords);
     if (piece == null) return false;
-    return piece.type == pieceType && piece.color == pieceColor
+    return piece.type === pieceType && piece.color == pieceColor
 }
 
 export function getKingCoords(boardstate, color) {
     for(let row = 0; row <= 7; row++) {
         for (let col = 0; col <= 7; col++) {
-            console.log(isPiece(boardstate, [row, col], "King", color));
-            if(isPiece(boardstate, [row, col], "King", color)) {
+            if(isPiece(boardstate, [col, row], 'King', color)) {
                 return [row, col]
             }
         }
     }
-    return None //should never happen?
+    return None; //should never happen?
 }
 
 // recursive fn to scan along a row/col/diag to see if a given piece is in that direction.

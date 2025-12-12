@@ -2,7 +2,7 @@
 
 import React from 'react'; // do I need this?
 import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
 
 const LoginArea = (() =>
 	<div>

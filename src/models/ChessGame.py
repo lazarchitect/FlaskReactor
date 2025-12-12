@@ -1,7 +1,8 @@
-from src.utils import generateId
+
 import json
 from datetime import datetime
-from psycopg2.extras import UUID_adapter, Json
+from src.utils import generateId
+from psycopg.types.json import Json
 
 
 class ChessGame:
@@ -11,6 +12,7 @@ class ChessGame:
     def __init__(self):
         pass
 
+    # TODO why use this method instead of the constructor?
     @staticmethod
     def manualCreate(white_player, black_player):
         """constructor for creation from user-input values."""
@@ -40,31 +42,32 @@ class ChessGame:
     def dbLoad(record):
         """constructor for loading from PGDB. field names match db column names exactly."""
         g = ChessGame()
-        g.id = record[0]
-        g.white_player = record[1]
-        g.black_player = record[2]
-        g.boardstate = record[3]
-        g.completed = record[4]
-        g.time_started = record[5]
-        g.last_move = record[6]
-        g.time_ended = record[7]
-        g.player_turn = record[8]
-        g.winner = record[9]
-        g.notation = record[10]
-        g.whitekingmoved = record[11]
-        g.blackkingmoved = record[12]
-        g.wqr_moved = record[13]
-        g.wkr_moved = record[14]
-        g.bqr_moved = record[15]
-        g.bkr_moved = record[16]
-        g.pawn_leapt = record[17]
-        g.pawn_leap_col = record[18]
+        g.id = record['id']
+        g.white_player = record['white_player']
+        g.black_player = record['black_player']
+        g.boardstate = record['boardstate']
+        g.completed = record['completed']
+        g.time_started = record['time_started']
+        g.last_move = record['last_move']
+        g.time_ended = record['time_ended']
+        g.player_turn = record['player_turn']
+        g.winner = record['winner']
+        g.notation = record['notation']
+        g.whitekingmoved = record['whitekingmoved']
+        g.blackkingmoved = record['blackkingmoved']
+        g.wqr_moved = record['wqr_moved']
+        g.wkr_moved = record['wkr_moved']
+        g.bqr_moved = record['bqr_moved']
+        g.bkr_moved = record['bkr_moved']
+        g.pawn_leapt = record['pawn_leapt']
+        g.pawn_leap_col = record['pawn_leap_col']
         return g
 
+    # TODO can we get rid of all the toTuple methods if PGDB supports inserting by __dict__?
     def toTuple(self):
         """creates a database-friendly format of the object."""
         return (
-            UUID_adapter(self.id), 
+            self.id, # UUID
             self.white_player, 
             self.black_player, 
             Json(self.boardstate),

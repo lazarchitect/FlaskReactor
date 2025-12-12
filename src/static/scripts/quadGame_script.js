@@ -6,11 +6,14 @@ import { createRoot } from 'react-dom/client';
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
-import { SiteHeader } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
+import { Chatbox } from './commonComponents/Chatbox';
 import { QuadBoard } from './QuadBoard';
 import { TorusDragLayer } from './TorusDragLayer';
 
-var page = (
+const isPlayer = [payload.game.player1, payload.game.player2].includes(payload.username);
+
+const page = (
 	<div id="reactRoot">
 
         {/* top of the page */}
@@ -24,7 +27,7 @@ var page = (
             </DndProvider>
             <p>Status: <span id="status"></span></p>
         </div>
-        
+        { isPlayer && <Chatbox expanded={false} /> }
     </div>
 );
 

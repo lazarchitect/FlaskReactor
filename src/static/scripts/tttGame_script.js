@@ -1,10 +1,11 @@
 import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
-import { SiteHeader, MessageBox } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
+import { Chatbox } from './commonComponents/Chatbox';
 
 const gameId = payload.game.id;
 
-function wsSubscribe(tttSocket) {
+function tttSocketSubscribe(tttSocket) {
 	const subscribeObj = {
 		"request": "subscribe",
 		"ws_token": payload.ws_token,
@@ -15,7 +16,7 @@ function wsSubscribe(tttSocket) {
 	tttSocket.send(subscribeJSON);
 }
 
-function wsUpdate(tttSocket, boardIndex) {
+function tttSocketUpdate(tttSocket, boardIndex) {
 	const updateObj = {
 		"request": "update", 
 		"ws_token": payload.ws_token,
@@ -29,12 +30,12 @@ function wsUpdate(tttSocket, boardIndex) {
     tttSocket.send(updateStr);
 }
 
-function wsConnect(setBoardstate, setYourTurn) {
+function tttSocketConnect(setBoardstate, setYourTurn) {
 	
     const tttSocket = new WebSocket(payload.wsBaseUrl + "/ttt")
 	const statSocket =new WebSocket(payload.wsBaseUrl + "/stat")
 
-	tttSocket.onopen = (() => wsSubscribe(tttSocket));
+	tttSocket.onopen = (() => tttSocketSubscribe(tttSocket));
 
     tttSocket.onmessage = (message) => {
 		const data = JSON.parse(message.data);
@@ -77,7 +78,7 @@ function wsConnect(setBoardstate, setYourTurn) {
 		if(mouseClick.target.className != "tttCell activeTttCell") return;
     	console.log("click detected: sending message to socketServer.");
 		const boardIndex = mouseClick.target.id;
-		wsUpdate(tttSocket, boardIndex);
+		tttSocketUpdate(tttSocket, boardIndex);
     };
 }
 
@@ -143,13 +144,13 @@ function O_Piece(){
 	);
 }
 
-function TttBoardRow(props){
-	const row = props.row;
-	// props.values will look like ["X", "X", "O"]. each is a cellItem
-	return (props.values).map((cellItem, index) => 
+function TttBoardRow({yourTurn, row, values}){
+	// values will look like ["X", "X", "O"]. each is a cellItem
+    console.log(values);
+	return (values).map((cellItem, index) =>
 			<span 
 				key={index} 
-				className={"tttCell" + ((props.yourTurn && cellItem=="" && payload.username!="") ? " activeTttCell": "")}
+				className={"tttCell" + ((yourTurn && cellItem === "" && payload.username !== "") ? " activeTttCell": "")}
 				id={index+(row*3)}
 				style={{left: 15+(index*29) + "%", top: 15+(row*29) + "%"}}
 			>
@@ -164,8 +165,7 @@ function TttBoard(){
 
 	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn); 
 	
-	React.useEffect(() => wsConnect(setBoardstate, setYourTurn), []); 
-	// empty array is a list of values that would trigger the function if they change. we dont want any.
+	React.useEffect(() => tttSocketConnect(setBoardstate, setYourTurn), []);
 
 	return (
 		<div id="tttBoard">
@@ -195,7 +195,7 @@ var page = (
 			<TttBoard/>
 			<p>Status: <span id="status"></span></p>
 		</div>
-		{isPlayer && <MessageBox/>}
+		{isPlayer && <Chatbox expanded={false}/>}
 	</div>
 );
 
