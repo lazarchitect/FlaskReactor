@@ -248,7 +248,7 @@ body {
 
 #chatbox-indicator:active {
     box-shadow: none;
-    top: 22;
+    top: 22%;
     right: 6%;
 }
 

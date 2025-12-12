@@ -85,16 +85,16 @@ function TttGameList ({completed}) {
 	.filter(game => game['completed'] === completed)
 	.map(game => 
 
-		<GameDiv tabIndex={"0"} key={game['id']} onClick={() => openGame(game['id'], "ttt")}>
+		<GameDiv tabIndex={0} key={game['id']} onClick={() => openGame(game['id'], "ttt")}>
 			{"Vs. " + (game['x_player'] === username ? game['o_player'] : game['x_player'])}
 		</GameDiv>
 	);
 }
 
-function enableOnClick(gamemode) {
-	document.getElementById("viewPast"+gamemode+"Games").onclick = (() => {
+function enableOnClick(gameMode) {
+	document.getElementById("viewPast"+gameMode+"Games").onclick = (() => {
 
-		let pastGames = document.getElementById("past"+gamemode+"Games");
+		let pastGames = document.getElementById("past"+gameMode+"Games");
 
 		let currentVisibility = pastGames.style.visibility;
         pastGames.style.visibility = (currentVisibility === 'visible' ? 'hidden' : 'visible');
