@@ -5,7 +5,7 @@ export function TorusSVG ({ color, isRadiating }) {
 
     let [hover, setHover] = useState(false);
 
-    let isPlayer1Torus = color == payload.game.player1_color;
+    let isPlayer1Torus = color === payload.game.player1_color;
     let gradientType = hover ? "Highlight" : (isRadiating ? "Radial" : "");
     let colorGradientId = "torusCoreGradient" + (isPlayer1Torus ? "1" : "2") + gradientType;
     let colorGradientVal = "url(#" + colorGradientId + ")";
