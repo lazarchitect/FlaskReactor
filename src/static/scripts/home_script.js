@@ -32,7 +32,7 @@ function QuadradiusGameList ({completed}) {
     return quadradiusGames
 	.filter(game => game.completed === completed)
 	.map(game => 
-		<GameDiv className="quadradiusGame" tabIndex={"0"} key={game['id']} onClick={() => openGame(game['id'], "quadradius")}>
+		<GameDiv className="quadradiusGame" tabIndex={0} key={game['id']} onClick={() => openGame(game['id'], "quadradius")}>
 			{"Vs. " + (game.player1 === username ? game.player2 : game.player1)}
 		</GameDiv>
 	);
@@ -58,7 +58,7 @@ function ChessGameList ({completed}) {
 	return chessGames
 	.filter(game => game.completed === completed)
 	.map(game =>
-		<GameDiv className="chessGame" tabIndex={"0"} key={game.id} onClick={() => openGame(game.id, "chess")}>
+		<GameDiv className="chessGame" tabIndex={0} key={game.id} onClick={() => openGame(game.id, "chess")}>
 			{"Vs. " + (game.white_player === username ? game.black_player : game.white_player)}
 		</GameDiv>
 	);
