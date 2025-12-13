@@ -11,8 +11,8 @@ export function TorusSVG ({ color, isRadiating }) {
     let colorGradientVal = "url(#" + colorGradientId + ")";
 
     return (
-        <svg className='torusSVG' 
-        onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} 
+        <svg className='torusSVG'
+        onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
         version="1.1" xmlns="http://www.w3.org/2000/svg">
 
             <defs>

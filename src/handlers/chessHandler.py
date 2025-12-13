@@ -71,10 +71,9 @@ class ChessHandler(WebSocketHandler):
             "conn": self.ws_connection
         }
 
-        # gameId is given to the frontend by Flask in the payload
-        try:
-            gameId = fields['gameId'] # TODO can utilize hasNoContent here
-        except KeyError:
+        # gameId is given to the frontend by Flask in the payload and then sent back here to confirm
+        gameId = fields.get('gameId')
+        if utils.isEmpty(gameId):
             self.write_message({
                 "command": "error",
                 "message": "server did not receive a game ID from the client",
@@ -82,7 +81,7 @@ class ChessHandler(WebSocketHandler):
             })
             return
         
-        if utils.hasNoContent(fields.get('ws_token')):
+        if utils.isEmpty(fields.get('ws_token')):
             self.write_message({
                 "command": "info",
                 "message": "server did not receive a ws_token from the client",
@@ -105,7 +104,7 @@ class ChessHandler(WebSocketHandler):
 
         if game is None:
             pass
-            #TODO handle possible error if pgdb doesnt find anything.
+            #TODO If game is None, we should error alert the UI and halt here
 
         if game.white_player == game.player_turn:
             otherPlayer = game.black_player

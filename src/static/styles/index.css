@@ -122,8 +122,6 @@ body {
 
 .tttCell{
     overflow: hidden;
-    
-    /* positioning */
     position: absolute;
     width: 70px;
     height: 70px;
@@ -148,9 +146,8 @@ body {
 }
 
 .quadTile {
-    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this file */
+    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this CSS file */
     background-size: 100% 100%;
-    background-color: red;
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
@@ -164,6 +161,8 @@ body {
     top: 6.5%; /* specific proportions used to line up with tile art */
     left: 4.5%;
     position: relative;
+    border-radius: 50%;
+
 }
 
 .previewTorus {

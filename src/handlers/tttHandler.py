@@ -1,9 +1,7 @@
 from datetime import datetime
-import src.utils as utils
-from src.pgdb import Pgdb
+from src.utils import tttGameEnded, isEmpty, generateId, updateAll
 from tornado.websocket import WebSocketHandler
 import json
-from flask import session
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -24,7 +22,7 @@ class TttHandler(WebSocketHandler):
         self.pgdb = pgdb
 
     def open(self):
-        self.socketId = "socket"+ str(utils.generateId())[:8]
+        self.socketId = "socket"+ str(generateId())[:8]
         print("tttSocket opened:", str(self.socketId))
 
     def on_message(self, message):
@@ -71,16 +69,16 @@ class TttHandler(WebSocketHandler):
         }
 
         # gameId is given to the frontend by Flask in the payload
-        try:
-            gameId = fields['gameId']
-        except KeyError:
+        gameId = fields.get('gameId')
+        if isEmpty(gameId):
             self.write_message({
             "command": "error",
             "message": "server did not receive a game ID from the client",
             "details": str(connectionDetails)
-        })
+            })
+            return
             
-        if utils.hasNoContent(fields.get('ws_token')):
+        if isEmpty(fields.get('ws_token')):
             self.write_message({
                 "command": "info",
                 "message": "server did not receive a ws_token from the client",
@@ -101,7 +99,7 @@ class TttHandler(WebSocketHandler):
 
         game = self.pgdb.getTttGame(gameId)
 
-        if game == None:
+        if game is None:
             self.write_message({
                 "command": "error",
                 "contents": "game with ID '" + gameId + "' not found in database." 
@@ -130,11 +128,11 @@ class TttHandler(WebSocketHandler):
         
         
         player = fields['player']
-        if player == None:
+        if player is None:
             #the player is not logged in
             self.write_message({
                 "command": "error",
-                "contents": "NOT LOGGED IN YO!! BRUH! WTF?"
+                "contents": "NOT LOGGED IN!?"
             })
             return
 
@@ -186,9 +184,9 @@ class TttHandler(WebSocketHandler):
             "otherPlayer": oldActivePlayer
         }
 
-        utils.updateAll(clientConnections[gameId], message)
+        updateAll(clientConnections[gameId], message)
 
-        gameEnded = utils.tttGameEnded(boardstate)
+        gameEnded = tttGameEnded(boardstate)
         winner = oldActivePlayer if (gameEnded == "Win") else None
 
         if gameEnded:
@@ -202,7 +200,7 @@ class TttHandler(WebSocketHandler):
             "winner": winner # None for a tie
         }
 
-        utils.updateAll(clientConnections[gameId], message)
+        updateAll(clientConnections[gameId], message)
 
         self.pgdb.endTttGame(datetime.now(), winner, gameId)
 

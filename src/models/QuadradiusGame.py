@@ -1,5 +1,7 @@
 
 import json
+from datetime import datetime
+
 from src.utils import generateId
 from psycopg.types.json import Json
 
@@ -7,10 +9,8 @@ class QuadradiusGame:
     def __init__(self):
         pass
 
-
-    # TODO likely these manualCreate functions are not needed at all, toTuple can just handle directly since it gets called right after
     @staticmethod
-    def manualCreate(player1, player2, player1_color, player2_color):
+    def manualCreate(player1, player2, player1_color, player2_color, active_player):
         g = QuadradiusGame()
         g.id = generateId()
         g.player1 = player1
@@ -19,8 +19,12 @@ class QuadradiusGame:
         g.player2_color = player2_color
         g.boardstate = json.loads(open('resources/initialQuadLayout.json', 'r').read())
         g.populatePlayerColors(player1_color, player2_color)
+        g.active_player = active_player
         g.completed = False
-        # TODO add more fields like various time stamps, winner, active player, and any other data, add in database as well
+        g.time_started = datetime.now()
+        g.last_move = None
+        g.time_ended = None
+        g.winner = None
         return g
 
     @staticmethod
@@ -32,7 +36,12 @@ class QuadradiusGame:
         g.player1_color = gameDict['player1_color']
         g.player2_color = gameDict['player2_color']
         g.boardstate = gameDict['boardstate']
+        g.active_player = gameDict['active_player']
         g.completed = gameDict['completed']
+        g.time_started = gameDict['time_started']
+        g.last_move = gameDict['last_move']
+        g.time_ended = gameDict['time_ended']
+        g.winner = gameDict['winner']
         return g
 
     def toTuple(self):
@@ -41,8 +50,13 @@ class QuadradiusGame:
             self.id,
             self.player1, self.player2,
             self.player1_color, self.player2_color,
-            Json(self.boardstate), 
-            self.completed
+            Json(self.boardstate),
+            self.active_player,
+            self.completed,
+            self.time_started,
+            self.last_move,
+            self.time_ended,
+            self.winner
         )
     
     def populatePlayerColors(self, player1_color, player2_color):
