@@ -174,11 +174,6 @@ body {
     border-radius: 50%;
 }
 
-/*.torusSVGCore:hover {*/
-/*    -webkit-filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));*/
-/*    filter: drop-shadow( 3px 3px 2px rgba(0, 0, 0, .7));*/
-/*}*/
-
 .torusSVGBody {
     fill: rgb(150, 150, 150);
     cx: 50%; /*cx and cy dictate location of circle's origin */
