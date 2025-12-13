@@ -16,8 +16,12 @@ create table flaskreactor.quadradius_games (
     player1_color text NOT NULL,
     player2_color text NOT NULL,
     boardstate JSON NOT NULL,
-    completed boolean NOT NULL
-    -- todo add time_started, last_move, time_ended, and winner fields here, in QuadGame class file, and in DB itself.
+    active_player text NOT NULL,
+    completed boolean NOT NULL,
+    time_started timestamp NOT NULL,
+    last_move timestamp,
+    time_ended timestamp,
+    winner text
 );
 
 create table flaskreactor.chess_games (

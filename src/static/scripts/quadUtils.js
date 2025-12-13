@@ -2,9 +2,9 @@
 import React from "react";
 
 // TODO move to QuadConsts?
-const playerColors = {
+export const playerColors = {
     "red": ["#e72424ff", "#6e0b0bff"], "redHighlight": ["#FF0000", "#CC0000"],
-    "blue": ["#0000ff", "#191983ff"], "blueHighlight": ["#2583ffff", "#2424e7ff"],
+    "blue": ["#0000ff", "#191983ff"], "blueHighlight": ["#2583ff", "#2424e7"],
     "green": ["#0fda41ff", "#08681cff"], "greenHighlight": ["#99FF99", "#44cc44"],
     "cyan": ["#33cef5ff", "#038596ff"],  "cyanHighlight": ["#bdeefaff", "#45d9ecff"],
     "pink": ["#d87debff", "#b409caff"],  "pinkHighlight": ["#fabdf2ff", "#f58affff"],
@@ -12,6 +12,7 @@ const playerColors = {
     "teal": ["#2ccac2ff", "#036370ff"],  "tealHighlight": ["#39bfd1ff", "#009fb4ff"],
     "yellow": ["#cbe635ff", "#90a000ff"],  "yellowHighlight": ["#effabdff", "#d7ff27ff"],
     "orange": ["#eeb03dff", "#a76d02ff"],  "orangeHighlight": ["#f1d9aaff", "#bd8a2dff"]
+    // TODO many of these contain alpha values, just remove the last 2 chars if 8 chars
 
     // can add more colors (bronze?) or like, dual colors, or other gradient types
 };

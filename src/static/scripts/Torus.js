@@ -36,7 +36,6 @@ export function Torus ({ torus, row, col }) {
         [dragPreview]
     );
 
-    // TODO BUG: these draggable Tori are rendered ON TOP of the chat box even with z-index modified.
     return <div className='torus' style={{ cursor: "grab", opacity: opacity }} ref={dragRef}>
         <TorusSVG color={torus.color} isRadiating={false}/>
     </div>;

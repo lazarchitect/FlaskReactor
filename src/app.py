@@ -11,7 +11,7 @@ import json
 import os
 
 from src.pgdb import Pgdb
-from src.utils import generateId, generateHash
+from src.utils import generateId, generateHash, notLoggedIn
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
 from src.models.QuadradiusGame import QuadradiusGame
@@ -49,17 +49,12 @@ with app.test_request_context():
 @app.route('/')
 def homepage():
 
-    print(session)
-
-    if(session.get('loggedIn') == False or session.get('loggedIn') == None):
+    if notLoggedIn(session):
         return render_template("splash.html")
 
-    else: # user is logged in
+    else:
+        chessGames, tttGames, quadradiusGames = pgdb.getAllGames(session.get('username'))
 
-        # TODO this is getting repetitive, any way to optimize?
-        chessGames = pgdb.getChessGames(session.get('username'))
-        tttGames = pgdb.getTttGames(session.get('username'))
-        quadradiusGames = pgdb.getQuadradiusGames(session.get('username'))
         payload = {
             "username": session.get('username'),
             "chessGames": chessGames,
@@ -85,16 +80,19 @@ def chessGame(gameId):
     enemyColor = "Black" if userColor == "White" else ("White" if userColor == "Black" else None)
 
     payload = {
-        "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
-        "boardstate": game.boardstate,
         "username": username,
         "game_type": "chess", # field used by common component
-        "players": [game.white_player, game.black_player], 
+
+        # TODO following three lines' values already derive from "game" and "username", redundant payload fields. let UI figure it out
+        "boardstate": game.boardstate,
+        "players": [game.white_player, game.black_player],
+        "yourTurn": game.player_turn == session.get('username'),
+
+        "wsBaseUrl": wsBaseUrl,
         "ws_token": session.get('ws_token'),
         "userColor": userColor,
         "enemyColor": enemyColor,
-        "yourTurn": game.player_turn == session.get('username'),
         "deployVersion": deployVersion
     }
     payload = json.dumps(payload, default=str)
@@ -114,8 +112,6 @@ def quadGame(gameId):
         "ws_token": session.get('ws_token')
         # "yourTurn": game.player_turn == session.get('username') # TODO this has not been added in the db yet
     }
-
-    # print(payload)
 
     payload = json.dumps(payload, default=str)
     return render_template("quadGame.html", payload=payload)
@@ -145,6 +141,8 @@ def tttGame(gameId):
 
 @app.route('/login', methods=["POST"])
 def login():
+    # TODO we query the DB three times here - we could reduce to 1 by checking password_hash and userExists here
+    #  instead of through pgdb. pgdb.UserExists doesnt need to exist, just use a clearly named boolean.
     username = request.form['username']
     password = request.form['password']
     password_hash = generateHash(password)
@@ -152,14 +150,13 @@ def login():
     if not pgdb.userExists(username):
         return "User " + username + " does not exist."
 
-    correctLogin = pgdb.checkLogin(username, password_hash) # TODO we query the DB three times here, can we improve?
+    correctLogin = pgdb.checkLogin(username, password_hash)
     if(correctLogin):
-        user_details = pgdb.getUser(username)
-        userId = user_details['id'] # TODO build a User object instead of relying on the array returned from pgdb
+        user = pgdb.getUser(username)
         session['loggedIn'] = True
         session['username'] = username
-        session['userId'] = userId
-        session['ws_token'] = user_details['ws_token']
+        session['userId'] = user.id
+        session['ws_token'] = user.ws_token
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -257,8 +254,8 @@ def createGame():
 
     elif game_type == "Quadradius":
 
-        playerColorPrefs = pgdb.getPreferredColors(player_name)
-        opponentColorPrefs = pgdb.getPreferredColors(opponent_name)
+        playerColorPrefs = pgdb.getPreferredTorusColors(player_name)
+        opponentColorPrefs = pgdb.getPreferredTorusColors(opponent_name)
 
         # TODO use .get(str, default) (and make the field name better?)
         if playerColorPrefs['quad_color_pref'] != opponentColorPrefs['quad_color_pref']:
@@ -277,7 +274,7 @@ def createGame():
 
         print(players)
 
-        game = QuadradiusGame.manualCreate(players[0][0], players[1][0], players[0][1], players[1][1]) # users will later be able to choose their preferred color and a backup
+        game = QuadradiusGame.manualCreate(players[0][0], players[1][0], players[0][1], players[1][1], active_player=players[0][0]) # users will later be able to choose their preferred color and a backup
         pgdb.createQuadradiusGame(game)
 
     return redirect('/')

@@ -122,8 +122,6 @@ body {
 
 .tttCell{
     overflow: hidden;
-    
-    /* positioning */
     position: absolute;
     width: 70px;
     height: 70px;
@@ -148,9 +146,8 @@ body {
 }
 
 .quadTile {
-    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this file */
+    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this CSS file */
     background-size: 100% 100%;
-    background-color: red;
     background-position: center;
     background-repeat: no-repeat;
     position: relative;
@@ -163,10 +160,7 @@ body {
     width: 78%;
     top: 6.5%; /* specific proportions used to line up with tile art */
     left: 4.5%;
-    background-repeat: no-repeat;
     position: relative;
-    border-radius: 50%;
-    z-index: 2;
 }
 
 .previewTorus {
@@ -175,17 +169,16 @@ body {
 }
 
 .torusSVG {
-    object-view-box: 0 0 50 50;
     height: 100%;
     width: 100%;
+    border-radius: 50%;
 }
 
 .torusSVGBody {
     fill: rgb(150, 150, 150);
     cx: 50%; /*cx and cy dictate location of circle's origin */
     cy: 50%;
-    r: 47%; /* radius */
-    /* TODO why is radius not 50% ? maybe .torus width should be lower? */
+    r: 47%; /* radius, slightly lower than 50% to account for black borders on tile */
 }
 
 .torusSVGPath {
@@ -203,12 +196,6 @@ body {
     d: path("M 24,45 C 31,45 43,38 43,26");
 }
 
-.torusSVGCore {
-    cx: 50%;
-    cy: 50%;
-    r: 20%;
-}
-
 #chatbox { /* overall container */
     position: fixed;
     right: 10%;
@@ -220,7 +207,7 @@ body {
 #chatbox-base {
     height: 100%;
     background-color: #DDDDDD;
-    outline: 4px solid #633e07;
+    outline: 2px solid #1e1e49;
 }
 
 #chatbox-label {
@@ -248,29 +235,29 @@ body {
 
 #chatbox-indicator:active {
     box-shadow: none;
-    top: 22;
+    top: 22%;
     right: 6%;
 }
 
 /* possible improvement - make it slide up and down for show/hide */
 #chatbox-text-area {
     position: absolute;
-    right: 1%;
-    top: -800%;
-    width: 100%;
-    height: 800%;
+    right: 2.5%;
+    top: -750%;
+    width: 98%;
+    height: 750%;
 }
 
 #chatbox-log {
-    position: relative;
-    height: 85.5%;
+    position: absolute;
+    height: 86.1%;
     width: 100%;
     resize: none;
 }
 
 #chatbox-input{
-    position: relative;
-    top: -1.2%;
+    position: absolute;
+    bottom: 0.5%;
     height: 10%;
     width: 100%;
     resize: none;

@@ -34,14 +34,14 @@ class StatHandler(WebSocketHandler):
 
 	def wsSubscribe(self, fields: dict):
 
-		if utils.hasNoContent(fields.get('ws_token')):
+		if utils.isEmpty(fields.get('ws_token')):
 			self.write_message({
-                "command": "error",
-                "message": "server did not receive a ws_token from the client",
-                # "details": str(connectionDetails)
-            })
+				"command": "error",
+				"message": "server did not receive a ws_token from the client",
+				# "details": str(connectionDetails)
+			})
 			return
-        
+
 		else:
 			# used for authentication during updates
 			self.ws_token = fields['ws_token']
@@ -58,7 +58,7 @@ class StatHandler(WebSocketHandler):
 		tttGame = self.pgdb.getTttGame(gameId)
 		winner = tttGame.winner
 
-        # TODO this is broken now apparently. create ticket for adding full stats functionality to TTT and Chess?
+		# TODO this is broken now apparently. create ticket for adding full stats functionality to TTT and Chess?
 		ttt_games_played = stat['ttt_games_played'] + 1
 		ttt_wins = stat['ttt_wins'] + (1 if winner == username else 0)
 		ttt_win_percent = ttt_wins/ttt_games_played

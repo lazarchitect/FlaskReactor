@@ -21,11 +21,11 @@ class ChessGame:
         g.white_player = white_player
         g.black_player = black_player
         g.boardstate = json.loads(open('resources/initialChessLayout.json', 'r').read())
+        g.player_turn = white_player # TODO change this to 'g.active_player' here and in DB, do so in TTT as well
         g.completed = False
         g.time_started = datetime.now()
         g.last_move = g.time_started
         g.time_ended = None
-        g.player_turn = white_player
         g.winner = None
         g.notation = ""
         g.whitekingmoved = False
@@ -39,42 +39,46 @@ class ChessGame:
         return g
 
     @staticmethod
-    def dbLoad(record):
+    def dbLoad(gameDict):
         """constructor for loading from PGDB. field names match db column names exactly."""
         g = ChessGame()
-        g.id = record['id']
-        g.white_player = record['white_player']
-        g.black_player = record['black_player']
-        g.boardstate = record['boardstate']
-        g.completed = record['completed']
-        g.time_started = record['time_started']
-        g.last_move = record['last_move']
-        g.time_ended = record['time_ended']
-        g.player_turn = record['player_turn']
-        g.winner = record['winner']
-        g.notation = record['notation']
-        g.whitekingmoved = record['whitekingmoved']
-        g.blackkingmoved = record['blackkingmoved']
-        g.wqr_moved = record['wqr_moved']
-        g.wkr_moved = record['wkr_moved']
-        g.bqr_moved = record['bqr_moved']
-        g.bkr_moved = record['bkr_moved']
-        g.pawn_leapt = record['pawn_leapt']
-        g.pawn_leap_col = record['pawn_leap_col']
+        g.id = gameDict['id']
+        g.white_player = gameDict['white_player']
+        g.black_player = gameDict['black_player']
+        g.boardstate = gameDict['boardstate']
+        g.completed = gameDict['completed']
+        g.time_started = gameDict['time_started']
+        g.last_move = gameDict['last_move']
+        g.time_ended = gameDict['time_ended']
+        g.player_turn = gameDict['player_turn'] # subject to change to 'active_player'
+        g.winner = gameDict['winner']
+        g.notation = gameDict['notation']
+        g.whitekingmoved = gameDict['whitekingmoved']
+        g.blackkingmoved = gameDict['blackkingmoved']
+        g.wqr_moved = gameDict['wqr_moved']
+        g.wkr_moved = gameDict['wkr_moved']
+        g.bqr_moved = gameDict['bqr_moved']
+        g.bkr_moved = gameDict['bkr_moved']
+        g.pawn_leapt = gameDict['pawn_leapt']
+        g.pawn_leap_col = gameDict['pawn_leap_col']
         return g
 
-    # TODO can we get rid of all the toTuple methods if PGDB supports inserting by __dict__?
+    # TODO can we get rid of all the toTuple methods if psycopg supports inserting by __dict__?
+    #  ANSWER - YES, BUT THE INSERT QUERIES NEED TO SPECIFY EACH COLUMN NAME AT THE PLACEHOLDERS.
+    #  query = "INSERT INTO schema.table (num, data) VALUES (%(num)s, %(data)s)"
+    #  cur.execute(query, my_dict)
     def toTuple(self):
         """creates a database-friendly format of the object."""
         return (
             self.id, # UUID
-            self.white_player, 
-            self.black_player, 
+            self.white_player,
+            self.black_player,
             Json(self.boardstate),
-            self.completed, 
-            self.time_started, 
-            self.last_move, 
+            self.completed,
+            self.time_started,
+            self.last_move,
             self.time_ended,
             self.player_turn,
             self.winner
+            # unspecified attributes are initialized to defaults (NULL, FALSE, or -1)
         )
