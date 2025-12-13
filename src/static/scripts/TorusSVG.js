@@ -4,7 +4,7 @@ import {playerColors, TorusCoreLinearGradient, TorusCoreRadialGradient} from "./
 const halo = (horizontal, vertical, color) => {
     let haloColor = playerColors[color + "Highlight"][0] + "99";
     let blur = "3px";
-    return `drop-shadow(${vertical} ${horizontal} ${blur} ${haloColor}) `;
+    return `drop-shadow(${horizontal} ${vertical} ${blur} ${haloColor}) `;
 }
 
 const allHalosFilter = (color) => {
@@ -42,7 +42,8 @@ export function TorusSVG ({ color, isRadiating }) {
             <circle className='torusSVGBody' />
             <path className='torusSVGPath torusSVGPathTop' />
             <path className='torusSVGPath torusSVGPathBottom' />
-            <circle className='TorusSVGCore' fill={colorGradientVal} style={coreStyle} />
+            {/*Copilot says consider using an SVG <filter> element with feGaussianBlur + feOffset + feMerge, can improve performance*/}
+            <circle className='torusSVGCore' fill={colorGradientVal} style={coreStyle} />
         </svg>
     );
 }
