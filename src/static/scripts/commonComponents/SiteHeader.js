@@ -20,9 +20,7 @@ export function SiteHeader () {
 
 			<div id="headerRight">
 
-				<div id="settings" tabIndex={1}
-						 onKeyDown={() => setSettingsExpanded(!settingsExpanded)}
-						 onClick={() => setSettingsExpanded(!settingsExpanded)}>
+				<div id="settings" onClick={() => setSettingsExpanded(!settingsExpanded)}>
 					<SettingsGearSVG />
 				</div>
 
@@ -48,10 +46,8 @@ export function SiteHeader () {
 
 function SettingsPane({isLoggedIn}) {
 
-	const quadColors = ["red", "blue", "green", "teal", "orange", "purple"];
 	const [quadColorPref, setQuadColorPref] = useState(payload.preferences.quadColorPref);
-	//  TODO same DRY shit for quadColorBackup
-	console.log(payload);
+	const [quadColorBackup, setQuadColorBackup] = useState(payload.preferences.quadColorBackup);
 
 	return <div id="settingsPane">
 		Settings
@@ -59,24 +55,32 @@ function SettingsPane({isLoggedIn}) {
 		{isLoggedIn?
 			<>
 				<span>Quadradius Color Preference: </span>
-				<select id="quadColorPrefSelect" value={quadColorPref}
-						onChange={(e) => {
-							setQuadColorPref(e.target.value);
-							updateSettings("quadColorPref", {"color": e.target.value})
-						}} >
-					{quadColors.map((item) =>
-						<option key={item} value={item}>
-							{item}
-						</option>)
-					}
-				</select>
+				<QuadColorSelector command="quadColorPref" setter={setQuadColorPref} value={quadColorPref} />
 				<br/>
-				<span>Opt out of chat?</span>
+				<span>Quadradius Color Backup: </span>
+				<QuadColorSelector command="quadColorBackup" setter={setQuadColorBackup} value={quadColorBackup} />
+				<br/>
+				<span>Opt out of chat? -- yes/no slider</span>
 			</>
-		: //  else
+		: //  else - settings visible while logged out? uses cookies?
 			<></>
 		}
 	</div>
+}
+
+function QuadColorSelector({value, setter, command}) {
+	const quadColors = ["red", "blue", "green", "teal", "orange", "purple"];
+	return <select value={value}
+			onChange={(e) => {
+				setter(e.target.value);
+				updateSettings(command, {"color": e.target.value})
+			}} >
+		{quadColors.map((item) =>
+			<option key={item} value={item}>
+				{item}
+			</option>)
+		}
+	</select>
 }
 
 function formatMax20(username) {

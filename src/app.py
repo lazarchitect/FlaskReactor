@@ -292,6 +292,9 @@ def receiveSettings():
         case "quadColorPref":
             color = body["data"]["color"]
             pgdb.updateSetting("quad_color_pref", color, username)
+        case "quadColorBackup":
+            color = body["data"]["color"]
+            pgdb.updateSetting("quad_color_backup", color, username)
     return "ACCEPTED", 202
 
 is_closing = False
