@@ -1,19 +1,16 @@
 
 import React from "react";
 
-// TODO move to QuadConsts?
 export const playerColors = {
-    "red": ["#e72424ff", "#6e0b0bff"], "redHighlight": ["#FF0000", "#CC0000"],
-    "blue": ["#0000ff", "#191983ff"], "blueHighlight": ["#2583ff", "#2424e7"],
-    "green": ["#0fda41ff", "#08681cff"], "greenHighlight": ["#99FF99", "#44cc44"],
-    "cyan": ["#33cef5ff", "#038596ff"],  "cyanHighlight": ["#bdeefaff", "#45d9ecff"],
-    "pink": ["#d87debff", "#b409caff"],  "pinkHighlight": ["#fabdf2ff", "#f58affff"],
-    "purple": ["#6f00ffff", "#550b80ff"],  "purpleHighlight": ["#cc81ffff", "#af45ecff"],
-    "teal": ["#2ccac2ff", "#036370ff"],  "tealHighlight": ["#39bfd1ff", "#009fb4ff"],
-    "yellow": ["#cbe635ff", "#90a000ff"],  "yellowHighlight": ["#effabdff", "#d7ff27ff"],
-    "orange": ["#eeb03dff", "#a76d02ff"],  "orangeHighlight": ["#f1d9aaff", "#bd8a2dff"]
-    // TODO many of these contain alpha values, just remove the last 2 chars if 8 chars
-
+    "red":    ["#e72424", "#6e0b0b"], "redHighlight":     ["#FF0000", "#CC0000"],
+    "blue":   ["#0000ff", "#191983"], "blueHighlight":    ["#2583ff", "#2424e7"],
+    "green":  ["#0fda41", "#08681c"], "greenHighlight":   ["#99FF99", "#44cc44"],
+    "cyan":   ["#33cef5", "#038596"],  "cyanHighlight":   ["#bdeefa", "#45d9ec"],
+    "pink":   ["#d87deb", "#b409ca"],  "pinkHighlight":   ["#fabdf2", "#f58aff"],
+    "purple": ["#6f00ff", "#550b80"],  "purpleHighlight": ["#cc81ff", "#af45ec"],
+    "teal":   ["#2ccac2", "#036370"],  "tealHighlight":   ["#39bfd1", "#009fb4"],
+    "yellow": ["#cbe635", "#90a000"],  "yellowHighlight": ["#effabd", "#d7ff27"],
+    "orange": ["#eeb03d", "#a76d02"],  "orangeHighlight": ["#f1d9aa", "#bd8a2d"]
     // can add more colors (bronze?) or like, dual colors, or other gradient types
 };
 
