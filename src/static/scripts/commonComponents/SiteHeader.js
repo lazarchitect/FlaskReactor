@@ -46,8 +46,10 @@ export function SiteHeader () {
 
 function SettingsPane({isLoggedIn}) {
 
-	const [quadColorPref, setQuadColorPref] = useState(payload.preferences.quadColorPref);
-	const [quadColorBackup, setQuadColorBackup] = useState(payload.preferences.quadColorBackup);
+	let {preferences} = payload;
+
+	const [quadColorPref, setQuadColorPref] = useState(preferences?.quadColorPref);
+	const [quadColorBackup, setQuadColorBackup] = useState(preferences?.quadColorBackup);
 
 	return <div id="settingsPane">
 		Settings
