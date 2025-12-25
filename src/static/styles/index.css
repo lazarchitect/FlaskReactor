@@ -1,46 +1,73 @@
 
-html {
-    height: 100%;
-}
-
 body {
     background-color: #5ba7af;
-    margin: 0%;
-    height: 100%;
-}
-
-#root {
-    height: 100%
-}
-
-#reactRoot {
+    margin: 0;
     height: 100%;
 }
 
 #siteHeader {
-    background-color: mediumaquamarine;
+    position: fixed;
+    top: 0;
+    width: 100%;
     height: 10%;
-    width: 100vw;
-    max-width: 100%;
+    z-index: 99;
+    background-color: mediumaquamarine;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 #headerLeft {
-    padding-left: 2%;
+    position: relative;
+    left: 2%;
+    height: 100%;
     font-size: x-large;
-}
-
-#headerRight {
-    padding-right: 5%;
     display: flex;
     align-items: center;
 }
 
-#headerUsername {
-    min-width: 65%;
+#headerRight {
+    position: relative;
+    right: 3%;
     font-size: large;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+
+#settingsGearSVG {
+    width: 25px;
+    height: 25px;
+}
+
+#settingsGearSVG:hover {
+    cursor: pointer;
+}
+
+#settingsPane {
+    background-color: white;
+    position: fixed;
+    top: 10%;
+    width: fit-content;
+}
+
+#headerUserText {
+    padding-inline: 5%;
+    font-size: large;
+}
+
+#logout {
+    padding: 20%;
+    display: inline;
+}
+
+#main {
+    position: absolute;
+    top: 10%;
+    padding: 0 2% 0 2%;
 }
 
 #pastTttGames {
@@ -85,11 +112,11 @@ body {
 }
 
 .darkHighlighted {
-    background-color: blue;
+    background-color: #ca7d2a;
 }
 
 .lightHighlighted {
-    background-color: orange;
+    background-color: hsl(34, 100%, 92%);
 }
 
 .pieceImg {
@@ -111,7 +138,6 @@ body {
 #tttBoard {
     height: 500px;
     width: 500px;
-    background-color: cadetblue;
     overflow: hidden;
     position: relative;
 }
@@ -125,9 +151,6 @@ body {
     position: absolute;
     width: 70px;
     height: 70px;
-
-    /* debug */
-    /* border: 1px solid indianred;     */
 }
 
 .activeTttCell:hover{
@@ -199,7 +222,7 @@ body {
 #chatbox { /* overall container */
     position: fixed;
     right: 10%;
-    bottom: 0%;
+    bottom: 0;
     width: 15%;
     height: 6%;
 }

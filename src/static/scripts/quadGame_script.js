@@ -17,7 +17,7 @@ const page = (
 	<div id="reactRoot">
 
         {/* top of the page */}
-        <SiteHeader version={payload.deployVersion} username={payload.username}/>
+        <SiteHeader />
         
         {/* rest of the page */}
         <div id="quadPlayArea"> 

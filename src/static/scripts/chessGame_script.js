@@ -10,7 +10,7 @@ let isPlayer = payload.players.includes(payload.username);
 
 let page = (
 	<div id="reactRoot">
-        <SiteHeader version={payload.deployVersion} username={payload.username}/>
+        <SiteHeader />
         <div id="chessPlayArea">
             <Chessboard />
             <p>Status: <span id="status"></span></p>

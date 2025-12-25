@@ -3,7 +3,7 @@ containing game data, users, and more."""
 
 from psycopg import connect, InterfaceError, OperationalError
 from psycopg.errors import InFailedSqlTransaction
-from psycopg.rows import dict_row, class_row
+from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
 from src.MockPgdb import MockPgdb
@@ -26,6 +26,7 @@ sql = {
 	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup) VALUES (%s, %s, %s, %s, %s, %s, %s)",
 	"getUser": f"SELECT * FROM {usersTable} WHERE name=%s",
 	"checkLogin": f"SELECT * FROM {usersTable} WHERE name=%s AND password_hash=%s",
+	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
 	# Quadradius
 	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, completed, time_started, last_move, time_ended, winner) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
@@ -290,6 +291,15 @@ class Pgdb:
 		values = [gameId]
 		self.__execute(query, values)
 		return self.cursor.fetchall()
+
+
+	### Settings
+
+	def updateSetting(self, settingName, value, username):
+		query = sql['updateSetting'].replace("_SETTING_", settingName) # can try this with %s instead of .replace?
+		values = [value, username]
+		self.__execute(query, values)
+		return self.conn.commit()
 
 	####### HELPER METHODS #########
 

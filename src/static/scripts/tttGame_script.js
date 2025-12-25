@@ -47,7 +47,7 @@ function tttSocketConnect(setBoardstate, setYourTurn) {
 
 		}
 
-		else if(data.command == "endGame") {
+		else if(data.command === "endGame") {
 			setStatus(determineStatus(payload, data));
 			setYourTurn(payload.username === data.activePlayer);
 			// call out to server - update this user's stats
@@ -75,9 +75,8 @@ function tttSocketConnect(setBoardstate, setYourTurn) {
 
     var board = document.getElementById("tttBoard");
     board.onclick = function(mouseClick){
-		if(mouseClick.target.className != "tttCell activeTttCell") return;
-    	console.log("click detected: sending message to socketServer.");
-		const boardIndex = mouseClick.target.id;
+		if(mouseClick.target.className !== "tttCell activeTttCell") return;
+    	const boardIndex = mouseClick.target.id;
 		tttSocketUpdate(tttSocket, boardIndex);
     };
 }
@@ -99,10 +98,10 @@ function determineStatus(payload, data) {
 			retval+="It's a tie.";
 		}
 		else{
-			if(payload.username==data.winner)
+			if(payload.username === data.winner)
 				retval+="You win!";
 	
-			else if(payload.username==data.otherPlayer) 
+			else if(payload.username === data.otherPlayer)
 				retval+="You lose...";
 			
 			else
@@ -144,17 +143,16 @@ function O_Piece(){
 	);
 }
 
-function TttBoardRow({yourTurn, row, values}){
-	// values will look like ["X", "X", "O"]. each is a cellItem
-    console.log(values);
-	return (values).map((cellItem, index) =>
+function TttBoardRow({yourTurn, rowIndex, values}){
+	// values is an array containing three cell data, e.g. ["X", "X", "O"]
+    return (values).map((cellContents, colIndex) =>
 			<span 
-				key={index} 
-				className={"tttCell" + ((yourTurn && cellItem === "" && payload.username !== "") ? " activeTttCell": "")}
-				id={index+(row*3)}
-				style={{left: 15+(index*29) + "%", top: 15+(row*29) + "%"}}
+				key={colIndex}
+				className={"tttCell" + ((yourTurn && cellContents === "" && payload.username !== "") ? " activeTttCell": "")}
+				id={colIndex+(rowIndex*3)}
+				style={{left: 15+(colIndex*29) + "%", top: 15+(rowIndex*29) + "%"}}
 			>
-				{cellItem === "" ? "" : (cellItem === 'X' ? <X_Piece/> : <O_Piece/>)}
+				{cellContents === "" ? "" : (cellContents === 'X' ? <X_Piece/> : <O_Piece/>)}
 			</span>
 	);
 }
@@ -177,9 +175,9 @@ function TttBoard(){
 				<rect x="50" y="330" width="400" height="12" rx="5"/>
 			</svg>
 			<div id="tttBoardData">
-				<TttBoardRow yourTurn={yourTurn} row={0} values={boardstate.slice(0,3)}/><br/>
-				<TttBoardRow yourTurn={yourTurn} row={1} values={boardstate.slice(3,6)}/><br/>
-				<TttBoardRow yourTurn={yourTurn} row={2} values={boardstate.slice(6,9)}/><br/>
+				<TttBoardRow yourTurn={yourTurn} rowIndex={0} values={boardstate.slice(0,3)}/><br/>
+				<TttBoardRow yourTurn={yourTurn} rowIndex={1} values={boardstate.slice(3,6)}/><br/>
+				<TttBoardRow yourTurn={yourTurn} rowIndex={2} values={boardstate.slice(6,9)}/><br/>
 			</div>
 		</div>
 	)

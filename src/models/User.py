@@ -22,7 +22,9 @@ class User:
         u.id = userDict['id']
         u.password_hash = userDict['password_hash']
         u.ws_token = userDict['ws_token']
-        # TODO quadradius color prefs and other prefs later
+        u.quad_color_pref = userDict['quad_color_pref']
+        u.quad_color_backup = userDict['quad_color_backup']
+        # add other prefs here
         return u
         
     def toTuple(self):

@@ -7,11 +7,7 @@ import {createRoot} from 'react-dom/client';
 import {SiteHeader} from './commonComponents/SiteHeader';
 import styled from 'styled-components';
 
-const username = payload.username;
-
-const quadradiusGames = payload.quadradiusGames;
-const chessGames = payload.chessGames;
-const tttGames = payload.tttGames;
+const {username, quadradiusGames, chessGames, tttGames} = payload;
 
 const GameDiv = styled.div`
 	background-color: peachpuff;
@@ -21,13 +17,13 @@ const GameDiv = styled.div`
 	border: 2px solid blue;
 	width: 100px;
 	height: 50px;
-	border-radius: 10px
-`;
+	border-radius: 10px`;
 
 function openGame(gameId, gameType){
 	window.location.href = "/games/" + gameType + "/" + gameId;
 }
 
+// TODO should the following 6 functions be refactored to reduce DRYness?
 function QuadradiusGameList ({completed}) {
     return quadradiusGames
 	.filter(game => game.completed === completed)
@@ -120,36 +116,33 @@ function TttGames () {
 	);
 }
 
-
-
 const gameTypes = ["Chess", "Tic-Tac-Toe", "Quadradius"]; 
 
-const jsxGT = gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>);
-
-var page = (
+const page = (
 
 	<div id="reactRoot">
-		<SiteHeader version={payload.deployVersion} username={payload.username}/>
 
-		<form action="/creategame" method="POST" id="createGameDiv">
-			<h4>Create Game</h4>
-			
-			<select name="gameType"> {/*The name attribute is used to reference the form data*/}
-  				{jsxGT}
-			</select>
-			<br/>
-			
-			Opponent Username: <input type="text" name="opponent"/> 
-			<input type="submit" value="Create"/>
-		</form>
+		<SiteHeader/>
+		<div id="main">
+			<form action="/creategame" method="POST" id="createGameDiv">
+				<h4>Create Game</h4>
 
-		<QuadradiusGames/>
-		<ChessGames/>
-		<TttGames/>
+				<select name="gameType"> {/*The name attribute is used to reference the form data*/}
+					{gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>)}
+				</select>
+				<br/>
 
+				Opponent Username: <input type="text" name="opponent"/>
+				<input type="submit" value="Create"/>
+			</form>
+
+			<QuadradiusGames/>
+			<ChessGames/>
+			<TttGames/>
+		</div>
 	</div>
 );
 
-let rootElement = document.getElementById('root');
-let reactRoot = createRoot(rootElement);
+const rootElement = document.getElementById('root');
+const reactRoot = createRoot(rootElement);
 reactRoot.render(page);
