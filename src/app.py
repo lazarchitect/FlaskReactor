@@ -11,7 +11,7 @@ import json
 import os
 
 from src.pgdb import Pgdb
-from src.utils import generateId, generateHash, notLoggedIn
+from src.utils import generateId, generateHash, notLoggedIn, buildPreferences
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
 from src.models.QuadradiusGame import QuadradiusGame
@@ -50,13 +50,15 @@ with app.test_request_context():
 def homepage():
 
     if notLoggedIn(session):
-        return render_template("splash.html")
+        payload = json.dumps({"deployVersion": deployVersion})
+        return render_template("splash.html", payload = payload)
 
     else:
         chessGames, tttGames, quadradiusGames = pgdb.getAllGames(session.get('username'))
 
         payload = {
             "username": session.get('username'),
+            "preferences": buildPreferences(session),
             "chessGames": chessGames,
             "tttGames": tttGames,
             "quadradiusGames": quadradiusGames,
@@ -70,7 +72,7 @@ def homepage():
 def chessGame(gameId):
     game = pgdb.getChessGame(gameId)
 
-    if game == None:
+    if game is None:
         return "game with that ID was not found"#render_template("home.html", alert="Game could not be retrieved from database.")
 
     username = session.get('username')
@@ -109,8 +111,8 @@ def quadGame(gameId):
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "game_type": "quadradius",
-        "ws_token": session.get('ws_token')
-        # "yourTurn": game.player_turn == session.get('username') # TODO this has not been added in the db yet
+        "ws_token": session.get('ws_token'),
+        "yourTurn": game.active_player == session.get('username')
     }
 
     payload = json.dumps(payload, default=str)
@@ -157,6 +159,8 @@ def login():
         session['username'] = username
         session['userId'] = user.id
         session['ws_token'] = user.ws_token
+        session['quadColorPref'] = user.quad_color_pref
+        session['quadColorBackup'] = user.quad_color_backup
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -279,6 +283,16 @@ def createGame():
 
     return redirect('/')
 
+@app.route("/receive_settings", methods=["PATCH"])
+def receiveSettings():
+    # todo authenticate (session?)
+    body = request.json
+    username = body["username"]
+    match(body.get("command", None)):
+        case "quadColorPref":
+            color = body["data"]["color"]
+            pgdb.updateSetting("quad_color_pref", color, username)
+    return "ACCEPTED", 202
 
 is_closing = False
 

@@ -2,15 +2,16 @@ import React, { useState } from "react";
 import {playerColors, TorusCoreLinearGradient, TorusCoreRadialGradient} from "./quadUtils";
 
 const halo = (horizontal, vertical, color) => {
-    let haloColor = playerColors[color + "Highlight"][0] + "99";
+    let haloColor = playerColors[color + "Highlight"][0] + "99"; // 99 is alpha for translucency
     let blur = "3px";
     return `drop-shadow(${horizontal} ${vertical} ${blur} ${haloColor}) `;
 }
 
+// "allHalos" refers to the 4 halo drop-shadow effects needed in the 4 cardinal directions for an even visual.
 const allHalosFilter = (color) => {
     let length = "1px";
     let negLength = "-" + length;
-    return halo(length, "0px", color) + halo("0px", length, color) + halo(negLength, "0px", color) +halo("0px", negLength, color);
+    return halo(length, "0px", color) + halo("0px", length, color) + halo(negLength, "0px", color) + halo("0px", negLength, color);
 }
 
 export function TorusSVG ({ color, isRadiating }) {

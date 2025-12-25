@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html>
     <head>
-        
+        <title>Flask Reactor</title>
         <link rel="stylesheet" href="/static/styles/index.css">
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-        
+        <link rel="shortcut icon" href="/static/favicon.ico">
 
-
-        <script type="text/javascript" src="/static/scripts/dist/CommonComponents.js" defer ></script>
-        <script type="text/javascript" src="/static/scripts/dist/splash_script.js" defer ></script>
-        
     </head>
 
     <body>
 
         <div id="root"></div>
 
+        <script> const payload = JSON.parse('{{payload | safe}}'); </script>
+        <script type="text/javascript" src="/static/scripts/dist/splash_script.js" defer ></script>
     </body>
 </html>

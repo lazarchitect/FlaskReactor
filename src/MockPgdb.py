@@ -38,6 +38,9 @@ class MockPgdb:
 	def getTttGame(self, username):
 		return ('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'MockUser1', 'MockUser2', {}, False, None, None, None, 'MockUser1')
 
+	def getAllGames(self, username):
+		return [[('FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'MockUser1', 'MockUser2', {}, False, None, None, None, 'MockUser1')],[],[]]
+
 	def updateBoardstate(self, new_boardstate, update_time, gameid):
 		pass
 

@@ -289,3 +289,10 @@ def numberToLetter(i):
     if i > 7 or i < 0:
         return None
     return 'abcdefgh'[i]
+
+
+def buildPreferences(session):
+    return {
+        "quadColorPref": session.get("quadColorPref"),
+        "quadColorBackup": session.get("quadColorBackup")
+    }
