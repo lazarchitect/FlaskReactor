@@ -3,7 +3,7 @@
 import React from 'react'; // required by React
 import { createRoot } from 'react-dom/client';
 
-import { DndProvider, useDrop } from "react-dnd";
+import { DndProvider } from "react-dnd";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import { SiteHeader } from './commonComponents/SiteHeader';
@@ -31,6 +31,6 @@ const page = (
     </div>
 );
 
-var rootElement = document.getElementById("root");
-var reactRoot = createRoot(rootElement);
+const rootElement = document.getElementById("root");
+const reactRoot = createRoot(rootElement);
 reactRoot.render(page);
