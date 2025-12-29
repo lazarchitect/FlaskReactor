@@ -78,7 +78,7 @@ def chessGame(gameId):
     username = session.get('username')
 
     colors = {game.white_player: "White", game.black_player: "Black"}
-    userColor = colors.get(username) # defaults to None if user is not a player (not logged in, other acct, etc)
+    userColor = colors.get(username) # defaults to None if user is not a player (not logged in, other acct, etc.)
     enemyColor = "Black" if userColor == "White" else ("White" if userColor == "Black" else None)
 
     payload = {
@@ -201,10 +201,10 @@ def logout():
     session.clear()
     return redirect("/")
 
-@app.route("/creategame", methods=["POST"])
+@app.route("/create-game", methods=["POST"])
 def createGame():
 
-    # TODO refactoring /creategame into smaller subroutines
+    # TODO refactoring /create-game into smaller subroutines
     # bad input handling can be handled outside this file
     # game_type should be a match/case statement with subfunctions in other files
     # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
@@ -278,7 +278,7 @@ def createGame():
 
         print(players)
 
-        game = QuadradiusGame.manualCreate(players[0][0], players[1][0], players[0][1], players[1][1], active_player=players[0][0]) # users will later be able to choose their preferred color and a backup
+        game = QuadradiusGame.manualCreate(players[0][0], players[1][0], players[0][1], players[1][1], active_player=players[0][0]) # users will be able to update their preferred & backup Torus colors
         pgdb.createQuadradiusGame(game)
 
     return redirect('/')

@@ -23,7 +23,7 @@ function openGame(gameId, gameType){
 	window.location.href = "/games/" + gameType + "/" + gameId;
 }
 
-// TODO should the following 6 functions be refactored to reduce DRYness?
+// TODO should the following 6 functions be refactored to reduce DRY-ness?
 function QuadradiusGameList ({completed}) {
     return quadradiusGames
 	.filter(game => game.completed === completed)
@@ -124,7 +124,7 @@ const page = (
 
 		<SiteHeader/>
 		<div id="main">
-			<form action="/creategame" method="POST" id="createGameDiv">
+			<form action="/create-game" method="POST" id="createGameDiv">
 				<h4>Create Game</h4>
 
 				<select name="gameType"> {/*The name attribute is used to reference the form data*/}

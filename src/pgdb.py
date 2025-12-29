@@ -1,4 +1,4 @@
-"""provides a set of tools for interfacing with FlaskReactor's custom PostGres DataBase (PGDB) instance, 
+"""provides a set of tools for interfacing with FlaskReactor's custom Postgres Database (PGDB) instance,
 containing game data, users, and more."""
 
 from psycopg import connect, InterfaceError, OperationalError
@@ -61,11 +61,11 @@ sql = {
 }
 
 class Pgdb:
-	"""interacts with a PostgreSQL database of Flaskreactor users and games, for CRUD operations on records."""
+	"""interacts with a Postgres database of Flaskreactor users and games, for CRUD operations on records."""
 
 	_instance = None
 
-	# overriding new in order to use a Singleton approach, no need to reinstatiate for every Handler that comes up
+	# overriding new in order to use a Singleton approach, no need to reinstantiate for every Handler that comes up
 	# and also to allow for MockPgdb to be used without impacting code in any other file
 	def __new__(cls, postgres_config):
 
@@ -229,7 +229,7 @@ class Pgdb:
 		values = [gameId]
 		self.__execute(query, values)
 		record = self.cursor.fetchone()
-		if(record == None):
+		if(record is None):
 			print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
 		return TttGame.dbLoad(record)

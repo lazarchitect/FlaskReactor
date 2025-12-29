@@ -1,5 +1,5 @@
 
-# not used anywhere
+# this class is not used
 class Chat:
     
     def __init__(self):

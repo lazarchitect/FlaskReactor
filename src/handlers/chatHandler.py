@@ -1,6 +1,7 @@
-from tornado.websocket import WebSocketHandler
 import json
-from src.models.User import User
+
+from tornado.websocket import WebSocketHandler
+
 from src.utils import generateId, isEmpty, updateAll
 
 clientConnections = dict()
@@ -52,7 +53,7 @@ class ChatHandler(WebSocketHandler):
 
         print(fields)
         
-        index = 0 # doesnt matter, but we could set it to max(indexes so far)
+        index = 0 # doesn't matter, but we could set it to max(indexes so far)
         username = fields['username']
         content = fields['content']
 
@@ -70,8 +71,8 @@ class ChatHandler(WebSocketHandler):
 
     def handleSubscribe(self, fields: dict):
 
-        if self.socketId == None: 
-            print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
+        if self.socketId is None:
+            print('--------------------\nERROR!!! SOCKET ID NOT ASSIGNED\n---------------')
 
         connectionDetails = {
             "id": self.socketId,
@@ -130,7 +131,7 @@ class ChatHandler(WebSocketHandler):
                 return
 
         # authenticate user by checking if the provided ws_token matches what's in the DB 
-        user = self.pgdb.getUser(fields['username']) # possible improvement - let the users recieve and pass back an encrypted string containing their ws_token
+        user = self.pgdb.getUser(fields['username']) # possible improvement - let the users receive and pass back an encrypted string containing their ws_token
         if (fields['ws_token'] != user.ws_token):
             print("debug: this user is claiming to have a different WS token? malicious?")
             return #this guy's a phony!

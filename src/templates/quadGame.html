@@ -7,7 +7,7 @@
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         
         <script>
-            var payload = JSON.parse('{{payload | safe}}'); // comes from Flask
+            const payload = JSON.parse('{{payload | safe}}'); // comes from Flask
         </script>
 
         <script type="text/javascript" src="/static/scripts/dist/quadGame_script.js"  defer ></script>

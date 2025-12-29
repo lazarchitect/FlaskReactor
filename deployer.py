@@ -44,7 +44,7 @@ def authenticated(req):
 
     try:
         remote_hash = request.headers['X-Hub-Signature-256'].split("=")[1]
-    except:
+    except [KeyError, IndexError]:
         return False
     return hmac.compare_digest(remote_hash, local_hash)
 
