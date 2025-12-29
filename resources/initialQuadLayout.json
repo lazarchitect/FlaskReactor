@@ -1,334 +1,374 @@
 [
     [
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         }
     ],
     [
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "blue",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         }
     ],
-    [{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{}],
-    [{},{},{},{},{},{},{},{},{},{}],
+    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
+    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
+    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
+    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
     [
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         }
     ],
     [
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         },
         {
-            "piece": { 
-                "color": "red",
+            "torus": { 
+                "color": "TBD",
                 "powers": [],
                 "isParasiteHost": false,
                 "parasites": []
-            }
+            },
+            "elevation": 3
         }
     ]
 ]

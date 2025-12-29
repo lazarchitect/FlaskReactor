@@ -2,17 +2,21 @@
 
 import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
-import { SiteHeader, MessageBox } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
+import { Chatbox } from './commonComponents/Chatbox';
 import { Chessboard } from './chessboard';
 
-var page = (
+let isPlayer = payload.players.includes(payload.username);
+
+let page = (
 	<div id="reactRoot">
-        <SiteHeader version={payload.deployVersion} username={payload.username}/>
+        <SiteHeader />
         <div id="chessPlayArea">
-            <Chessboard boardstate={payload.boardstate}/>
+            <Chessboard />
             <p>Status: <span id="status"></span></p>
         </div>
-        <MessageBox/>
+        
+        {isPlayer && <Chatbox expanded={false} />}
         
     </div>
 );

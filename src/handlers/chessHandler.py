@@ -1,8 +1,6 @@
 from datetime import datetime
 import json
 from tornado.websocket import WebSocketHandler
-from src.pgdb import Pgdb
-from src.FakePgdb import FakePgdb
 import src.utils as utils
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
@@ -20,8 +18,8 @@ class ChessHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self, db_env):
-        self.pgdb = Pgdb(db_env) if db_env != "no_db" else FakePgdb()
+    def initialize(self, pgdb):
+        self.pgdb = pgdb
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
@@ -39,6 +37,14 @@ class ChessHandler(WebSocketHandler):
         if request == "subscribe":
             self.handleSubscribe(fields)
 
+        # after subscribing, we should be authenticating
+        elif fields.get('ws_token') != self.ws_token:
+            self.write_message({
+                "command": "error",
+                "message": "auth error! invalid ws_token for user"
+            })
+            return
+
         elif request == "update":
             self.handleUpdate(fields)
 
@@ -55,7 +61,7 @@ class ChessHandler(WebSocketHandler):
     ## Message Handler functions ##
     ###############################
 
-    def handleSubscribe(self, fields):
+    def handleSubscribe(self, fields: dict):
 
         if self.socketId == None: 
             print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
@@ -65,16 +71,27 @@ class ChessHandler(WebSocketHandler):
             "conn": self.ws_connection
         }
 
-        # gameId is given to the frontend by Flask in the payload
-        try:
-            gameId = fields['gameId']
-        except KeyError:
+        # gameId is given to the frontend by Flask in the payload and then sent back here to confirm
+        gameId = fields.get('gameId')
+        if utils.isEmpty(gameId):
             self.write_message({
-            "command": "error",
-            "message": "server did not receive a game ID from the client",
-            "details": str(connectionDetails)
-        })
-
+                "command": "error",
+                "message": "server did not receive a game ID from the client",
+                "details": str(connectionDetails)
+            })
+            return
+        
+        if utils.isEmpty(fields.get('ws_token')):
+            self.write_message({
+                "command": "info",
+                "message": "server did not receive a ws_token from the client",
+                "details": str(connectionDetails)
+            })
+        
+        else:
+            # used for authentication during updates
+            self.ws_token = fields['ws_token']
+        
         #used for easy search during later deletion
         self.gameId = gameId
 
@@ -85,9 +102,9 @@ class ChessHandler(WebSocketHandler):
 
         game = self.pgdb.getChessGame(gameId)
 
-        if game == None:
+        if game is None:
             pass
-            #TODO handle possible error if pgdb doesnt find anything.
+            #TODO If game is None, we should error alert the UI and halt here
 
         if game.white_player == game.player_turn:
             otherPlayer = game.black_player

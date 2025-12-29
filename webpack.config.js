@@ -1,14 +1,17 @@
 const path = require("path");
 const glob = require('glob');
 
+const delim = path.sep;
+const scriptsDir = "src" + delim + "static" + delim + "scripts" + delim;
+
 module.exports = {
   entry: () => {
       const entries = {};
       glob.sync("./src/**/*.js").forEach(file => {
-          const name = file.replace("src\\static\\scripts\\", "").replace(".js", "");
-          if(!name.includes("dist\\")) {
+        const name = file.replace(scriptsDir, "").replace(".js", "");
+        if(!name.includes("dist")) {
             entries[name] = "./" + file;
-          }
+        }
       });
       return entries
   },
@@ -16,7 +19,7 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  output: { 
+  output: {
     path: path.resolve("src/static/scripts", "dist"),
     clean: true
   },

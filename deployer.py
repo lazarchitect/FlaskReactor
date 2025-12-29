@@ -24,8 +24,8 @@ def process_webhook():
     body = request.json
     ref = body["ref"]
     commitId = body["after"][0:7]
-    if(ref != "refs/heads/master"):
-        return "Not master branch, ignoring", 400
+    if(ref != "refs/heads/main"):
+        return "Not main branch, ignoring", 400
 
 
     th = Thread(target=redeploy, args=(commitId,)) #comma needed in args to make it iterable
@@ -68,8 +68,8 @@ def redeploy(commitId):
     (newImage, logs) = client.images.build(path = ".", tag = tag)
 
     logging.info("new image built. Running new container....")
-    # port 80 inside container links to port 5000 of host machine
-    client.containers.run(newImage, name=name, ports = {80:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
+    # port 5000 inside container links to port 5000 of host machine
+    client.containers.run(newImage, name=name, ports = {5000:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
     logging.info("done. commit " + commitId + " deployed.")
 
 

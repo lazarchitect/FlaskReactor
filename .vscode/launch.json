@@ -5,33 +5,18 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "FlaskReactor LOCAL DB",
+			"name": "FlaskReactor - Windows",
 			"type": "debugpy",
 			"request": "launch",
 			"module": "src.app",
-			"args": [
-				"local_db"
-			],
 			"preLaunchTask": "webpack build"
 		},
 		{
-			"name": "FlaskReactor REMOTE DB",
+			"name": "FlaskReactor - Unix",
 			"type": "debugpy",
 			"request": "launch",
 			"module": "src.app",
-			"args": [
-				"remote_db"
-			],
-			"preLaunchTask": "webpack build"
-		},
-		{
-			"name": "FlaskReactor NO DB",
-			"type": "debugpy",
-			"request": "launch",
-			"module": "src.app",
-			"args": [
-				"no_db"
-			],
+			"sudo": true, //could cause issues on windows
 			"preLaunchTask": "webpack build"
 		}
 	]

@@ -1,46 +1,73 @@
 
-html {
-    height: 100%;
-}
-
 body {
     background-color: #5ba7af;
-    margin: 0%;
-    height: 100%;
-}
-
-#root {
-    height: 100%
-}
-
-#reactRoot {
+    margin: 0;
     height: 100%;
 }
 
 #siteHeader {
-    background-color: mediumaquamarine;
+    position: fixed;
+    top: 0;
+    width: 100%;
     height: 10%;
-    width: 100vw;
-    max-width: 100%;
+    z-index: 99;
+    background-color: mediumaquamarine;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
 #headerLeft {
-    padding-left: 2%;
+    position: relative;
+    left: 2%;
+    height: 100%;
     font-size: x-large;
-}
-
-#headerRight {
-    padding-right: 5%;
     display: flex;
     align-items: center;
 }
 
-#headerUsername {
-    min-width: 65%;
+#headerRight {
+    position: relative;
+    right: 3%;
     font-size: large;
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+
+#settingsGearSVG {
+    width: 25px;
+    height: 25px;
+}
+
+#settingsGearSVG:hover {
+    cursor: pointer;
+}
+
+#settingsPane {
+    background-color: white;
+    position: fixed;
+    top: 10%;
+    width: fit-content;
+}
+
+#headerUserText {
+    padding-inline: 5%;
+    font-size: large;
+}
+
+#logout {
+    padding: 20%;
+    display: inline;
+}
+
+#main {
+    position: absolute;
+    top: 10%;
+    padding: 0 2% 0 2%;
 }
 
 #pastTttGames {
@@ -85,11 +112,11 @@ body {
 }
 
 .darkHighlighted {
-    background-color: blue;
+    background-color: #ca7d2a;
 }
 
 .lightHighlighted {
-    background-color: orange;
+    background-color: hsl(34, 100%, 92%);
 }
 
 .pieceImg {
@@ -111,7 +138,6 @@ body {
 #tttBoard {
     height: 500px;
     width: 500px;
-    background-color: cadetblue;
     overflow: hidden;
     position: relative;
 }
@@ -122,14 +148,9 @@ body {
 
 .tttCell{
     overflow: hidden;
-    
-    /* positioning */
     position: absolute;
     width: 70px;
     height: 70px;
-
-    /* debug */
-    /* border: 1px solid indianred;     */
 }
 
 .activeTttCell:hover{
@@ -138,97 +159,130 @@ body {
 
 #quadboard {
     display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-template-rows: repeat(8, 1fr);
+    grid-template-columns: repeat(10, 10%);
+    grid-template-rows: repeat(8, 12.5%);
     margin-top: 4%;
     margin-left: 8%;
-    width: 512px;
+    width: 640px;
     height: 512px;
     border: 3px solid black;
 }
 
 .quadTile {
-    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this file */
+    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this CSS file */
     background-size: 100% 100%;
-    background-color: red;
     background-position: center;
     background-repeat: no-repeat;
-    width: 1fr;
-    height: 1fr;
+    position: relative;
+    overflow: hidden;
     border: 1px solid slategray;
 }
 
 .torus {
+    height: 82%;
+    width: 78%;
+    top: 6.5%; /* specific proportions used to line up with tile art */
+    left: 4.5%;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
 }
 
-.torusImg{
-    /* torii default to a light green (01FF00) but should be programatically changed to the user's preferred color */
-    width: 80%;
-    height: 80%;
-    margin-left: 5%;
-    margin-top: 10%;
+.previewTorus {
+    height: 50px;
+    width: 50px;
 }
 
-#messagebox { /* overall container */
-    position: fixed;
-    width: 250px;
-    height: 400px;
-    right: 10%;
-    bottom: 0%;
-}
-
-/* possible improvement - make it slide up and down for show/hide */
-#messagebox-main {
+.torusSVG {
     height: 100%;
-    background-color: purple;
-}
-
-#messagebox-log {
-    height: 78.4%; /* crazy... */
     width: 100%;
-    resize: none;
+    border-radius: 50%;
 }
 
-#messagebox-input{
-    position: relative;
-    width: 100%;
-    resize: none;
-    bottom: 1%;
+.torusSVGBody {
+    fill: rgb(150, 150, 150);
+    cx: 50%; /*cx and cy dictate location of circle's origin */
+    cy: 50%;
+    r: 47%; /* radius, slightly lower than 50% to account for black borders on tile */
 }
 
-#messagebox-base {
-    background-color: #DDDDDD;
-    outline: 4px solid #633e07;
-    position: absolute;
-    width: 100%;
-    height: 10%;
-    bottom: 0%;    
+.torusSVGPath {
+    fill: transparent;
+    stroke: black;
+    stroke-width: 3px;
+    stroke-opacity: 1;
 }
 
-#messagebox-label {
-    position: absolute;
-    top: 30%;
-    left: 10%;
+.torusSVGPathTop {
+    d: path("M 6,26 C 6,15 15,6 24,6");
 }
 
-#messagebox-indicator {
-    display: inline-block;
-    position: absolute;
-    top: 25%;
+.torusSVGPathBottom {
+    d: path("M 24,45 C 31,45 43,38 43,26");
+}
+
+#chatbox { /* overall container */
+    position: fixed;
     right: 10%;
+    bottom: 0;
+    width: 15%;
+    height: 6%;
+}
+
+#chatbox-base {
+    height: 100%;
+    background-color: #DDDDDD;
+    outline: 2px solid #1e1e49;
+}
+
+#chatbox-label {
+    position: relative;
+    width: 1fr;
+    left: 10%;
+    top: 25%;
+}
+
+#chatbox-indicator {
+    position: absolute;
+    top: 20%;
+    right: 8%;
     background-color: #3333dd;
     color: white;
     text-align: center;
-    width: 30%;
+    width: 40%;
     border: 2px solid white;
     border-radius: 15% / 50%;
 }
 
-#messagebox-indicator:hover {
+#chatbox-indicator:hover {
     box-shadow: 2px 2px black;
 }
+
+#chatbox-indicator:active {
+    box-shadow: none;
+    top: 22%;
+    right: 6%;
+}
+
+/* possible improvement - make it slide up and down for show/hide */
+#chatbox-text-area {
+    position: absolute;
+    right: 2.5%;
+    top: -750%;
+    width: 98%;
+    height: 750%;
+}
+
+#chatbox-log {
+    position: absolute;
+    height: 86.1%;
+    width: 100%;
+    resize: none;
+}
+
+#chatbox-input{
+    position: absolute;
+    bottom: 0.5%;
+    height: 10%;
+    width: 100%;
+    resize: none;
+}
+

@@ -1,26 +1,21 @@
 {
   "dependencies": {
-    "@babel/plugin-transform-react-jsx": "^7.27.1",
-    "@babel/standalone": "^7.27.6",
-    "assert": "^2.1.0",
-    "babel-standalone": "^6.26.0",
-    "glob": "^11.0.2",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "babel-loader": "^10.0.0",
+    "glob": "^13.0.0",
     "path": "^0.12.7",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "styled-components": "^6.1.19"
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^19.2.3",
+    "styled-components": "^6.1.19",
+    "use-sound": "^5.0.0",
+    "webpack": "^5.104.1"
   },
   "scripts": {
     "build": "webpack"
   },
   "devDependencies": {
-    "@babel/cli": "^7.27.2",
-    "@babel/core": "^7.27.4",
-    "@babel/preset-env": "^7.27.2",
-    "@babel/preset-react": "^7.27.1",
-    "babel-loader": "^10.0.0",
-    "webpack": "^5.99.9",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.2"
+    "webpack-cli": "^6.0.1"
   }
 }

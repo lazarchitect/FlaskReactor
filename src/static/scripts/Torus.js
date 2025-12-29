@@ -1,48 +1,42 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useDrag } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
+import useSound from 'use-sound';
 
+import { TorusSVG } from './TorusSVG';
 
-export function Torus (props) {
+export function Torus ({ torus, row, col }) {
+
+    let [playPickupSound] = useSound('/static/sounds/pickup.wav');
+
+    // useState will be used here for color, powers, buffs, and debuffs later
     
-    const [position, setPosition] = React.useState({x:0, y:0});
-    const [dragStart, setDragStart] = React.useState({x:0, y:0});
-    const [isDragging, setIsDragging] = React.useState(false);
-    
-    return <div
-            id = {{}}
-            className="torus"
-            style={{
-                cursor: "move",
-                left: position.x,
-                top: position.y
-            }}
+    const [{ isDragging, opacity }, dragRef, dragPreview] = useDrag(
+        () => ({
+            type: 'Torus',
+            item: { torus: torus, dragRow: row, dragCol: col }, // gets passed to drop function
+            collect: (monitor) => ({
+                isDragging: monitor.isDragging(),
+                opacity: monitor.isDragging() ? 0.6 : 1
+            })
+        }),
+        [torus] // react drag systems update their own records when this changes
+    );
 
-            onMouseDown={(e) => {
-                setIsDragging(true);
-                setDragStart({x: e.clientX, y: e.clientY});
-            }}
-            onMouseUp={(e) => setIsDragging(false)}
-            /* ALERT! MOUSE UP WILL ONLY TRIGGER IF YOU MOUSEUP _WHILE_ OVER THE DIV! 
-            SO YOU NEED TO TRACK MOUSE EVENTS OF THE WHOLE PAGE..? */
 
-            onMouseMove={(e) => {
+    if (isDragging) {
+        playPickupSound();
+    }
 
-                if (!isDragging) {
-                    return;
-                }
 
-                console.log("dragStart:" + dragStart.x + " "+  dragStart.y );
-                console.log("position:" + position.x + " " + position.y);
+    // following code removes default browser Torus image during drag. 
+    useEffect(
+        () => {dragPreview(getEmptyImage(), { captureDraggingState: true });}, // possibly causing a bit of lag?
+        [dragPreview]
+    );
 
-                setPosition({
-                    x: e.clientX - dragStart.x, // always bounces back to origin since mouseDown sets dragstart to client, so this evals to 0,0
-                    y: e.clientY - dragStart.y 
-                });
-                // console.log(position);
-            }}
-            
-        >
-        <img className="torusImg" src="/static/images/quadradius/torus_default.png"></img>
-    </div>
-    
+    return <div className='torus' style={{ cursor: "grab", opacity: opacity }} ref={dragRef}>
+        <TorusSVG color={torus.color} isRadiating={false}/>
+    </div>;
 }

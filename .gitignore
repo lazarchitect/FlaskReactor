@@ -1,12 +1,21 @@
+#Python Cache
 __pycache__
-secret_key.txt
-*details.json
 *.pyc
-python-app.yml
-.vscode/settings.json
-.vscode/tasks.json
-*details.json
-*pat
-*.log
+
+# React/Webpack files
 node_modules
 **/dist
+
+# VS Code
+.vscode/settings.json
+.vscode/tasks.json
+
+#PyCharm
+.idea
+
+#App Config Files
+app_config.json
+*pat
+
+# Misc
+*.log

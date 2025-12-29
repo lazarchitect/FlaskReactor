@@ -1,8 +1,8 @@
-Click==7.0
-Flask==1.1.2
-itsdangerous==0.24
-Jinja2==2.11.3
-MarkupSafe==1.1.0
-psycopg2==2.8.6
-tornado==6.1
-Werkzeug==2.0.3
+Click==8.3.1
+Flask==3.1.2
+itsdangerous==2.2.0
+Jinja2==3.1.6
+MarkupSafe==3.0.3
+psycopg[binary]==3.3.2
+tornado==6.5.2
+Werkzeug==3.1.4

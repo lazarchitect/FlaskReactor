@@ -1,12 +1,14 @@
 import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
-import { SiteHeader, MessageBox } from './CommonComponents';
+import { SiteHeader } from './commonComponents/SiteHeader';
+import { Chatbox } from './commonComponents/Chatbox';
 
 const gameId = payload.game.id;
 
-function wsSubscribe(tttSocket) {
+function tttSocketSubscribe(tttSocket) {
 	const subscribeObj = {
-		"request": "subscribe", 
+		"request": "subscribe",
+		"ws_token": payload.ws_token,
 		"gameId": gameId,
 		"username": payload.username
 	};
@@ -14,9 +16,10 @@ function wsSubscribe(tttSocket) {
 	tttSocket.send(subscribeJSON);
 }
 
-function wsUpdate(tttSocket, boardIndex) {
+function tttSocketUpdate(tttSocket, boardIndex) {
 	const updateObj = {
 		"request": "update", 
+		"ws_token": payload.ws_token,
 		"gameId": gameId, 
 		"gameType": "ttt", 
 		"player": payload.username, 
@@ -27,14 +30,12 @@ function wsUpdate(tttSocket, boardIndex) {
     tttSocket.send(updateStr);
 }
 
-function wsConnect(setBoardstate, setYourTurn) {
-
-	console.log("initializing WS")
+function tttSocketConnect(setBoardstate, setYourTurn) {
 	
     const tttSocket = new WebSocket(payload.wsBaseUrl + "/ttt")
 	const statSocket =new WebSocket(payload.wsBaseUrl + "/stat")
 
-	tttSocket.onopen = (() => wsSubscribe(tttSocket));
+	tttSocket.onopen = (() => tttSocketSubscribe(tttSocket));
 
     tttSocket.onmessage = (message) => {
 		const data = JSON.parse(message.data);
@@ -46,19 +47,20 @@ function wsConnect(setBoardstate, setYourTurn) {
 
 		}
 
-		else if(data.command == "endGame") {
+		else if(data.command === "endGame") {
 			setStatus(determineStatus(payload, data));
 			setYourTurn(payload.username === data.activePlayer);
 			// call out to server - update this user's stats
 			const messageObj = {
-				"request": "updateStat", 
+				"request": "updateStat",
+				"ws_token": payload.ws_token,
 				"gameType": "ttt",
 				"gameId": gameId,
 				"userId": payload.userId,
 				"username": payload.username
 			};
 			const message = JSON.stringify(messageObj);
-			statSocket.send(message);
+			statSocket.send(message); // TODO wouldnt this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
 		}
 
 		else if(data.command === "info") {
@@ -73,10 +75,9 @@ function wsConnect(setBoardstate, setYourTurn) {
 
     var board = document.getElementById("tttBoard");
     board.onclick = function(mouseClick){
-		if(mouseClick.target.className != "tttCell activeTttCell") return;
-    	console.log("click detected: sending message to socketServer.");
-		const boardIndex = mouseClick.target.id;
-		wsUpdate(tttSocket, boardIndex);
+		if(mouseClick.target.className !== "tttCell activeTttCell") return;
+    	const boardIndex = mouseClick.target.id;
+		tttSocketUpdate(tttSocket, boardIndex);
     };
 }
 
@@ -97,10 +98,10 @@ function determineStatus(payload, data) {
 			retval+="It's a tie.";
 		}
 		else{
-			if(payload.username==data.winner)
+			if(payload.username === data.winner)
 				retval+="You win!";
 	
-			else if(payload.username==data.otherPlayer) 
+			else if(payload.username === data.otherPlayer)
 				retval+="You lose...";
 			
 			else
@@ -142,17 +143,16 @@ function O_Piece(){
 	);
 }
 
-function TttBoardRow(props){
-	const row = props.row;
-	// props.values will look like ["X", "X", "O"]. each is a cellItem
-	return (props.values).map((cellItem, index) => 
+function TttBoardRow({yourTurn, rowIndex, values}){
+	// values is an array containing three cell data, e.g. ["X", "X", "O"]
+    return (values).map((cellContents, colIndex) =>
 			<span 
-				key={index} 
-				className={"tttCell" + ((props.yourTurn && cellItem=="" && payload.username!="") ? " activeTttCell": "")}
-				id={index+(row*3)}
-				style={{left: 15+(index*29) + "%", top: 15+(row*29) + "%"}}
+				key={colIndex}
+				className={"tttCell" + ((yourTurn && cellContents === "" && payload.username !== "") ? " activeTttCell": "")}
+				id={colIndex+(rowIndex*3)}
+				style={{left: 15+(colIndex*29) + "%", top: 15+(rowIndex*29) + "%"}}
 			>
-				{cellItem === "" ? "" : (cellItem === 'X' ? <X_Piece/> : <O_Piece/>)}
+				{cellContents === "" ? "" : (cellContents === 'X' ? <X_Piece/> : <O_Piece/>)}
 			</span>
 	);
 }
@@ -163,8 +163,7 @@ function TttBoard(){
 
 	const [yourTurn, setYourTurn] = React.useState(payload.yourTurn); 
 	
-	React.useEffect(() => wsConnect(setBoardstate, setYourTurn), []); 
-	// empty array is a list of values that would trigger the function if they change. we dont want any.
+	React.useEffect(() => tttSocketConnect(setBoardstate, setYourTurn), []);
 
 	return (
 		<div id="tttBoard">
@@ -176,13 +175,15 @@ function TttBoard(){
 				<rect x="50" y="330" width="400" height="12" rx="5"/>
 			</svg>
 			<div id="tttBoardData">
-				<TttBoardRow yourTurn={yourTurn} row={0} values={boardstate.slice(0,3)}/><br/>
-				<TttBoardRow yourTurn={yourTurn} row={1} values={boardstate.slice(3,6)}/><br/>
-				<TttBoardRow yourTurn={yourTurn} row={2} values={boardstate.slice(6,9)}/><br/>
+				<TttBoardRow yourTurn={yourTurn} rowIndex={0} values={boardstate.slice(0,3)}/><br/>
+				<TttBoardRow yourTurn={yourTurn} rowIndex={1} values={boardstate.slice(3,6)}/><br/>
+				<TttBoardRow yourTurn={yourTurn} rowIndex={2} values={boardstate.slice(6,9)}/><br/>
 			</div>
 		</div>
 	)
 }
+
+var isPlayer = payload.players.includes(payload.username);
 
 var page = (
 	<div id="reactRoot">
@@ -192,7 +193,7 @@ var page = (
 			<TttBoard/>
 			<p>Status: <span id="status"></span></p>
 		</div>
-		<MessageBox/>
+		{isPlayer && <Chatbox expanded={false}/>}
 	</div>
 );
 

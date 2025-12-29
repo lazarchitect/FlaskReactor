@@ -1,42 +1,66 @@
-/* contains all JS, react or otherwise, that creates and maintains the home.html template. */
+/* Script to build the home.html template. */
 
 'use strict';
 
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './CommonComponents';
+import {createRoot} from 'react-dom/client';
+import {SiteHeader} from './commonComponents/SiteHeader';
 import styled from 'styled-components';
 
-var chessGames = payload.chessGames;
-var username = payload.username;
-var tttGames = payload.tttGames;
+const {username, quadradiusGames, chessGames, tttGames} = payload;
 
 const GameDiv = styled.div`
-	background-color: #bbb;
+	background-color: peachpuff;
 	margin: 10px;
 	text-align: center;
 	padding: 10px 0;
 	border: 2px solid blue;
 	width: 100px;
 	height: 50px;
-	border-radius: 10px
-`;
+	border-radius: 10px`;
 
 function openGame(gameId, gameType){
 	window.location.href = "/games/" + gameType + "/" + gameId;
 }
 
-function ChessGameList (props) {
-	return chessGames
-	.filter(game => game[4] == props.completed)
+// TODO should the following 6 functions be refactored to reduce DRYness?
+function QuadradiusGameList ({completed}) {
+    return quadradiusGames
+	.filter(game => game.completed === completed)
 	.map(game => 
-		<GameDiv className="chessGame" tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "chess")}>
-			{"Vs. " + (game[1] === username ? game[2] : game[1])}
+		<GameDiv className="quadradiusGame" tabIndex={0} key={game['id']} onClick={() => openGame(game['id'], "quadradius")}>
+			{"Vs. " + (game.player1 === username ? game.player2 : game.player1)}
 		</GameDiv>
 	);
 }
 
-function ChessGames (props) {
+function QuadradiusGames () {
+
+	React.useEffect(() => enableOnClick("Quadradius"), []);
+
+	return (
+		<div>
+			<h4>Quadradius Games:</h4>			
+			<QuadradiusGameList completed={false}/>
+			Show Past Games? <input type="checkbox" id="viewPastQuadradiusGames"/>
+			<div id="pastQuadradiusGames">
+				<QuadradiusGameList completed={true}/>
+			</div>
+		</div>
+	);
+}
+
+function ChessGameList ({completed}) {
+	return chessGames
+	.filter(game => game.completed === completed)
+	.map(game =>
+		<GameDiv className="chessGame" tabIndex={0} key={game.id} onClick={() => openGame(game.id, "chess")}>
+			{"Vs. " + (game.white_player === username ? game.black_player : game.white_player)}
+		</GameDiv>
+	);
+}
+
+function ChessGames () {
 
 	React.useEffect(() => enableOnClick("Chess"), []);
 
@@ -52,33 +76,31 @@ function ChessGames (props) {
 	);
 }
 
-function TttGameList (props) {
+function TttGameList ({completed}) {
 	return tttGames
-	.filter(game => game[3] == props.completed)
+	.filter(game => game['completed'] === completed)
 	.map(game => 
 
-		<GameDiv tabIndex={"0"} key={game[0]} onClick={() => openGame(game[0], "ttt")}>
-			{"Vs. " + (game[1] === username ? game[2] : game[1])}
+		<GameDiv tabIndex={0} key={game['id']} onClick={() => openGame(game['id'], "ttt")}>
+			{"Vs. " + (game['x_player'] === username ? game['o_player'] : game['x_player'])}
 		</GameDiv>
 	);
 }
 
-function enableOnClick(gamemode) {
-	document.getElementById("viewPast"+gamemode+"Games").onclick = (() => {
+function enableOnClick(gameMode) {
+	document.getElementById("viewPast"+gameMode+"Games").onclick = (() => {
 
-		let pastGames = document.getElementById("past"+gamemode+"Games");
+		let pastGames = document.getElementById("past"+gameMode+"Games");
 
-		let currentVisbility = pastGames.style.visibility;
-		let newVisibility = (currentVisbility == 'visible' ? 'hidden' : 'visible');
-		pastGames.style.visibility = newVisibility;
+		let currentVisibility = pastGames.style.visibility;
+        pastGames.style.visibility = (currentVisibility === 'visible' ? 'hidden' : 'visible');
 
 		let currentPosition = pastGames.style.position;
-		let newPosition = (currentPosition == 'static' ? 'absolute' : 'static');
-		pastGames.style.position = newPosition;
+        pastGames.style.position = (currentPosition === 'static' ? 'absolute' : 'static');
 	});
 }
 
-function TttGames (props) {
+function TttGames () {
 
 	React.useEffect(() => enableOnClick("Ttt"), []);
 
@@ -94,35 +116,33 @@ function TttGames (props) {
 	);
 }
 
+const gameTypes = ["Chess", "Tic-Tac-Toe", "Quadradius"]; 
 
-
-const gameTypes = ["Chess", "Tic-Tac-Toe"]; 
-
-const jsxGT = gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>);
-
-var page = (
+const page = (
 
 	<div id="reactRoot">
-		<SiteHeader version={payload.deployVersion} username={payload.username}/>
 
-		<form action="/creategame" method="POST" id="createGameDiv">
-			<h4>Create Game</h4>
-			
-			<select name="gameType"> {/*The name attribute is used to reference the form data*/}
-  				{jsxGT}
-			</select>
-			<br/>
-			
-			Opponent Username: <input type="text" name="opponent"/> 
-			<input type="submit" value="Create"/>
-		</form>
+		<SiteHeader/>
+		<div id="main">
+			<form action="/creategame" method="POST" id="createGameDiv">
+				<h4>Create Game</h4>
 
-		<ChessGames/>
-		<TttGames/>
+				<select name="gameType"> {/*The name attribute is used to reference the form data*/}
+					{gameTypes.map((gameType) => <option key={gameType} value={gameType}>{gameType}</option>)}
+				</select>
+				<br/>
 
+				Opponent Username: <input type="text" name="opponent"/>
+				<input type="submit" value="Create"/>
+			</form>
+
+			<QuadradiusGames/>
+			<ChessGames/>
+			<TttGames/>
+		</div>
 	</div>
 );
 
-let rootElement = document.getElementById('root');
-let reactRoot = createRoot(rootElement);
+const rootElement = document.getElementById('root');
+const reactRoot = createRoot(rootElement);
 reactRoot.render(page);

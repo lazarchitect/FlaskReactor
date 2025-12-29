@@ -1,59 +1,36 @@
 'use strict';
 
-import React from 'react'; // do I need this?    yes
+import React from 'react'; // required by React
 import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './CommonComponents';
-import { Torus } from './Torus';
 
-<div />
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
-function QuadTile (props) {
+import { SiteHeader } from './commonComponents/SiteHeader';
+import { Chatbox } from './commonComponents/Chatbox';
+import { QuadBoard } from './QuadBoard';
+import { TorusDragLayer } from './TorusDragLayer';
 
-    if (props.tileData.piece != undefined) {
-        return <div className="quadTile"><Torus piece={props.tileData.piece}></Torus></div> 
-    }
+const isPlayer = [payload.game.player1, payload.game.player2].includes(payload.username);
 
-    return <div className="quadTile"></div>
-}
-
-
-function QuadRow(props) {
-    let tileArray = [];
-    for (let tileIndex = 0; tileIndex < 10; tileIndex++) {
-        tileArray.push(<QuadTile key={tileIndex} tileData={props.rowData[tileIndex]}></QuadTile>);
-    }
-    return tileArray;
-}
-
-function QuadBoard(props){
-    
-    let rowArray = [];
-    for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-        rowArray.push(<QuadRow key={rowIndex} rowData={props.boardstate[rowIndex]}></QuadRow>);
-    }
-    
-    return (
-        <div id="quadboard" display='inline'>
-            {rowArray}
-        </div>
-    )
-}
-
-var page = (
-	<div id="reactRoot" onMouseMove={(e) => console.log(e.clientX, e.clientY)}>
+const page = (
+	<div id="reactRoot">
 
         {/* top of the page */}
-        <SiteHeader version={payload.deployVersion} username={payload.username}/>
+        <SiteHeader />
         
         {/* rest of the page */}
-        <div id="quadPlayArea">
-            <QuadBoard boardstate={payload.boardstate}/>
+        <div id="quadPlayArea"> 
+            <DndProvider backend={HTML5Backend}>
+                <QuadBoard />
+                <TorusDragLayer />
+            </DndProvider>
             <p>Status: <span id="status"></span></p>
         </div>
-        
+        { isPlayer && <Chatbox expanded={false} /> }
     </div>
 );
 
-var rootElement = document.getElementById("root");
-var reactRoot = createRoot(rootElement);
+const rootElement = document.getElementById("root");
+const reactRoot = createRoot(rootElement);
 reactRoot.render(page);

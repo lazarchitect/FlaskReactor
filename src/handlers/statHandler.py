@@ -1,7 +1,7 @@
 
 from tornado.websocket import WebSocketHandler
 from src.pgdb import Pgdb
-from src.utils import generateId
+import src.utils as utils
 import json
 
 class StatHandler(WebSocketHandler):
@@ -9,17 +9,20 @@ class StatHandler(WebSocketHandler):
 	def check_origin(self, origin):
 		return True
 
-	def initialize(self, db_env):
-		self.pgdb = Pgdb(db_env)
+	def initialize(self, pgdb):
+		self.pgdb = pgdb
 
 	def open(self):
-		self.socketId = "socket"+ str(generateId())[:8]
+		self.socketId = "socket"+ str(utils.generateId())[:8]
 		print("statSocket opened:", str(self.socketId))
 
 	def on_message(self, message):
 		fields = json.loads(message)
 		request = fields['request']
 		gameType = fields['gameType']
+
+		if request == "subscribe":
+			self.wsSubscribe(fields)
 
 		if request == "updateStat":
 
@@ -28,6 +31,22 @@ class StatHandler(WebSocketHandler):
 
 	def on_close(self):
 		pass
+
+	def wsSubscribe(self, fields: dict):
+
+		if utils.isEmpty(fields.get('ws_token')):
+			self.write_message({
+				"command": "error",
+				"message": "server did not receive a ws_token from the client",
+				# "details": str(connectionDetails)
+			})
+			return
+
+		else:
+			# used for authentication during updates
+			self.ws_token = fields['ws_token']
+
+		#TODO build out broadcast logic here. Players and spectators should know immediately when stats change
 
 	def updateTttStat(self, fields):
 		gameId = fields['gameId']
@@ -39,6 +58,7 @@ class StatHandler(WebSocketHandler):
 		tttGame = self.pgdb.getTttGame(gameId)
 		winner = tttGame.winner
 
+		# TODO this is broken now apparently. create ticket for adding full stats functionality to TTT and Chess?
 		ttt_games_played = stat['ttt_games_played'] + 1
 		ttt_wins = stat['ttt_wins'] + (1 if winner == username else 0)
 		ttt_win_percent = ttt_wins/ttt_games_played
