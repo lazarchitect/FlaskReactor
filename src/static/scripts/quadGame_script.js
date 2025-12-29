@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react'; // required by React
+import React from 'react';
 import { createRoot } from 'react-dom/client';
 
 import { DndProvider } from "react-dnd";
@@ -16,18 +16,18 @@ const isPlayer = [payload.game.player1, payload.game.player2].includes(payload.u
 const page = (
 	<div id="reactRoot">
 
-        {/* top of the page */}
         <SiteHeader />
         
-        {/* rest of the page */}
-        <div id="quadPlayArea"> 
-            <DndProvider backend={HTML5Backend}>
-                <QuadBoard />
-                <TorusDragLayer />
-            </DndProvider>
-            <p>Status: <span id="status"></span></p>
-        </div>
-        { isPlayer && <Chatbox expanded={false} /> }
+        <main>
+            <div id="quadPlayArea">
+                <DndProvider backend={HTML5Backend}>
+                    <QuadBoard />
+                    <TorusDragLayer />
+                </DndProvider>
+                <p>Status: <span id="status"></span></p>
+            </div>
+            { isPlayer && <Chatbox expanded={false} /> }
+        </main>
     </div>
 );
 

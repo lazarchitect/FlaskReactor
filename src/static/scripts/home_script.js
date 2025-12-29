@@ -123,7 +123,7 @@ const page = (
 	<div id="reactRoot">
 
 		<SiteHeader/>
-		<div id="main">
+		<main>
 			<form action="/create-game" method="POST" id="createGameDiv">
 				<h4>Create Game</h4>
 
@@ -139,7 +139,7 @@ const page = (
 			<QuadradiusGames/>
 			<ChessGames/>
 			<TttGames/>
-		</div>
+		</main>
 	</div>
 );
 

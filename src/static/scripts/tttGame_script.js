@@ -187,13 +187,14 @@ const isPlayer = payload.players.includes(payload.username);
 
 const page = (
 	<div id="reactRoot">
-		<SiteHeader version={payload.deployVersion} username={payload.username}/>
-
-		<div id="tttPlayArea">
-			<TttBoard/>
-			<p>Status: <span id="status"></span></p>
-		</div>
-		{isPlayer && <Chatbox expanded={false}/>}
+		<SiteHeader />
+		<main>
+			<div id="tttPlayArea">
+				<TttBoard/>
+				<p>Status: <span id="status"></span></p>
+			</div>
+			{isPlayer && <Chatbox expanded={false}/>}
+		</main>
 	</div>
 );
 

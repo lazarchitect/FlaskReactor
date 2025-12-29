@@ -12,7 +12,7 @@ export function SiteHeader () {
 	const [settingsExpanded, setSettingsExpanded] = React.useState(false);
 
 	return (
-		<div id="siteHeader">
+		<header>
 
 			<div id="headerLeft">
 				<a href="/">FlaskReactor</a> (Version {deployVersion})
@@ -40,7 +40,7 @@ export function SiteHeader () {
 				}
 			</div>
 
-		</div>
+		</header>
 	)
 }
 
