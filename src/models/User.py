@@ -16,6 +16,8 @@ class User:
 
     @staticmethod
     def dbLoad(userDict):
+        if userDict is None:
+            return None # nothing found by the given name in DB
         u = User()
         u.name = userDict['name']
         u.email = userDict['email']

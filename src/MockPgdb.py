@@ -8,9 +8,6 @@ class MockPgdb:
 	def getUser(self, username):
 		return ('MockSmith11', 'mock_email@aol.com', 'mock_38298dd7-e30d-42d7-8c3a-94483dfc4af3', 'mock_pw_shtjteykyjthehu6w57', 'mock_wstoken')
 
-	def checkLogin(self, username, password_hash):
-		return True
-
 	def createUser(self, username, password_hash, email, userid):
 		pass
 
@@ -46,8 +43,3 @@ class MockPgdb:
 
 	def getMessages(self, gameId):
 		return [(1, "MockUser1", "hello")]
-
-	####### HELPER METHODS #########
-
-	def userExists(self, username):
-		return True

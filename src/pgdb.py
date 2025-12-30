@@ -24,8 +24,7 @@ sql = {
 
 	#Users
 	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-	"getUser": f"SELECT * FROM {usersTable} WHERE name=%s",
-	"checkLogin": f"SELECT * FROM {usersTable} WHERE name=%s AND password_hash=%s",
+	"getUser": f"SELECT * FROM {usersTable} WHERE lower(name)=lower(%s)",
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
 	# Quadradius
@@ -142,12 +141,6 @@ class Pgdb:
 		values = [username]
 		self.__execute(query, values)
 		return User.dbLoad(self.cursor.fetchone())
-
-	def checkLogin(self, username, password_hash):
-		query = sql['checkLogin']
-		values = [username, password_hash]
-		self.__execute(query, values)
-		return self.cursor.fetchone() is not None
 
 	def createUser(self, username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup):
 		query = sql['createUser']
@@ -302,12 +295,6 @@ class Pgdb:
 		return self.conn.commit()
 
 	####### HELPER METHODS #########
-
-	def userExists(self, username):
-		query = sql['getUser']
-		values = [username]
-		self.__execute(query, values)
-		return self.cursor.fetchone() is not None
 
 	def getAllGames(self, username):
 		"""Retrieves all games of all types where the given user is a player."""

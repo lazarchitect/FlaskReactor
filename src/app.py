@@ -143,24 +143,23 @@ def tttGame(gameId):
 
 @app.route('/login', methods=["POST"])
 def login():
-    # TODO we query the DB three times here - we could reduce to 1 by checking password_hash and userExists here
-    #  instead of through pgdb. pgdb.UserExists doesnt need to exist, just use a clearly named boolean.
-    username = request.form['username']
-    password = request.form['password']
-    password_hash = generateHash(password)
+    input_username = request.form['username']
+    input_password = request.form['password']
+    input_password_hash = generateHash(input_password)
 
-    if not pgdb.userExists(username):
-        return "User " + username + " does not exist."
+    existingUser = pgdb.getUser(input_username)
 
-    correctLogin = pgdb.checkLogin(username, password_hash)
-    if(correctLogin):
-        user = pgdb.getUser(username)
+    if existingUser is None:
+        return "User " + input_username + " does not exist."
+
+    correctPassword = input_password_hash == existingUser.password_hash
+    if correctPassword:
         session['loggedIn'] = True
-        session['username'] = username
-        session['userId'] = user.id
-        session['ws_token'] = user.ws_token
-        session['quadColorPref'] = user.quad_color_pref
-        session['quadColorBackup'] = user.quad_color_backup
+        session['username'] = existingUser.name
+        session['userId'] = existingUser.id
+        session['ws_token'] = existingUser.ws_token
+        session['quadColorPref'] = existingUser.quad_color_pref
+        session['quadColorBackup'] = existingUser.quad_color_backup
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -176,7 +175,7 @@ def signup():
     if(password != password_repeat):
         return ("Your passwords did not match.")
 
-    usernameTaken = pgdb.userExists(username)
+    usernameTaken = pgdb.getUser(username) is not None
     if(usernameTaken):
         return("That username is taken! sorry fam")
 
@@ -205,6 +204,7 @@ def logout():
 def createGame():
 
     # TODO refactoring /create-game into smaller subroutines
+    # there should be a widespread service layer to handle back end logic, this file should just be setup and endpoint routing
     # bad input handling can be handled outside this file
     # game_type should be a match/case statement with subfunctions in other files
     # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
@@ -216,7 +216,7 @@ def createGame():
     opponent_name = request.form['opponent'].strip()
 
     if(session.get('loggedIn') == False):
-        return "not logged in?"#shouldnt happen
+        return "not logged in?" # shouldn't happen
 
     if(opponent_name == ""):
         return "enter a name, doofbury."
@@ -224,9 +224,13 @@ def createGame():
     if(player_name == opponent_name):
         return "you can't vs yourself, bubso."
 
-    opponentExists = pgdb.userExists(opponent_name)
+    opponent = pgdb.getUser(opponent_name)
+    opponentExists = opponent is not None
+
     if(opponentExists == False):
-        return "no user by that name. try again or message me if this is incorrect."
+        return "We didn't find a user with that name. Check spelling and special characters."
+
+    opponent_name = opponent.name # if the user typed in wrongly cased letters, we silently fix it here
 
     if game_type == "Chess":
         color = random.choice(['white', 'black'])
