@@ -74,7 +74,10 @@ def chessGame(gameId):
     game = pgdb.getChessGame(gameId)
 
     if game is None:
-        return render_template("game_not_found.html", payload={"alert":"Game could not be retrieved from database."})
+        return render_template("game_not_found.html", payload=json.dumps({
+            "preferences": buildPreferences(session),
+            "deployVersion": deployVersion
+        }, default=str))
 
     username = session.get('username')
 
@@ -107,8 +110,11 @@ def chessGame(gameId):
 def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
     if game is None:
-        # TODO make this template
-        return render_template("game_not_found.html", payload={"alert":"Game could not be retrieved from database."})
+        return render_template("game_not_found.html", payload=json.dumps({
+            "preferences": buildPreferences(session),
+            "deployVersion": deployVersion
+        }, default=str))
+
     payload = {
         "deployVersion": deployVersion,
         "wsBaseUrl": wsBaseUrl,
@@ -129,7 +135,10 @@ def quadGame(gameId):
 def tttGame(gameId):
     game = pgdb.getTttGame(gameId)
     if game is None:
-        return render_template("game_not_found.html", payload={"alert": "game with that ID not found"})
+        return render_template("game_not_found.html", payload=json.dumps({
+            "preferences": buildPreferences(session),
+            "deployVersion": deployVersion
+        }, default=str))
     # TODO thoughts -
     #  username, preferences, and deployVersion are common to all payloads.
     #  Should there be a common payloadBuilder?
