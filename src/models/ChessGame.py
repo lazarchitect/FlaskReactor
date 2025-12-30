@@ -4,47 +4,40 @@ from datetime import datetime
 from src.utils import generateId
 from psycopg.types.json import Json
 
-
 class ChessGame:
     """Python object representing a specific chess game between two players, with all schema fields that a game record has.
-    These are easier to work with than the tuples that psycopg2 returns, and can be converted back to a database record easily."""
+    These are easier to work with than the tuples that psycopg returns, and can be converted back to a database record easily."""
     
-    def __init__(self):
-        pass
+    def __init__(self, white_player, black_player, isDbLoad):
 
-    # TODO why use this method instead of the constructor?
-    @staticmethod
-    def manualCreate(white_player, black_player):
-        """constructor for creation from user-input values."""
-        g = ChessGame()
-        g.id = generateId()
-        g.white_player = white_player
-        g.black_player = black_player
-        g.boardstate = json.loads(open('resources/initialChessLayout.json', 'r').read())
-        g.player_turn = white_player # TODO change this to 'g.active_player' here and in DB, do so in TTT as well
-        g.completed = False
-        g.time_started = datetime.now()
-        g.last_move = g.time_started
-        g.time_ended = None
-        g.winner = None
-        g.notation = ""
-        g.whitekingmoved = False
-        g.blackkingmoved = False
-        g.wqr_moved = False
-        g.wkr_moved = False
-        g.bqr_moved = False
-        g.bkr_moved = False
-        g.pawn_leapt = False
-        g.pawn_leap_col = -1
-        return g
+        self.white_player = white_player
+        self.black_player = black_player
+        if (isDbLoad): return
+
+        # else, use defaults
+        self.id = generateId()
+        self.boardstate = json.loads(open('resources/initialChessLayout.json', 'r').read())
+        self.player_turn = white_player # TODO change this to 'g.active_player' here and in DB, do so in TTT as well
+        self.completed = False
+        self.time_started = datetime.now()
+        self.last_move = self.time_started
+        self.time_ended = None
+        self.winner = None
+        self.notation = ""
+        self.whitekingmoved = False
+        self.blackkingmoved = False
+        self.wqr_moved = False
+        self.wkr_moved = False
+        self.bqr_moved = False
+        self.bkr_moved = False
+        self.pawn_leapt = False
+        self.pawn_leap_col = -1
 
     @staticmethod
     def dbLoad(gameDict):
-        """constructor for loading from PGDB. field names match db column names exactly."""
-        g = ChessGame()
+        """creator function for loading from a DB record. Dict keys match db column names exactly."""
+        g = ChessGame(gameDict['white_player'], gameDict['black_player'], isDbLoad=True)
         g.id = gameDict['id']
-        g.white_player = gameDict['white_player']
-        g.black_player = gameDict['black_player']
         g.boardstate = gameDict['boardstate']
         g.completed = gameDict['completed']
         g.time_started = gameDict['time_started']

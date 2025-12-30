@@ -2,26 +2,21 @@
 # not used anywhere... yet
 class Stats:
 
-    def __init__(self):
-        pass
+    def __init__(self, userId, isDbLoad):
+        self.userId = userId
+        if isDbLoad: return
 
-    @staticmethod
-    def manualCreate(userId):
-        s = Stats()
-        s.userId = userId
-        s.games_played = 0
-        s.wins = 0
-        s.win_percent = 0
-        s.played_white = 0
-        s.played_black = 0
-        s.won_white = 0
-        s.won_black = 0
-        return s
+        self.games_played = 0
+        self.wins = 0
+        self.win_percent = 0
+        self.played_white = 0
+        self.played_black = 0
+        self.won_white = 0
+        self.won_black = 0
 
     @staticmethod
     def dbLoad(statsDict):
-        s = Stats()
-        s.userId = statsDict['userId']
+        s = Stats(statsDict['userId'], isDbLoad=True)
         s.games_played = statsDict['games_played']
         s.wins = statsDict['wins']
         s.win_percent = statsDict['win_percent']

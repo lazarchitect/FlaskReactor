@@ -10,6 +10,7 @@ import random
 import json
 import os
 
+from src.models.User import User
 from src.pgdb import Pgdb
 from src.utils import generateId, generateHash, notLoggedIn, buildPreferences
 from src.models.ChessGame import ChessGame
@@ -73,7 +74,7 @@ def chessGame(gameId):
     game = pgdb.getChessGame(gameId)
 
     if game is None:
-        return "game with that ID was not found"#render_template("home.html", alert="Game could not be retrieved from database.")
+        return render_template("game_not_found.html", payload={"alert":"Game could not be retrieved from database."})
 
     username = session.get('username')
 
@@ -104,6 +105,9 @@ def chessGame(gameId):
 @app.route("/games/quadradius/<gameId>")
 def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
+    if game is None:
+        # TODO make this template
+        return render_template("game_not_found.html", payload={"alert":"Game could not be retrieved from database."})
     payload = {
         "deployVersion": deployVersion,
         "wsBaseUrl": wsBaseUrl,
@@ -123,7 +127,7 @@ def quadGame(gameId):
 def tttGame(gameId):
     game = pgdb.getTttGame(gameId)
     if game is None:
-        return "No game found with that ID."
+        return render_template("game_not_found.html", payload={"alert": "game with that ID not found"})
     payload = {
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
@@ -131,7 +135,7 @@ def tttGame(gameId):
         "game_type": "ttt", # field used by common component
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
-        # TODO next three lines are not explicitly needed, they are already in "game"
+        # TODO simplify payload - next three lines can be derived from "game" on client side
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
         "players": [game.x_player, game.o_player],
         "yourTurn": game.player_turn == session.get('username'),
@@ -184,10 +188,8 @@ def signup():
     userid = str(generateId())
     ws_token = str(generateId())[:8]
 
-    quad_color_pref = "red" # initial defaults
-    quad_color_backup = "blue"
-
-    pgdb.createUser(username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup)
+    newUser = User(username, password_hash, email, ws_token, isDbLoad=False)
+    pgdb.createUser(newUser)
     pgdb.createStat(userid)
 
     session['loggedIn'] = True
@@ -243,7 +245,7 @@ def createGame():
             white_player = opponent_name
             black_player = player_name
 
-        game = ChessGame.manualCreate(white_player, black_player)
+        game = ChessGame(white_player, black_player, isDbLoad=False)
 
         pgdb.createChessGame(game)
 
@@ -256,7 +258,7 @@ def createGame():
             o_player = player_name
             x_player = opponent_name
 
-        game = TttGame.manualCreate(x_player, o_player)
+        game = TttGame(x_player, o_player, isDbLoad=False)
 
         pgdb.createTttGame(game)
 
@@ -282,7 +284,14 @@ def createGame():
 
         print(players)
 
-        game = QuadradiusGame.manualCreate(players[0][0], players[1][0], players[0][1], players[1][1], active_player=players[0][0]) # users will be able to update their preferred & backup Torus colors
+        game = QuadradiusGame(
+            player1=players[0][0],
+            player2=players[1][0],
+            player1_color=players[0][1],
+            player2_color=players[1][1],
+            active_player=players[0][0],
+            isDbLoad=False) # users will be able to update their preferred & backup Torus colors
+
         pgdb.createQuadradiusGame(game)
 
     return redirect('/')

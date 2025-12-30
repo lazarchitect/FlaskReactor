@@ -2,32 +2,33 @@ from src.utils import generateId
 
 class User:
 
-    def __init__(self):
-        pass
+    def __init__(self, name, password_hash, email, ws_token, isDbLoad):
+        self.name = name
+        self.password_hash = password_hash
+        self.email = email
+        self.ws_token = ws_token
+        if isDbLoad: return
 
-    @staticmethod
-    def manualCreate(name, password_hash):
-        u = User()
-        u.name = name
-        u.email = None
-        u.userId = generateId()
-        u.password_hash = password_hash
-        return u
+        self.userId = generateId()
+        self.quad_color_pref = "red"
+        self.quad_color_backup = "blue"
 
     @staticmethod
     def dbLoad(userDict):
-        if userDict is None:
-            return None # nothing found by the given name in DB
-        u = User()
-        u.name = userDict['name']
-        u.email = userDict['email']
+        u = User(userDict['name'], userDict['password_hash'], userDict['email'], userDict['ws_token'], isDbLoad=True)
+
         u.id = userDict['id']
-        u.password_hash = userDict['password_hash']
-        u.ws_token = userDict['ws_token']
         u.quad_color_pref = userDict['quad_color_pref']
         u.quad_color_backup = userDict['quad_color_backup']
         # add other prefs here
         return u
         
     def toTuple(self):
-        return (self.name, self.email, self.userId, self.password_hash, self.ws_token)
+        return (
+            self.name,
+            self.password_hash,
+            self.email,
+            self.userId,
+            self.ws_token,
+            self.quad_color_pref,
+            self.quad_color_backup)

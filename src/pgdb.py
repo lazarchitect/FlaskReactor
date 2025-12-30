@@ -140,11 +140,14 @@ class Pgdb:
 		query = sql['getUser']
 		values = [username]
 		self.__execute(query, values)
-		return User.dbLoad(self.cursor.fetchone())
+		userDict = self.cursor.fetchone()
+		if (userDict is None):
+			return None
+		return User.dbLoad(userDict)
 
-	def createUser(self, username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup):
+	def createUser(self, user):
 		query = sql['createUser']
-		values = [username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup]
+		values = user.toTuple()
 		self.__execute(query, values)
 		self.conn.commit()
 
