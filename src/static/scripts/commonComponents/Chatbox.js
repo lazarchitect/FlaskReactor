@@ -11,7 +11,7 @@ let chatSocket = null;
 let chatLogGlobal = [];
 
 
-// TODO possible enhancement - ignore rendering for users who opt out. User settings is down the line
+// TODO possible enhancement - ignore rendering for users who opt out. User settings is in v0.7.0
 export function Chatbox ( {expanded} ) {
 
     const [currentlyExpanded, setCurrentlyExpanded] = useState(expanded);
@@ -34,9 +34,7 @@ export function Chatbox ( {expanded} ) {
                     onClick={() => {
                         setCurrentlyExpanded(!currentlyExpanded); // toggle
                         let nowExpanded = !currentlyExpanded;
-                        // noinspection UnnecessaryLocalVariableJS
-                        let newText = nowExpanded ? 'Hide' : 'Expand';
-                        document.getElementById('chatbox-indicator').innerText = newText;
+                        document.getElementById('chatbox-indicator').innerText = nowExpanded ? 'Hide' : 'Expand';
                     }}>
                 
                     Expand
