@@ -10,7 +10,7 @@ export function getPiece(boardstate, coords) {
 }
 
 export function pieceMatch(piece, pieceColor, pieceType) {
-    return piece.color === pieceColor && piece.type == pieceType
+    return piece.color === pieceColor && piece.type === pieceType
 }
 
 export function hasPiece(boardstate, coords) { 
@@ -38,7 +38,6 @@ export function getKingCoords(boardstate, color) {
             }
         }
     }
-    return None; //should never happen?
 }
 
 // recursive fn to scan along a row/col/diag to see if a given piece is in that direction.
@@ -70,7 +69,7 @@ export function inCheck(boardstate, enemyColor, kingCoords) {
 
     // Look for Pawns
     // can you == strings? === needed?
-    const pawnDirection = enemyColor == "White" ? 1 : -1;
+    const pawnDirection = enemyColor === "White" ? 1 : -1;
     const pawnLeftCoords = [kingCoords[0] + pawnDirection, kingCoords[1] - 1];
     const pawnRightCoords= [kingCoords[0] + pawnDirection, kingCoords[1] + 1];
     if (isPiece(boardstate, pawnLeftCoords, "Pawn", enemyColor))

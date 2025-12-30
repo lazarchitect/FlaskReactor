@@ -16,7 +16,7 @@ let bqr_moved = payload.game.bqr_moved;
 let bkr_moved = payload.game.bkr_moved;
 
 import * as chessUtils from './chessUtils';
-import * as chessConsts from './chessConsts';
+import {Colors, PieceTypes, BISHOP_OFFSETS, ROYAL_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS} from "./chessConsts";
 
 function chessSocketSubscribe(chessSocket){
 	const subscribeObj = {
@@ -132,16 +132,16 @@ function generateHighlights(boardstate, piece){ // void
 	highlightedTiles = [];
 	active_coords = [piece.row, piece.col];
 
-	const enemyColor = piece.color == "Black" ? "White" : "Black";
+	const enemyColor = piece.color === Colors.BLACK ? Colors.WHITE : Colors.BLACK;
 
 	const allyKingCoords = chessUtils.getKingCoords(boardstate, piece.color);
 
 	if(piece.type === "Pawn"){
 		const whiteDirection = -1;
 		const blackDirection =  1;
-		const pieceDirection = piece.color === "Black" ? blackDirection : whiteDirection;
-		const finalRow = piece.color === "Black" ? 7 : 0;
-        const starterRow = piece.color === "Black" ? 1 : 6;
+		const pieceDirection = piece.color === Colors.BLACK ? blackDirection : whiteDirection;
+		const finalRow = piece.color === Colors.BLACK ? 7 : 0;
+        const starterRow = piece.color === Colors.BLACK ? 1 : 6;
 
 		const row = piece.row;
 		if(row === finalRow) return; // will never happen under promotion
@@ -235,16 +235,16 @@ function generateHighlights(boardstate, piece){ // void
 	}
 
 	// possible refactoring: piece and color enums instead of strings?
-	else if(piece.type === "King"){
-		if (piece.color === "White") {
+	else if(piece.type === PieceTypes.KING){
+		if (piece.color === Colors.WHITE) {
 			whiteCastlingMoves(boardstate);
 		}
-		else if (piece.color === "Black") {
+		else if (piece.color === Colors.BLACK) {
 			blackCastlingMoves(boardstate);
 		}
 
 		// TODO: kings cannot move into a check position
-		chessConsts.ROYAL_OFFSETS.forEach(offset => {
+		ROYAL_OFFSETS.forEach(offset => {
 			const destRow = piece.row+offset[0];
 			const destCol = piece.col + offset[1];
 
@@ -252,7 +252,7 @@ function generateHighlights(boardstate, piece){ // void
 				const targetPiece = boardstate[destRow][destCol].piece;
 				if(targetPiece === undefined || targetPiece.color === enemyColor) {
 
-					// TODO much of this modifiedBoardstate check logic can be encapsulated and refactored into a callable function. 
+					// TODO much of this modifiedBoardstate check logic can be encapsulated and refactored into a callable function.
 					// just need to pass in a bunch of params but its still better IMO
 
 
@@ -263,7 +263,7 @@ function generateHighlights(boardstate, piece){ // void
 
 					if (inCheck(boardstate, enemyColor, allyKingCoords)) {
 						if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
-							highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);		
+							highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);
 						}
 					}
 					else {
@@ -271,15 +271,15 @@ function generateHighlights(boardstate, piece){ // void
 							highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);
 						}
 					}
-					
+
 					highlightedTiles.push(destRow + "" + destCol);
 				}
 			}
 		});
 	}
 
-	else if(piece.type === "Knight"){
-		chessConsts.KNIGHT_OFFSETS.forEach(offset => {
+	else if(piece.type === PieceTypes.KNIGHT){
+		KNIGHT_OFFSETS.forEach(offset => {
 			const destRow = piece.row+offset[0];
 			const destCol = piece.col + offset[1];
 			if(!outOfBounds(destRow, destCol)){
@@ -291,14 +291,14 @@ function generateHighlights(boardstate, piece){ // void
 		});
 	}
 
-	else if (piece.type === "Rook") {
-		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.ROOK_OFFSETS);
+	else if (piece.type === PieceTypes.ROOK) {
+		highlightedTiles = sliderMoves(piece, boardstate, ROOK_OFFSETS);
 	}
-	else if(piece.type === "Bishop") {
-		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.BISHOP_OFFSETS);
+	else if(piece.type === PieceTypes.BISHOP) {
+		highlightedTiles = sliderMoves(piece, boardstate, BISHOP_OFFSETS);
 	}
-	else if(piece.type === "Queen") {
-		highlightedTiles = sliderMoves(piece, boardstate, chessConsts.ROYAL_OFFSETS);
+	else if(piece.type === PieceTypes.QUEEN) {
+		highlightedTiles = sliderMoves(piece, boardstate, ROYAL_OFFSETS);
 	}
 
 
@@ -393,7 +393,7 @@ function setStatus(status){
 }
 
 function playerInCheck(yourColor, whiteInCheck, blackInCheck){
-	return (yourColor==="White" && whiteInCheck) || (yourColor==="Black" && blackInCheck);
+	return (yourColor === Colors.WHITE && whiteInCheck) || (yourColor=== Colors.BLACK && blackInCheck);
 }
 
 
@@ -468,7 +468,7 @@ function Tile({darkTile, data, rowIndex, tileIndex}) {
 	if (piece != null) {
 		imagePath = "/static/images/" + piece.color + piece.type + ".png";
 
-		if (piece.type === "Bishop" && piece.color === "Black") {
+		if (piece.type === PieceTypes.BISHOP && piece.color === Colors.BLACK) {
 			imagePath = "/static/svg/" + piece.color + piece.type + ".svg";
 		}
 	}
