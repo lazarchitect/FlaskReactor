@@ -133,6 +133,8 @@ const page = (
 				<br/>
 
 				Opponent Username: <input type="text" name="opponent"/>
+
+				{/*TODO disable this button (and enter key submit) if 'opponent' field is empty*/}
 				<input type="submit" value="Create"/>
 			</form>
 

@@ -86,9 +86,9 @@ main {
 }
 
 #chessPlayArea {
-    display: block;
-    padding-left: 5%;
-    padding-top: 5%;
+    width: 100%;
+    margin-left: 5%;
+    margin-top: 5%;
 }
 
 #tttPlayArea {
@@ -100,7 +100,6 @@ main {
 .tile {
     width: 60px;
     height: 60px;
-    position: relative;
     display: inline-block;
 }
 

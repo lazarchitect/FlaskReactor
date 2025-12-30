@@ -441,14 +441,14 @@ export function Chessboard() {
 	);
 }
 
-function Row(props){
+function Row({rowIndex, tiles}){
 
-    let darkTile = props.rowIndex % 2 !== 0;
+    let darkTile = rowIndex % 2 !== 0;
 
     let reactTileArray = []
-	for(let tileIndex = 0; tileIndex < props.tiles.length; tileIndex++) {
+	for(let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
 		reactTileArray.push(
-			<Tile key={tileIndex} darkTile={darkTile} rowIndex={props.rowIndex} tileIndex={tileIndex} data={props.tiles[tileIndex]}/>
+			<Tile key={tileIndex} darkTile={darkTile} rowIndex={rowIndex} tileIndex={tileIndex} data={tiles[tileIndex]}/>
 		)
 		darkTile = !darkTile
 	}
@@ -456,9 +456,9 @@ function Row(props){
 	return <div className="chessRow">{reactTileArray}</div>;
 }
 
-function Tile(props) {
+function Tile({darkTile, data, rowIndex, tileIndex}) {
 
-	const piece = props.data.piece;
+	const piece = data.piece;
 
 	// TODO remove debug
 	console.debug(piece);
@@ -475,9 +475,9 @@ function Tile(props) {
 
 	return (
 		<span
-			key = {props.tileIndex.toString() + props.rowIndex.toString()}
-			className = {props.darkTile ? "tile darkTile" : "tile lightTile"}
-			id = {props.tileIndex.toString() + props.rowIndex.toString()}
+			key = {tileIndex.toString() + rowIndex.toString()}
+			className = {darkTile ? "tile darkTile" : "tile lightTile"}
+			id = {tileIndex.toString() + rowIndex.toString()}
 		>
 			{/* tile contents */}
 			{ imagePath !== "" &&
