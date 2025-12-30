@@ -6,37 +6,34 @@ from src.utils import generateId
 from psycopg.types.json import Json
 
 class QuadradiusGame:
-    def __init__(self):
-        pass
+    def __init__(self, player1, player2, player1_color, player2_color, active_player, isDbLoad):
 
-    @staticmethod
-    def manualCreate(player1, player2, player1_color, player2_color, active_player):
-        g = QuadradiusGame()
-        g.id = generateId()
-        g.player1 = player1
-        g.player2 = player2
-        g.player1_color = player1_color
-        g.player2_color = player2_color
-        g.boardstate = json.loads(open('resources/initialQuadLayout.json', 'r').read())
-        g.populatePlayerColors(player1_color, player2_color)
-        g.active_player = active_player
-        g.completed = False
-        g.time_started = datetime.now()
-        g.last_move = None
-        g.time_ended = None
-        g.winner = None
-        return g
+        self.player1 = player1
+        self.player2 = player2
+        self.player1_color = player1_color
+        self.player2_color = player2_color
+        self.active_player = active_player
+        if isDbLoad: return
+        self.id = generateId()
+        self.boardstate = json.loads(open('resources/initialQuadLayout.json', 'r').read())
+        self.populatePlayerColors(player1_color, player2_color)
+        self.completed = False
+        self.time_started = datetime.now()
+        self.last_move = None
+        self.time_ended = None
+        self.winner = None
 
     @staticmethod
     def dbLoad(gameDict):
-        g = QuadradiusGame()
+        g = QuadradiusGame(
+            gameDict['player1'],
+            gameDict['player2'],
+            gameDict['player1_color'],
+            gameDict['player2_color'],
+            gameDict['active_player'],
+            isDbLoad=True)
         g.id = gameDict['id']
-        g.player1 = gameDict['player1']
-        g.player2 = gameDict['player2']
-        g.player1_color = gameDict['player1_color']
-        g.player2_color = gameDict['player2_color']
         g.boardstate = gameDict['boardstate']
-        g.active_player = gameDict['active_player']
         g.completed = gameDict['completed']
         g.time_started = gameDict['time_started']
         g.last_move = gameDict['last_move']

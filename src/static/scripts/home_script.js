@@ -23,7 +23,7 @@ function openGame(gameId, gameType){
 	window.location.href = "/games/" + gameType + "/" + gameId;
 }
 
-// TODO should the following 6 functions be refactored to reduce DRYness?
+// TODO should the following 6 functions be refactored to reduce DRY-ness?
 function QuadradiusGameList ({completed}) {
     return quadradiusGames
 	.filter(game => game.completed === completed)
@@ -123,8 +123,8 @@ const page = (
 	<div id="reactRoot">
 
 		<SiteHeader/>
-		<div id="main">
-			<form action="/creategame" method="POST" id="createGameDiv">
+		<main>
+			<form action="/create-game" method="POST" id="createGameDiv">
 				<h4>Create Game</h4>
 
 				<select name="gameType"> {/*The name attribute is used to reference the form data*/}
@@ -133,13 +133,15 @@ const page = (
 				<br/>
 
 				Opponent Username: <input type="text" name="opponent"/>
+
+				{/*TODO disable this button (and enter key submit) if 'opponent' field is empty*/}
 				<input type="submit" value="Create"/>
 			</form>
 
 			<QuadradiusGames/>
 			<ChessGames/>
 			<TttGames/>
-		</div>
+		</main>
 	</div>
 );
 

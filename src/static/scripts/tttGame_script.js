@@ -60,7 +60,7 @@ function tttSocketConnect(setBoardstate, setYourTurn) {
 				"username": payload.username
 			};
 			const message = JSON.stringify(messageObj);
-			statSocket.send(message); // TODO wouldnt this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
+			statSocket.send(message); // TODO wouldn't this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
 		}
 
 		else if(data.command === "info") {
@@ -73,8 +73,8 @@ function tttSocketConnect(setBoardstate, setYourTurn) {
 
     };
 
-    var board = document.getElementById("tttBoard");
-    board.onclick = function(mouseClick){
+	const board = document.getElementById("tttBoard");
+	board.onclick = function(mouseClick){
 		if(mouseClick.target.className !== "tttCell activeTttCell") return;
     	const boardIndex = mouseClick.target.id;
 		tttSocketUpdate(tttSocket, boardIndex);
@@ -90,8 +90,8 @@ returns the updated status string,
 which gets displayed to the user at all times.
 */
 function determineStatus(payload, data) {
-	
-	var retval = "";
+
+	let retval = "";
 	if(data.gameEnded){
 		retval+="Game over. ";
 		if(data.winner==null) {
@@ -183,17 +183,18 @@ function TttBoard(){
 	)
 }
 
-var isPlayer = payload.players.includes(payload.username);
+const isPlayer = payload.players.includes(payload.username);
 
-var page = (
+const page = (
 	<div id="reactRoot">
-		<SiteHeader version={payload.deployVersion} username={payload.username}/>
-
-		<div id="tttPlayArea">
-			<TttBoard/>
-			<p>Status: <span id="status"></span></p>
-		</div>
-		{isPlayer && <Chatbox expanded={false}/>}
+		<SiteHeader />
+		<main>
+			<div id="tttPlayArea">
+				<TttBoard/>
+				<p>Status: <span id="status"></span></p>
+			</div>
+			{isPlayer && <Chatbox expanded={false}/>}
+		</main>
 	</div>
 );
 

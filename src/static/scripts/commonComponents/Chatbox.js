@@ -34,6 +34,7 @@ export function Chatbox ( {expanded} ) {
                     onClick={() => {
                         setCurrentlyExpanded(!currentlyExpanded); // toggle
                         let nowExpanded = !currentlyExpanded;
+                        // noinspection UnnecessaryLocalVariableJS
                         let newText = nowExpanded ? 'Hide' : 'Expand';
                         document.getElementById('chatbox-indicator').innerText = newText;
                     }}>

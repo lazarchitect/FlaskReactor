@@ -60,8 +60,8 @@ class TttHandler(WebSocketHandler):
 
     def wsSubscribe(self, fields: dict):
 
-        if self.socketId == None: 
-            print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
+        if self.socketId is None:
+            print('--------------------\nERROR!!! SOCKET ID NOT ASSIGNED\n---------------')
 
         connectionDetails = {
             "id": self.socketId,

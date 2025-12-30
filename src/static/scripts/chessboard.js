@@ -46,7 +46,7 @@ function chessSocketUpdate(chessSocket, tileId){
 function chessSocketConnect(boardstate, setBoardstate) {
 	const chessSocket = new WebSocket(payload.wsBaseUrl + "/chess");
 	// this is where you might initiate a statSocket as well for db chess stats
-	// EDIT: why would stats need a websocket? it doesnt need to update on the fly. HTTP would suffice methinks?
+	// EDIT: why would stats need a websocket? it doesn't need to update on the fly. HTTP would suffice methinks?
 
 	chessSocket.onopen = (() => chessSocketSubscribe(chessSocket));
 
@@ -79,7 +79,7 @@ function chessSocketConnect(boardstate, setBoardstate) {
 		}
 	};
 
-	var board = document.getElementById("board");
+	const board = document.getElementById("board");
 
 	board.onclick = function(mouseEvent){
 
@@ -101,7 +101,7 @@ function chessSocketConnect(boardstate, setBoardstate) {
 
 			removeHighlights();
 
-			if(piece == undefined || piece == null || piece.color != payload.userColor) return;
+			if(piece === undefined || piece == null || piece.color !== payload.userColor) return;
 
 			generateHighlights(boardstate, piece);
 
@@ -117,7 +117,7 @@ function chessSocketConnect(boardstate, setBoardstate) {
 function removeHighlights(){
 	active_coords = [];
 	highlightedTiles.forEach(coords => {
-		var tileDiv = document.getElementById(coords[1]+""+coords[0]);
+		let tileDiv = document.getElementById(coords[1] + "" + coords[0]);
 		tileDiv.classList.remove("darkHighlighted");
 		tileDiv.classList.remove("lightHighlighted");
 	});
@@ -302,7 +302,7 @@ function generateHighlights(boardstate, piece){ // void
 	}
 
 
-	for(var index in highlightedTiles){
+	for(let index in highlightedTiles){
 		const coordinate = highlightedTiles[index];
 		const tileDiv = document.getElementById(coordinate[1]+""+coordinate[0]);
 		if(tileDiv.classList.contains("darkTile")){
@@ -363,11 +363,11 @@ function determineStatus(payload, data){
 			status += "It's a tie."
 		else if(data.winner === payload.username)
 			status += "You win!"
-		else if(payload.username===data.otherPlayer)
+		else if(payload.username === data.otherPlayer)
 			status += "You lose...";
 		else
 			status += "Winner was " + data.winner;
-		return;
+		return status;
 	}
 	switch(payload.username){
 		case data.activePlayer:
@@ -441,14 +441,14 @@ export function Chessboard() {
 	);
 }
 
-function Row(props){
+function Row({rowIndex, tiles}){
 
-    let darkTile = props.rowIndex % 2 !== 0;
+    let darkTile = rowIndex % 2 !== 0;
 
     let reactTileArray = []
-	for(let tileIndex = 0; tileIndex < props.tiles.length; tileIndex++) {
+	for(let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
 		reactTileArray.push(
-			<Tile key={tileIndex} darkTile={darkTile} rowIndex={props.rowIndex} tileIndex={tileIndex} data={props.tiles[tileIndex]}/>
+			<Tile key={tileIndex} darkTile={darkTile} rowIndex={rowIndex} tileIndex={tileIndex} data={tiles[tileIndex]}/>
 		)
 		darkTile = !darkTile
 	}
@@ -456,9 +456,9 @@ function Row(props){
 	return <div className="chessRow">{reactTileArray}</div>;
 }
 
-function Tile(props) {
+function Tile({darkTile, data, rowIndex, tileIndex}) {
 
-	const piece = props.data.piece;
+	const piece = data.piece;
 
 	// TODO remove debug
 	console.debug(piece);
@@ -475,9 +475,9 @@ function Tile(props) {
 
 	return (
 		<span
-			key = {props.tileIndex.toString() + props.rowIndex.toString()}
-			className = {props.darkTile ? "tile darkTile" : "tile lightTile"}
-			id = {props.tileIndex.toString() + props.rowIndex.toString()}
+			key = {tileIndex.toString() + rowIndex.toString()}
+			className = {darkTile ? "tile darkTile" : "tile lightTile"}
+			id = {tileIndex.toString() + rowIndex.toString()}
 		>
 			{/* tile contents */}
 			{ imagePath !== "" &&

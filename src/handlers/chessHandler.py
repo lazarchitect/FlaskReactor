@@ -63,8 +63,8 @@ class ChessHandler(WebSocketHandler):
 
     def handleSubscribe(self, fields: dict):
 
-        if self.socketId == None: 
-            print('--------------------\nERROR!!! SOCKETID NOT ASSIGNED\n---------------')
+        if self.socketId is None:
+            print('--------------------\nERROR!!! SOCKET ID NOT ASSIGNED\n---------------')
 
         connectionDetails = {
             "id": self.socketId,
@@ -156,7 +156,7 @@ class ChessHandler(WebSocketHandler):
         wkrMoved = srcId == "wkr" or game.wkr_moved
 
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
-        if (game.notation == None): 
+        if (game.notation is None):
             game.notation = ""
         newNotation = game.notation + moveNotation
 

@@ -1,4 +1,4 @@
-"""provides a set of tools for interfacing with FlaskReactor's custom PostGres DataBase (PGDB) instance, 
+"""provides a set of tools for interfacing with FlaskReactor's custom Postgres Database (PGDB) instance,
 containing game data, users, and more."""
 
 from psycopg import connect, InterfaceError, OperationalError
@@ -24,8 +24,7 @@ sql = {
 
 	#Users
 	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup) VALUES (%s, %s, %s, %s, %s, %s, %s)",
-	"getUser": f"SELECT * FROM {usersTable} WHERE name=%s",
-	"checkLogin": f"SELECT * FROM {usersTable} WHERE name=%s AND password_hash=%s",
+	"getUser": f"SELECT * FROM {usersTable} WHERE lower(name)=lower(%s)",
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
 	# Quadradius
@@ -61,11 +60,11 @@ sql = {
 }
 
 class Pgdb:
-	"""interacts with a PostgreSQL database of Flaskreactor users and games, for CRUD operations on records."""
+	"""interacts with a Postgres database of Flaskreactor users and games, for CRUD operations on records."""
 
 	_instance = None
 
-	# overriding new in order to use a Singleton approach, no need to reinstatiate for every Handler that comes up
+	# overriding new in order to use a Singleton approach, no need to reinstantiate for every Handler that comes up
 	# and also to allow for MockPgdb to be used without impacting code in any other file
 	def __new__(cls, postgres_config):
 
@@ -141,17 +140,14 @@ class Pgdb:
 		query = sql['getUser']
 		values = [username]
 		self.__execute(query, values)
-		return User.dbLoad(self.cursor.fetchone())
+		userDict = self.cursor.fetchone()
+		if (userDict is None):
+			return None
+		return User.dbLoad(userDict)
 
-	def checkLogin(self, username, password_hash):
-		query = sql['checkLogin']
-		values = [username, password_hash]
-		self.__execute(query, values)
-		return self.cursor.fetchone() is not None
-
-	def createUser(self, username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup):
+	def createUser(self, user):
 		query = sql['createUser']
-		values = [username, password_hash, email, userid, ws_token, quad_color_pref, quad_color_backup]
+		values = user.toTuple()
 		self.__execute(query, values)
 		self.conn.commit()
 
@@ -229,7 +225,7 @@ class Pgdb:
 		values = [gameId]
 		self.__execute(query, values)
 		record = self.cursor.fetchone()
-		if(record == None):
+		if(record is None):
 			print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
 		return TttGame.dbLoad(record)
@@ -302,12 +298,6 @@ class Pgdb:
 		return self.conn.commit()
 
 	####### HELPER METHODS #########
-
-	def userExists(self, username):
-		query = sql['getUser']
-		values = [username]
-		self.__execute(query, values)
-		return self.cursor.fetchone() is not None
 
 	def getAllGames(self, username):
 		"""Retrieves all games of all types where the given user is a player."""

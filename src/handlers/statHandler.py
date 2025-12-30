@@ -1,8 +1,10 @@
 
-from tornado.websocket import WebSocketHandler
-from src.pgdb import Pgdb
-import src.utils as utils
 import json
+
+from tornado.websocket import WebSocketHandler
+
+import src.utils as utils
+
 
 class StatHandler(WebSocketHandler):
 

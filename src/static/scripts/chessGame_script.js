@@ -11,13 +11,14 @@ let isPlayer = payload.players.includes(payload.username);
 let page = (
 	<div id="reactRoot">
         <SiteHeader />
-        <div id="chessPlayArea">
-            <Chessboard />
-            <p>Status: <span id="status"></span></p>
-        </div>
-        
-        {isPlayer && <Chatbox expanded={false} />}
-        
+        <main>
+            <div id="chessPlayArea">
+                <Chessboard />
+                <p>Status: <span id="status"></span></p>
+            </div>
+
+            {isPlayer && <Chatbox expanded={false} />}
+        </main>
     </div>
 );
 

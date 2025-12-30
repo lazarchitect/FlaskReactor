@@ -58,7 +58,7 @@ export function QuadBoard(){
     }
     
     return (
-        <div id="quadboard" display='inline' ref={dropRef}>
+        <div id="quadboard" ref={dropRef}>
             {rowArray}
         </div>
     )

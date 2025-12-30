@@ -5,7 +5,7 @@ body {
     height: 100%;
 }
 
-#siteHeader {
+header {
     position: fixed;
     top: 0;
     width: 100%;
@@ -24,6 +24,7 @@ body {
     font-size: x-large;
     display: flex;
     align-items: center;
+    white-space: pre;
 }
 
 #headerRight {
@@ -64,7 +65,7 @@ body {
     display: inline;
 }
 
-#main {
+main {
     position: absolute;
     top: 10%;
     padding: 0 2% 0 2%;
@@ -85,9 +86,9 @@ body {
 }
 
 #chessPlayArea {
-    display: block;
-    padding-left: 5%;
-    padding-top: 5%;
+    width: 100%;
+    margin-left: 5%;
+    margin-top: 5%;
 }
 
 #tttPlayArea {
@@ -99,7 +100,6 @@ body {
 .tile {
     width: 60px;
     height: 60px;
-    position: relative;
     display: inline-block;
 }
 

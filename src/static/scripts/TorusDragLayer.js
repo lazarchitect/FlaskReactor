@@ -3,7 +3,7 @@ import React from 'react';
 import { useDragLayer } from 'react-dnd';
 import { TorusSVG } from './TorusSVG';
 
-export function TorusDragLayer (props) {
+export function TorusDragLayer () {
 
 	const {item, itemType, initialOffset, currentOffset, isDragging} = useDragLayer((monitor) => ({
 	  item: monitor.getItem(),
@@ -27,7 +27,7 @@ export function TorusDragLayer (props) {
 		height: "100%",
 	};
 
-	if (item.torus == undefined) {
+	if (item.torus === undefined) {
 		console.log(JSON.stringify(item));
 		return;
 	}
