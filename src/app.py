@@ -51,7 +51,7 @@ with app.test_request_context():
 def homepage():
 
     if notLoggedIn(session):
-        payload = json.dumps({"deployVersion": deployVersion})
+        payload = json.dumps({"deployVersion": deployVersion, "preferences": buildPreferences(session)})
         return render_template("splash.html", payload = payload)
 
     else:
@@ -86,6 +86,7 @@ def chessGame(gameId):
         "game": vars(game),
         "username": username,
         "game_type": "chess", # field used by common component
+        "preferences": buildPreferences(session),
 
         # TODO following three lines' values already derive from "game" and "username", redundant payload fields. let UI figure it out
         "boardstate": game.boardstate,
@@ -112,6 +113,7 @@ def quadGame(gameId):
         "deployVersion": deployVersion,
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
+        "preferences": buildPreferences(session),
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "game_type": "quadradius",
@@ -128,12 +130,17 @@ def tttGame(gameId):
     game = pgdb.getTttGame(gameId)
     if game is None:
         return render_template("game_not_found.html", payload={"alert": "game with that ID not found"})
+    # TODO thoughts -
+    #  username, preferences, and deployVersion are common to all payloads.
+    #  Should there be a common payloadBuilder?
+    #  should Payload be a class?
     payload = {
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
         "ws_token": session.get('ws_token'),
         "game_type": "ttt", # field used by common component
         "username": session.get('username'), #can be null if not logged in
+        "preferences": buildPreferences(session),
         "userId": session.get('userId'),
         # TODO simplify payload - next three lines can be derived from "game" on client side
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
