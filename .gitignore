@@ -16,6 +16,7 @@ node_modules
 #App Config Files
 app_config.json
 *pat
+secret_key.txt
 
 # Misc
 *.log
