@@ -5,34 +5,27 @@ from src.utils import generateId
 
 class TttGame:
     """Python object representing a specific Ttt game between two players, with all schema fields that a game record has.
-    These are easier to work with than the tuples that psycopg2 returns, and can be converted back to a database record easily."""
+    These are easier to work with than the tuples that psycopg returns, and can be converted back to a database record easily."""
     
-    def __init__(self):
-        pass
+    def __init__(self, x_player, o_player, isDbLoad):
 
-    @staticmethod
-    def manualCreate(x_player, o_player):
-        """constructor for creation from user-input values."""
-        g = TttGame()
-        g.id = generateId()
-        g.x_player = x_player
-        g.o_player = o_player
-        g.completed = False
-        g.time_started = datetime.now()
-        g.last_move = g.time_started
-        g.time_ended = None
-        g.player_turn = random.choice([x_player, o_player]) # move this 'random' logic outside this class
-        g.winner = None
-        g.boardstate = ['','','','','','','','',''] # 9 empty strings
-        return g
+        self.x_player = x_player
+        self.o_player = o_player
+        if isDbLoad: return
+
+        self.id = generateId()
+        self.completed = False
+        self.time_started = datetime.now()
+        self.last_move = self.time_started
+        self.time_ended = None
+        self.player_turn = random.choice([x_player, o_player]) # move this 'random' logic outside this class
+        self.winner = None
+        self.boardstate = ['','','','','','','','',''] # 9 empty strings
 
     @staticmethod
     def dbLoad(gameDict):
-        """constructor for PGDB load"""
-        g = TttGame()
+        g = TttGame(gameDict['x_player'], gameDict['o_player'], isDbLoad=True)
         g.id = gameDict['id']
-        g.x_player = gameDict['x_player']
-        g.o_player = gameDict['o_player']
         g.completed = gameDict['completed']
         g.time_started = gameDict['time_started']
         g.last_move = gameDict['last_move']
