@@ -24,6 +24,7 @@ header {
     font-size: x-large;
     display: flex;
     align-items: center;
+    white-space: pre;
 }
 
 #headerRight {
