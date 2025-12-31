@@ -66,7 +66,7 @@ function SignupArea() {
 			{!passwordLengthWarning && passwordsMatchWarning && <Warning message="Passwords must match." />}
 			<br/>
 			<label>Email (optional):</label>
-			<input type="text" name="email" autoComplete="email"/>
+			<input type="email" name="email" autoComplete="email"/>
 			<br/>
 			<input type="submit" id="signupSubmit" value="Submit"/>
 		</form>
