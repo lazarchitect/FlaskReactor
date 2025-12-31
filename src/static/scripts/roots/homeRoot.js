@@ -45,9 +45,6 @@ function enableOnClick(gameType) {
 
 		let currentVisibility = pastGames.style.visibility;
 		pastGames.style.visibility = (currentVisibility === 'visible' ? 'hidden' : 'visible');
-
-		let currentPosition = pastGames.style.position;
-		pastGames.style.position = (currentPosition === 'static' ? 'absolute' : 'static');
 	});
 }
 

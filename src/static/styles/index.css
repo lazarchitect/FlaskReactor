@@ -84,12 +84,14 @@ main {
 
 #pastTttGames {
     visibility: hidden;
-    position: absolute;
 }
 
 #pastChessGames {
     visibility: hidden;
-    position: absolute;
+}
+
+#pastQuadGames {
+    visibility: hidden;
 }
 
 .playArea {
