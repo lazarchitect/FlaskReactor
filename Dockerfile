@@ -1,17 +1,14 @@
 # PART 1: frontend ReactJS webpack build
-FROM node:20-bookworm as frontend
-LABEL stage=node_build
+FROM node:22-bookworm as frontend
 
 WORKDIR /app
 
 COPY . .
 
-RUN npm install
-RUN npm run build
+RUN npm install -g npm && npm install && npm run build
 
 # PART 2: install Python and run app
 FROM python:3.10-bookworm
-LABEL stage=python_build
 
 WORKDIR /app
 
@@ -26,7 +23,7 @@ ENV PYTHONPATH=/app
 
 COPY . .
 
-RUN pip install -r requirements.txt
+RUN python -m pip install --upgrade pip && pip install -r requirements.txt
 
 COPY --from=frontend /app/src/static/scripts/dist /app/src/static/scripts/dist
 

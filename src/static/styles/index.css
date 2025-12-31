@@ -68,33 +68,39 @@ header {
 main {
     position: absolute;
     top: 10%;
+    width: 96%; /* full width minus L/R padding */
     padding: 0 2% 0 2%;
+}
+
+#gameDisplaysArea {
+    display: flex;
+    width: 100%;
+}
+
+.gameDisplay {
+    width: 1fr;
+    padding-right: 10%;
 }
 
 #pastTttGames {
     visibility: hidden;
-    position: absolute;
 }
 
 #pastChessGames {
     visibility: hidden;
-    position: absolute;
+}
+
+#pastQuadGames {
+    visibility: hidden;
+}
+
+.playArea {
+    margin-top: 3%;
+    margin-left: 1%;
 }
 
 .chessRow {
     font-size: 0; /* HTML has this weird spacing issue causing empty spaces, removing any font size fixes it */
-}
-
-#chessPlayArea {
-    width: 100%;
-    margin-left: 5%;
-    margin-top: 5%;
-}
-
-#tttPlayArea {
-    display: block;
-    padding-left: 5%;
-    padding-top: 5%;
 }
 
 .tile {
@@ -133,11 +139,9 @@ main {
     padding: 1em;
 }
 
-
-
 #tttBoard {
-    height: 500px;
-    width: 500px;
+    height: 400px;
+    width: 400px;
     overflow: hidden;
     position: relative;
 }
@@ -161,8 +165,6 @@ main {
     display: grid;
     grid-template-columns: repeat(10, 10%);
     grid-template-rows: repeat(8, 12.5%);
-    margin-top: 4%;
-    margin-left: 8%;
     width: 640px;
     height: 512px;
     border: 3px solid black;

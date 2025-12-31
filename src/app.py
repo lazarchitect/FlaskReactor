@@ -51,18 +51,18 @@ with app.test_request_context():
 def homepage():
 
     if notLoggedIn(session):
-        payload = json.dumps({"deployVersion": deployVersion})
+        payload = json.dumps({"deployVersion": deployVersion, "preferences": buildPreferences(session)})
         return render_template("splash.html", payload = payload)
 
     else:
-        chessGames, tttGames, quadradiusGames = pgdb.getAllGames(session.get('username'))
+        chessGames, tttGames, quadGames = pgdb.getAllGames(session.get('username'))
 
         payload = {
             "username": session.get('username'),
             "preferences": buildPreferences(session),
             "chessGames": chessGames,
             "tttGames": tttGames,
-            "quadradiusGames": quadradiusGames,
+            "quadGames": quadGames,
             "deployVersion": deployVersion
         }
         payload = json.dumps(payload, default=str)
@@ -74,7 +74,10 @@ def chessGame(gameId):
     game = pgdb.getChessGame(gameId)
 
     if game is None:
-        return render_template("game_not_found.html", payload={"alert":"Game could not be retrieved from database."})
+        return render_template("game_not_found.html", payload=json.dumps({
+            "preferences": buildPreferences(session),
+            "deployVersion": deployVersion
+        }, default=str))
 
     username = session.get('username')
 
@@ -86,6 +89,7 @@ def chessGame(gameId):
         "game": vars(game),
         "username": username,
         "game_type": "chess", # field used by common component
+        "preferences": buildPreferences(session),
 
         # TODO following three lines' values already derive from "game" and "username", redundant payload fields. let UI figure it out
         "boardstate": game.boardstate,
@@ -102,16 +106,20 @@ def chessGame(gameId):
 
     return render_template("chessGame.html", payload=payload)
 
-@app.route("/games/quadradius/<gameId>")
+@app.route("/games/quad/<gameId>")
 def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
     if game is None:
-        # TODO make this template
-        return render_template("game_not_found.html", payload={"alert":"Game could not be retrieved from database."})
+        return render_template("game_not_found.html", payload=json.dumps({
+            "preferences": buildPreferences(session),
+            "deployVersion": deployVersion
+        }, default=str))
+
     payload = {
         "deployVersion": deployVersion,
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
+        "preferences": buildPreferences(session),
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "game_type": "quadradius",
@@ -127,13 +135,21 @@ def quadGame(gameId):
 def tttGame(gameId):
     game = pgdb.getTttGame(gameId)
     if game is None:
-        return render_template("game_not_found.html", payload={"alert": "game with that ID not found"})
+        return render_template("game_not_found.html", payload=json.dumps({
+            "preferences": buildPreferences(session),
+            "deployVersion": deployVersion
+        }, default=str))
+    # TODO thoughts -
+    #  username, preferences, and deployVersion are common to all payloads.
+    #  Should there be a common payloadBuilder?
+    #  should Payload be a class?
     payload = {
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
         "ws_token": session.get('ws_token'),
         "game_type": "ttt", # field used by common component
         "username": session.get('username'), #can be null if not logged in
+        "preferences": buildPreferences(session),
         "userId": session.get('userId'),
         # TODO simplify payload - next three lines can be derived from "game" on client side
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
@@ -249,7 +265,7 @@ def createGame():
 
         pgdb.createChessGame(game)
 
-    elif game_type == "Tic-Tac-Toe":
+    elif game_type == "Ttt":
         role = random.choice(['X', 'O'])
         if(role == 'X'):
             x_player = player_name
@@ -262,7 +278,7 @@ def createGame():
 
         pgdb.createTttGame(game)
 
-    elif game_type == "Quadradius":
+    elif game_type == "Quad":
 
         playerColorPrefs = pgdb.getPreferredTorusColors(player_name)
         opponentColorPrefs = pgdb.getPreferredTorusColors(opponent_name)

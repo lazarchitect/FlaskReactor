@@ -2,10 +2,10 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import {SiteHeader} from './commonComponents/SiteHeader';
+import {SiteHeader} from '../components/common/SiteHeader';
 
 function Warning ({message}) {
-	return <p style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</p>;
+	return <span style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</span>;
 }
 
 function LoginArea () {
@@ -66,7 +66,7 @@ function SignupArea() {
 			{!passwordLengthWarning && passwordsMatchWarning && <Warning message="Passwords must match." />}
 			<br/>
 			<label>Email (optional):</label>
-			<input type="text" name="email" autoComplete="email"/>
+			<input type="email" name="email" autoComplete="email"/>
 			<br/>
 			<input type="submit" id="signupSubmit" value="Submit"/>
 		</form>
@@ -75,7 +75,7 @@ function SignupArea() {
 
 
 const page = (
-	<div id="reactRoot">
+	<>
 		<SiteHeader />
 		<main>
 			<p>FlaskReactor is a site for playing games online with your friends. Gaming will be free of charge for everyone, forever. Please make an account to get started!</p>
@@ -83,7 +83,7 @@ const page = (
 			<br/><br/>
 			<SignupArea/>
 		</main>
-	</div>
+	</>
 );
 
 const rootElement = document.getElementById("root");
