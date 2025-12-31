@@ -132,7 +132,7 @@ function generateHighlights(boardstate, piece){ // void
 	highlightedTiles = [];
 	active_coords = [piece.row, piece.col];
 
-	const enemyColor = piece.color == "Black" ? "White" : "Black";
+	const enemyColor = piece.color === "Black" ? "White" : "Black";
 
 	const allyKingCoords = chessUtils.getKingCoords(boardstate, piece.color);
 

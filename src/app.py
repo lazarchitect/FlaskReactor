@@ -55,14 +55,14 @@ def homepage():
         return render_template("splash.html", payload = payload)
 
     else:
-        chessGames, tttGames, quadradiusGames = pgdb.getAllGames(session.get('username'))
+        chessGames, tttGames, quadGames = pgdb.getAllGames(session.get('username'))
 
         payload = {
             "username": session.get('username'),
             "preferences": buildPreferences(session),
             "chessGames": chessGames,
             "tttGames": tttGames,
-            "quadradiusGames": quadradiusGames,
+            "quadGames": quadGames,
             "deployVersion": deployVersion
         }
         payload = json.dumps(payload, default=str)
@@ -106,7 +106,7 @@ def chessGame(gameId):
 
     return render_template("chessGame.html", payload=payload)
 
-@app.route("/games/quadradius/<gameId>")
+@app.route("/games/quad/<gameId>")
 def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
     if game is None:
@@ -265,7 +265,7 @@ def createGame():
 
         pgdb.createChessGame(game)
 
-    elif game_type == "Tic-Tac-Toe":
+    elif game_type == "Ttt":
         role = random.choice(['X', 'O'])
         if(role == 'X'):
             x_player = player_name
@@ -278,7 +278,7 @@ def createGame():
 
         pgdb.createTttGame(game)
 
-    elif game_type == "Quadradius":
+    elif game_type == "Quad":
 
         playerColorPrefs = pgdb.getPreferredTorusColors(player_name)
         opponentColorPrefs = pgdb.getPreferredTorusColors(opponent_name)

@@ -1,7 +1,7 @@
 import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './commonComponents/SiteHeader';
-import { Chatbox } from './commonComponents/Chatbox';
+import { SiteHeader } from '../components/common/SiteHeader';
+import { Chatbox } from '../components/common/Chatbox';
 
 const gameId = payload.game.id;
 
@@ -150,7 +150,7 @@ function TttBoardRow({yourTurn, rowIndex, values}){
 				key={colIndex}
 				className={"tttCell" + ((yourTurn && cellContents === "" && payload.username !== "") ? " activeTttCell": "")}
 				id={colIndex+(rowIndex*3)}
-				style={{left: 15+(colIndex*29) + "%", top: 15+(rowIndex*29) + "%"}}
+				style={{left: 7+(colIndex*34) + "%", top: 7+(rowIndex*35) + "%"}}
 			>
 				{cellContents === "" ? "" : (cellContents === 'X' ? <X_Piece/> : <O_Piece/>)}
 			</span>
@@ -168,11 +168,11 @@ function TttBoard(){
 	return (
 		<div id="tttBoard">
 			
-			<svg id="octothorpe" width="500px" height="500px" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
-  				<rect x="166" y="50" width="12" height="400" rx="5" />
-				<rect x="330" y="50" width="12" height="400" rx="5"/>
-				<rect x="50" y="166" width="400" height="12" rx="5"/>
-				<rect x="50" y="330" width="400" height="12" rx="5"/>
+			<svg id="octothorpe" width="400px" height="400px" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  				<rect x="125" y="0" width="12" height="400" rx="5" />
+				<rect x="263" y="0" width="12" height="400" rx="5"/>
+				<rect x="0" y="125" width="400" height="12" rx="5"/>
+				<rect x="0" y="263" width="400" height="12" rx="5"/>
 			</svg>
 			<div id="tttBoardData">
 				<TttBoardRow yourTurn={yourTurn} rowIndex={0} values={boardstate.slice(0,3)}/><br/>
@@ -186,16 +186,16 @@ function TttBoard(){
 const isPlayer = payload.players.includes(payload.username);
 
 const page = (
-	<div id="reactRoot">
+	<>
 		<SiteHeader />
 		<main>
-			<div id="tttPlayArea">
+			<div className="playArea">
 				<TttBoard/>
 				<p>Status: <span id="status"></span></p>
 			</div>
 			{isPlayer && <Chatbox expanded={false}/>}
 		</main>
-	</div>
+	</>
 );
 
 createRoot(document.getElementById('root')).render(page);
