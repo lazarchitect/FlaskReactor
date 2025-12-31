@@ -5,7 +5,7 @@ import { createRoot } from 'react-dom/client';
 import {SiteHeader} from '../components/common/SiteHeader';
 
 function Warning ({message}) {
-	return <p style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</p>;
+	return <span style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</span>;
 }
 
 function LoginArea () {
