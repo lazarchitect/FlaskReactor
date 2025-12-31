@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import {SiteHeader} from './commonComponents/SiteHeader';
+import {SiteHeader} from '../components/common/SiteHeader';
 
 function Warning ({message}) {
 	return <p style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</p>;
@@ -75,7 +75,7 @@ function SignupArea() {
 
 
 const page = (
-	<div id="reactRoot">
+	<>
 		<SiteHeader />
 		<main>
 			<p>FlaskReactor is a site for playing games online with your friends. Gaming will be free of charge for everyone, forever. Please make an account to get started!</p>
@@ -83,7 +83,7 @@ const page = (
 			<br/><br/>
 			<SignupArea/>
 		</main>
-	</div>
+	</>
 );
 
 const rootElement = document.getElementById("root");

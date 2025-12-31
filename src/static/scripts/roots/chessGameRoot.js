@@ -2,24 +2,24 @@
 
 import React from 'react'; // used by Webpack
 import { createRoot } from 'react-dom/client';
-import { SiteHeader } from './commonComponents/SiteHeader';
-import { Chatbox } from './commonComponents/Chatbox';
-import { Chessboard } from './chessboard';
+import { SiteHeader } from '../components/common/SiteHeader';
+import { Chatbox } from '../components/common/Chatbox';
+import { Chessboard } from '../components/chess/chessboard';
 
 let isPlayer = payload.players.includes(payload.username);
 
 let page = (
-	<div id="reactRoot">
+	<>
         <SiteHeader />
         <main>
-            <div id="chessPlayArea">
+            <div className="playArea">
                 <Chessboard />
                 <p>Status: <span id="status"></span></p>
             </div>
 
             {isPlayer && <Chatbox expanded={false} />}
         </main>
-    </div>
+    </>
 );
 
 createRoot(document.getElementById('root')).render(page);

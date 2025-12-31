@@ -1,5 +1,5 @@
 import {createRoot} from "react-dom/client";
-import {SiteHeader} from "./commonComponents/SiteHeader";
+import {SiteHeader} from "../components/common/SiteHeader";
 import React from "react";
 
 let page = (
