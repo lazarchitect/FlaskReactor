@@ -38,7 +38,7 @@ function determineOpponentName(gameType, game) {
 	}
 }
 
-function enableOnClick(gameType) {
+function enablePastGamesToggle(gameType) {
 	document.getElementById("viewPast"+gameType+"Games").onclick = (() => {
 
 		let pastGames = document.getElementById("past"+gameType+"Games");
@@ -60,7 +60,7 @@ function GameList ({isCompleted, gameType}) {
 
 function GameDisplay ({gameType}) {
 
-	React.useEffect(() => enableOnClick(gameType), []);
+	React.useEffect(() => enablePastGamesToggle(gameType), []);
 
 	const displayName = gameDefs[gameType].displayName;
 
