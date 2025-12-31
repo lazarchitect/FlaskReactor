@@ -38,16 +38,6 @@ function determineOpponentName(gameType, game) {
 	}
 }
 
-function enablePastGamesToggle(gameType) {
-	document.getElementById("viewPast"+gameType+"Games").onclick = (() => {
-
-		let pastGames = document.getElementById("past"+gameType+"Games");
-
-		let currentVisibility = pastGames.style.visibility;
-		pastGames.style.visibility = (currentVisibility === 'visible' ? 'hidden' : 'visible');
-	});
-}
-
 function GameList ({isCompleted, gameType}) {
 	return gameDefs[gameType].games
 		.filter(game => game.completed === isCompleted)
@@ -60,7 +50,9 @@ function GameList ({isCompleted, gameType}) {
 
 function GameDisplay ({gameType}) {
 
-	React.useEffect(() => enablePastGamesToggle(gameType), []);
+	let [showPastGames, setShowPastGames] =	React.useState(false);
+
+	const toggleShowPastGames = () => {setShowPastGames(!showPastGames)};
 
 	const displayName = gameDefs[gameType].displayName;
 
@@ -68,10 +60,9 @@ function GameDisplay ({gameType}) {
 		<div className="gameDisplay">
 			<h4>{displayName} Games:</h4>
 			<GameList gameType={gameType} isCompleted={false} />
-			Show Past Games? <input type="checkbox" id={"viewPast" + gameType + "Games"}/>
-			<div id={"past" + gameType + "Games"}>
-				<GameList gameType={gameType} isCompleted={true}/>
-			</div>
+			Show Past Games? <input type="checkbox" id={"viewPast" + gameType + "Games"} onChange={toggleShowPastGames}/>
+
+			{showPastGames && <GameList gameType={gameType} isCompleted={true}/>}
 		</div>
 	);
 }
