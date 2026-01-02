@@ -23,7 +23,6 @@ class ChessHandler(WebSocketHandler):
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
-        print("chessSocket opened:", str(self.socketId))
 
     def on_message(self, message):
         """

@@ -25,7 +25,6 @@ class ChatHandler(WebSocketHandler):
     
     def open(self):
         self.socketId = "socket"+ str(generateId())[:8]
-        print("messageSocket opened:", str(self.socketId))
 
     def on_message(self, message):
 
