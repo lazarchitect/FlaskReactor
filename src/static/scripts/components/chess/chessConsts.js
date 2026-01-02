@@ -9,16 +9,12 @@ export const BISHOP_OFFSETS = BISHOP_OFFSET_DIFFS.map(offsetMap);
 export const ROOK_OFFSETS = ROOK_OFFSET_DIFFS.map(offsetMap);
 export const ROYAL_OFFSETS = BISHOP_OFFSETS.concat(ROOK_OFFSETS);
 
-export const Colors = Object.freeze({
-    WHITE: 'White',
-    BLACK: 'Black'
-})
+export const WHITE = 'White';
+export const BLACK = 'Black';
 
-export const PieceTypes = Object.freeze({
-    PAWN: 'Pawn',
-    BISHOP: 'Bishop',
-    QUEEN: 'Queen',
-    KING: 'King',
-    ROOK: 'Rook',
-    KNIGHT: 'Knight'
-})
+export const PAWN = 'Pawn';
+export const BISHOP = 'Bishop';
+export const QUEEN = 'Queen';
+export const KING = 'King';
+export const ROOK = 'Rook';
+export const KNIGHT = 'Knight';
