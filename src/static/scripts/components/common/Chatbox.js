@@ -10,9 +10,10 @@ let chatSocket = null;
 // initial value (chats so far) populated during ws subscription process
 let chatLogGlobal = [];
 
-
-// TODO possible enhancement - ignore rendering for users who opt out. User settings is in v0.7.0
 export function Chatbox ( {expanded} ) {
+
+    // TODO possible enhancement - ignore rendering for users who opt out. User settings is in v0.7.0
+    // if (!payload.preferences.chat) return;
 
     const [currentlyExpanded, setCurrentlyExpanded] = useState(expanded);
     
@@ -57,19 +58,15 @@ function chatSocketConnect(setChatLog) {
 
     chatSocket.onmessage = (messageEvent) => {
 
-        console.log(messageEvent.data);
-
         let data = JSON.parse(messageEvent.data);
 
         if (data.command === "initialize") {
             chatLogGlobal = data.chats;
             setChatLog(buildFormattedChatLog(chatLogGlobal));
-            console.log("chat log initial value set.");
         }
 
         else if (data.command === "append") {
             chatLogGlobal.push(data.chat);
-            console.log(chatLogGlobal);
             setChatLog(buildFormattedChatLog(chatLogGlobal));
         }
         else if (data.command === "error") {

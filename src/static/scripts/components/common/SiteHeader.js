@@ -50,6 +50,7 @@ function SettingsPane({isLoggedIn}) {
 
 	const [quadColorPref, setQuadColorPref] = useState(preferences?.quadColorPref);
 	const [quadColorBackup, setQuadColorBackup] = useState(preferences?.quadColorBackup);
+	const [useChat, setUseChat] = useState(preferences?.useChat);
 
 	return <div id="settingsPane">
 		Settings
@@ -62,12 +63,24 @@ function SettingsPane({isLoggedIn}) {
 				<span>Quadradius Color Backup: </span>
 				<QuadColorSelector command="quadColorBackup" setter={setQuadColorBackup} value={quadColorBackup} />
 				<br/>
-				<span>Opt out of chat? -- yes/no slider</span>
+				<label htmlFor="useChatToggle"> Opt out of chat?</label>
+				<BooleanSelector id="useChatToggle" command="useChat" setter={setUseChat} value={useChat} />
 			</>
 		: //  else - settings visible while logged out? uses cookies?
 			<></>
 		}
 	</div>
+}
+
+function BooleanSelector ({id, value, setter, command}) {
+	return <input type="checkbox" id={id}
+	  	onChange={(e) => {
+			// let newValue = useChat;
+		    // setter(e.target.value);
+			console.log(e.target.value);
+			// updateSettings(command, {"value": value})
+		}}
+	/>
 }
 
 function QuadColorSelector({value, setter, command}) {

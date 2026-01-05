@@ -180,6 +180,7 @@ def login():
         session['ws_token'] = existingUser.ws_token
         session['quadColorPref'] = existingUser.quad_color_pref
         session['quadColorBackup'] = existingUser.quad_color_backup
+        session['useChat'] = existingUser.use_chat
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -324,6 +325,10 @@ def receiveSettings():
         case "quadColorBackup":
             color = body["data"]["color"]
             pgdb.updateSetting("quad_color_backup", color, username)
+        case "useChat":
+            value = body["data"]["value"]
+            print(value) # debug
+            pgdb.updateSetting("use_chat", value, username)
     return "ACCEPTED", 202
 
 is_closing = False

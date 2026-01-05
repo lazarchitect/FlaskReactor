@@ -295,5 +295,6 @@ def numberToLetter(i):
 def buildPreferences(session):
 	return {
 		"quadColorPref": session.get("quadColorPref"),
-		"quadColorBackup": session.get("quadColorBackup")
+		"quadColorBackup": session.get("quadColorBackup"),
+		"useChat": session.get("useChat")
 	}
