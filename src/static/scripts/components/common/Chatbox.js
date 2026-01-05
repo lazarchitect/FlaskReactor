@@ -49,8 +49,6 @@ export function Chatbox ( {expanded} ) {
 
 function chatSocketConnect(setChatLog) {
 
-    // TODO return immediately if user is not one of the players
-
     chatSocket = new WebSocket(payload.wsBaseUrl + "/chat");
 
     chatSocket.onopen = (() => chatSocketSubscribe());
