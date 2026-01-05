@@ -68,23 +68,32 @@ function GameDisplay ({gameType}) {
 	);
 }
 
+function CreateGameArea() {
+
+	document.addEventListener("keyup", e => {
+		const opponentName = document.getElementById("opponentName").value;
+		document.getElementById("submitCreateGame").disabled = opponentName.length === 0;
+	});
+
+	return <form action="/create-game" method="POST" id="createGameDiv">
+		<h4>Create Game</h4>
+
+		<select name="gameType"> {/*The name attribute is used to reference the form data*/}
+			{gameTypes.map((type) => <option key={type} value={type}>{gameDefs[type].displayName}</option>)}
+		</select>
+		<br/>
+
+		Opponent Username: <input type="text" name="opponent" id="opponentName" />
+
+		<input type="submit" value="Create" id="submitCreateGame" disabled />
+	</form>;
+}
+
 const page = (
 	<>
 		<SiteHeader/>
 		<main>
-			<form action="/create-game" method="POST" id="createGameDiv">
-				<h4>Create Game</h4>
-
-				<select name="gameType"> {/*The name attribute is used to reference the form data*/}
-					{gameTypes.map((type) => <option key={type} value={type}>{gameDefs[type].displayName}</option>)}
-				</select>
-				<br/>
-
-				Opponent Username: <input type="text" name="opponent"/>
-
-				{/*TODO disable this button (and enter key submit) if 'opponent' field is empty*/}
-				<input type="submit" value="Create"/>
-			</form>
+			<CreateGameArea />
 
 			<div id="gameDisplaysArea">
 				{gameTypes.map((gameType) =>
