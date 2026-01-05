@@ -59,8 +59,9 @@ function GameDisplay ({gameType}) {
 	return (
 		<div className="gameDisplay">
 			<h4>{displayName} Games:</h4>
-			<GameList gameType={gameType} isCompleted={false} />
-			Show Past Games? <input type="checkbox" id={"viewPast" + gameType + "Games"} onChange={toggleShowPastGames}/>
+			<GameList gameType={gameType} isCompleted={false}/>
+			<label htmlFor={"viewPast" + gameType + "Games"}> Show Past Games? </label>
+			<input type="checkbox" id={"viewPast" + gameType + "Games"} onChange={toggleShowPastGames}/>
 
 			{showPastGames && <GameList gameType={gameType} isCompleted={true}/>}
 		</div>
