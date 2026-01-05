@@ -58,13 +58,13 @@ function SettingsPane({isLoggedIn}) {
 		{isLoggedIn?
 			<>
 				<span>Quadradius Color Preference: </span>
-				<QuadColorSelector command="quadColorPref" setter={setQuadColorPref} value={quadColorPref} />
+				<QuadColorSelector command="quadColorPref" setter={setQuadColorPref} current={quadColorPref} />
 				<br/>
 				<span>Quadradius Color Backup: </span>
-				<QuadColorSelector command="quadColorBackup" setter={setQuadColorBackup} value={quadColorBackup} />
+				<QuadColorSelector command="quadColorBackup" setter={setQuadColorBackup} current={quadColorBackup} />
 				<br/>
-				<label htmlFor="useChatToggle"> Opt out of chat?</label>
-				<BooleanSelector id="useChatToggle" command="useChat" setter={setUseChat} value={useChat} />
+				<label htmlFor="useChatToggle">Use Chat?</label>
+				<BooleanSelector id="useChatToggle" command="useChat" setter={setUseChat} current={useChat} />
 			</>
 		: //  else - settings visible while logged out? uses cookies?
 			<></>
@@ -72,20 +72,18 @@ function SettingsPane({isLoggedIn}) {
 	</div>
 }
 
-function BooleanSelector ({id, value, setter, command}) {
-	return <input type="checkbox" id={id}
-	  	onChange={(e) => {
-			// let newValue = useChat;
-		    // setter(e.target.value);
-			console.log(e.target.value);
-			// updateSettings(command, {"value": value})
+function BooleanSelector ({id, current, setter, command}) {
+	return <input type="checkbox" id={id} checked={current}
+		onChange={(e) => {
+			setter(!current);
+			updateSettings(command, {"value": !current});
 		}}
 	/>
 }
 
-function QuadColorSelector({value, setter, command}) {
+function QuadColorSelector({current, setter, command}) {
 	const quadColors = ["red", "blue", "green", "teal", "orange", "purple"];
-	return <select value={value}
+	return <select value={current}
 			onChange={(e) => {
 				setter(e.target.value);
 				updateSettings(command, {"color": e.target.value})

@@ -292,9 +292,12 @@ def numberToLetter(i):
 	return 'abcdefgh'[i]
 
 
-def buildPreferences(session):
+# user can be None if not logged in
+def buildPreferences(user = None):
+	if user is None:
+		return {}
 	return {
-		"quadColorPref": session.get("quadColorPref"),
-		"quadColorBackup": session.get("quadColorBackup"),
-		"useChat": session.get("useChat")
+		"quadColorPref": user.quad_color_pref,
+		"quadColorBackup": user.quad_color_backup,
+		"useChat": user.use_chat
 	}

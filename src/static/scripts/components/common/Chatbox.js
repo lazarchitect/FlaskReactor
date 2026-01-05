@@ -12,8 +12,7 @@ let chatLogGlobal = [];
 
 export function Chatbox ( {expanded} ) {
 
-    // TODO possible enhancement - ignore rendering for users who opt out. User settings is in v0.7.0
-    // if (!payload.preferences.chat) return;
+    if (!payload.preferences.useChat) return;
 
     const [currentlyExpanded, setCurrentlyExpanded] = useState(expanded);
     
