@@ -10,7 +10,7 @@ node_modules
 .vscode/settings.json
 .vscode/tasks.json
 
-#PyCharm
+#JetBrains IDEs
 .idea
 
 #App Config Files
