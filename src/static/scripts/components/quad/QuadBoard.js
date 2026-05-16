@@ -15,14 +15,14 @@ export function QuadBoard(){
         }),
         drop: ((item, monitor) => {
 
-            let sourceTile = boardstate[item.dragRow][item.dragCol];
-            let targetTile = tileAtCoords(boardstate, coordsAtMouse(monitor.getClientOffset()));
+            let sourceCoords = {row: item.dragRow, col: item.dragCol};
+            let sourceTile = tileAtCoords(boardstate, sourceCoords);
 
-            if (
-                ("torus" in targetTile && targetTile.torus.color === item.torus.color) // target is occupied with ally
-                || (targetTile === sourceTile) // cant drop to same location.
-            ) {
-               return;
+            let targetCoords = coordsAtMouse(monitor.getClientOffset());
+            let targetTile = tileAtCoords(boardstate, targetCoords);
+
+            if (isInvalidMove(sourceTile, targetTile, sourceCoords, targetCoords)) {
+                return;
             }
 
             targetTile.torus = sourceTile.torus;
@@ -91,4 +91,19 @@ function coordsAtMouse(mousePos) {
 
 function tileAtCoords(boardstate, coords) {
     return boardstate[coords.row][coords.col];
+}
+
+function isInvalidMove(sourceTile, targetTile, sourceCoords, targetCoords) {
+
+    let manhattanDistance = Math.abs(sourceCoords.row - targetCoords.row) + Math.abs(sourceCoords.col - targetCoords.col);
+    if (manhattanDistance > 1) return true; // normal moves are max 1 orthogonal tile only (exceptions are Move Diagonal, F2S, Centerpult?)
+
+    let draggedTorus = sourceTile.torus;
+
+    if (("torus" in targetTile && targetTile.torus.color === draggedTorus.color) // target is occupied with ally
+        || (targetTile === sourceTile)) { // cant drop to same location.
+        return true;
+    }
+
+    return false; // assume valid move if nothing wrong
 }
