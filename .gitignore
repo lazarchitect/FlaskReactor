@@ -4,7 +4,6 @@ __pycache__
 
 # React/Webpack files
 node_modules
-package-lock.json
 **/dist
 
 # VS Code
