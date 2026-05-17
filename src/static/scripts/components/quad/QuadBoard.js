@@ -96,14 +96,10 @@ function tileAtCoords(boardstate, coords) {
 function isInvalidMove(sourceTile, targetTile, sourceCoords, targetCoords) {
 
     let manhattanDistance = Math.abs(sourceCoords.row - targetCoords.row) + Math.abs(sourceCoords.col - targetCoords.col);
-    if (manhattanDistance > 1) return true; // normal moves are max 1 orthogonal tile only (exceptions are Move Diagonal, F2S, Centerpult?)
+    let isInvalidDistance = manhattanDistance !== 1; // normal moves are exactly 1 orthogonal tile only (exceptions are Move Diagonal, F2S, Centerpult?)
 
-    let draggedTorus = sourceTile.torus;
+    let allyAtTarget = ("torus" in targetTile && targetTile.torus.color === sourceTile.torus.color);
 
-    if (("torus" in targetTile && targetTile.torus.color === draggedTorus.color) // target is occupied with ally
-        || (targetTile === sourceTile)) { // cant drop to same location.
-        return true;
-    }
+    return isInvalidDistance || allyAtTarget;
 
-    return false; // assume valid move if nothing wrong
 }
