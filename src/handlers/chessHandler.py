@@ -163,7 +163,6 @@ class ChessHandler(WebSocketHandler):
         # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD 
         # (https://www.notion.so/noshun/Server-side-chess-move-validation-d89dfc680c8849c19b89fbab2a924367)
 
-         
         # execute the move
         boardstate[srcRow][srcCol] = {}
         boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor, "id": srcId}}
@@ -195,7 +194,7 @@ class ChessHandler(WebSocketHandler):
             })
             return
 
-        message = {
+        messageToSubscribers = {
             "command": "updateBoard",
             "newBoardstate": boardstate,
             "activePlayer": newActivePlayer,
@@ -212,7 +211,7 @@ class ChessHandler(WebSocketHandler):
             "pawnLeapCol": pawnLeapCol
         }
 
-        utils.updateAll(clientConnections[gameId], message)
+        utils.updateAll(clientConnections[gameId], messageToSubscribers)
 
         self.pgdb.updateChessGame(
             boardstate,
@@ -234,7 +233,7 @@ class ChessHandler(WebSocketHandler):
         if utils.noLegalMoves(boardstate, enemyColor):
             winner = oldActivePlayer if enemyInCheck else None
             mate = "Checkmate" if enemyInCheck else "Stalemate"
-            message = {
+            messageToSubscribers = {
                 "command": "endGame",
                 "gameEnded": True,
                 "otherPlayer": newActivePlayer,
@@ -242,6 +241,6 @@ class ChessHandler(WebSocketHandler):
                 "mate": mate
             }
             
-            utils.updateAll(clientConnections[gameId], message)
+            utils.updateAll(clientConnections[gameId], messageToSubscribers)
 
             self.pgdb.endChessGame(datetime.now(), winner, gameId)

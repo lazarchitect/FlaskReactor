@@ -4,7 +4,7 @@
 
 DROP DATABASE IF EXISTS postgres WITH (FORCE);
 
--- following line will delete all data, use with intent
+-- following line will delete all data. Use with intent.
 --drop schema if exists flaskreactor cascade;
 
 create schema flaskreactor;
@@ -21,7 +21,9 @@ create table flaskreactor.quadradius_games (
     time_started timestamp NOT NULL,
     last_move timestamp,
     time_ended timestamp,
-    winner text
+    winner text,
+    turn_number smallint DEFAULT 0 NOT NULL,
+    orb_countdown smallint DEFAULT 0 NOT NULL
 );
 
 create table flaskreactor.chess_games (

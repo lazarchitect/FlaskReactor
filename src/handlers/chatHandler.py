@@ -6,6 +6,8 @@ from src.utils import generateId, isEmpty, updateAll
 
 clientConnections = dict()
 
+# lots of code here which is exactly the same across the handler scripts. Time to DRY it?
+
 def deleteConnection(gameId, socketId):
     gameConnectionList = clientConnections[gameId]
     for x in gameConnectionList:
@@ -18,6 +20,7 @@ class ChatHandler(WebSocketHandler):
     # this fn is required due to Flask/Tornado rejecting unspecified origins as Forbidden
     # unless we allow it explicitly
     def check_origin(self, origin):
+        print(origin)
         return True
 
     def initialize(self, pgdb):
@@ -56,15 +59,14 @@ class ChatHandler(WebSocketHandler):
         index = 0 # doesn't matter, but we could set it to max(indexes so far)
         username = fields['username']
         content = fields['content']
+        gameId = fields['gameId']
 
-        responseToClient = {
+        messageToSubscribers = {
             "command": "append",
             "chat": {"index": index, "username": username, "content": content}
         }
 
-        gameId = fields['gameId']
-
-        updateAll(clientConnections[fields['gameId']], responseToClient)
+        updateAll(clientConnections[gameId], messageToSubscribers)
             
         self.pgdb.createChat(gameId, fields['content'], fields['username'])
 
