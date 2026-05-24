@@ -23,6 +23,18 @@ def generateOrbSpawnLocation(boardstate):
 		if (boardstate[y][x]["torus"] is not None):
 			return (x, y)
 
+
+def determineMaxOrbs(turn_number, boardstate):
+
+	maxOrbs = 2 # default at start of game
+	maxOrbs += int(turn_number / 15) # game length factor
+
+	# TODO bother with this?
+	# maxOrbs += emptyTileCount(boardstate) - 32 # sparser board factor
+
+	return maxOrbs
+
+
 class QuadHandler(WebSocketHandler):
 
 	# this fn is required due to Flask/Tornado rejecting unspecified origins as Forbidden
@@ -72,14 +84,15 @@ class QuadHandler(WebSocketHandler):
 
 		orbSpawnLocations = []
 
-		newOrbCounter = game.orb_counter - 1
-		if newOrbCounter == 0:
-			newOrbCounter = randint(4, 8)
-			orbSpawnLocations = [generateOrbSpawnLocation(game.boardstate) for _ in range(randint(2, 3))]
+		newOrbCountdown = game.orb_countdown - 1
+		if newOrbCountdown == 0:
+			newOrbCountdown = randint(4, 8)
+			maxOrbs = determineMaxOrbs(game.turn_number, game.boardstate)
+			orbSpawnLocations = [generateOrbSpawnLocation(game.boardstate) for _ in range(randint(1, maxOrbs))]
 
 		responseToClient = {
 			"turn_number": newTurnNumber,
-			"orb_counter": newOrbCounter,
+			"orb_counter": newOrbCountdown,
 			"orb_spawn_locations": orbSpawnLocations
 			# what else?
 		}
