@@ -15,7 +15,7 @@ export function Torus ({ torus, row, col, isGhost }) {
     const [{ isDragging, opacity }, dragRef, dragPreview] = useDrag(
         () => ({
             type: 'Torus',
-            item: { torus: torus, dragRow: row, dragCol: col }, // gets passed to drop function
+            item: { torus: torus, row: row, col: col }, // gets passed to drop function
             collect: (monitor) => ({
                 isDragging: monitor.isDragging(),
                 opacity: monitor.isDragging() ? 0.6 : 1
