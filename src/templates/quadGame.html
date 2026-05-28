@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
     <head>
-        <!-- TODO ponder this - edit the title after page load to mention opponent name -->
+        <!-- TODO edit the title after page load to mention opponent name -->
         <title>Flask Reactor - Quadradius</title>
         <link rel="stylesheet" href="/static/styles/index.css">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         
-        <script>
-            const payload = JSON.parse('{{payload | safe}}'); // comes from Flask
-        </script>
+        <script>const payload = JSON.parse('{{payload | safe}}');</script>
+        <script type="text/javascript" src="/static/scripts/dist/roots/quadGameRoot.js" defer></script>
 
-        <script type="text/javascript" src="/static/scripts/dist/roots/quadGameRoot.js"  defer ></script>
     </head>
 
     <body>
         <div id = "root"></div>
     </body>
+
 </html>
