@@ -18,6 +18,10 @@ let bkr_moved = payload.game.bkr_moved;
 import * as chessUtils from './chessUtils';
 import * as chessConsts from './chessConsts';
 
+// TODO ALL of the websocket handling logic & associated helpers should probably be moved into a separate JS file
+// this file should really just contain the React component rendering logic
+// I'll try this approach with Quadradius first and apply it to chess if I like it & it works
+
 function chessSocketSubscribe(chessSocket){
 	const subscribeObj = {
 		"request": "subscribe",
