@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en-US">
+
     <head>
         <title>Flask Reactor - Chess</title>
         <link rel="stylesheet" href="/static/styles/index.css">
         <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
         
-        <script>
-            const payload = JSON.parse('{{payload | safe}}'); // comes from Flask
-        </script>
-            
-        <script type="text/javascript" src="/static/scripts/dist/roots/chessGameRoot.js" defer ></script>
+        <script>const payload = JSON.parse('{{payload | safe}}');</script>
+        <script type="text/javascript" src="/static/scripts/dist/roots/chessGameRoot.js" defer></script>
 
     </head>
 
-    <body><div id="root"></div></body>
+    <body>
+        <div id="root"></div>
+    </body>
+
 </html>
