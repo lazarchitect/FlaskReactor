@@ -14,9 +14,12 @@ const allHalosFilter = (color) => {
     return halo(length, "0px", color) + halo("0px", length, color) + halo(negLength, "0px", color) + halo("0px", negLength, color);
 }
 
-export function TorusSVG ({ color, isRadiating }) {
+export function TorusSVG ({ color, isRadiating, isGhost }) {
 
     let [hover, setHover] = useState(false);
+
+    // will default to player2's color if the input is not passed in correctly
+    if (color == null) console.log("no color passed to TorusSVG display logic");
 
     let isPlayer1Torus = color === payload.game.player1_color;
     let gradientType = hover ? "Highlight" : (isRadiating ? "Radial" : "");
@@ -28,6 +31,7 @@ export function TorusSVG ({ color, isRadiating }) {
 
     return (
         <svg className='torusSVG'
+         style={isGhost ? {opacity: "50%"} : {}}
         onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
         version="1.1" xmlns="http://www.w3.org/2000/svg">
 
