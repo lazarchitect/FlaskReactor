@@ -24,11 +24,9 @@ export function Torus ({ torus, row, col, isGhost }) {
         [torus] // react drag systems update their own records when this changes
     );
 
-
     if (isDragging) {
         playPickupSound();
     }
-
 
     // following code removes default browser Torus image during drag. 
     useEffect(
