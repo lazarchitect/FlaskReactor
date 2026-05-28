@@ -6,7 +6,7 @@ import useSound from 'use-sound';
 
 import { TorusSVG } from './TorusSVG';
 
-export function Torus ({ torus, row, col }) {
+export function Torus ({ torus, row, col, isGhost }) {
 
     let [playPickupSound] = useSound('/static/sounds/pickup.wav');
 
@@ -37,6 +37,6 @@ export function Torus ({ torus, row, col }) {
     );
 
     return <div className='torus' style={{ cursor: "grab", opacity: opacity }} ref={dragRef}>
-        <TorusSVG color={torus.color} isRadiating={false}/>
+        <TorusSVG color={torus.color} isRadiating={false} isGhost={isGhost} />
     </div>;
 }

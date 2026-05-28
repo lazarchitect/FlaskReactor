@@ -57,19 +57,15 @@ function chatSocketConnect(setChatLog) {
 
     chatSocket.onmessage = (messageEvent) => {
 
-        console.log(messageEvent.data);
-
         let data = JSON.parse(messageEvent.data);
 
         if (data.command === "initialize") {
             chatLogGlobal = data.chats;
             setChatLog(buildFormattedChatLog(chatLogGlobal));
-            console.log("chat log initial value set.");
         }
 
         else if (data.command === "append") {
             chatLogGlobal.push(data.chat);
-            console.log(chatLogGlobal);
             setChatLog(buildFormattedChatLog(chatLogGlobal));
         }
         else if (data.command === "error") {
