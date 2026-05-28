@@ -13,6 +13,8 @@ const playerColors = {
     // can add more colors (bronze?) or like, dual colors, or other gradient types
 };
 
+/// CSS Utility functions for Torus glow on hover ///
+
 const halo = (horizontal, vertical, color) => {
     let haloColor = playerColors[color + "Highlight"][0] + "99"; // 99 is alpha for translucency
     let blur = "3px";
@@ -25,6 +27,8 @@ const allHalosFilter = (color) => {
     let negLength = "-" + length;
     return halo(length, "0px", color) + halo("0px", length, color) + halo(negLength, "0px", color) + halo("0px", negLength, color);
 }
+
+/// Components ///
 
 export function TorusSVG ({ color, isRadiating, isGhost }) {
 
