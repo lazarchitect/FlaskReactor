@@ -180,6 +180,16 @@ main {
     border: 1px solid slategray;
 }
 
+.orb {
+    background-color: #444; /* TODO use SVG for orbs instead of a solid color */
+    position: absolute;
+    top:    30%;
+    left:   27%;
+    width:  35%;
+    height: 35%;
+    border-radius: 50%;
+}
+
 .torus {
     height: 82%;
     width: 78%;
