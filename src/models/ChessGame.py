@@ -12,7 +12,7 @@ class ChessGame:
 
         self.white_player = white_player
         self.black_player = black_player
-        if (isDbLoad): return
+        if isDbLoad: return
 
         # else, use defaults
         self.id = generateId()
