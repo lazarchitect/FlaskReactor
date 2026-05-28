@@ -62,6 +62,7 @@ sql = {
 class Pgdb:
 	"""interacts with a Postgres database of Flaskreactor users and games, for CRUD operations on records."""
 
+	db_env = None
 	_instance = None
 
 	# overriding new in order to use a Singleton approach, no need to reinstantiate for every Handler that comes up
@@ -141,7 +142,7 @@ class Pgdb:
 		values = [username]
 		self.__execute(query, values)
 		userDict = self.cursor.fetchone()
-		if (userDict is None):
+		if userDict is None:
 			return None
 		return User.dbLoad(userDict)
 
