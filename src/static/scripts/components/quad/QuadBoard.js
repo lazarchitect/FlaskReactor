@@ -9,11 +9,12 @@ export function QuadBoard(){
     
     let rowArray = [];
     for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-        rowArray.push(<QuadRow
-            key={rowIndex}
-            rowIndex={rowIndex} rowData={boardstate[rowIndex]}
-            boardstate={boardstate} setBoardstate={setBoardstate}>
-        </QuadRow>);
+        rowArray.push(
+            <QuadRow
+                key={rowIndex} rowIndex={rowIndex} rowData={boardstate[rowIndex]}
+                boardstate={boardstate} setBoardstate={setBoardstate}>
+            </QuadRow>
+        );
     }
     
     return (
@@ -27,14 +28,12 @@ export function QuadBoard(){
 function QuadRow({ rowIndex, rowData, boardstate, setBoardstate })  {
     let tileArray = [];
     for (let columnIndex = 0; columnIndex < 10; columnIndex++) {
-        tileArray.push(<QuadTile
-            key={columnIndex}
-            columnIndex={columnIndex}
-            rowIndex={rowIndex}
-            tileData={rowData[columnIndex]}
-            boardstate={boardstate}
-            setBoardstate={setBoardstate}>
-        </QuadTile>);
+        tileArray.push(
+            <QuadTile
+                key={columnIndex} columnIndex={columnIndex} rowIndex={rowIndex} tileData={rowData[columnIndex]}
+                boardstate={boardstate} setBoardstate={setBoardstate}>
+            </QuadTile>
+        );
     }
     return tileArray;
 }
