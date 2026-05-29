@@ -16,10 +16,12 @@ from src.utils import generateId, generateHash, notLoggedIn, buildPreferences
 from src.models.ChessGame import ChessGame
 from src.models.TttGame import TttGame
 from src.models.QuadradiusGame import QuadradiusGame
+
 from src.handlers.tttHandler import TttHandler
 from src.handlers.statHandler import StatHandler
 from src.handlers.chessHandler import ChessHandler
 from src.handlers.chatHandler import ChatHandler
+from src.handlers.quadHandler import QuadHandler
 
 app = Flask(__name__)
 
@@ -345,6 +347,7 @@ if __name__ == "__main__":
             ("/ws/ttt",     TttHandler,      {"pgdb": pgdb}),
             ("/ws/chat",    ChatHandler,     {"pgdb": pgdb}),
             ("/ws/stat",    StatHandler,     {"pgdb": pgdb}),
+            ("/ws/quad",    QuadHandler,     {"pgdb": pgdb}),
             ("/ws/chess",   ChessHandler,    {"pgdb": pgdb}),
             (".*",          FallbackHandler, {"fallback": flaskApp})
         ]

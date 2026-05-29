@@ -22,6 +22,8 @@ class QuadradiusGame:
         self.last_move = None
         self.time_ended = None
         self.winner = None
+        self.turn_number = 0
+        self.orb_countdown = 0 # should this start at 4 or 8?
 
     @staticmethod
     def dbLoad(gameDict):
@@ -39,6 +41,8 @@ class QuadradiusGame:
         g.last_move = gameDict['last_move']
         g.time_ended = gameDict['time_ended']
         g.winner = gameDict['winner']
+        g.turn_number = gameDict['turn_number']
+        g.orb_countdown = gameDict['orb_counter']
         return g
 
     def toTuple(self):
@@ -53,7 +57,9 @@ class QuadradiusGame:
             self.time_started,
             self.last_move,
             self.time_ended,
-            self.winner
+            self.winner,
+            self.turn_number,
+            self.orb_countdown
         )
     
     def populatePlayerColors(self, player1_color, player2_color):

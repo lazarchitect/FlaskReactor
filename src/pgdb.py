@@ -62,6 +62,7 @@ sql = {
 class Pgdb:
 	"""interacts with a Postgres database of Flaskreactor users and games, for CRUD operations on records."""
 
+	db_env = None
 	_instance = None
 
 	# overriding new in order to use a Singleton approach, no need to reinstantiate for every Handler that comes up
@@ -141,7 +142,7 @@ class Pgdb:
 		values = [username]
 		self.__execute(query, values)
 		userDict = self.cursor.fetchone()
-		if (userDict is None):
+		if userDict is None:
 			return None
 		return User.dbLoad(userDict)
 
@@ -172,7 +173,7 @@ class Pgdb:
 		self.__execute(query, values)
 		gameDict = self.cursor.fetchone()
 		if gameDict is None:
-			print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
 		return QuadradiusGame.dbLoad(gameDict)
 
@@ -196,7 +197,7 @@ class Pgdb:
 		self.__execute(query, values)
 		record = self.cursor.fetchone()
 		if record is None:
-			print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
 		return ChessGame.dbLoad(record)
 
@@ -225,8 +226,8 @@ class Pgdb:
 		values = [gameId]
 		self.__execute(query, values)
 		record = self.cursor.fetchone()
-		if(record is None):
-			print("PGDB ERROR: NO GAME FOUND WITH ID " + gameId)
+		if record is None:
+			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
 		return TttGame.dbLoad(record)
 
@@ -295,7 +296,7 @@ class Pgdb:
 		query = sql['updateSetting'].replace("_SETTING_", settingName) # can try this with %s instead of .replace?
 		values = [value, username]
 		self.__execute(query, values)
-		return self.conn.commit()
+		self.conn.commit()
 
 	####### HELPER METHODS #########
 
