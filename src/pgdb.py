@@ -183,6 +183,10 @@ class Pgdb:
 		self.__execute(query, values)
 		return self.cursor.fetchone()
 
+	def updateQuadradiusGame(self, otherfields):
+		# TODO implement updating of Quadradius game record in Postgres
+		pass
+
 	### Chess
 
 	def createChessGame(self, g):

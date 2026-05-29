@@ -53,6 +53,8 @@ class QuadHandler(WebSocketHandler):
 	def on_message(self, message):
 
 		fields = json.loads(message) # message structure comes in as JSON from frontend
+		print(fields)
+
 		request = fields['request']
 
 		if request == "subscribe":
@@ -74,11 +76,12 @@ class QuadHandler(WebSocketHandler):
 
 	def handleUpdate(self, fields):
 
-		print(fields)
-
 		gameId = fields['gameId']
 
 		game = self.pgdb.getQuadradiusGame(gameId)
+
+		# TODO modify game.boardstate based on src and dest. Destroy tori where appropriate. (Then that behavior should not exist in DropLogic.js.)
+		# also in the future we will need to modify boardstate's tile elevation and status, orb locations, torus orbs and abilities
 
 		newTurnNumber = game.turn_number + 1
 
@@ -91,16 +94,17 @@ class QuadHandler(WebSocketHandler):
 			orbSpawnLocations = [generateOrbSpawnLocation(game.boardstate) for _ in range(randint(1, maxOrbs))]
 
 		responseToClient = {
+			"command": "updateBoard",
 			"turn_number": newTurnNumber,
 			"orb_counter": newOrbCountdown,
-			"orb_spawn_locations": orbSpawnLocations
+			"orb_spawn_locations": orbSpawnLocations,
+			"newBoardstate": game.boardstate
 			# what else?
 		}
 
 		updateAll(clientConnections[fields['gameId']], responseToClient)
 
-		# TODO implement updateQuadGame
-		self.pgdb.updateQuadGame(gameId, "...")
+		self.pgdb.updateQuadradiusGame(gameId)
 
 
 	def handleSubscribe(self, fields: dict):

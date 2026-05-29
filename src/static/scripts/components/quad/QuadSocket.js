@@ -1,9 +1,9 @@
 
 const gameId = payload.game.id;
 
-// TODO can these three functions be members of a QuadSocketConnection class which has the socket reference field?
+let socket = null;
 
-function quadSocketSubscribe(quadSocket){
+export function subscribe(){
     const subscribeObj = {
         "request": "subscribe",
         "gameId": gameId,
@@ -11,43 +11,39 @@ function quadSocketSubscribe(quadSocket){
         "ws_token": payload.ws_token
     };
     const subscribeStr = JSON.stringify(subscribeObj);
-    quadSocket.send(subscribeStr);
+    socket.send(subscribeStr);
 }
 
-// TODO DropLogic will need to be passed this function so it can send data to server upon drop
-function quadSocketUpdate(quadSocket, tileId){
+export function update(sourceCoords, targetCoords){
     const updateObj = {
         "request": "update",
         "ws_token": payload.ws_token,
         "gameId": payload.game.id,
         "player": payload.player,
         "userId": payload.userId,
-        "src": active_coords[1] +""+ active_coords[0],
-        "dest": tileId
+        "src": sourceCoords,
+        "dest": targetCoords
     }
     const updateStr = JSON.stringify(updateObj);
-    quadSocket.send(updateStr);
+    socket.send(updateStr);
 }
 
-export function quadSocketConnect(boardstate, setBoardstate) {
-    const quadSocket = new WebSocket(payload.wsBaseUrl + "/quad");
-    // this is where you might initiate a statSocket as well for db quad stats
-    // EDIT: why would stats need a websocket? it doesn't need to update on the fly. HTTP would suffice methinks?
+export function connect(setBoardstate) {
 
-    quadSocket.onopen = (() => quadSocketSubscribe(quadSocket));
+    socket = new WebSocket(payload.wsBaseUrl + "/quad");
 
-    quadSocket.onmessage = (messageEvent) => {
+    socket.onopen = (() => subscribe());
+
+    socket.onmessage = (messageEvent) => {
 
         const data = JSON.parse(messageEvent.data);
 
         if(data.command === "updateBoard"){
             setStatus(determineStatus(payload, data));
             setBoardstate(data.newBoardstate);
-            // and set any other aspects front end game management needs
-
-            // do we need this?
-            boardstate = data.newBoardstate;
+            console.log("good news everyone!");
         }
+
         else if(data.command === "info"){
             setStatus(determineStatus(payload, data));
         }

@@ -1,13 +1,13 @@
 import React, {useState} from "react";
 
 import {QuadTile} from "./QuadTile";
-import {quadSocketConnect} from "./QuadSocket";
+import {connect} from "./QuadSocket";
 
 export function QuadBoard(){
 
     const [boardstate, setBoardstate] = useState(payload.game.boardstate);
 
-    React.useEffect(() => quadSocketConnect(boardstate, setBoardstate), []);
+    React.useEffect(() => connect(setBoardstate), []);
     
     let rowArray = [];
     for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
