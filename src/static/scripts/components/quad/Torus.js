@@ -2,13 +2,10 @@
 import React, { useEffect } from 'react';
 import { useDrag } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
-import useSound from 'use-sound';
 
 import { TorusSVG } from './TorusSVG';
 
 export function Torus ({ torus, row, col, isGhost }) {
-
-    let [playPickupSound] = useSound('/static/sounds/pickup.wav');
 
     // useState will be used here for color, powers, buffs, and debuffs later
     
@@ -23,10 +20,6 @@ export function Torus ({ torus, row, col, isGhost }) {
         }),
         [torus] // react drag systems update their own records when this changes
     );
-
-    if (isDragging) {
-        playPickupSound();
-    }
 
     // following code removes default browser Torus image during drag. 
     useEffect(
