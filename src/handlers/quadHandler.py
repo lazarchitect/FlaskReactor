@@ -40,7 +40,6 @@ class QuadHandler(WebSocketHandler):
 	# this fn is required due to Flask/Tornado rejecting unspecified origins as Forbidden
 	# unless we allow it explicitly
 	def check_origin(self, origin):
-		print(origin)
 		return True
 
 	def initialize(self, pgdb):
