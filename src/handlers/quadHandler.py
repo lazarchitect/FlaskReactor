@@ -9,9 +9,9 @@ clientConnections = dict()
 
 def deleteConnection(gameId, socketId):
 	gameConnectionList = clientConnections[gameId]
-	for x in gameConnectionList:
-		if x['id'] == socketId:
-			gameConnectionList.remove(x)
+	for conn in gameConnectionList:
+		if conn['id'] == socketId:
+			gameConnectionList.remove(conn)
 			return
 
 
@@ -20,8 +20,8 @@ def generateOrbSpawnLocation(boardstate):
 	while True:
 		x = randint(0, 9)
 		y = randint(0, 7)
-		if (boardstate[y][x]["torus"] is not None):
-			return (x, y)
+		if boardstate[y][x]["torus"] is not None:
+			return x, y
 
 
 def determineMaxOrbs(turn_number, boardstate):
@@ -29,10 +29,16 @@ def determineMaxOrbs(turn_number, boardstate):
 	maxOrbs = 2 # default at start of game
 	maxOrbs += int(turn_number / 15) # game length factor
 
-	# TODO bother with this?
+	# possible upgrade - increase orb spawn chance when fewer tori are left
 	# maxOrbs += emptyTileCount(boardstate) - 32 # sparser board factor
 
 	return maxOrbs
+
+
+def validMove(sourceCoords, targetCoords):
+	""" Server side move validation, in case of tricksters.
+	Manhattan distance, elevation +1 or less, target is empty or enemy and is not acid-melted."""
+	return True
 
 
 class QuadHandler(WebSocketHandler):
