@@ -1,6 +1,6 @@
 import {useDrop} from "react-dnd";
 import {Torus} from "./Torus";
-import {update} from "./QuadSocket";
+import {quadSocketUpdate} from "./QuadSocket";
 
 export function tileDropBehavior(boardstate, setBoardstate){
     return useDrop(() => ({
@@ -28,7 +28,7 @@ export function tileDropBehavior(boardstate, setBoardstate){
 
             setBoardstate(newBoardstate);
 
-            update(sourceCoords, targetCoords);
+            quadSocketUpdate(sourceCoords, targetCoords);
 
         })
     }))

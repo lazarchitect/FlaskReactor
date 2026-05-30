@@ -3,7 +3,7 @@ const gameId = payload.game.id;
 
 let socket = null;
 
-export function subscribe(){
+export function quadSocketSubscribe(){
     const subscribeObj = {
         "request": "subscribe",
         "gameId": gameId,
@@ -14,7 +14,7 @@ export function subscribe(){
     socket.send(subscribeStr);
 }
 
-export function update(sourceCoords, targetCoords){
+export function quadSocketUpdate(sourceCoords, targetCoords){
     const updateObj = {
         "request": "update",
         "ws_token": payload.ws_token,
@@ -28,11 +28,11 @@ export function update(sourceCoords, targetCoords){
     socket.send(updateStr);
 }
 
-export function connect(setBoardstate) {
+export function quadSocketConnect(setBoardstate) {
 
     socket = new WebSocket(payload.wsBaseUrl + "/quad");
 
-    socket.onopen = (() => subscribe());
+    socket.onopen = (() => quadSocketSubscribe());
 
     socket.onmessage = (messageEvent) => {
 
