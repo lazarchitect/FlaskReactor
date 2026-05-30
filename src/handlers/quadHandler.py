@@ -52,7 +52,6 @@ class QuadHandler(WebSocketHandler):
 	def on_message(self, message):
 
 		fields = json.loads(message) # message structure comes in as JSON from frontend
-		print(fields)
 
 		request = fields['request']
 
@@ -77,10 +76,26 @@ class QuadHandler(WebSocketHandler):
 
 		gameId = fields['gameId']
 
+		# performance issue to do a DB read every single move? maybe just have them send what we need?
 		game = self.pgdb.getQuadradiusGame(gameId)
 
-		# TODO modify game.boardstate based on src and dest. Destroy tori where appropriate. (Then that behavior should not exist in DropLogic.js.)
-		# also in the future we will need to modify boardstate's tile elevation and status, orb locations, torus orbs and abilities
+		# TODO there are multiple types of updates. Moves, power activations on tori, power effect outcomes.
+
+		### MOVE LOGIC ###
+		# modify game.boardstate based on src and dest. Destroy tori where appropriate. (Then that behavior should not exist in DropLogic.js.)
+
+		sourceCoords = fields['src']
+		targetCoords = fields['dest']
+
+		sourceRow, sourceCol = fields['src']['row'], fields['src']['col']
+		targetRow, targetCol = fields['dest']['row'], fields['dest']['col']
+
+		if not validMove(sourceCoords, targetCoords):
+			return
+
+		# execute the move. copy torus over to target and then remove source one. any existing torus at target is wiped out.
+		game.boardstate[targetRow][targetCol]["torus"] = game.boardstate[sourceRow][sourceCol]["torus"]
+		del game.boardstate[sourceRow][sourceCol]["torus"]
 
 		newTurnNumber = game.turn_number + 1
 
@@ -103,7 +118,7 @@ class QuadHandler(WebSocketHandler):
 
 		updateAll(clientConnections[fields['gameId']], responseToClient)
 
-		self.pgdb.updateQuadradiusGame(gameId)
+		self.pgdb.updateQuadradiusGame(game.boardstate, gameId)
 
 
 	def handleSubscribe(self, fields: dict):

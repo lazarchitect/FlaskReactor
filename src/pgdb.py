@@ -32,7 +32,7 @@ sql = {
 	"getQuadradiusGames": f"SELECT * FROM {quadGamesTable} WHERE player1 = %s OR player2 = %s ORDER BY last_move DESC",
 	"getQuadradiusGame": f"SELECT * FROM {quadGamesTable} WHERE id = %s",
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
-
+	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s where id=%s",
 	# Chess
 	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	"getCompletedChessGames": f"SELECT * FROM {chessGamesTable} where completed=true AND (white_player=%s OR black_player=%s)",
@@ -183,9 +183,12 @@ class Pgdb:
 		self.__execute(query, values)
 		return self.cursor.fetchone()
 
-	def updateQuadradiusGame(self, otherfields):
+	def updateQuadradiusGame(self, newBoardstate, gameId):
 		# TODO implement updating of Quadradius game record in Postgres
-		pass
+		query = sql['updateQuadradiusGame']
+		values = (Json(newBoardstate), gameId)
+		self.__execute(query, values)
+		self.conn.commit()
 
 	### Chess
 
