@@ -41,7 +41,6 @@ export function quadSocketConnect(setBoardstate) {
         if(data.command === "updateBoard"){
             setStatus(determineStatus(payload, data));
             setBoardstate(data.newBoardstate);
-            console.log("good news everyone!");
         }
 
         else if(data.command === "info"){
