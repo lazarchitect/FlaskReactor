@@ -2,6 +2,7 @@
 const gameId = payload.game.id;
 
 let socket = null;
+let retryTimer = 1000;
 
 export function quadSocketSubscribe(){
     const subscribeObj = {
@@ -32,7 +33,18 @@ export function quadSocketConnect(setBoardstate) {
 
     socket = new WebSocket(payload.wsBaseUrl + "/quad");
 
-    socket.onopen = (() => quadSocketSubscribe());
+    socket.onopen = () => {
+        quadSocketSubscribe();
+        retryTimer = 1000;
+    }
+
+    socket.onclose = () => {
+        // TODO need some way to communicate temporary outage to user
+        console.log("quadSocket closed. reopening...");
+        setTimeout(() => quadSocketConnect(setBoardstate), retryTimer);
+        retryTimer += Math.floor(Math.random()*1000);
+        console.log(retryTimer);
+    };
 
     socket.onmessage = (messageEvent) => {
 
