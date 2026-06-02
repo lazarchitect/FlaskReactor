@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-
 import {QuadTile} from "./QuadTile";
 import {quadSocketConnect} from "./QuadSocket";
 
@@ -9,33 +8,21 @@ export function QuadBoard(){
 
     React.useEffect(() => quadSocketConnect(setBoardstate), []);
     
-    let rowArray = [];
-    for (let rowIndex = 0; rowIndex < 8; rowIndex++) {
-        rowArray.push(
-            <QuadRow
-                key={rowIndex} rowIndex={rowIndex} rowData={boardstate[rowIndex]}
-                boardstate={boardstate} setBoardstate={setBoardstate}>
-            </QuadRow>
-        );
-    }
-    
     return (
         <div id="quadboard">
-            {rowArray}
+            {Array(8).fill(0).map((_, rowIndex) =>
+                <QuadRow key={rowIndex} rowIndex={rowIndex} rowData={boardstate[rowIndex]} />
+            )}
         </div>
     )
 }
 
-/* subcomponent of a board, representing a single row of the game board in an array of rows. */
-function QuadRow({ rowIndex, rowData, boardstate, setBoardstate })  {
-    let tileArray = [];
-    for (let columnIndex = 0; columnIndex < 10; columnIndex++) {
-        tileArray.push(
-            <QuadTile
-                key={columnIndex} columnIndex={columnIndex} rowIndex={rowIndex} tileData={rowData[columnIndex]}
-                boardstate={boardstate} setBoardstate={setBoardstate}>
-            </QuadTile>
-        );
-    }
-    return tileArray;
+/* subcomponent of a board, representing a single row of the game board within an array of rows. */
+function QuadRow({ rowIndex, rowData })  {
+
+    return Array(10).fill(0).map((_, columnIndex) => {
+        let tileData = {row: rowIndex, col: columnIndex, contents: rowData[columnIndex]};
+        return <QuadTile key={columnIndex} tileData={tileData} />;
+    })
+
 }

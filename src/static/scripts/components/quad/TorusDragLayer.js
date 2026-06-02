@@ -1,19 +1,19 @@
-
 import React from 'react';
-import { useDragLayer } from 'react-dnd';
-import { TorusSVG } from './TorusSVG';
+import {useDragLayer} from 'react-dnd';
+import {TorusSVG} from './TorusSVG';
 
+/** this class defines what gets rendered WHILE a torus is being dragged;
+ * in layman's terms, the thing that follows your mouse.
+ */
 export function TorusDragLayer () {
 
-	const {item, itemType, initialOffset, currentOffset, isDragging} = useDragLayer((monitor) => ({
-	  item: monitor.getItem(),
-	  itemType: monitor.getItemType(),
-	  initialOffset: monitor.getInitialSourceClientOffset(),
-	  currentOffset: monitor.getSourceClientOffset(),
-	  isDragging: monitor.isDragging(),
+	const {sourceTileData, initialOffset, currentOffset} = useDragLayer((monitor) => ({
+		sourceTileData: monitor.getItem(),
+		initialOffset: monitor.getInitialSourceClientOffset(),
+		currentOffset: monitor.getSourceClientOffset(),
 	}));
 
-	if (item == null) return; // not dragging anything.
+	if (sourceTileData == null) return null; // not dragging anything.
 
     const dragStyles = getDragStyles(initialOffset, currentOffset);
 
@@ -27,14 +27,15 @@ export function TorusDragLayer () {
 		height: "100%",
 	};
 
-	if (item.torus === undefined) {
-		console.log(JSON.stringify(item));
-		return;
+	const torus = sourceTileData.contents.torus;
+
+	if (torus === undefined) {
+		return null;
 	}
 
 	return (
 		<div style={layerStyles}>
-			<DragTorus color={item.torus.color} dragStyles={dragStyles} />
+			<DragTorus color={torus.color} dragStyles={dragStyles} />
 		</div>
 	);
 

@@ -1,33 +1,40 @@
+import React, {useEffect} from 'react';
+import {useDrag} from 'react-dnd';
+import {getEmptyImage} from 'react-dnd-html5-backend';
 
-import React, { useEffect } from 'react';
-import { useDrag } from 'react-dnd';
-import { getEmptyImage } from 'react-dnd-html5-backend';
+import {TorusSVG} from './TorusSVG';
 
-import { TorusSVG } from './TorusSVG';
-
-export function Torus ({ torus, row, col, isGhost }) {
+export function Torus ({ tileData }) {
 
     // useState will be used here for color, powers, buffs, and debuffs later
-    
-    const [{ isDragging, opacity }, dragRef, dragPreview] = useDrag(
+
+    const torusData = tileData.contents.torus;
+
+    const [{ opacity }, dragRef, dragPreview] = useDrag(
         () => ({
             type: 'Torus',
-            item: { torus: torus, row: row, col: col }, // gets passed to drop function
+            item: tileData, // gets passed to drop function
             collect: (monitor) => ({
-                isDragging: monitor.isDragging(),
-                opacity: monitor.isDragging() ? 0.6 : 1
+                opacity: monitor.isDragging() ? 0 : 1
             })
         }),
-        [torus] // react drag systems update their own records when this changes
+        // react drag systems update their own records when this changes.
+        [torusData]
     );
 
-    // following code removes default browser Torus image during drag. 
+    // following code removes default browser Torus image during drag.
     useEffect(
         () => {dragPreview(getEmptyImage(), { captureDraggingState: true });}, // possibly causing a bit of lag?
         [dragPreview]
     );
 
     return <div className='torus' style={{ cursor: "grab", opacity: opacity }} ref={dragRef}>
-        <TorusSVG color={torus.color} isRadiating={false} isGhost={isGhost} />
+        <TorusSVG color={torusData.color} isRadiating={false} isGhost={false} />
+    </div>;
+}
+
+export function TorusHoverGhost({torusData}) {
+    return <div className='torus'>
+        <TorusSVG color={torusData.color} isRadiating={false} isGhost={true} />
     </div>;
 }

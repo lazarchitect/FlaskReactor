@@ -1,24 +1,24 @@
-
 import React from "react";
-import {Torus} from "./Torus";
-import {tileDropBehavior, isValidMove} from "./DropLogic";
+import {Torus, TorusHoverGhost} from "./Torus";
+import {isValidMove, tileDropBehavior} from "./DropLogic";
 
 /* subcomponent of a QuadBoard's row, representing a single tile of the game board within a 2-D array. */
-export function QuadTile ({ rowIndex, columnIndex, tileData, boardstate, setBoardstate }) {
+export function QuadTile ({ tileData }) {
 
-    let tileId = "tile_" + rowIndex + "_" + columnIndex;
+    let tileId = "tile_" + tileData.row + "_" + tileData.col;
+    let tileContents = tileData.contents;
 
-    const [{isOver, draggedItem, monitor}, dropRef] = tileDropBehavior(boardstate, setBoardstate);
+    const [{isOver, sourceTileData}, dropRef] = tileDropBehavior(tileData);
 
-    let hasOrb = "orb" in tileData;
-    let hasTorus = "torus" in tileData && tileData.torus != null;
-    let hasHoverGhost = isOver && isValidMove(draggedItem, monitor, boardstate);
+    let hasOrb = "orb" in tileContents;
+    let hasTorus = "torus" in tileContents && tileContents.torus != null;
+    let hasHoverGhost = isOver && isValidMove(sourceTileData, tileData);
 
     return <div id={tileId} className="quadTile" ref={dropRef}>
 
-        { hasOrb && <div className="orb"></div> }
-        { hasHoverGhost && <Torus torus={draggedItem.torus} row={rowIndex} col={columnIndex} isGhost={true}/> }
-        { hasTorus && <Torus torus={tileData.torus} row={rowIndex} col={columnIndex}/> }
+        { hasOrb && <div className="orb" /> }
+        { hasHoverGhost && <TorusHoverGhost torusData={sourceTileData.contents.torus} /> }
+        { (hasTorus && !hasHoverGhost) && <Torus tileData={tileData} /> }
 
     </div>
 
