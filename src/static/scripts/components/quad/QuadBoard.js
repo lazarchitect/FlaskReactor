@@ -1,12 +1,6 @@
-import React, {useState} from "react";
 import {QuadTile} from "./QuadTile";
-import {quadSocketConnect} from "./QuadSocket";
 
-export function QuadBoard(){
-
-    const [boardstate, setBoardstate] = useState(payload.game.boardstate);
-
-    React.useEffect(() => quadSocketConnect(setBoardstate), []);
+export function QuadBoard({boardstate}) {
     
     return (
         <div id="quadboard">

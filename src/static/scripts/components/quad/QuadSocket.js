@@ -29,7 +29,7 @@ export function quadSocketUpdate(sourceCoords, targetCoords){
     socket.send(updateStr);
 }
 
-export function quadSocketConnect(setBoardstate) {
+export function quadSocketConnect(setBoardstate, setLegendState) {
 
     socket = new WebSocket(payload.wsBaseUrl + "/quad");
 
@@ -53,6 +53,7 @@ export function quadSocketConnect(setBoardstate) {
         if(data.command === "updateBoard"){
             setStatus(determineStatus(payload, data));
             setBoardstate(data.newBoardstate);
+            setLegendState(data.newLegendState);
         }
 
         else if(data.command === "info"){
