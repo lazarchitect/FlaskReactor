@@ -2,6 +2,8 @@
 'use strict';
 
 import React from 'react';
+import * as chessUtils from './chessUtils';
+import * as chessConsts from './chessConsts';
 
 let highlightedTiles = [];
 let active_coords = [];
@@ -14,9 +16,6 @@ let wqr_moved = payload.game.wqr_moved;
 let wkr_moved = payload.game.wkr_moved;
 let bqr_moved = payload.game.bqr_moved;
 let bkr_moved = payload.game.bkr_moved;
-
-import * as chessUtils from './chessUtils';
-import * as chessConsts from './chessConsts';
 
 // TODO ALL of the websocket handling logic & associated helpers should probably be moved into a separate JS file
 // this file should really just contain the React component rendering logic
@@ -205,12 +204,12 @@ function generateHighlights(boardstate, piece){ // void
 
 			if (chessUtils.inCheck(boardstate, enemyColor, allyKingCoords)) {
 				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
-					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col - 1);		
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + (piece.col - 1));
 				}
 			}
 			else {
 				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
-					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col - 1);
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + (piece.col - 1));
 				}
 			}
 
@@ -226,12 +225,12 @@ function generateHighlights(boardstate, piece){ // void
 
 			if (chessUtils.inCheck(boardstate, enemyColor, allyKingCoords)) {
 				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
-					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);		
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + (piece.col + 1));
 				}
 			}
 			else {
 				if (!chessUtils.inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
-					highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);
+					highlightedTiles.push((piece.row + pieceDirection) + ""  + (piece.col + 1));
 				}
 			}
 
