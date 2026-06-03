@@ -1,5 +1,6 @@
 
 import json
+import random
 from datetime import datetime
 
 from psycopg.types.json import Json
@@ -25,7 +26,7 @@ class QuadradiusGame:
         self.time_ended = None
         self.winner = None
         self.turn_number = 0
-        self.orb_countdown = 0 # should this start at 4 or 8?
+        self.orb_countdown = random.choice([2,4,8])
         self.player1_powers = []
         self.player2_powers = []
 
@@ -59,8 +60,8 @@ class QuadradiusGame:
             self.player1, self.player2,
             self.player1_color, self.player2_color,
             Json(self.boardstate),
-            self.active_player,
             self.completed,
+            self.active_player,
             self.time_started,
             self.last_move,
             self.time_ended,

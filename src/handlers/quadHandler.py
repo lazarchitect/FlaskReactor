@@ -21,7 +21,7 @@ def generateOrbSpawnLocation(boardstate):
 	while True:
 		x = randint(0, 9)
 		y = randint(0, 7)
-		if boardstate[y][x]["torus"] is not None:
+		if "torus" not in boardstate[y][x]:
 			return x, y
 
 
@@ -113,12 +113,13 @@ class QuadHandler(WebSocketHandler):
 			newOrbCountdown = randint(4, 8)
 			maxOrbs = determineMaxOrbs(game.turn_number, game.boardstate)
 			orbSpawnLocations = [generateOrbSpawnLocation(game.boardstate) for _ in range(randint(1, maxOrbs))]
+			for orbSpawn in orbSpawnLocations:
+				game.boardstate[orbSpawn[1]][orbSpawn[0]]["orb"] = True
 
 		responseToClient = {
 			"command": "updateBoard",
 			"turn_number": newTurnNumber,
 			"orb_counter": newOrbCountdown,
-			"orb_spawn_locations": orbSpawnLocations,
 			"newBoardstate": game.boardstate
 			# what else?
 		}

@@ -28,7 +28,7 @@ sql = {
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
 	# Quadradius
-	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, completed, time_started, last_move, time_ended, winner) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, completed, active_player, time_started, last_move, time_ended, winner, turn_number, orb_counter, player1_powers,  player2_powers) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	"getQuadradiusGames": f"SELECT * FROM {quadGamesTable} WHERE player1 = %s OR player2 = %s ORDER BY last_move DESC",
 	"getQuadradiusGame": f"SELECT * FROM {quadGamesTable} WHERE id = %s",
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
@@ -185,7 +185,7 @@ class Pgdb:
 
 	def updateQuadradiusGame(self, boardstate, active_player, last_move, turn_number, orb_counter, player1_powers, player2_powers, gameId):
 		query = sql['updateQuadradiusGame']
-		values = (Json(boardstate), active_player, last_move, turn_number, orb_counter, player1_powers, player2_powers, gameId)
+		values = (Json(boardstate), active_player, last_move, turn_number, orb_counter, Json(player1_powers), Json(player2_powers), gameId)
 		self.__execute(query, values)
 		self.conn.commit()
 
