@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from random import randint
 
 from tornado.websocket import WebSocketHandler
@@ -124,7 +125,8 @@ class QuadHandler(WebSocketHandler):
 
 		updateAll(clientConnections[fields['gameId']], responseToClient)
 
-		self.pgdb.updateQuadradiusGame(game.boardstate, gameId)
+		# TODO determine new active player and double check the rest of these
+		self.pgdb.updateQuadradiusGame(game.boardstate, "active_player", datetime.now(), newTurnNumber, newOrbCountdown, game.player1_powers, game.player2_powers, gameId)
 
 
 	def handleSubscribe(self, fields: dict):

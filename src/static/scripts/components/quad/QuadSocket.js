@@ -86,15 +86,9 @@ function determineStatus(payload, data){
     switch(payload.username){
         case data.activePlayer:
             status += "Your turn. ";
-            if(playerInCheck(payload.userColor, data.whiteInCheck, data.blackInCheck)){
-                status += "You are in check!"
-            }
             break;
         case data.otherPlayer:
             status += "Waiting for opponent... ";
-            if(playerInCheck(payload.enemyColor, data.whiteInCheck, data.blackInCheck)){
-                status += "Opponent is in check!"
-            }
             break;
         default:
             status += "spectating. ";

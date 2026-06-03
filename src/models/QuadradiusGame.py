@@ -2,8 +2,10 @@
 import json
 from datetime import datetime
 
-from src.utils import generateId
 from psycopg.types.json import Json
+
+from src.utils import generateId
+
 
 class QuadradiusGame:
     def __init__(self, player1, player2, player1_color, player2_color, active_player, isDbLoad):
@@ -24,6 +26,8 @@ class QuadradiusGame:
         self.winner = None
         self.turn_number = 0
         self.orb_countdown = 0 # should this start at 4 or 8?
+        self.player1_powers = []
+        self.player2_powers = []
 
     @staticmethod
     def dbLoad(gameDict):
@@ -43,6 +47,9 @@ class QuadradiusGame:
         g.winner = gameDict['winner']
         g.turn_number = gameDict['turn_number']
         g.orb_countdown = gameDict['orb_counter']
+        g.player1_powers = gameDict['player1_powers']
+        g.player2_powers = gameDict['player2_powers']
+
         return g
 
     def toTuple(self):
@@ -59,7 +66,10 @@ class QuadradiusGame:
             self.time_ended,
             self.winner,
             self.turn_number,
-            self.orb_countdown
+            self.orb_countdown,
+            self.player1_powers,
+            self.player2_powers
+
         )
     
     def populatePlayerColors(self, player1_color, player2_color):
