@@ -1,6 +1,6 @@
 import React from "react";
 import {Torus, TorusHoverGhost} from "./Torus";
-import {isValidMove, tileDropBehavior} from "./DropLogic";
+import {isValidMove, tileDropBehavior} from "./dropLogic";
 
 /* subcomponent of a QuadBoard's row, representing a single tile of the game board within a 2-D array. */
 export function QuadTile ({ tileData }) {

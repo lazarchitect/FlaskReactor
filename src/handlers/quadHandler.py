@@ -86,10 +86,10 @@ class QuadHandler(WebSocketHandler):
 		# performance issue to do a DB read every single move? maybe just have them send what we need?
 		game = self.pgdb.getQuadradiusGame(gameId)
 
-		# TODO there are multiple types of updates. Moves, power activations on tori, power effect outcomes.
+		# TODO for posterity: there are multiple types of updates. Moves, power activations on tori, power effect outcomes.
 
 		### MOVE LOGIC ###
-		# modify game.boardstate based on src and dest. Destroy tori where appropriate. (Then that behavior should not exist in DropLogic.js.)
+		# modify game.boardstate based on src and dest. Destroy tori where appropriate.
 
 		sourceCoords = fields['src']
 		targetCoords = fields['dest']
