@@ -1,3 +1,4 @@
+import React from 'react';
 import {QuadTile} from "./QuadTile";
 
 export function QuadBoard({boardstate}) {
