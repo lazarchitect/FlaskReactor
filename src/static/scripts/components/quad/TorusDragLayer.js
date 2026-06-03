@@ -13,7 +13,9 @@ export function TorusDragLayer () {
 		currentOffset: monitor.getSourceClientOffset(),
 	}));
 
-	if (sourceTileData == null) return null; // not dragging anything.
+	if (sourceTileData?.contents?.torus === undefined) return null; // not dragging anything.
+
+	const torus = sourceTileData.contents.torus;
 
     const dragStyles = getDragStyles(initialOffset, currentOffset);
 
@@ -27,18 +29,11 @@ export function TorusDragLayer () {
 		height: "100%",
 	};
 
-	const torus = sourceTileData.contents.torus;
-
-	if (torus === undefined) {
-		return null;
-	}
-
 	return (
 		<div style={layerStyles}>
 			<DragTorus color={torus.color} dragStyles={dragStyles} />
 		</div>
 	);
-
 }
 
 function DragTorus ({color, dragStyles}) {
