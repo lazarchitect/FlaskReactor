@@ -3,6 +3,7 @@
 
 import React from 'react';
 import * as chessUtils from './chessUtils';
+import {inCheck} from './chessUtils';
 import * as chessConsts from './chessConsts';
 
 let highlightedTiles = [];
@@ -248,7 +249,7 @@ function generateHighlights(boardstate, piece){ // void
 
 		// TODO: kings cannot move into a check position
 		chessConsts.ROYAL_OFFSETS.forEach(offset => {
-			const destRow = piece.row+offset[0];
+			const destRow = piece.row + offset[0];
 			const destCol = piece.col + offset[1];
 
 			if(!outOfBounds(destRow, destCol)){
@@ -259,19 +260,18 @@ function generateHighlights(boardstate, piece){ // void
 					// just need to pass in a bunch of params but its still better IMO
 
 
-                    // TODO BUG pieceDirection IS NOT DEFINED HERE?
 					let srcCoords = [piece.row, piece.col];
-					let destCoords = [piece.row + pieceDirection, piece.col + 1];
+					let destCoords = [destRow, destCol];
 					let modifiedBoardstate = chessUtils.previewModifiedBoard(boardstate, srcCoords, destCoords);
 
 					if (inCheck(boardstate, enemyColor, allyKingCoords)) {
 						if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
-							highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);		
+							highlightedTiles.push(destRow + ""  + destCol);
 						}
 					}
 					else {
 						if (!inCheck(modifiedBoardstate, enemyColor, allyKingCoords)) {
-							highlightedTiles.push((piece.row + pieceDirection) + ""  + piece.col + 1);
+							highlightedTiles.push(destRow + ""  + destCol);
 						}
 					}
 					
