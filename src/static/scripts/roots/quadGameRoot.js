@@ -15,10 +15,15 @@ import {Legend} from "../components/quad/Legend";
 
 const isPlayer = [payload.game.player1, payload.game.player2].includes(payload.username);
 
+
+const isPlayer1 = payload.game.player1 === payload.username;
+const powersList = isPlayer ? (isPlayer1 ? payload.game.player1_powers : payload.game.player2_powers) : null;
+const legendData = {powersList: powersList, orb_countdown: payload.game.orb_countdown, turn_number: payload.game.turn_number };
+
 function Page() {
 
     const [boardstate, setBoardstate] = React.useState(payload.game.boardstate);
-    const [legendState, setLegendState] = React.useState(payload.game.legendState);
+    const [legendState, setLegendState] = React.useState(legendData);
 
     useEffect(() => quadSocketConnect(setBoardstate, setLegendState), []);
 

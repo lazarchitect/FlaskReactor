@@ -3,15 +3,15 @@ import React from 'react';
 export function Legend({legendState}) {
 
     return <div>
-        <p>Orb countdown: {legendState.orb_countdown}</p>
-        <div> Powers: <PowersList powers={legendState?.powers}/> </div>
+        <p>Orb countdown: </p>
+        <div> Powers: <PowersList /> </div>
     </div>
 }
 
-function PowersList({powers}) {
+function PowersList({}) {
 
     return <div>
-        {powers.map((_, power) => <Power name={power.name} count={power.count} />)}
+
     </div>
 }
 
