@@ -25,7 +25,7 @@ COPY . .
 
 RUN python -m pip install --upgrade pip && pip install -r requirements.txt
 
-COPY --from=frontend /app/src/static/scripts/dist /app/src/static/scripts/dist
+COPY --from=frontend /app/src/frontend/scripts/dist /app/src/frontend/scripts/dist
 
 EXPOSE 5000
 
