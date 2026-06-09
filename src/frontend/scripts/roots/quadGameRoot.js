@@ -1,15 +1,15 @@
 'use strict';
 
 import React, {useEffect} from 'react';
-import { createRoot } from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from 'react-dnd-html5-backend';
 
-import { SiteHeader } from '../components/common/SiteHeader';
-import { Chatbox } from '../components/common/Chatbox';
-import { QuadBoard } from '../components/quad/QuadBoard';
-import { TorusDragLayer } from '../components/quad/TorusDragLayer';
+import {SiteHeader} from '../components/common/SiteHeader';
+import {Chatbox} from '../components/common/Chatbox';
+import {QuadBoard} from '../components/quad/QuadBoard';
+import {TorusDragLayer} from '../components/quad/TorusDragLayer';
 import {quadSocketConnect} from "../components/quad/QuadSocket";
 import {Legend} from "../components/quad/Legend";
 
