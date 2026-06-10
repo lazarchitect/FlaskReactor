@@ -2,7 +2,7 @@ const path = require("path");
 const glob = require('glob');
 
 const delim = path.sep;
-const scriptsDir = "src" + delim + "static" + delim + "scripts" + delim;
+const scriptsDir = "src" + delim + "frontend" + delim + "scripts" + delim;
 
 module.exports = {
   entry: () => {
@@ -20,7 +20,7 @@ module.exports = {
     extensions: ['.js', '.jsx']
   },
   output: {
-    path: path.resolve("src/static/scripts", "dist"),
+    path: path.resolve("src/frontend/scripts", "dist"),
     clean: true
   },
   module: {

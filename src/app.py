@@ -1,29 +1,29 @@
 #!usr/bin/env python
 
-from flask import Flask, render_template, redirect, request, session
-from tornado.web import Application, FallbackHandler
-from tornado.wsgi import WSGIContainer
-from tornado.options import parse_command_line
-from signal import signal, SIGINT
-import tornado
-import random
 import json
 import os
+import random
+from signal import signal, SIGINT
 
-from src.models.User import User
-from src.pgdb import Pgdb
-from src.utils import generateId, generateHash, notLoggedIn, buildPreferences
-from src.models.ChessGame import ChessGame
-from src.models.TttGame import TttGame
-from src.models.QuadradiusGame import QuadradiusGame
+import tornado
+from flask import Flask, render_template, redirect, request, session
+from tornado.options import parse_command_line
+from tornado.web import Application, FallbackHandler
+from tornado.wsgi import WSGIContainer
 
-from src.handlers.tttHandler import TttHandler
-from src.handlers.statHandler import StatHandler
-from src.handlers.chessHandler import ChessHandler
-from src.handlers.chatHandler import ChatHandler
-from src.handlers.quadHandler import QuadHandler
+from src.backend.handlers.chatHandler import ChatHandler
+from src.backend.handlers.chessHandler import ChessHandler
+from src.backend.handlers.quadHandler import QuadHandler
+from src.backend.handlers.statHandler import StatHandler
+from src.backend.handlers.tttHandler import TttHandler
+from src.backend.models.ChessGame import ChessGame
+from src.backend.models.QuadradiusGame import QuadradiusGame
+from src.backend.models.TttGame import TttGame
+from src.backend.models.User import User
+from src.backend.pgdb import Pgdb
+from src.backend.utils import generateId, generateHash, notLoggedIn, buildPreferences
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="frontend", static_url_path='/frontend', template_folder="frontend/templates")
 
 try:
     config = json.loads(open("resources/app_config.json", "r").read())
@@ -47,6 +47,7 @@ except KeyError:
     deployVersion = "Local"
 
 with app.test_request_context():
+    print("session cleared")
     session.clear()
 
 @app.route('/')
@@ -68,7 +69,7 @@ def homepage():
             "deployVersion": deployVersion
         }
         payload = json.dumps(payload, default=str)
-        return render_template("home.html", payload=payload)
+        return render_template("/home.html", payload=payload)
 
 
 @app.route('/games/chess/<gameId>')
