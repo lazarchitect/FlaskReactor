@@ -8,41 +8,43 @@ export function isYourTurn() {
     return yourTurn;
 }
 
-export function quadSocketUpdate(sourceCoords, targetCoords){
+export function sendMoveUpdate(sourceCoords, targetCoords){
     const message = {
         "username": payload.username,
         "src": sourceCoords,
         "dest": targetCoords
     }
-    socket.update(message);
+    socket.sendUpdate(message);
 }
 
 export function quadSocketConnect(setBoardstate, setLegendState) {
 
-    socket = webSocketConnect("/quad");
+    socket = webSocketConnect({
+        path: "/quad",
+        onMessage: (messageEvent) => {
 
-    socket.onmessage = (messageEvent) => {
+            const data = JSON.parse(messageEvent.data);
 
-        const data = JSON.parse(messageEvent.data);
+            console.log(data);
 
-        if(data.command === "updateBoard"){ // TODO should be like "updateGame" or something wider
-            setStatus(determineStatus(payload, data));
-            setBoardstate(data.newBoardstate);
-            setLegendState(data.newLegendState);
-            yourTurn = payload.username === data.active_player;
+            if (data.command === "updateBoard") { // TODO should be like "updateGame" or something wider
+                setStatus(determineStatus(payload, data));
+                setBoardstate(data.newBoardstate);
+                setLegendState(data.newLegendState);
+                yourTurn = payload.username === data.active_player;
+            }
+            else if (data.command === "info") {
+                setStatus(determineStatus(payload, data));
+            }
+            else if (data.command === "endGame") {
+                setStatus(determineStatus(payload, data))
+            }
+            else if (data.command === "error") {
+                console.log(data.message)
+                alert(data.message)
+            }
         }
-
-        else if(data.command === "info"){
-            setStatus(determineStatus(payload, data));
-        }
-        else if(data.command === "endGame"){
-            setStatus(determineStatus(payload, data))
-        }
-        else if(data.command === "error"){
-            console.log(data.message)
-            alert(data.message)
-        }
-    };
+    });
 }
 
 function determineStatus(payload, data){
