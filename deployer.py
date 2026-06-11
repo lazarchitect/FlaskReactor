@@ -10,6 +10,8 @@ import logging
 
 logging.basicConfig(filename='logForDeployment.log', format='%(levelname)s: (%(asctime)s) %(message)s', level=logging.DEBUG)
 
+os.environ["BUILDKIT_PROGRESS"] = "plain"
+
 deployer = Flask(__name__)
 
 name="app"
@@ -65,7 +67,10 @@ def redeploy(commitId):
     os.system("git pull") # runs shell cmd
 
     logging.info("Building new image")
-    (newImage, logs) = client.images.build(path = ".", tag = tag)
+    (newImage, buildLogs) = client.images.build(path = ".", tag = tag)
+
+    for logDict in buildLogs:
+        logging.info(logDict.get('stream'))
 
     logging.info("new image built. Running new container....")
     # port 5000 inside container links to port 5000 of host machine
