@@ -1,9 +1,9 @@
 import {useDrop} from "react-dnd";
 import {Torus} from "./Torus";
-import {quadSocketUpdate} from "./QuadSocket";
+import {sendMoveUpdate} from "./QuadSocket";
 
 export function useTorusDrop(targetTileData){
-    return useDrop(() => ({
+    return useDrop({
         accept: 'Torus',
         collect: (monitor) => ({
             isOver: monitor.isOver(),
@@ -13,10 +13,10 @@ export function useTorusDrop(targetTileData){
 
             if (!isValidMove(sourceTileData, targetTileData)) return;
 
-            quadSocketUpdate(sourceTileData, targetTileData);
+            sendMoveUpdate(sourceTileData, targetTileData);
 
         })
-    }))
+    })
 }
 export function isValidMove(sourceTileData, targetTileData) {
 
