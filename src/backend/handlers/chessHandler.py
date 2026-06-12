@@ -140,8 +140,8 @@ class ChessHandler(WebSocketHandler):
         srcTileId = fields["src"]
         destTileId = fields["dest"]
 
-        srcCol, srcRow = (int(srcTileId[0]), int(srcTileId[1]))
-        destCol, destRow = (int(destTileId[0]), int(destTileId[1]))
+        srcRow, srcCol = (int(srcTileId[0]), int(srcTileId[1]))
+        destRow, destCol = (int(destTileId[0]), int(destTileId[1]))
 
         srcPiece = boardstate[srcRow][srcCol]["piece"]
 

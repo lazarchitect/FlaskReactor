@@ -117,11 +117,11 @@ main {
     background-color: #633e07;
 }
 
-.darkHighlighted {
+.darkHighlightedTile {
     background-color: #ca7d2a;
 }
 
-.lightHighlighted {
+.lightHighlightedTile {
     background-color: hsl(34, 100%, 92%);
 }
 
