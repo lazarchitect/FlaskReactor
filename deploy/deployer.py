@@ -1,12 +1,13 @@
-from flask import Flask, request
-import docker
-import os
-import hmac
 import hashlib
-from docker.errors import NotFound as NotFoundError
+import hmac
+import logging
+import os
 from sys import argv
 from threading import Thread
-import logging
+
+import docker
+from docker.errors import NotFound as NotFoundError
+from flask import Flask, request
 
 logging.basicConfig(filename='logForDeployment.log', format='%(levelname)s: (%(asctime)s) %(message)s', level=logging.DEBUG)
 
@@ -54,14 +55,6 @@ def redeploy(commitId):
     client = docker.from_env()
 
     logging.info("starting redeploy")
-    try:
-        old_container = client.containers.get(name)
-        old_container.stop()
-        old_container.remove()
-        logging.info("old container stopped and removed")
-    except NotFoundError:
-        pass
-        logging.warning("old container not found")
 
     logging.info("Pulling latest code repo changes...")
     os.system("git pull") # runs shell cmd
@@ -71,8 +64,19 @@ def redeploy(commitId):
 
     for logDict in buildLogs:
         logging.info(logDict.get('stream'))
+    logging.info("new image built")
 
-    logging.info("new image built. Running new container....")
+    logging.info("removing old container...")
+    try:
+        old_container = client.containers.get(name)
+        old_container.stop()
+        old_container.remove()
+        logging.info("old container stopped and removed")
+    except NotFoundError:
+        pass
+        logging.warning("old container not found")
+
+    logging.info("Running new container...")
     # port 5000 inside container links to port 5000 of host machine
     client.containers.run(newImage, name=name, ports = {5000:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
     logging.info("done. commit " + commitId + " deployed.")
