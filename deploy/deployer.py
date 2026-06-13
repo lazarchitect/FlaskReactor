@@ -76,9 +76,16 @@ def redeploy(commitId):
         pass
         logging.warning("old container not found")
 
+    logging.info("maintenance: pruning unused containers")
+    client.containers.prune()
+
     logging.info("Running new container...")
     # port 5000 inside container links to port 5000 of host machine
-    client.containers.run(newImage, name=name, ports = {5000:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
+    container = client.containers.run(newImage, name=name, ports = {5000:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
+
+    for line in container.logs(stream=True):
+        logging.info(line.decode("utf-8").strip())
+
     logging.info("done. commit " + commitId + " deployed.")
 
 
