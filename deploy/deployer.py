@@ -27,7 +27,7 @@ def process_webhook():
     ref = body["ref"]
     commitId = body["after"][0:7]
     if(ref != "refs/heads/main"):
-        return "Not main branch, ignoring", 400
+        return "Not main branch, ignoring", 204
 
 
     th = Thread(target=redeploy, args=(commitId,)) #comma needed in args to make it iterable
