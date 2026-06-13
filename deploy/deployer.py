@@ -27,7 +27,7 @@ def process_webhook():
     ref = body["ref"]
     commitId = body["after"][0:7]
     if(ref != "refs/heads/main"):
-        return "Not main branch, ignoring", 204
+        return "Not main branch, ignoring", 200
 
 
     th = Thread(target=redeploy, args=(commitId,)) #comma needed in args to make it iterable
@@ -67,7 +67,7 @@ def redeploy(commitId):
     os.system("git pull") # runs shell cmd
 
     logging.info("Building new image")
-    (newImage, buildLogs) = client.images.build(path = ".", tag = tag)
+    (newImage, buildLogs) = client.images.build(path = "..", tag = tag) # Dockerfile lives in parent folder
 
     for logDict in buildLogs:
         logging.info(logDict.get('stream'))
