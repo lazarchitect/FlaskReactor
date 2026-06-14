@@ -121,8 +121,8 @@ class Pgdb:
 		except (InterfaceError, OperationalError):
 			#Connection was closed. reset conn and cursor. (this happens due to idle timeouts.)
 			self.conn = connect(
-				host     = self.config['remote_ip' if self.db_env=='remote' else 'local_ip'],
-				database = self.config['database'],
+				host     = self.config['local_ip' if self.db_env=='local' else 'remote_ip'],
+				dbname   = self.config['database'],
 				user     = self.config['user'],
 				password = self.config['password']
 			)
