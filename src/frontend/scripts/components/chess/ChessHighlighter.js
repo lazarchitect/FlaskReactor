@@ -158,6 +158,11 @@ export function generateHighlights(boardstate, piece) { // void
         chessConsts.KNIGHT_OFFSETS.forEach(offset => {
             const destRow = piece.row + offset[0];
             const destCol = piece.col + offset[1];
+
+            // TODO Knights need to not highlight a tile if moving there would leave their King in check
+            // idea - create an isSafe() function to process this for all piece types
+            // also - we should check for outOfBounds, isSafe, and targetPiece!=ally early, and continue if so. ("early return")
+
             if (!outOfBounds(destRow, destCol)) {
                 const targetPiece = boardstate[destRow][destCol].piece;
                 if (targetPiece === undefined || targetPiece.color === enemyColor) {
@@ -186,6 +191,8 @@ function sliderMoves(piece, boardstate, offsets) {
         const colOffset = offset[1];
         scan(rowOffset, colOffset, piece.row, piece.col, piece.color, boardstate, moveList);
     });
+
+    // TODO the variable name "moveList" represents "highlightedTiles". both its unclear that this always lines up. Let's pick one and stick with it in all files.
     return moveList;
 }
 
