@@ -2,8 +2,8 @@
 'use strict';
 
 import React, {useState} from 'react';
-import {generateHighlights} from "./ChessHighlighter";
-import {chessSocketConnect, chessSocketUpdate} from "./ChessSocket";
+import {generateMoves} from "./moveGenerator";
+import {chessSocketConnect, chessSocketUpdate} from "./chessSocket";
 import {pieceAt} from "./chessUtils";
 
 let yourTurn = payload.yourTurn;
@@ -34,7 +34,7 @@ export function Chessboard() {
 		}
 		else {
 			if(piece === undefined || piece == null || piece.color !== payload.userColor) return;
-			setHighlightedTiles(generateHighlights(boardstate, piece));
+			setHighlightedTiles(generateMoves(boardstate, piece));
 			setActiveTile(tileId);
 		}
 

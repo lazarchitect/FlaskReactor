@@ -1,6 +1,6 @@
 // collection of helper functions for front-end logic to support chess gameplay
 
-import * as chessConsts from './chessConsts';
+import {BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS} from './chessConsts';
 
 /** @param boardstate 2D array with objects representing tiles, and sub-objects for pieces
  *  @param coords can be a string tileId (e.g. "02") or a cartesian pair array (e.g. [0,2])
@@ -55,25 +55,33 @@ export function pieceTowards(boardstate, coords, offset) {
     return pieceTowards(boardstate, targetCoords, offset);
 }
 
-// TODO this is broken during the modifiedBoardstate logic, if the piece thats moving IS the ally king!
-// fix - make the function find the ally king instead of passing that in
+/* assumes both coords are within the board */
+export function isSafeMove(boardstate, srcCoords, destCoords) {
 
-// TODO just pass in yourColor instead of enemyColor...
-export function inCheck(boardstate, enemyColor) {
+    let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);
 
-    const yourColor = (enemyColor === "Black" ? "White" : "Black");
+    let [srcRow, srcCol] = srcCoords;
+    const pieceColor = boardstate[srcRow][srcCol].piece?.color;
+
+    return !inCheck(modifiedBoardstate, pieceColor);
+
+}
+
+function inCheck(boardstate, yourColor) {
+
+    const enemyColor = (yourColor === "Black" ? "White" : "Black");
 
     const kingCoords = getKingCoords(boardstate, yourColor);
     
     // Look for Kings (assuming no safety) 
-    chessConsts.ROYAL_OFFSETS.forEach(offset => {
+    ROYAL_OFFSETS.forEach(offset => {
         const targetCoords = [kingCoords[0] + offset[0], kingCoords[1] + offset[1]];
         if (isPiece(boardstate, targetCoords, "King", enemyColor)) 
             return true;
     });
 
     // Look for Knights
-    chessConsts.KNIGHT_OFFSETS.forEach(offset => {
+    KNIGHT_OFFSETS.forEach(offset => {
         const targetCoords = [kingCoords[0] + offset[0], kingCoords[1] + offset[1]];
         if (isPiece(boardstate, targetCoords, "Knight", enemyColor)) 
             return true;
@@ -89,7 +97,7 @@ export function inCheck(boardstate, enemyColor) {
         return true;
 
     // Look orthogonally for Rooks/Queens
-    chessConsts.ROOK_OFFSETS.forEach(offset => {
+    ROOK_OFFSETS.forEach(offset => {
         let piece = pieceTowards(boardstate, kingCoords, offset);
         if (piece != null) { // is null correct here?
             if (pieceMatch(piece, enemyColor, "Rook") || pieceMatch(piece, enemyColor, "Queen")) {
@@ -99,7 +107,7 @@ export function inCheck(boardstate, enemyColor) {
     });
         
     // Look diagonally for Bishops/Queens
-    chessConsts.BISHOP_OFFSETS.forEach(offset => {
+    BISHOP_OFFSETS.forEach(offset => {
         let piece = pieceTowards(boardstate, kingCoords, offset)
         if (piece != null) {
             if (pieceMatch(piece, enemyColor, "Bishop") || pieceMatch(piece, enemyColor, "Queen")){
@@ -110,8 +118,8 @@ export function inCheck(boardstate, enemyColor) {
     return false;
 }   
 
-/** generates a deepcopy of the boardstate & moves the piece at src to the tile dest, replacing anything there;
-    returns the board copy containing this modification. */
+/** Generates a deepcopy of the boardstate & moves the piece at tile 'src' to tile 'dest', replacing anything there.
+    Returns the board copy containing this modification. */
 export function previewModifiedBoard(boardstate, srcCoords, destCoords) {
 
     let deepcopy = structuredClone(boardstate);
@@ -125,9 +133,4 @@ export function previewModifiedBoard(boardstate, srcCoords, destCoords) {
 
     return deepcopy;
 
-
-}
-
-export function playerInCheck(yourColor, whiteInCheck, blackInCheck){
-    return (yourColor==="White" && whiteInCheck) || (yourColor==="Black" && blackInCheck);
 }

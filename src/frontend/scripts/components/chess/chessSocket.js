@@ -1,5 +1,4 @@
 import {webSocketConnect} from "../common/SocketConnection";
-import {playerInCheck} from "./chessUtils";
 
 let socket = null;
 
@@ -50,6 +49,10 @@ export function chessSocketConnect(setBoardstate) {
             }
         }
     });
+}
+
+function playerInCheck(yourColor, whiteInCheck, blackInCheck) {
+    return (yourColor === "White" && whiteInCheck) || (yourColor === "Black" && blackInCheck);
 }
 
 function determineStatus(payload, data){
