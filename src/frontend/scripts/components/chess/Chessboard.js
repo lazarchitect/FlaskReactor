@@ -6,22 +6,33 @@ import {generateMoves} from "./moveGenerator";
 import {chessSocketConnect, chessSocketUpdate} from "./chessSocket";
 import {pieceAt} from "./chessUtils";
 
-let yourTurn = payload.yourTurn;
-
 export function Chessboard() {
 
-	const [boardstate, setBoardstate] = React.useState(payload.boardstate);
+	const [boardstate, setBoardstate] = React.useState(payload.game.boardstate);
+
+	const [gameDetails, setGameDetails] = React.useState({
+		"activePlayer": payload.activePlayer, // payload field name is subject to change
+		"otherPlayer": payload.otherPlayer,
+		"blackkingmoved": payload.game.blackkingmoved,
+		"whitekingmoved": payload.game.whitekingmoved,
+		"wqr_moved": payload.game.wqr_moved,
+		"wkr_moved": payload.game.wkr_moved,
+		"bqr_moved": payload.game.bqr_moved,
+		"bkr_moved": payload.game.bkr_moved
+	});
 
 	// useEffect ensures the component has rendered at least once before the ws connection, which syncs with the chessboard, is made.
 	// note - this only triggers on the first render, due to the empty dependency array. (no dependencies => no ongoing effect)
-	React.useEffect(() => chessSocketConnect(setBoardstate), []);
+	React.useEffect(() => chessSocketConnect(setBoardstate, setGameDetails), []);
 
 	let [highlightedTiles, setHighlightedTiles] = useState([]);
 	let [activeTile, setActiveTile] = React.useState([]);
 
 	let boardOnClick = (mouseEvent) => {
 
-		if(!yourTurn) return;
+		console.log(gameDetails);
+
+		if (gameDetails.activePlayer !== payload.username) return;
 
 		const tileId = mouseEvent.target.id;
 

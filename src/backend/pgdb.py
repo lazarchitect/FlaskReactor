@@ -34,11 +34,11 @@ sql = {
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
 	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s, active_player=%s, last_move=%s, turn_number=%s, orb_counter=%s, player1_powers=%s, player2_powers=%s where id=%s",
 	# Chess
-	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, player_turn, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, active_player, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	"getCompletedChessGames": f"SELECT * FROM {chessGamesTable} where completed=true AND (white_player=%s OR black_player=%s)",
 	"getChessGames": f"SELECT * FROM {chessGamesTable} where (white_player=%s OR black_player=%s) ORDER BY last_move DESC",
 	"getChessGame": f"SELECT * FROM {chessGamesTable} WHERE id=%s",
-	"updateChessGame": f"UPDATE {chessGamesTable} SET boardstate=%s, last_move=%s, player_turn=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s, pawn_leapt=%s, pawn_leap_col=%s WHERE id=%s",
+	"updateChessGame": f"UPDATE {chessGamesTable} SET boardstate=%s, last_move=%s, active_player=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s, pawn_leapt=%s, pawn_leap_col=%s WHERE id=%s",
 	"endChessGame": f"UPDATE {chessGamesTable} SET completed=true, time_ended=%s, winner=%s WHERE id=%s",
 
 	# Tic-Tac-Toe

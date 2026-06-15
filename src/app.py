@@ -95,9 +95,9 @@ def chessGame(gameId):
         "preferences": buildPreferences(session),
 
         # TODO following three lines' values already derive from "game" and "username", redundant payload fields. let UI figure it out
-        "boardstate": game.boardstate,
         "players": [game.white_player, game.black_player],
-        "yourTurn": game.player_turn == session.get('username'),
+        "activePlayer": game.active_player,
+        "otherPlayer": (game.white_player if userColor == "Black" else game.black_player),
 
         "wsBaseUrl": wsBaseUrl,
         "ws_token": session.get('ws_token'),

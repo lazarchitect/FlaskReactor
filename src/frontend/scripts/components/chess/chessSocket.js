@@ -16,7 +16,7 @@ export function chessSocketUpdate(tileId, activeTile) {
     socket.send(updateStr);
 }
 
-export function chessSocketConnect(setBoardstate) {
+export function chessSocketConnect(setBoardstate, setGameDetails) {
 
     socket = webSocketConnect({
         path: "/chess",
@@ -24,18 +24,12 @@ export function chessSocketConnect(setBoardstate) {
 
             const data = JSON.parse(messageEvent.data);
 
+            console.log(data);
+
             if(data.command === "updateBoard"){
                 setStatus(determineStatus(payload, data));
                 setBoardstate(data.newBoardstate);
-                // blackKingMoved = data.blackKingMoved;
-                // whiteKingMoved = data.whiteKingMoved;
-                // bqr_moved = data.bqrMoved;
-                // bkr_moved = data.bkrMoved;
-                // wqr_moved = data.wqrMoved;
-                // wkr_moved = data.wkrMoved;
-
-                // yourTurn = payload.username === data.activePlayer;
-                // boardstate = data.newBoardstate;
+                setGameDetails(data.gameDetails);
             }
             else if(data.command === "info"){
                 setStatus(determineStatus(payload, data));
@@ -63,20 +57,20 @@ function determineStatus(payload, data){
             status += "It's a tie."
         else if(data.winner === payload.username)
             status += "You win!"
-        else if(payload.username === data.otherPlayer)
+        else if(payload.username === data.gameDetails.otherPlayer)
             status += "You lose...";
         else
             status += "Winner was " + data.winner;
         return status;
     }
     switch(payload.username){
-        case data.activePlayer:
+        case data.gameDetails.activePlayer:
             status += "Your turn. ";
             if(playerInCheck(payload.userColor, data.whiteInCheck, data.blackInCheck)){
                 status += "You are in check!"
             }
             break;
-        case data.otherPlayer:
+        case data.gameDetails.otherPlayer:
             status += "Waiting for opponent... ";
             if(playerInCheck(payload.enemyColor, data.whiteInCheck, data.blackInCheck)){
                 status += "Opponent is in check!"
