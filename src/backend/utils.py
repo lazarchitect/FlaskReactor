@@ -57,26 +57,6 @@ def tttGameEnded(b):
 
 ### CHESS ###
 
-def printChessboard(b):
-	retval = ""
-	for row in b:
-		for tile in row:
-			piece = tile.get("piece")
-			if piece is None:
-				retval += ("  ")
-			else:
-				retval += pieceCode(piece)
-			retval += " "
-		retval += "\n"
-	print(retval)
-
-
-def pieceCode(p):
-	if p["type"] == "Knight":
-		return p["color"][0] + "N"
-	return p["color"][0] + p["type"][0]
-
-
 def outOfBounds(coords):
 	row, col = coords
 	return row < 0 or row > 7 or col < 0 or col > 7

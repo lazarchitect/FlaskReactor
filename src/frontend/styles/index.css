@@ -99,6 +99,10 @@ main {
     margin-left: 1%;
 }
 
+#chessboard {
+    display: inline-block;
+}
+
 .chessRow {
     font-size: 0; /* HTML has this weird spacing issue causing empty spaces, removing any font size fixes it */
 }
@@ -117,11 +121,11 @@ main {
     background-color: #633e07;
 }
 
-.darkHighlighted {
+.darkHighlightedTile {
     background-color: #ca7d2a;
 }
 
-.lightHighlighted {
+.lightHighlightedTile {
     background-color: hsl(34, 100%, 92%);
 }
 

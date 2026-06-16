@@ -68,7 +68,7 @@ function tttSocketConnect(setBoardstate, setYourTurn) {
 		}
 
 		else if(data.command === "error") {
-			console.log(data.contents);
+			alert(data.contents);
 		}
 
     };

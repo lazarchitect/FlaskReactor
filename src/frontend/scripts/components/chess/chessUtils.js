@@ -1,20 +1,32 @@
-// collection of helper functions for front-end logic to support chess gameplay
+// Small collection of helpful tools for front-end logic to support chess gameplay.
 
-import * as chessConsts from './chessConsts';
-
-// returns a Piece Object like Piece{color: "Black", type: "Knight" ....}
-export function getPiece(boardstate, coords) {
-    let col = parseInt(coords[0]);
-    let row = parseInt(coords[1]);
-    return boardstate[row][col].piece;
+/** Represents a chess piece.
+    Useful mostly for semi-pseudocode readability, like piece.is("Black", "Pawn") instead of a more cumbersome function call.
+    Note - these internal row and col references are updated on the server side and refreshed with socket update commands when pieces move.
+    `pieceData` also has an unused piece ID field. */
+class Piece {
+    constructor(pieceData) {
+        this.color = pieceData.color;
+        this.type = pieceData.type;
+        this.row = pieceData.row;
+        this.col = pieceData.col;
+    }
+    isAllyOf(otherPiece) {return otherPiece !== undefined && this.color === otherPiece.color;}
+    isOpposingColorOf(color) {return this.color === "White" ? color === "Black" : color === "White";}
+    is (color, type) {return this.color === color && type === this.type}
 }
 
-export function pieceMatch(piece, pieceColor, pieceType) {
-    return piece.color === pieceColor && piece.type === pieceType
-}
-
-export function hasPiece(boardstate, coords) { 
-   return getPiece(boardstate, coords) != null; 
+/** Fetches a piece at a location, if any. Note - we should use the optional chaining operator on the result in most situations.
+ *  @param boardstate 2D array with objects representing tiles, and sub-objects for pieces
+ *  @param coords can be a string tileId (e.g. "02") or a cartesian pair array (e.g. [0,2])
+ *  @return Piece object e.g. Piece{color: "Black", type: "Knight" ....} or undefined for an empty or out-of-bounds tile. */
+export function pieceAt(boardstate, coords) {
+    if (outOfBounds(coords)) return undefined;
+    let row = parseInt(coords[0]);
+    let col = parseInt(coords[1]);
+    let pieceData = boardstate[row][col]["piece"];
+    if (pieceData === undefined) return undefined;
+    return new Piece(pieceData);
 }
 
 export function outOfBounds(coords) {
@@ -22,101 +34,7 @@ export function outOfBounds(coords) {
     return row < 0 || row > 7 || col < 0 || col > 7;
 }
 
-// is a piece at a location the specified type and color?
-export function isPiece(boardstate, coords, pieceType, pieceColor) {
-    if (outOfBounds(coords)) return false;
-    const piece = getPiece(boardstate, coords);
-    if (piece == null) return false;
-    return piece.type === pieceType && piece.color === pieceColor
-}
-
-export function getKingCoords(boardstate, color) {
-    for(let row = 0; row <= 7; row++) {
-        for (let col = 0; col <= 7; col++) {
-            if(isPiece(boardstate, [col, row], 'King', color)) {
-                return [row, col]
-            }
-        }
-    }
-    return None; //should never happen?
-}
-
-// recursive fn to scan along a row/col/diag to see if a given piece is in that direction.
-export function pieceTowards(boardstate, coords, offset) {
-    let targetCoords = [coords[0] + offset[0], coords[1] + offset[1]]; 
-    if (outOfBounds(targetCoords)) 
-        return null;
-    if (hasPiece(boardstate, coords)) {
-        return getPiece(boardstate, coords);
-    }
-    return pieceTowards(boardstate, targetCoords, offset);
-}
-
-export function inCheck(boardstate, enemyColor, kingCoords) {
-    
-    // Look for Kings (assuming no safety) 
-    chessConsts.ROYAL_OFFSETS.forEach(offset => {
-        const targetCoords = [kingCoords[0] + offset[0], kingCoords[1] + offset[1]];
-        if (isPiece(boardstate, targetCoords, "King", enemyColor)) 
-            return true;
-    });
-
-    // Look for Knights
-    chessConsts.KNIGHT_OFFSETS.forEach(offset => {
-        const targetCoords = [kingCoords[0] + offset[0], kingCoords[1] + offset[1]];
-        if (isPiece(boardstate, targetCoords, "Knight", enemyColor)) 
-            return true;
-    });
-
-    // Look for Pawns
-    // can you == strings? === needed?
-    const pawnDirection = enemyColor == "White" ? 1 : -1;
-    const pawnLeftCoords = [kingCoords[0] + pawnDirection, kingCoords[1] - 1];
-    const pawnRightCoords= [kingCoords[0] + pawnDirection, kingCoords[1] + 1];
-    if (isPiece(boardstate, pawnLeftCoords, "Pawn", enemyColor))
-        return true;
-    if (isPiece(boardstate, pawnRightCoords, "Pawn", enemyColor))
-        return true;
-
-    // Look orthogonally for Rooks/Queens
-    chessConsts.ROOK_OFFSETS.forEach(offset => {
-        let piece = pieceTowards(boardstate, kingCoords, offset);
-        if (piece != null) { // is null correct here?
-            if (pieceMatch(piece, enemyColor, "Rook") || pieceMatch(piece, enemyColor, "Queen")) {
-                return true;
-            }
-        } 
-    });
-        
-    // Look diagonally for Bishops/Queens
-    chessConsts.BISHOP_OFFSETS.forEach(offset => {
-        let piece = pieceTowards(boardstate, kingCoords, offset)
-        if (piece != null) {
-            if (pieceMatch(piece, enemyColor, "Bishop") || pieceMatch(piece, enemyColor, "Queen")){
-                return true;
-            }
-        }
-    return false;
-    })
-}   
-
-// generates a deepcopy of the boardstate & moves the piece at src to the tile dest, replacing anything there;
-// returns the board copy containing this modification
-export function previewModifiedBoard(boardstate, srcCoords, destCoords) {
-
-    let deepcopy = structuredClone(boardstate);
-
-    let srcRow = srcCoords[0];
-    let srcCol = srcCoords[1];
-    let destRow = destCoords[0];
-    let destCol = destCoords[1];
-
-    // gonna be a lot of these
-    // console.log("deepCopy: " + JSON.stringify(deepcopy));
-
-    deepcopy[destRow][destCol] = deepcopy[srcRow][srcCol]; // does this  work??
-
-    return deepcopy;
-
-
+/** returns row digit concatenated with col digit. */
+export function tileIdOf(coords){
+    return coords[0] + "" + coords[1];
 }

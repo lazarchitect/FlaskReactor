@@ -74,7 +74,7 @@ class ChessHandler(WebSocketHandler):
         }
 
         # gameId is given to the frontend by Flask in the payload and then sent back here to confirm
-        gameId = fields.get('gameId')
+        gameId = str(fields.get('gameId'))
         if utils.isEmpty(gameId):
             self.write_message({
                 "command": "error",
@@ -108,7 +108,7 @@ class ChessHandler(WebSocketHandler):
             pass
             #TODO If game is None, we should error alert the UI and halt here
 
-        if game.white_player == game.player_turn:
+        if game.white_player == game.active_player:
             otherPlayer = game.black_player
         else:
             otherPlayer = game.white_player
@@ -118,15 +118,25 @@ class ChessHandler(WebSocketHandler):
         whiteInCheck = utils.inCheck(boardstate, "Black", utils.getKingCoords(boardstate, "White"))
         blackInCheck = utils.inCheck(boardstate, "White", utils.getKingCoords(boardstate, "Black"))
 
+        blackKingMoved = game.blackkingmoved
+        whiteKingMoved = game.whitekingmoved
+        bqrMoved = game.bqr_moved
+        bkrMoved = game.bkr_moved
+        wqrMoved = game.wqr_moved
+        wkrMoved = game.wkr_moved
+
         self.write_message({
-                "command": "info",
-                "gameEnded": game.completed,
-                "activePlayer": game.player_turn,
-                "otherPlayer": otherPlayer,
-                "whiteInCheck": whiteInCheck,
-                "blackInCheck": blackInCheck,
-                "winner": game.winner,
-                "contents": str(self.socketId) + " subscribed to gameId " + gameId
+            "command": "info",
+            "gameEnded": game.completed,
+            "whiteInCheck": whiteInCheck,
+            "blackInCheck": blackInCheck,
+            "winner": game.winner,
+            "gameDetails": {
+                "activePlayer": game.active_player, "otherPlayer": otherPlayer,
+                "whitekingmoved": whiteKingMoved, "blackkingmoved": blackKingMoved,
+                "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved
+            },
+            "contents": str(self.socketId) + " subscribed to gameId " + gameId
         })
 
     def handleUpdate(self, fields):
@@ -140,8 +150,8 @@ class ChessHandler(WebSocketHandler):
         srcTileId = fields["src"]
         destTileId = fields["dest"]
 
-        srcCol, srcRow = (int(srcTileId[0]), int(srcTileId[1]))
-        destCol, destRow = (int(destTileId[0]), int(destTileId[1]))
+        srcRow, srcCol = (int(srcTileId[0]), int(srcTileId[1]))
+        destRow, destCol = (int(destTileId[0]), int(destTileId[1]))
 
         srcPiece = boardstate[srcRow][srcCol]["piece"]
 
@@ -158,19 +168,18 @@ class ChessHandler(WebSocketHandler):
         wkrMoved = srcId == "wkr" or game.wkr_moved
 
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
-        if (game.notation is None):
+        if game.notation is None:
             game.notation = ""
         newNotation = game.notation + moveNotation
 
         # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD 
-        # (https://www.notion.so/noshun/Server-side-chess-move-validation-d89dfc680c8849c19b89fbab2a924367)
 
         # execute the move
         boardstate[srcRow][srcCol] = {}
         boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor, "id": srcId}}
 
-        newActivePlayer = game.white_player if game.player_turn == game.black_player else game.black_player
-        oldActivePlayer = game.white_player if game.player_turn != game.black_player else game.black_player
+        newActivePlayer = game.white_player if game.active_player == game.black_player else game.black_player
+        oldActivePlayer = game.white_player if game.active_player != game.black_player else game.black_player
 
         allyColor = srcColor
         enemyColor = "Black" if srcColor == "White" else "White"
@@ -200,16 +209,17 @@ class ChessHandler(WebSocketHandler):
             "command": "updateBoard",
             "newBoardstate": boardstate,
 
-            # following group of game data could be wrapped up in one structure? to avoid so many setState calls on the JS side
-            "activePlayer": newActivePlayer,
-            "otherPlayer": oldActivePlayer,
+            # TODO: following fields could be wrapped up into gameDetails
             "whiteInCheck": whiteInCheck,
             "blackInCheck": blackInCheck,
             "pawnLeapt": pawnLeapt,
             "pawnLeapCol": pawnLeapCol,
 
-            "castlingFlags": {"whitekingmoved": whiteKingMoved, "blackkingmoved": blackKingMoved,
-                              "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved},
+            "gameDetails": {
+                "activePlayer": newActivePlayer, "otherPlayer": oldActivePlayer,
+                "whitekingmoved": whiteKingMoved, "blackkingmoved": blackKingMoved,
+                "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved
+            }
         }
 
         utils.updateAll(clientConnections[gameId], messageToSubscribers)

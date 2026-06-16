@@ -11,7 +11,7 @@ quadJson =json.loads(open('resources/initialQuadLayout.json', 'r').read())
 class MockPgdb:
 
 	def getUser(self, username):
-		return User('MockSmith11', 'mock_email@aol.com', 'mock_38298dd7-e30d-42d7-8c3a-94483dfc4af3', 'mock_pw_shtjteykyjthehu6w57', 'mock_wstoken')
+		return User('MockSmith11', 'mock_email@aol.com', 'mock_38298dd7-e30d-42d7-8c3a-94483dfc4af3', 'mock_pw_shtjteykyjthehu6w57', 'mock_ws_token')
 
 	def createUser(self, username, password_hash, email, userid):
 		pass

@@ -20,7 +20,7 @@ class ChessGame:
         # else, use defaults
         self.id = generateId()
         self.boardstate = json.loads(open('resources/initialChessLayout.json', 'r').read())
-        self.player_turn = white_player # TODO change this to 'g.active_player' here and in DB, do so in TTT as well
+        self.active_player = white_player # TODO as we changed this to 'g.active_player' here and in DB, do so in TTT as well
         self.completed = False
         self.time_started = datetime.now()
         self.last_move = self.time_started
@@ -46,7 +46,7 @@ class ChessGame:
         g.time_started = gameDict['time_started']
         g.last_move = gameDict['last_move']
         g.time_ended = gameDict['time_ended']
-        g.player_turn = gameDict['player_turn'] # subject to change to 'active_player'
+        g.active_player = gameDict['active_player']
         g.winner = gameDict['winner']
         g.notation = gameDict['notation']
         g.whitekingmoved = gameDict['whitekingmoved']
@@ -74,7 +74,7 @@ class ChessGame:
             self.time_started,
             self.last_move,
             self.time_ended,
-            self.player_turn,
+            self.active_player,
             self.winner
             # unspecified attributes are initialized to defaults (NULL, FALSE, or -1)
         )

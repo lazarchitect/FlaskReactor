@@ -71,9 +71,6 @@ function chatSocketConnect(setChatLog) {
         else if (data.command === "error") {
             alert(data.message);
         }
-        else if (data.command === "info") {
-            // console.log(data.content);
-        }
     }
 
 }

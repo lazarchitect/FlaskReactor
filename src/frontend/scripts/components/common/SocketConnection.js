@@ -22,12 +22,11 @@ export function webSocketConnect({path, onMessage}) {
     socket.onmessage = onMessage;
 
     socket.onclose = () => {
-        // attempt exponential delayed ( + jitter) looping reconnect when connection is lost.
+        // attempt increasingly delayed looping reconnect ( + random jitter) when connection is lost.
         // TODO need some way to communicate temporary outage to user. Can display a "network reconnecting..." modal while state is not CONNECTED
-        console.log("socket connection to " + path + " closed. reopening...");
         setTimeout(() => webSocketConnect({path, onMessage}), retryTimer);
         retryTimer += Math.floor(Math.random()*1000);
-        console.log(retryTimer);
+        console.log("socket connection to " + path + " closed. reopening in " + retryTimer + "ms");
     };
 
     socket.sendUpdate = (message) => {
