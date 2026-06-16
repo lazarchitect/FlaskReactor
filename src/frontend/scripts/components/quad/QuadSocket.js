@@ -25,8 +25,6 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
 
             const data = JSON.parse(messageEvent.data);
 
-            console.log(data);
-
             if (data.command === "updateBoard") { // TODO should be like "updateGame" or something wider
                 setStatus(determineStatus(payload, data));
                 setBoardstate(data.newBoardstate);
@@ -40,8 +38,7 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
                 setStatus(determineStatus(payload, data))
             }
             else if (data.command === "error") {
-                console.log(data.message)
-                alert(data.message)
+                alert(data.message);
             }
         }
     });

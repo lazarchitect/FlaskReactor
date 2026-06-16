@@ -2,18 +2,14 @@ import {webSocketConnect} from "../common/SocketConnection";
 
 let socket = null;
 
-export function chessSocketUpdate(tileId, activeTile) {
+export function sendMoveUpdate(tileId, activeTile) {
     const updateObj = {
-        "request": "update",
-        "ws_token": payload.ws_token,
-        "gameId": payload.game.id,
         "player": payload.player,
         "userId": payload.userId,
         "src": activeTile,
         "dest": tileId
     }
-    const updateStr = JSON.stringify(updateObj);
-    socket.send(updateStr);
+    socket.sendUpdate(updateObj);
 }
 
 export function chessSocketConnect(setBoardstate, setGameDetails) {
@@ -23,8 +19,6 @@ export function chessSocketConnect(setBoardstate, setGameDetails) {
         onMessage: (messageEvent) => {
 
             const data = JSON.parse(messageEvent.data);
-
-            console.log(data);
 
             if(data.command === "updateBoard"){
                 setStatus(determineStatus(payload, data));
@@ -38,7 +32,6 @@ export function chessSocketConnect(setBoardstate, setGameDetails) {
                 setStatus(determineStatus(payload, data))
             }
             else if(data.command === "error"){
-                console.log(data.message)
                 alert(data.message)
             }
         }

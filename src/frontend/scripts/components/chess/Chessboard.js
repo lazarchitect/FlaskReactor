@@ -3,7 +3,7 @@
 
 import React, {useState} from 'react';
 import {generateMoves} from "./moveGenerator";
-import {chessSocketConnect, chessSocketUpdate} from "./chessSocket";
+import {chessSocketConnect, sendMoveUpdate} from "./chessSocket";
 import {pieceAt} from "./chessUtils";
 
 export function Chessboard() {
@@ -26,11 +26,9 @@ export function Chessboard() {
 	React.useEffect(() => chessSocketConnect(setBoardstate, setGameDetails), []);
 
 	let [highlightedTiles, setHighlightedTiles] = useState([]);
-	let [activeTile, setActiveTile] = React.useState([]);
+	let [activeTile, setActiveTile] = React.useState("");
 
 	let boardOnClick = (mouseEvent) => {
-
-		console.log(gameDetails);
 
 		if (gameDetails.activePlayer !== payload.username) return;
 
@@ -38,21 +36,24 @@ export function Chessboard() {
 
 		const piece = pieceAt(boardstate, tileId);
 
-		if(highlightedTiles.includes(tileId)){
-			chessSocketUpdate(tileId, activeTile);
+		if(highlightedTiles.includes(tileId)) {
+			sendMoveUpdate(tileId, activeTile);
 			setHighlightedTiles([]);
-			setActiveTile([]);
+			setActiveTile("");
 		}
-		else {
-			if(piece === undefined || piece == null || piece.color !== payload.userColor) return;
+		else if (piece !== undefined && piece.color === payload.userColor) {
 			setHighlightedTiles(generateMoves(boardstate, piece));
 			setActiveTile(tileId);
+		}
+		else {
+			setHighlightedTiles([]);
+			setActiveTile("");
 		}
 
 	};
 
 	return (
-		<div id="board" onClick={boardOnClick}>
+		<div id="chessboard" onClick={boardOnClick}>
 			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val} highlightedTiles={highlightedTiles} />)}
 		</div>
 	);
@@ -96,7 +97,7 @@ function Tile({isDarkTile, isHighlightedTile, tileId, data}) {
 
 	return (
 		<span key={tileId} className={className} id={tileId}>
-			{ imagePath !== "" && <img src={imagePath} className="pieceImg"/> }
+			{ imagePath !== "" && <img src={imagePath} className="pieceImg" alt={null} /> }
 		</span>
 	);
 }
