@@ -30,6 +30,8 @@ export function Chessboard() {
 
 	let boardOnClick = (mouseEvent) => {
 
+		console.log(gameDetails);
+
 		if (gameDetails.activePlayer !== payload.username) return;
 
 		const tileId = mouseEvent.target.id;
@@ -42,7 +44,7 @@ export function Chessboard() {
 			setActiveTile("");
 		}
 		else if (piece !== undefined && piece.color === payload.userColor) {
-			setHighlightedTiles(generateMoves(boardstate, piece));
+			setHighlightedTiles(generateMoves(boardstate, gameDetails, piece));
 			setActiveTile(tileId);
 		}
 		else {
