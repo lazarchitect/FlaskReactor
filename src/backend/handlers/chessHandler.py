@@ -172,7 +172,10 @@ class ChessHandler(WebSocketHandler):
             game.notation = ""
         newNotation = game.notation + moveNotation
 
-        # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD 
+        # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD
+
+        # TODO #80: was this move a castle? Check if the King jumped.
+        #  If so, also move the Rook during below move execution
 
         # execute the move
         boardstate[srcRow][srcCol] = {}
