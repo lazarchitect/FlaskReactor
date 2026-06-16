@@ -2,7 +2,7 @@
 'use strict';
 
 import React, {useState} from 'react';
-import {generateMoves} from "./moveGenerator";
+import generateMoves from "./moveGenerator";
 import {chessSocketConnect, sendMoveUpdate} from "./chessSocket";
 import {pieceAt} from "./chessUtils";
 

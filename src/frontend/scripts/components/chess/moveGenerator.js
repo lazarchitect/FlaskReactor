@@ -2,7 +2,7 @@ import {outOfBounds, pieceAt, tileIdOf} from "./chessUtils";
 import {BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS} from "./chessConsts";
 import isSafeMove from "./moveSafetyVerifier";
 
-export function generateMoves(boardstate, activePiece) {
+export default function generateMoves(boardstate, activePiece) {
     switch(activePiece.type) {
         case "Pawn":    return generatePawnMoves(boardstate, activePiece);
         case "King":    return generateKingMoves(boardstate, activePiece);
