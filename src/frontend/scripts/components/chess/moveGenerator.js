@@ -1,5 +1,6 @@
-import {isSafeMove, outOfBounds, pieceAt, tileIdOf} from "./chessUtils";
+import {outOfBounds, pieceAt, tileIdOf} from "./chessUtils";
 import {BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS} from "./chessConsts";
+import isSafeMove from "./moveSafetyVerifier";
 
 export function generateMoves(boardstate, activePiece) {
     switch(activePiece.type) {
