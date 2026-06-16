@@ -83,9 +83,11 @@ function Tile({isDarkTile, isHighlightedTile, tileId, data}) {
 	const piece = data.piece;
 
 	let imagePath = "";
+	let altText = "";
 
 	if (piece != null) {
 		imagePath = "/frontend/images/" + piece.color + piece.type + ".png";
+		altText = "A " + piece.color + " " + piece.type + ".";
 
 		if (piece.type === "Bishop" && piece.color === "Black") {
 			imagePath = "/frontend/svg/" + piece.color + piece.type + ".svg";
@@ -97,7 +99,7 @@ function Tile({isDarkTile, isHighlightedTile, tileId, data}) {
 
 	return (
 		<span key={tileId} className={className} id={tileId}>
-			{ imagePath !== "" && <img src={imagePath} className="pieceImg" alt={null} /> }
+			{ imagePath !== "" && <img src={imagePath} className="pieceImg" alt={altText} /> }
 		</span>
 	);
 }
