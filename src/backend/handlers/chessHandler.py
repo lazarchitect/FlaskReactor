@@ -169,12 +169,11 @@ class ChessHandler(WebSocketHandler):
         wqrMoved = srcId == "wqr" or game.wqr_moved
         wkrMoved = srcId == "wkr" or game.wkr_moved
 
+        # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD
+
         moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
         if game.notation is None:
             game.notation = ""
-        newNotation = game.notation + moveNotation
-
-        # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD
 
         move = Move(srcTileId, destTileId, srcPiece)
 
@@ -182,6 +181,9 @@ class ChessHandler(WebSocketHandler):
 
         if move.type == MoveType.CASTLE:
             executeRookJump(boardstate, move)
+            moveNotation = "O-O" if move.side == MoveSide.KINGSIDE else "O-O-O"
+
+        newNotation = game.notation + moveNotation
 
         newActivePlayer = game.white_player if game.active_player == game.black_player else game.black_player
         oldActivePlayer = game.white_player if game.active_player != game.black_player else game.black_player
