@@ -4,7 +4,7 @@ from datetime import datetime
 from tornado.websocket import WebSocketHandler
 
 import src.backend.utils as utils
-from src.backend.services.chess.Move import Move, MoveType, MoveSide, executeMove
+from src.backend.services.chess.Move import Move, executeMove, executeRookJump
 from src.backend.services.chess.chessConsts import *
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
@@ -176,22 +176,12 @@ class ChessHandler(WebSocketHandler):
 
         # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD
 
-        # TODO #80: was this move a castle? Check if the King jumped.
-        #  If so, also move the Rook during below move execution
         move = Move(srcTileId, destTileId, srcPiece)
-        if move.type == MoveType.CASTLE:
-            if move.color == "Black":
-                if move.side == MoveSide.QUEENSIDE:
-                    executeMove(boardstate, bqrStartTile, bqStartTile)
-                else:
-                    executeMove(boardstate, bkrStartTile, bkbStartTile)
-            else: # White
-                if move.side == MoveSide.QUEENSIDE:
-                    executeMove(boardstate, wqrStartTile, wkStartTile)
-                else:
-                    executeMove(boardstate, wkrStartTile, wkbStartTile)
 
-        executeMove(boardstate, srcTileId, destTileId)
+        executeMove(boardstate, srcTileId, destTileId) # TODO I would LOVE if this was an instance method of Move.class
+
+        if move.type == MoveType.CASTLE:
+            executeRookJump(boardstate, move)
 
         newActivePlayer = game.white_player if game.active_player == game.black_player else game.black_player
         oldActivePlayer = game.white_player if game.active_player != game.black_player else game.black_player

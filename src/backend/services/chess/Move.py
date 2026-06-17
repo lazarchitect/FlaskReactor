@@ -1,8 +1,10 @@
-from enum import Enum
+from src.backend.services.chess.chessConsts import *
 
-from src.backend.services.chess.chessConsts import bkStartTile, bknStartTile, bqbStartTile, wknStartTile, wqbStartTile, \
-	wkStartTile
-
+class Move:
+	def __init__(self, srcTileId, destTileId, srcPiece):
+		self.type = determineType(srcTileId, destTileId, srcPiece)
+		self.color = srcPiece["color"]
+		self.side = determineSide(destTileId)
 
 def determineType(srcTileId, destTileId, piece):
 	if piece["type"] == "King":
@@ -35,19 +37,15 @@ def executeMove(boardstate, srcTileId, destTileId):
 	boardstate[srcRow][srcCol] = {}
 	boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor, "id": srcId}}
 
-class Move:
-	def __init__(self, srcTileId, destTileId, srcPiece):
-		self.type = determineType(srcTileId, destTileId, srcPiece)
-		self.color = srcPiece["color"]
-		self.side = determineSide(destTileId)
 
-
-class MoveType(Enum):
-	CASTLE = "Castle"
-	EN_PASSANT = "En Passant"
-	NORMAL = "Normal"
-	# CAPTURE = "Capture"
-
-class MoveSide(Enum):
-	QUEENSIDE = "Queenside"
-	KINGSIDE = "Kingside"
+def executeRookJump(boardstate, move: Move):
+	if move.color == BLACK:
+		if move.side == MoveSide.QUEENSIDE:
+			executeMove(boardstate, bqrStartTile, bqStartTile)
+		else:
+			executeMove(boardstate, bkrStartTile, bkbStartTile)
+	else:  # White
+		if move.side == MoveSide.QUEENSIDE:
+			executeMove(boardstate, wqrStartTile, wqStartTile)
+		else:
+			executeMove(boardstate, wkrStartTile, wkbStartTile)
