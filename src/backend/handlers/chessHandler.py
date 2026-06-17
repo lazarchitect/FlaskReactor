@@ -178,7 +178,7 @@ class ChessHandler(WebSocketHandler):
 
         move = Move(srcTileId, destTileId, srcPiece)
 
-        executeMove(boardstate, srcTileId, destTileId) # TODO I would LOVE if this was an instance method of Move.class
+        executeMove(boardstate, srcTileId, destTileId)
 
         if move.type == MoveType.CASTLE:
             executeRookJump(boardstate, move)
