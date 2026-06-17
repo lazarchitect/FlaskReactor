@@ -4,6 +4,8 @@ from datetime import datetime
 from tornado.websocket import WebSocketHandler
 
 import src.backend.utils as utils
+from src.backend.services.chess.Move import Move, executeMove, executeRookJump
+from src.backend.services.chess.chessConsts import *
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -172,11 +174,14 @@ class ChessHandler(WebSocketHandler):
             game.notation = ""
         newNotation = game.notation + moveNotation
 
-        # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD 
+        # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD
 
-        # execute the move
-        boardstate[srcRow][srcCol] = {}
-        boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": srcType, "color": srcColor, "id": srcId}}
+        move = Move(srcTileId, destTileId, srcPiece)
+
+        executeMove(boardstate, srcTileId, destTileId)
+
+        if move.type == MoveType.CASTLE:
+            executeRookJump(boardstate, move)
 
         newActivePlayer = game.white_player if game.active_player == game.black_player else game.black_player
         oldActivePlayer = game.white_player if game.active_player != game.black_player else game.black_player

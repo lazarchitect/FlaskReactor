@@ -2,7 +2,7 @@ import {BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS} from "./che
 import {outOfBounds, pieceAt} from "./chessUtils";
 
 /** Determines if the given move from src to dest would NOT introduce check, or that it would escape any existing check.
- Assumes both coords are within the board. */
+ Assumes both coords are within the board. Note - will lead to undefined behavior if there is no piece at srcCoords. */
 export default function isSafeMove(boardstate, srcCoords, destCoords) {
 
     let modifiedBoardstate = previewModifiedBoard(boardstate, srcCoords, destCoords);

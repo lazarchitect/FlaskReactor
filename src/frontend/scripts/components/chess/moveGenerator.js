@@ -1,11 +1,28 @@
 import {outOfBounds, pieceAt, tileIdOf} from "./chessUtils";
-import {BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS} from "./chessConsts";
+import {
+    BISHOP_OFFSETS,
+    bkbStartTile,
+    bknStartTile,
+    bkStartTile,
+    bqbStartTile,
+    bqnStartTile,
+    bqStartTile,
+    KNIGHT_OFFSETS,
+    ROOK_OFFSETS,
+    ROYAL_OFFSETS,
+    wkbStartTile,
+    wknStartTile,
+    wkStartTile,
+    wqbStartTile,
+    wqnStartTile,
+    wqStartTile
+} from "./chessConsts";
 import isSafeMove from "./moveSafetyVerifier";
 
-export default function generateMoves(boardstate, activePiece) {
+export default function generateMoves(boardstate, gameDetails, activePiece) {
     switch(activePiece.type) {
         case "Pawn":    return generatePawnMoves(boardstate, activePiece);
-        case "King":    return generateKingMoves(boardstate, activePiece);
+        case "King":    return generateKingMoves(boardstate, gameDetails, activePiece);
         case "Knight":  return generateNormalMoves(boardstate, activePiece, KNIGHT_OFFSETS);
         case "Rook":    return generateSliderMoves(boardstate, activePiece, ROOK_OFFSETS);
         case "Bishop":  return generateSliderMoves(boardstate, activePiece, BISHOP_OFFSETS);
@@ -21,7 +38,7 @@ function generatePawnMoves(boardstate, activePiece) {
     const srcCoords = [activePiece.row, activePiece.col];
     const pieceDirection = activePiece.color === "Black" ? 1 : -1;
     const finalRow = activePiece.color === "Black" ? 7 : 0;
-    const starterRow = activePiece.color === "Black" ? 1 : 6;
+    const StartTileerRow = activePiece.color === "Black" ? 1 : 6;
 
     const advanceOneCoords =  [activePiece.row + pieceDirection, activePiece.col];
     const advanceTwoCoords =  [activePiece.row + (pieceDirection * 2), activePiece.col]
@@ -40,7 +57,7 @@ function generatePawnMoves(boardstate, activePiece) {
     }
 
     // advance 2
-    if (activePiece.row === starterRow
+    if (activePiece.row === StartTileerRow
         && pieceAt(boardstate, advanceOneCoords) === undefined
         && pieceAt(boardstate, advanceTwoCoords) === undefined) {
         
@@ -100,12 +117,12 @@ function generateNormalMoves(boardstate, activePiece, offsets) {
 
 /** Reviews any possible move targets from castling or normal movement.
  * @returns array of tile IDs for valid move targets */
-function generateKingMoves(boardstate, activePiece) {
+function generateKingMoves(boardstate, gameDetails, activePiece) {
     let validMoveTargets = [];
     if (activePiece.color === "White") {
-        validMoveTargets.push(whiteCastlingMoves(boardstate));
+        validMoveTargets.push(...whiteCastlingMoves(boardstate, gameDetails));
     } else if (activePiece.color === "Black") {
-        validMoveTargets.push(blackCastlingMoves(boardstate));
+        validMoveTargets.push(...blackCastlingMoves(boardstate, gameDetails));
     }
 
     validMoveTargets.push(...generateNormalMoves(boardstate, activePiece, ROYAL_OFFSETS));
@@ -159,12 +176,51 @@ function scan(boardstate, srcCoords, rowOffset, colOffset, row, col, activeColor
 
 }
 
-function whiteCastlingMoves(boardstate) {
-    // TODO implement using chessConsts and gameData regarding castling flags
-    return [];
+// TODO these can be refactored for performance (via splitting up and using early returns) if that becomes necessary
+function whiteCastlingMoves(boardstate, gameDetails) {
+
+    let validCastlingTargets = [];
+
+    let intermediateWkTilesEmpty = isEmpty(boardstate, wkbStartTile) && isEmpty(boardstate, wknStartTile);
+    let intermediateWqTilesEmpty = isEmpty(boardstate, wqbStartTile) && isEmpty(boardstate, wqnStartTile) && isEmpty(boardstate, wqStartTile);
+
+    if (!gameDetails.whitekingmoved) {
+
+        let whiteIsSafeToCastleKingside = isSafeMove(boardstate, wkStartTile, wkbStartTile) && isSafeMove(boardstate, wkStartTile, wknStartTile);
+        let whiteIsSafeToCastleQueenside = isSafeMove(boardstate, wkStartTile, wqStartTile) && isSafeMove(boardstate, wkStartTile, wqbStartTile);
+
+        if (!gameDetails.wqr_moved && intermediateWqTilesEmpty && whiteIsSafeToCastleQueenside) {
+            validCastlingTargets.push(wqbStartTile);
+        }
+        if(!gameDetails.wkr_moved && intermediateWkTilesEmpty && whiteIsSafeToCastleKingside) {
+            validCastlingTargets.push(wknStartTile);
+        }
+    }
+    return validCastlingTargets;
 }
 
-function blackCastlingMoves(boardstate) {
-    // TODO implement using chessConsts and gameData regarding castling flags
-    return [];
+function blackCastlingMoves(boardstate, gameDetails) {
+
+    let validCastlingTargets = [];
+
+    let intermediateBkTilesEmpty = isEmpty(boardstate, bkbStartTile) && isEmpty(boardstate, bknStartTile);
+    let intermediateBqTilesEmpty = isEmpty(boardstate, bqbStartTile) && isEmpty(boardstate, bqnStartTile) && isEmpty(boardstate, bqStartTile);
+
+    if (!gameDetails.blackkingmoved) {
+
+        let blackIsSafeToCastleKingside = isSafeMove(boardstate, bkStartTile, bkbStartTile) && isSafeMove(boardstate, bkStartTile, bknStartTile);
+        let blackIsSafeToCastleQueenside = isSafeMove(boardstate, bkStartTile, bqStartTile) && isSafeMove(boardstate, bkStartTile, bqbStartTile);
+
+        if (!gameDetails.bqr_moved && intermediateBqTilesEmpty && blackIsSafeToCastleQueenside) {
+            validCastlingTargets.push(bqbStartTile);
+        }
+        if(!gameDetails.bkr_moved && intermediateBkTilesEmpty && blackIsSafeToCastleKingside) {
+            validCastlingTargets.push(bknStartTile);
+        }
+    }
+    return validCastlingTargets;
+}
+
+function isEmpty(boardstate, tileId) {
+    return pieceAt(boardstate, tileId) === undefined;
 }

@@ -6,7 +6,7 @@
           "col": 0,
           "type": "Rook",
           "color": "Black",
-          "id": "br1"
+          "id": "bqr"
         }
       },
       {
@@ -15,7 +15,7 @@
           "col": 1,
           "type": "Knight",
           "color": "Black",
-          "id": "bn1"
+          "id": "bqn"
         }
       },
       {
@@ -24,7 +24,7 @@
           "col": 2,
           "type": "Bishop",
           "color": "Black",
-          "id": "bb1"
+          "id": "bqb"
         }
       },
       {
@@ -51,7 +51,7 @@
           "col": 5,
           "type": "Bishop",
           "color": "Black",
-          "id": "bb2"
+          "id": "bkb"
         }
       },
       {
@@ -60,7 +60,7 @@
           "col": 6,
           "type": "Knight",
           "color": "Black",
-          "id": "bn2"
+          "id": "bkn"
         }
       },
       {
@@ -69,7 +69,7 @@
           "col": 7,
           "type": "Rook",
           "color": "Black",
-          "id": "br2"
+          "id": "bkr"
         }
       }
     ],
@@ -268,7 +268,7 @@
           "col": 0,
           "type": "Rook",
           "color": "White",
-          "id": "wr1"
+          "id": "wqr"
         }
       },
       {
@@ -277,7 +277,7 @@
           "col": 1,
           "type": "Knight",
           "color": "White",
-          "id": "wn1"
+          "id": "wqn"
         }
       },
       {
@@ -286,7 +286,7 @@
           "col": 2,
           "type": "Bishop",
           "color": "White",
-          "id": "wb1"
+          "id": "wqb"
         }
       },
       {
@@ -313,7 +313,7 @@
           "col": 5,
           "type": "Bishop",
           "color": "White",
-          "id": "wb2"
+          "id": "wkb"
         }
       },
       {
@@ -322,7 +322,7 @@
           "col": 6,
           "type": "Knight",
           "color": "White",
-          "id": "wn2"
+          "id": "wkn"
         }
       },
       {
@@ -331,7 +331,7 @@
           "col": 7,
           "type": "Rook",
           "color": "White",
-          "id": "wr2"
+          "id": "wkr"
         }
       }
     ]
