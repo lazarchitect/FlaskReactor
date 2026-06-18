@@ -70,7 +70,7 @@ def pieceMatch(piece, pieceColor, pieceType):
 	return piece.get("color") == pieceColor and piece.get("type") == pieceType
 
 
-def getPiece(boardstate, coords) -> dict:
+def getPiece(boardstate, coords) -> dict | None:
 	return boardstate[coords[0]][coords[1]].get("piece")
 
 
@@ -86,7 +86,7 @@ def hasColorPiece(boardstate, coords, color):
 def getKingCoords(boardstate, color):
 	for row in range(8):
 		for col in range(8):
-			if (isPiece(boardstate, (row, col), "King", color)):
+			if isPiece(boardstate, (row, col), "King", color):
 				return (row, col)
 	return None  #should never happen?
 
