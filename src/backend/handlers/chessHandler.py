@@ -6,6 +6,7 @@ from tornado.websocket import WebSocketHandler
 import src.backend.utils as utils
 from src.backend.services.chess.Move import Move, executeMove, executeRookJump
 from src.backend.services.chess.chessConsts import *
+from src.backend.services.chess.mateEvaluator import noLegalMoves
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -191,7 +192,7 @@ class ChessHandler(WebSocketHandler):
         allyColor = srcColor
         enemyColor = "Black" if srcColor == "White" else "White"
 
-        allyKingCoords = utils.getKingCoords(boardstate, allyColor)
+        allyKingCoords = utils.getKingCoords(boardstate, allyColor) # king coords can be found within inCheck, dont need those values out here
         enemyKingCoords = utils.getKingCoords(boardstate, enemyColor)
 
         allyInCheck = utils.inCheck(boardstate, enemyColor, allyKingCoords)
@@ -248,7 +249,7 @@ class ChessHandler(WebSocketHandler):
             # else, stalemate.
             # convey this info to DB and front end.
             # return
-        if utils.noLegalMoves(boardstate, enemyColor):
+        if noLegalMoves(boardstate, enemyColor):
             winner = oldActivePlayer if enemyInCheck else None
             mate = "Checkmate" if enemyInCheck else "Stalemate"
             messageToSubscribers = {

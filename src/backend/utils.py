@@ -1,17 +1,12 @@
-import copy
 import json
 from hashlib import sha256
 from uuid import uuid4
 
 from tornado.websocket import WebSocketClosedError
 
+from src.backend.services.chess.chessConsts import royalOffsets, knightOffsets, rookOffsets, bishopOffsets
+
 tttTriples = [(0,1,2), (3,4,5), (6,7,8), (0,3,6), (1,4,7), (2,5,8), (0,4,8), (2,4,6)]
-
-knightOffsets = [[1,2],[1,-2],[-1,2],[-1,-2],[2,1],[2,-1],[-2,1],[-2,-1]]
-rookOffsets = [[0,1],[0,-1],[1,0],[-1,0]]
-bishopOffsets = [[1,1],[1,-1],[-1,1],[-1,-1]]
-royalOffsets = [[1,1],[1,-1],[-1,1],[-1,-1],[0,1],[0,-1],[1,0],[-1,0]]
-
 
 def generateId():
 	return uuid4()
@@ -75,7 +70,7 @@ def pieceMatch(piece, pieceColor, pieceType):
 	return piece.get("color") == pieceColor and piece.get("type") == pieceType
 
 
-def getPiece(boardstate, coords):
+def getPiece(boardstate, coords) -> dict:
 	return boardstate[coords[0]][coords[1]].get("piece")
 
 
@@ -143,127 +138,6 @@ def inCheck(boardstate, enemyColor, kingCoords):
 				return True
 
 	return False
-
-
-def knightCanMove(boardstate, coords, pieceColor, enemyColor):
-	newBoardstate = copy.deepcopy(boardstate)
-	newBoardstate[coords[0]][coords[1]] = {}
-	if inCheck(newBoardstate, enemyColor, getKingCoords(newBoardstate, pieceColor)):
-		return False
-
-	for offset in knightOffsets:
-		targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
-		if not outOfBounds(targetCoords) and not hasColorPiece(boardstate, targetCoords, pieceColor):
-			return True
-
-	return False
-
-
-def pawnCanMove(boardstate, coords, pieceColor, enemyColor):
-	newBoardstate = copy.deepcopy(boardstate)
-	newBoardstate[coords[0]][coords[1]] = {}
-	if inCheck(newBoardstate, enemyColor, getKingCoords(newBoardstate, pieceColor)):
-		return False
-
-	# look at 1 tile ahead, and enemies in diag spots
-	direction = 1 if pieceColor == "Black" else -1
-	targetCoords = (coords[0] + direction, coords[1])
-	if not hasColorPiece(boardstate, targetCoords, pieceColor):
-		return True
-	targetCoords = (coords[0] + direction, coords[1] + 1)  # right attack
-	if not outOfBounds(targetCoords) and hasColorPiece(boardstate, targetCoords, enemyColor):
-		return True
-	targetCoords = (coords[0] + direction, coords[1] + -1)  # left attack
-	if not outOfBounds(targetCoords) and hasColorPiece(boardstate, targetCoords, enemyColor):
-		return True
-	return False
-
-
-def queenCanMove(boardstate, coords, pieceColor, enemyColor):
-	newBoardstate = copy.deepcopy(boardstate)
-	newBoardstate[coords[0]][coords[1]] = {}
-	if inCheck(newBoardstate, enemyColor, getKingCoords(newBoardstate, pieceColor)):
-		return False
-
-	for offset in royalOffsets:
-		targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
-		if not outOfBounds(targetCoords) and not hasColorPiece(boardstate, targetCoords, pieceColor):
-			return True
-	return False
-
-
-def kingCanMove(boardstate, coords, pieceColor, enemyColor):
-	for offset in royalOffsets:
-		targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
-		if not outOfBounds(targetCoords) and not hasColorPiece(boardstate, targetCoords, pieceColor):
-			# TODO CHECK IF KING WOULD NOW BE IN CHECK IF HE MOVED HERE
-
-			return True
-	return False
-
-
-def rookCanMove(boardstate, coords, pieceColor, enemyColor):
-	newBoardstate = copy.deepcopy(boardstate)
-	newBoardstate[coords[0]][coords[1]] = {}
-	if inCheck(newBoardstate, enemyColor, getKingCoords(newBoardstate, pieceColor)):
-		return False
-
-	for offset in rookOffsets:
-		targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
-		if not outOfBounds(targetCoords) and not hasColorPiece(boardstate, targetCoords, pieceColor):
-			return True
-	return False
-
-
-def bishopCanMove(boardstate, coords, pieceColor, enemyColor):
-	newBoardstate = copy.deepcopy(boardstate)
-	newBoardstate[coords[0]][coords[1]] = {}
-	if inCheck(newBoardstate, enemyColor, getKingCoords(newBoardstate, pieceColor)):
-		return False
-
-	for offset in bishopOffsets:
-		targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
-		if not outOfBounds(targetCoords) and not hasColorPiece(boardstate, targetCoords, pieceColor):
-			return True
-	return False
-
-
-def canMove(boardstate, coords, pieceColor):
-	enemyColor = "Black" if pieceColor == "White" else "White"
-	piece = getPiece(boardstate, coords)
-	pieceType = piece.get("type")
-
-	if pieceType == "Knight":
-		return knightCanMove(boardstate, coords, pieceColor, enemyColor)
-	elif pieceType == "Pawn":
-		return pawnCanMove(boardstate, coords, pieceColor, enemyColor)
-	elif pieceType == "Rook":
-		return rookCanMove(boardstate, coords, pieceColor, enemyColor)  # only need to check adjacent tiles
-	elif pieceType == "Queen":
-		return queenCanMove(boardstate, coords, pieceColor, enemyColor)  # only need to check adjacent tiles
-	elif pieceType == "King":
-		return kingCanMove(boardstate, coords, pieceColor, enemyColor)
-	elif pieceType == "Bishop":
-		return bishopCanMove(boardstate, coords, pieceColor, enemyColor)  # only need to check adjacent tiles
-	return None
-
-
-def noLegalMoves(boardstate, playerColor):
-	# determines if player <playerColor> cannot make any moves.
-
-	# related to issue #81 and #82
-
-	# if inCheck(boardstate, enemyColor, getKingCoords(boardstate, playerColor)):
-	#     # only return false if you find a move which will get you out of check
-	#     return True
-
-	for row in range(8):
-		for col in range(8):
-			coords = (row, col)
-			if hasColorPiece(boardstate, coords, playerColor):
-				if canMove(boardstate, coords, playerColor):
-					return False
-	return True
 
 
 def numberToLetter(i):
