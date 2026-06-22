@@ -172,7 +172,7 @@ function scan(boardstate, srcCoords, rowOffset, colOffset, row, col, activeColor
     if (isSafeMove(boardstate, srcCoords, destCoords)) {
         validMoveTargets.push(destRow + "" + destCol);
     }
-    scan(boardstate, srcCoords, rowOffset, colOffset, row + rowOffset, col + colOffset, activeColor, validMoveTargets);
+    scan(boardstate, srcCoords, rowOffset, colOffset, destRow, destCol, activeColor, validMoveTargets);
 
 }
 
