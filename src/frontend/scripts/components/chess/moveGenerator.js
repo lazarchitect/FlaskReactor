@@ -38,7 +38,7 @@ function generatePawnMoves(boardstate, activePiece) {
     const srcCoords = [activePiece.row, activePiece.col];
     const pieceDirection = activePiece.color === "Black" ? 1 : -1;
     const finalRow = activePiece.color === "Black" ? 7 : 0;
-    const StartTileerRow = activePiece.color === "Black" ? 1 : 6;
+    const initialRow = activePiece.color === "Black" ? 1 : 6;
 
     const advanceOneCoords =  [activePiece.row + pieceDirection, activePiece.col];
     const advanceTwoCoords =  [activePiece.row + (pieceDirection * 2), activePiece.col]
@@ -57,7 +57,7 @@ function generatePawnMoves(boardstate, activePiece) {
     }
 
     // advance 2
-    if (activePiece.row === StartTileerRow
+    if (activePiece.row === initialRow
         && pieceAt(boardstate, advanceOneCoords) === undefined
         && pieceAt(boardstate, advanceTwoCoords) === undefined) {
         
