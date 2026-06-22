@@ -6,6 +6,7 @@ from tornado.websocket import WebSocketHandler
 import src.backend.utils as utils
 from src.backend.services.chess.Move import Move, executeMove, executeRookJump
 from src.backend.services.chess.chessConsts import *
+from src.backend.services.chess.chessUtils import inCheck, numberToLetter
 from src.backend.services.chess.mateEvaluator import hasNoLegalMoves
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
@@ -107,9 +108,9 @@ class ChessHandler(WebSocketHandler):
 
         game = self.pgdb.getChessGame(gameId)
 
-        if game is None:
-            pass
-            #TODO If game is None, we should error alert the UI and halt here
+        # if game is None:
+        #     pass
+        #     #TODO If game is None, we should error alert the UI and halt here
 
         if game.white_player == game.active_player:
             otherPlayer = game.black_player
@@ -118,8 +119,8 @@ class ChessHandler(WebSocketHandler):
 
         boardstate = game.boardstate
         
-        whiteInCheck = utils.inCheck(boardstate, "Black", utils.getKingCoords(boardstate, "White"))
-        blackInCheck = utils.inCheck(boardstate, "White", utils.getKingCoords(boardstate, "Black"))
+        whiteInCheck = inCheck(boardstate, "Black")
+        blackInCheck = inCheck(boardstate, "White")
 
         blackKingMoved = game.blackkingmoved
         whiteKingMoved = game.whitekingmoved
@@ -172,7 +173,7 @@ class ChessHandler(WebSocketHandler):
 
         # non-mvp work: VALIDATE MOVE AGAINST EXISTING BOARD
 
-        moveNotation = utils.numberToLetter(srcCol) + str(8 - srcRow) + utils.numberToLetter(destCol) + str(8 - destRow) + "."
+        moveNotation = numberToLetter(srcCol) + str(8 - srcRow) + numberToLetter(destCol) + str(8 - destRow) + "."
         if game.notation is None:
             game.notation = ""
 
@@ -192,11 +193,8 @@ class ChessHandler(WebSocketHandler):
         allyColor = srcColor
         enemyColor = "Black" if srcColor == "White" else "White"
 
-        allyKingCoords = utils.getKingCoords(boardstate, allyColor) # king coords can be found within inCheck, dont need those values out here
-        enemyKingCoords = utils.getKingCoords(boardstate, enemyColor)
-
-        allyInCheck = utils.inCheck(boardstate, enemyColor, allyKingCoords)
-        enemyInCheck= utils.inCheck(boardstate, allyColor, enemyKingCoords)
+        allyInCheck = inCheck(boardstate, allyColor)
+        enemyInCheck= inCheck(boardstate, enemyColor)
 
         whiteInCheck = (allyInCheck and srcColor=="White") or (enemyInCheck and enemyColor=="White")
         blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")
@@ -241,14 +239,6 @@ class ChessHandler(WebSocketHandler):
             pawnLeapt, pawnLeapCol,
             gameId)
 
-        # related to issues #81 and #82
-        # check if the ENEMY player cannot make any legal moves.
-        # if so, its mate.
-            # if enemyInCheck == true,
-                # then its checkmate.
-            # else, stalemate.
-            # convey this info to DB and front end.
-            # return
         if hasNoLegalMoves(boardstate, enemyColor):
             winner = oldActivePlayer if enemyInCheck else None
             mate = "Checkmate" if enemyInCheck else "Stalemate"
