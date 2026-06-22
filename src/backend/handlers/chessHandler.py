@@ -204,52 +204,55 @@ class ChessHandler(WebSocketHandler):
         pawnLeapCol = int(srcCol) if pawnLeapt else -1
 
         if allyInCheck:
-            # do NOT confirm the move to user or to DB
+            # do NOT confirm the move to user or to DB. Note - this shouldn't happen if messages are sent correctly, just a failsafe
             self.write_message({
                 "command": "error",
                 "message": "cannot move into check"
             })
             return
 
-        messageToSubscribers = {
-            "command": "updateBoard",
-            "newBoardstate": boardstate,
-
-            # TODO: following fields could be wrapped up into gameDetails
-            "whiteInCheck": whiteInCheck,
-            "blackInCheck": blackInCheck,
-            "pawnLeapt": pawnLeapt,
-            "pawnLeapCol": pawnLeapCol,
-
-            "gameDetails": {
-                "activePlayer": newActivePlayer, "otherPlayer": oldActivePlayer,
-                "whitekingmoved": whiteKingMoved, "blackkingmoved": blackKingMoved,
-                "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved
-            }
-        }
-
-        utils.updateAll(clientConnections[gameId], messageToSubscribers)
-
-        self.pgdb.updateChessGame(
-            boardstate,
-            datetime.now(),
-            newActivePlayer, newNotation,
-            blackKingMoved, whiteKingMoved,
-            bqrMoved, bkrMoved, wqrMoved, wkrMoved,
-            pawnLeapt, pawnLeapCol,
-            gameId)
-
         if hasNoLegalMoves(boardstate, enemyColor):
             winner = oldActivePlayer if enemyInCheck else None
             mate = "Checkmate" if enemyInCheck else "Stalemate"
             messageToSubscribers = {
                 "command": "endGame",
+                "newBoardstate": boardstate,
                 "gameEnded": True,
                 "otherPlayer": newActivePlayer,
                 "winner": winner,
                 "mate": mate
             }
-            
+
             utils.updateAll(clientConnections[gameId], messageToSubscribers)
 
             self.pgdb.endChessGame(datetime.now(), winner, gameId)
+
+        else:
+
+            messageToSubscribers = {
+                "command": "updateBoard",
+                "newBoardstate": boardstate,
+
+                # TODO: following fields could be wrapped up into gameDetails
+                "whiteInCheck": whiteInCheck,
+                "blackInCheck": blackInCheck,
+                "pawnLeapt": pawnLeapt,
+                "pawnLeapCol": pawnLeapCol,
+
+                "gameDetails": {
+                    "activePlayer": newActivePlayer, "otherPlayer": oldActivePlayer,
+                    "whitekingmoved": whiteKingMoved, "blackkingmoved": blackKingMoved,
+                    "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved
+                }
+            }
+
+            utils.updateAll(clientConnections[gameId], messageToSubscribers)
+
+            self.pgdb.updateChessGame(
+                boardstate,
+                datetime.now(),
+                newActivePlayer, newNotation,
+                blackKingMoved, whiteKingMoved,
+                bqrMoved, bkrMoved, wqrMoved, wkrMoved,
+                pawnLeapt, pawnLeapCol,
+                gameId)

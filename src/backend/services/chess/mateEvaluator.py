@@ -3,6 +3,7 @@ from copy import deepcopy as deepCopy
 from src.backend.services.chess.chessConsts import ROYAL_OFFSETS, ROOK_OFFSETS, BISHOP_OFFSETS, KNIGHT_OFFSETS
 from src.backend.services.chess.chessUtils import pieceAt, inCheck, outOfBounds, tileAt, sameColor
 
+
 def hasNoLegalMoves(boardstate, playerColor):
 
     for row in range(8):
@@ -82,18 +83,20 @@ def queenCanMove(boardstate, coords, pieceColor):
     return False
 
 
-def kingCanMove(boardstate, coords, pieceColor):
+def kingCanMove(boardstate, srcCoords, pieceColor):
+    srcRow, srcCol = srcCoords
+
     for offset in ROYAL_OFFSETS:
 
-        targetCoords = (coords[0] + offset[0], coords[1] + offset[1])
+        targetCoords = (srcCoords[0] + offset[0], srcCoords[1] + offset[1])
 
         if outOfBounds(targetCoords):
             continue
 
         if not tileAt(boardstate, targetCoords).hasA(pieceColor, "any"):
             newBoardstate = deepCopy(boardstate)
-            newBoardstate[coords[0]][coords[1]] = {}
-            newBoardstate[targetCoords[0]][targetCoords[1]] = {"piece": {"color": pieceColor, "type": "King"}}
+            newBoardstate[targetCoords[0]][targetCoords[1]] = newBoardstate[srcRow][srcCol]
+            newBoardstate[srcRow][srcCol] = {}
             if not inCheck(newBoardstate, pieceColor):
                 return True
     return False
@@ -167,14 +170,14 @@ def isSafeMove(boardstate, srcCoords, destCoords):
     return not inCheck(modifiedBoardstate, pieceColor)
 
 def previewModifiedBoard(boardstate, srcCoords, destCoords):
-    deepcopy = deepCopy(boardstate)
+    modifiedBoard = deepCopy(boardstate)
     srcRow, srcCol = srcCoords
     destRow, destCol = destCoords
 
-    deepcopy[destRow][destCol] = deepcopy[srcRow][srcCol]
-    deepcopy[srcRow][srcCol] = {}
+    modifiedBoard[destRow][destCol] = modifiedBoard[srcRow][srcCol]
+    modifiedBoard[srcRow][srcCol] = {}
 
-    return deepcopy
+    return modifiedBoard
 
 def pieceIsBlockingCheck(boardstate, coords, pieceColor):
     newBoardstate = deepCopy(boardstate)

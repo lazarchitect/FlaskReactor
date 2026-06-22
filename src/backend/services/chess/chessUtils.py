@@ -4,7 +4,7 @@ from src.backend.services.chess.chessConsts import ROOK_OFFSETS, BISHOP_OFFSETS,
 
 class Tile:
     def __init__(self, row, col, tileData):
-        if outOfBounds((row, col)): raise IndexError("tried to access nonexistent tile.")
+        if outOfBounds((row, col)): raise IndexError("tried to access nonexistent tile: " + str((row, col)))
         pieceData = tileData.get("piece")
         piece = Piece(pieceData) if pieceData is not None else None
         self.row = row
@@ -51,8 +51,8 @@ def getKingCoords(boardstate, color):
         for col in range(8):
             piece = pieceAt(boardstate, (row, col))
             if piece is not None and piece.isA(color, KING):
-                return (row, col)
-    return None  #should never happen
+                return row, col
+    return -1,-1  #should never happen
 
 
 def pieceTowards(boardstate, coords, offset):
@@ -93,11 +93,9 @@ def inCheck(boardstate, yourColor):
     pawnDirection = 1 if enemyColor == "White" else -1
     pawnLeftCoords = (kingCoords[0] + pawnDirection, kingCoords[1] - 1)
     pawnRightCoords = (kingCoords[0] + pawnDirection, kingCoords[1] + 1)
-    pawnLeftPiece  = pieceAt(boardstate, pawnLeftCoords)
-    if pawnLeftPiece is not None and pawnLeftPiece.isA(enemyColor, PAWN):
+    if not outOfBounds(pawnLeftCoords) and tileAt(boardstate, pawnLeftCoords).hasA(enemyColor, PAWN):
         return True
-    pawnRightPiece  = pieceAt(boardstate, pawnRightCoords)
-    if pawnRightPiece is not None and pawnRightPiece.isA(enemyColor, PAWN):
+    if not outOfBounds(pawnRightCoords) and tileAt(boardstate, pawnRightCoords).hasA(enemyColor, PAWN):
         return True
 
     # LOOK FOR ROOKS/QUEENS
