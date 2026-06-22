@@ -29,6 +29,7 @@ export function chessSocketConnect(setBoardstate, setGameDetails) {
                 setStatus(determineStatus(payload, data));
             }
             else if(data.command === "endGame"){
+                setBoardstate(data.newBoardstate);
                 setStatus(determineStatus(payload, data))
             }
             else if(data.command === "error"){
@@ -45,15 +46,15 @@ function playerInCheck(yourColor, whiteInCheck, blackInCheck) {
 function determineStatus(payload, data){
     let status = "";
     if(data.gameEnded){
-        status += "Game over."
-        if(data.winner == null)
-            status += "It's a tie."
+        status += "Game ended"
+        if(data.mate === "Stalemate")
+            status += " in stalemate."
         else if(data.winner === payload.username)
-            status += "You win!"
-        else if(payload.username === data.gameDetails.otherPlayer)
-            status += "You lose...";
+            status += " with a checkmate. You win!"
+        else if(payload.username === data.otherPlayer)
+            status += " with a checkmate. You lose...";
         else
-            status += "Winner was " + data.winner;
+            status += ". Winner was " + data.winner; // spectator view
         return status;
     }
     switch(payload.username){

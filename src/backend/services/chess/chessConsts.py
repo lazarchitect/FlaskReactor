@@ -1,5 +1,10 @@
 from enum import Enum
 
+KNIGHT_OFFSETS = [[1, 2], [1, -2], [-1, 2], [-1, -2], [2, 1], [2, -1], [-2, 1], [-2, -1]]
+ROOK_OFFSETS = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+BISHOP_OFFSETS = [[1, 1], [1, -1], [-1, 1], [-1, -1]]
+ROYAL_OFFSETS = [[1, 1], [1, -1], [-1, 1], [-1, -1], [0, 1], [0, -1], [1, 0], [-1, 0]]
+
 wkrStartTile = "77"
 wknStartTile = "76"
 wkbStartTile = "75"

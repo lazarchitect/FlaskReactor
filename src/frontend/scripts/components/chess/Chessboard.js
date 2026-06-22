@@ -30,8 +30,6 @@ export function Chessboard() {
 
 	let boardOnClick = (mouseEvent) => {
 
-		console.log(gameDetails);
-
 		if (gameDetails.activePlayer !== payload.username) return;
 
 		const tileId = mouseEvent.target.id;
