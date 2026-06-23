@@ -1,20 +1,35 @@
 from src.backend.services.chess.chessConsts import *
 
 class Move:
-	def __init__(self, srcTileId, destTileId, srcPiece):
-		self.type = determineType(srcTileId, destTileId, srcPiece)
+	def __init__(self, srcTileId, destTileId, srcPiece, pawn_leapt, pawn_leap_col):
 		self.color = srcPiece["color"]
 		self.side = determineSide(destTileId)
+		self.piece = srcPiece
+		self.srcTileId = srcTileId
+		self.destTileId = destTileId
+		self.srcCoords = (int(srcTileId[0]), int(srcTileId[1]))
+		self.destCoords = (int(destTileId[0]), int(destTileId[1]))
+		self.pawn_leapt = pawn_leapt
+		self.pawn_leap_col = pawn_leap_col
 
-def determineType(srcTileId, destTileId, piece):
-	if piece["type"] == "King":
-		if srcTileId == bkStartTile and destTileId in [bknStartTile, bqbStartTile]:
-			return MoveType.CASTLE
-		if srcTileId == wkStartTile and destTileId in [wknStartTile, wqbStartTile]:
-			return MoveType.CASTLE
+	def isEnPassant(self) -> bool:
+		if self.piece["type"] != PAWN or not self.pawn_leapt: return False
 
-	return MoveType.NORMAL
+		enemyLeapRow = 4 if self.color == BLACK else 3
 
+		srcRow, srcCol = self.srcCoords
+		destRow, destCol = self.destCoords
+		# if source is right next to pawn leap col, and src is on the enemy leap row, and dest is in pawn leap col:
+		return abs(srcCol - self.pawn_leap_col) == 1 and srcRow == enemyLeapRow and destCol == self.pawn_leap_col
+
+	def isCastling(self):
+		if self.piece["type"] == KING:
+			if self.srcTileId == bkStartTile and self.destTileId in [bknStartTile, bqbStartTile]:
+				return True
+			if self.srcTileId == wkStartTile and self.destTileId in [wknStartTile, wqbStartTile]:
+				return True
+
+		return False
 
 def determineSide(destTileId):
 	if destTileId in [bknStartTile, wknStartTile]:
@@ -49,3 +64,7 @@ def executeRookJump(boardstate, move: Move):
 			executeMove(boardstate, wqrStartTile, wqStartTile)
 		else:
 			executeMove(boardstate, wkrStartTile, wkbStartTile)
+
+def deletePiece(boardstate, tileId):
+	row, col = (int(tileId[0]), int(tileId[1]))
+	boardstate[row][col] = {}

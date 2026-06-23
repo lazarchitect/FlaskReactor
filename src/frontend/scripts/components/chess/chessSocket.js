@@ -26,6 +26,7 @@ export function chessSocketConnect(setBoardstate, setGameDetails) {
                 setGameDetails(data.gameDetails);
             }
             else if(data.command === "info"){
+                setGameDetails(data.gameDetails);
                 setStatus(determineStatus(payload, data));
             }
             else if(data.command === "endGame"){
@@ -51,7 +52,7 @@ function determineStatus(payload, data){
             status += " in stalemate."
         else if(data.winner === payload.username)
             status += " with a checkmate. You win!"
-        else if(payload.username === data.otherPlayer)
+        else if(data.loser === payload.username)
             status += " with a checkmate. You lose...";
         else
             status += ". Winner was " + data.winner; // spectator view

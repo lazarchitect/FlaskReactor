@@ -4,7 +4,7 @@ from datetime import datetime
 from tornado.websocket import WebSocketHandler
 
 import src.backend.utils as utils
-from src.backend.services.chess.Move import Move, executeMove, executeRookJump
+from src.backend.services.chess.Move import Move, executeMove, executeRookJump, deletePiece
 from src.backend.services.chess.chessConsts import *
 from src.backend.services.chess.chessUtils import inCheck, numberToLetter
 from src.backend.services.chess.mateEvaluator import hasNoLegalMoves
@@ -78,7 +78,7 @@ class ChessHandler(WebSocketHandler):
         }
 
         # gameId is given to the frontend by Flask in the payload and then sent back here to confirm
-        gameId = str(fields.get('gameId'))
+        gameId = fields.get('gameId')
         if utils.isEmpty(gameId):
             self.write_message({
                 "command": "error",
@@ -138,7 +138,8 @@ class ChessHandler(WebSocketHandler):
             "gameDetails": {
                 "activePlayer": game.active_player, "otherPlayer": otherPlayer,
                 "whitekingmoved": whiteKingMoved, "blackkingmoved": blackKingMoved,
-                "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved
+                "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved,
+                "pawn_leapt": game.pawn_leapt, "pawn_leap_col": game.pawn_leap_col
             },
             "contents": str(self.socketId) + " subscribed to gameId " + gameId
         })
@@ -177,13 +178,17 @@ class ChessHandler(WebSocketHandler):
         if game.notation is None:
             game.notation = ""
 
-        move = Move(srcTileId, destTileId, srcPiece)
+        move = Move(srcTileId, destTileId, srcPiece, game.pawn_leapt, game.pawn_leap_col)
 
         executeMove(boardstate, srcTileId, destTileId)
 
-        if move.type == MoveType.CASTLE:
+        if move.isCastling():
             executeRookJump(boardstate, move)
             moveNotation = "O-O" if move.side == MoveSide.KINGSIDE else "O-O-O"
+
+        if move.isEnPassant():
+            passedPieceTileId = str(srcRow) + str(game.pawn_leap_col)
+            deletePiece(boardstate, passedPieceTileId)
 
         newNotation = game.notation + moveNotation
 
@@ -199,9 +204,8 @@ class ChessHandler(WebSocketHandler):
         whiteInCheck = (allyInCheck and srcColor=="White") or (enemyInCheck and enemyColor=="White")
         blackInCheck = (allyInCheck and srcColor=="Black") or (enemyInCheck and enemyColor=="Black")
 
-        # TODO test this as part of en passant logic
-        pawnLeapt = (srcType == "Pawn") and (abs(srcRow - destRow) == 2)
-        pawnLeapCol = int(srcCol) if pawnLeapt else -1
+        newPawnLeapt = (srcType == PAWN) and (abs(srcRow - destRow) == 2)
+        newPawnLeapCol = int(srcCol) if newPawnLeapt else -1
 
         if allyInCheck:
             # do NOT confirm the move to user or to DB. Note - this shouldn't happen if messages are sent correctly, just a failsafe
@@ -212,15 +216,17 @@ class ChessHandler(WebSocketHandler):
             return
 
         if hasNoLegalMoves(boardstate, enemyColor):
-            winner = oldActivePlayer if enemyInCheck else None
             mate = "Checkmate" if enemyInCheck else "Stalemate"
+            winner = oldActivePlayer if enemyInCheck else None
+            loser = newActivePlayer if enemyInCheck else None
             messageToSubscribers = {
                 "command": "endGame",
                 "newBoardstate": boardstate,
+                "gameDetails": {"activePlayer": None},
                 "gameEnded": True,
-                "otherPlayer": newActivePlayer,
+                "mate": mate,
                 "winner": winner,
-                "mate": mate
+                "loser": loser
             }
 
             utils.updateAll(clientConnections[gameId], messageToSubscribers)
@@ -232,17 +238,14 @@ class ChessHandler(WebSocketHandler):
             messageToSubscribers = {
                 "command": "updateBoard",
                 "newBoardstate": boardstate,
-
-                # TODO: following fields could be wrapped up into gameDetails
                 "whiteInCheck": whiteInCheck,
                 "blackInCheck": blackInCheck,
-                "pawnLeapt": pawnLeapt,
-                "pawnLeapCol": pawnLeapCol,
 
                 "gameDetails": {
                     "activePlayer": newActivePlayer, "otherPlayer": oldActivePlayer,
                     "whitekingmoved": whiteKingMoved, "blackkingmoved": blackKingMoved,
-                    "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved
+                    "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved,
+                    "pawn_leapt": newPawnLeapt, "pawn_leap_col": newPawnLeapCol
                 }
             }
 
@@ -254,5 +257,5 @@ class ChessHandler(WebSocketHandler):
                 newActivePlayer, newNotation,
                 blackKingMoved, whiteKingMoved,
                 bqrMoved, bkrMoved, wqrMoved, wkrMoved,
-                pawnLeapt, pawnLeapCol,
+                newPawnLeapt, newPawnLeapCol,
                 gameId)

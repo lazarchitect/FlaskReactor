@@ -1,27 +1,14 @@
 import {outOfBounds, pieceAt, tileIdOf} from "./chessUtils";
 import {
-    BISHOP_OFFSETS,
-    bkbStartTile,
-    bknStartTile,
-    bkStartTile,
-    bqbStartTile,
-    bqnStartTile,
-    bqStartTile,
-    KNIGHT_OFFSETS,
-    ROOK_OFFSETS,
-    ROYAL_OFFSETS,
-    wkbStartTile,
-    wknStartTile,
-    wkStartTile,
-    wqbStartTile,
-    wqnStartTile,
-    wqStartTile
+    BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS,
+    bkbStartTile, bknStartTile, bkStartTile, bqbStartTile, bqnStartTile, bqStartTile,
+    wkbStartTile, wknStartTile, wkStartTile, wqbStartTile, wqnStartTile, wqStartTile
 } from "./chessConsts";
 import isSafeMove from "./moveSafetyVerifier";
 
 export default function generateMoves(boardstate, gameDetails, activePiece) {
     switch(activePiece.type) {
-        case "Pawn":    return generatePawnMoves(boardstate, activePiece);
+        case "Pawn":    return generatePawnMoves(boardstate, gameDetails, activePiece);
         case "King":    return generateKingMoves(boardstate, gameDetails, activePiece);
         case "Knight":  return generateNormalMoves(boardstate, activePiece, KNIGHT_OFFSETS);
         case "Rook":    return generateSliderMoves(boardstate, activePiece, ROOK_OFFSETS);
@@ -31,7 +18,7 @@ export default function generateMoves(boardstate, gameDetails, activePiece) {
     }
 }
 
-function generatePawnMoves(boardstate, activePiece) {
+function generatePawnMoves(boardstate, gameDetails, activePiece) {
 
     let validMoveTargets = [];
 
@@ -39,6 +26,8 @@ function generatePawnMoves(boardstate, activePiece) {
     const pieceDirection = activePiece.color === "Black" ? 1 : -1;
     const finalRow = activePiece.color === "Black" ? 7 : 0;
     const initialRow = activePiece.color === "Black" ? 1 : 6;
+    const enemyLeapRow = activePiece.color === "Black" ? 4 : 3;
+    const enPassantTargetRow = enemyLeapRow + pieceDirection;
 
     const advanceOneCoords =  [activePiece.row + pieceDirection, activePiece.col];
     const advanceTwoCoords =  [activePiece.row + (pieceDirection * 2), activePiece.col]
@@ -87,6 +76,17 @@ function generatePawnMoves(boardstate, activePiece) {
         }
 
     }
+
+    // en passant
+    if (gameDetails.pawn_leapt) {
+        const [srcRow, srcCol] = srcCoords;
+
+        if (Math.abs(gameDetails.pawn_leap_col - srcCol) === 1 && srcRow === enemyLeapRow) {
+            const targetCoords = [enPassantTargetRow, gameDetails.pawn_leap_col];
+            validMoveTargets.push(tileIdOf(targetCoords));
+        }
+    }
+
     return validMoveTargets;
 }
 
@@ -176,7 +176,7 @@ function scan(boardstate, srcCoords, rowOffset, colOffset, row, col, activeColor
 
 }
 
-// TODO these can be refactored for performance (via splitting up and using early returns) if that becomes necessary
+// these can be refactored for performance (via splitting up and using early returns) if that becomes necessary
 function whiteCastlingMoves(boardstate, gameDetails) {
 
     let validCastlingTargets = [];
