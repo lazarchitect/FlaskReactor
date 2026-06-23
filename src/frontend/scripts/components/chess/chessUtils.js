@@ -1,5 +1,7 @@
 // Small collection of helpful tools for front-end logic to support chess gameplay.
 
+import {BLACK, PAWN, WHITE} from './chessConsts';
+
 /** Represents a chess piece.
     Useful mostly for semi-pseudocode readability, like piece.is("Black", "Pawn") instead of a more cumbersome function call.
     Note - these internal row and col references are updated on the server side and refreshed with socket update commands when pieces move.
@@ -12,7 +14,7 @@ class Piece {
         this.col = pieceData.col;
     }
     isAllyOf(otherPiece) {return otherPiece !== undefined && this.color === otherPiece.color;}
-    isOpposingColorOf(color) {return this.color === "White" ? color === "Black" : color === "White";}
+    isOpposingColorOf(color) {return this.color === WHITE ? color === BLACK : color === WHITE;}
     is (color, type) {return this.color === color && type === this.type}
 }
 
@@ -27,6 +29,18 @@ export function pieceAt(boardstate, coords) {
     let pieceData = boardstate[row][col]["piece"];
     if (pieceData === undefined) return undefined;
     return new Piece(pieceData);
+}
+
+export function isPromotion(activePiece, clickedTileId, activeTileId) {
+
+    if (activePiece === undefined) return false; // should not happen
+
+    const finalRow = activePiece.color === BLACK ? 7 : 0;
+    const penultimateRow = activePiece.color === BLACK ? 6 : 1;
+    let clickedRow = clickedTileId[0];
+    let activeRow = activeTileId[0];
+
+    return activePiece.type === PAWN && clickedRow === finalRow && activeRow === penultimateRow;
 }
 
 export function outOfBounds(coords) {
