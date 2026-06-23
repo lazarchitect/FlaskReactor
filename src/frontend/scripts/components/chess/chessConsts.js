@@ -18,3 +18,12 @@ export const bkStartTile = "04";
 export const bqStartTile = "03";
 export const bqbStartTile = "02";
 export const bqnStartTile = "01";
+
+export const PAWN = "Pawn";
+export const BISHOP = "Bishop";
+export const KNIGHT = "Knight";
+export const QUEEN = "Queen";
+export const ROOK = "Rook";
+
+export const BLACK = "Black";
+export const WHITE = "White";
