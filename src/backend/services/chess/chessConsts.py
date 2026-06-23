@@ -33,12 +33,6 @@ PAWN = "Pawn"
 BLACK = "Black"
 WHITE = "White"
 
-class MoveType(Enum):
-    CASTLE = "Castle"
-    EN_PASSANT = "En Passant"
-    NORMAL = "Normal"
-    # CAPTURE = "Capture"
-
 class MoveSide(Enum):
     QUEENSIDE = "Queenside"
     KINGSIDE = "Kingside"
