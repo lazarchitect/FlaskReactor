@@ -1,26 +1,29 @@
 import React from "react";
-import {BISHOP, KNIGHT, QUEEN, ROOK} from "./chessConsts";
+import {BISHOP, BLACK, KNIGHT, QUEEN, ROOK, WHITE} from "./chessConsts";
 
-export function PromotionModal({}) {
+export default function PromotionModal({tileId}) {
+
+    let row = parseInt(tileId['0']);
 
     const pieces = [BISHOP, KNIGHT, QUEEN, ROOK];
-    const color =
+    const color = row === 0 ? BLACK : WHITE;
 
     return (
-        <div id="promotion-modal">
-            {
-                pieces.map(pieceType => {
-                    let imagePath = "/frontend/images/" + color + pieceType + ".png";
-                    let altText = "A " + color + " " + pieceType + ".";
-                    return <img src={imagePath} className="pieceImg" alt={altText}/>;
-                })
-            }
+        <div className={"promotionModal" + " promotionModal" + color} >
+            { pieces.map(pieceType => <PromotionPiece key={pieceType} piece={{color: color, type: pieceType}} /> )}
         </div>
     );
 }
 
+function PromotionPiece ({piece}) {
 
+    let imagePath = "/frontend/images/" + piece.color + piece.type + ".png";
+    let altText = "A " + piece.color + " " + piece.type + ".";
 
-export default function displayPromotionModal(clickedTileId) {
-
+    if (piece.type === "Bishop" && piece.color === "Black") {
+        imagePath = "/frontend/svg/" + piece.color + piece.type + ".svg";
+    }
+    return <div className="promotionPieceDiv">
+        <img src={imagePath} className="promotionPiece" alt={altText} />
+    </div>;
 }

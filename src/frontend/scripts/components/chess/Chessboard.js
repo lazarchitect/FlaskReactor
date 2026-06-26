@@ -5,15 +5,15 @@ import React, {useEffect, useState} from 'react';
 import generateMoves from "./moveGenerator";
 import {chessSocketConnect, sendMoveUpdate} from "./chessSocket";
 import {isPromotion, pieceAt} from "./chessUtils";
-import displayPromotionModal from "./PromotionModal";
+import PromotionModal from "./PromotionModal";
 
 export function Chessboard() {
 
 	const [boardstate, setBoardstate] = useState(payload.game.boardstate);
 	const [gameDetails, setGameDetails] = useState([]); // gets populated during socket connect
 
-	let [highlightedTiles, setHighlightedTiles] = useState([]);
-	let [activeTileId, setActiveTileId] = useState(""); // refers to tile where the piece that's selected for movement is located
+	const [highlightedTiles, setHighlightedTiles] = useState([]);
+	const [activeTileId, setActiveTileId] = useState(""); // refers to tile where the piece that's selected for movement is located
 
 	// useEffect ensures the component has rendered at least once before the ws connection, which syncs with the chessboard, is made.
 	// note - this only triggers on the first render, due to the empty dependency array. (no dependencies => no ongoing effect)
@@ -31,7 +31,6 @@ export function Chessboard() {
 		if(highlightedTiles.includes(clickedTileId)) {
 
 			if (isPromotion(piece, clickedTileId, activeTileId)) {
-				displayPromotionModal(clickedTileId);
 				return;
 			}
 
@@ -78,26 +77,24 @@ function Row({rowIndex, tiles, highlightedTiles}){
 
 function Tile({isDarkTile, isHighlightedTile, tileId, data}) {
 
-	const piece = data.piece;
-
-	let imagePath = "";
-	let altText = "";
-
-	if (piece != null) {
-		imagePath = "/frontend/images/" + piece.color + piece.type + ".png";
-		altText = "A " + piece.color + " " + piece.type + ".";
-
-		if (piece.type === "Bishop" && piece.color === "Black") {
-			imagePath = "/frontend/svg/" + piece.color + piece.type + ".svg";
-		}
-	}
-
 	const color = isDarkTile ? "dark" : "light";
 	const className = `tile ${color}${isHighlightedTile ? "HighlightedTile" : "Tile"}`;
 
 	return (
 		<span key={tileId} className={className} id={tileId}>
-			{ imagePath !== "" && <img src={imagePath} className="pieceImg" alt={altText} /> }
+			{ data.piece != null && <Piece piece={data.piece} /> }
+			{tileId === "70" && <PromotionModal tileId={tileId}/>}
 		</span>
 	);
+}
+
+export function Piece ({piece}) {
+
+	let imagePath = "/frontend/images/" + piece.color + piece.type + ".png";
+	let altText = "A " + piece.color + " " + piece.type + ".";
+
+	if (piece.type === "Bishop" && piece.color === "Black") {
+		imagePath = "/frontend/svg/" + piece.color + piece.type + ".svg";
+	}
+	 return <img src={imagePath} className="pieceImg" alt={altText} />;
 }
