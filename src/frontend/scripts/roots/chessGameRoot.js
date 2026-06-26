@@ -5,7 +5,6 @@ import {createRoot} from 'react-dom/client';
 import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
-import {PromotionModal} from "../components/chess/PromotionModal";
 
 let isPlayer = payload.players.includes(payload.username);
 
@@ -17,9 +16,6 @@ let page = (
                 <Chessboard />
                 <p>Status: <span id="status"></span></p>
             </div>
-
-            {/*debug*/}
-            <PromotionModal/>
 
             {isPlayer && <Chatbox expanded={false} />}
         </main>
