@@ -67,7 +67,7 @@ export function TorusSVG ({ color, isRadiating, isGhost }) {
             <path className='torusSVGPath torusSVGPathTop' />
             <path className='torusSVGPath torusSVGPathBottom' />
             {/*Copilot says consider using an SVG <filter> element with feGaussianBlur + feOffset + feMerge, can improve performance*/}
-            <circle className='torusSVGCore' fill={colorGradientVal} style={coreStyle} />
+            <circle fill={colorGradientVal} style={coreStyle} />
         </svg>
     );
 }
