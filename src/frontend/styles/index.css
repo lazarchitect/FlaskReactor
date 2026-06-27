@@ -95,7 +95,7 @@ main {
 }
 
 .playArea {
-    margin-top: 5%;
+    margin-top: 4%;
     margin-left: 1%;
 }
 
@@ -144,17 +144,17 @@ main {
     position: absolute;
     width: 250px;
     height: 70px;
-    right: -158%;
+    left: -95px; /* chosen based on appearance of tiles bisecting piece images */
     bottom: 75%;
     border-radius: 100px;
 }
 
-.promotionModalWhite {
-    background: #ffffff99;
+.promotionModalWhite { /* black background for white pieces */
+    background: #00000099;
 }
 
-.promotionModalBlack {
-    background: #00000099;
+.promotionModalBlack { /* white background for black pieces */
+    background: #ffffff99;
 }
 
 .promotionPieceDiv {
@@ -167,7 +167,11 @@ main {
     left: 2%;
 }
 
-.promotionPieceDiv:hover {
+.promotionPieceDivWhite:hover { /* for white pieces */
+    background-color: #ffffff99;
+}
+
+.promotionPieceDivBlack:hover { /* for black pieces */
     background: #00000099;
 }
 
