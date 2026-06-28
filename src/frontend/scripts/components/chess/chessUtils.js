@@ -18,7 +18,7 @@ class Piece {
     is (color, type) {return this.color === color && type === this.type}
 }
 
-/** Fetches a piece at a location, if any. Note - we should use the optional chaining operator on the result in most situations.
+/** Fetches a piece at a location, if any. Note - we should use the 'optional chaining' operator on the result in most situations.
  *  @param boardstate 2D array with objects representing tiles, and sub-objects for pieces
  *  @param coords can be a string tileId (e.g. "02") or a cartesian pair array (e.g. [0,2])
  *  @return Piece object e.g. Piece{color: "Black", type: "Knight" ....} or undefined for an empty or out-of-bounds tile. */
@@ -31,16 +31,20 @@ export function pieceAt(boardstate, coords) {
     return new Piece(pieceData);
 }
 
-export function isPromotion(activePiece, clickedTileId, activeTileId) {
+export function isPromotion(activePieceInfo, clickedTileId) {
 
-    if (activePiece === undefined) return false; // should not happen
+    // these SHOULD be populated at this point
+    if (activePieceInfo === {} || clickedTileId === undefined){
+        console.log("checking promotion but activePieceInfo or clickedTileId is undefined");
+        return false;
+    }
 
-    const finalRow = activePiece.color === BLACK ? 7 : 0;
-    const penultimateRow = activePiece.color === BLACK ? 6 : 1;
-    let clickedRow = clickedTileId[0];
-    let activeRow = activeTileId[0];
+    const finalRow = activePieceInfo.color === BLACK ? 7 : 0;
+    const penultimateRow = activePieceInfo.color === BLACK ? 6 : 1;
+    let clickedRow = parseInt(clickedTileId[0]);
+    let activeRow = parseInt(activePieceInfo.tileId[0]);
 
-    return activePiece.type === PAWN && clickedRow === finalRow && activeRow === penultimateRow;
+    return activePieceInfo.type === PAWN && clickedRow === finalRow && activeRow === penultimateRow;
 }
 
 export function outOfBounds(coords) {
