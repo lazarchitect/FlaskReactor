@@ -52,3 +52,13 @@ export function outOfBounds(coords) {
 export function tileIdOf(coords){
     return coords[0] + "" + coords[1];
 }
+
+export function generatePieceMetadata(piece) {
+    let imagePath = "/frontend/images/" + piece.color + piece.type + ".png";
+    let altText = "A " + piece.color + " " + piece.type + ".";
+
+    if (piece.type === "Bishop" && piece.color === "Black") {
+        imagePath = "/frontend/svg/" + piece.color + piece.type + ".svg";
+    }
+    return {imagePath, altText};
+}

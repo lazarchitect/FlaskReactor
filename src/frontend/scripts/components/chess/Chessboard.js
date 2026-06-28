@@ -1,11 +1,14 @@
 
 'use strict';
 
-import React, {useEffect, useState} from 'react';
+import React, {createContext, useEffect, useState} from 'react';
 import generateMoves from "./moveGenerator";
 import {chessSocketConnect, sendMoveUpdate} from "./chessSocket";
 import {isPromotion, pieceAt} from "./chessUtils";
+import {Row} from "./ChessboardElements";
 import PromotionModal from "./PromotionModal";
+
+export const ActivePieceContext = createContext({});
 
 export function Chessboard() {
 
@@ -54,47 +57,4 @@ export function Chessboard() {
 			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val} highlightedTiles={highlightedTiles} />)}
 		</div>
 	);
-}
-
-function Row({rowIndex, tiles, highlightedTiles}){
-
-    let isDarkTile = rowIndex % 2 !== 0;
-
-    let reactTileArray = [];
-	for(let tileIndex = 0; tileIndex < tiles.length; tileIndex++) {
-
-		let tileId = rowIndex.toString() + tileIndex.toString();
-		let isHighlightedTile = highlightedTiles.includes(tileId);
-
-		reactTileArray.push(
-			<Tile key={tileIndex} isDarkTile={isDarkTile} isHighlightedTile={isHighlightedTile} tileId={tileId} data={tiles[tileIndex]}/>
-		)
-		isDarkTile = !isDarkTile;
-	}
-
-	return <div className="chessRow">{reactTileArray}</div>;
-}
-
-function Tile({isDarkTile, isHighlightedTile, tileId, data}) {
-
-	const color = isDarkTile ? "dark" : "light";
-	const className = `tile ${color}${isHighlightedTile ? "HighlightedTile" : "Tile"}`;
-
-	return (
-		<span key={tileId} className={className} id={tileId}>
-			{ data.piece != null && <Piece piece={data.piece} /> }
-			{tileId === "70" && <PromotionModal tileId={tileId}/>}
-		</span>
-	);
-}
-
-export function Piece ({piece}) {
-
-	let imagePath = "/frontend/images/" + piece.color + piece.type + ".png";
-	let altText = "A " + piece.color + " " + piece.type + ".";
-
-	if (piece.type === "Bishop" && piece.color === "Black") {
-		imagePath = "/frontend/svg/" + piece.color + piece.type + ".svg";
-	}
-	 return <img src={imagePath} className="pieceImg" alt={altText} />;
 }
