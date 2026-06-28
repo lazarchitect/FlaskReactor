@@ -231,7 +231,7 @@ class ChessHandler(WebSocketHandler):
 
             utils.updateAll(clientConnections[gameId], messageToSubscribers)
 
-            self.pgdb.endChessGame(datetime.now(), winner, gameId)
+            self.pgdb.endChessGame(boardstate, datetime.now(), winner, gameId)
 
         else:
 
