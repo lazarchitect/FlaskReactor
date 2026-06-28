@@ -141,7 +141,7 @@ class ChessHandler(WebSocketHandler):
                 "bqr_moved": bqrMoved, "bkr_moved": bkrMoved, "wqr_moved": wqrMoved, "wkr_moved": wkrMoved,
                 "pawn_leapt": game.pawn_leapt, "pawn_leap_col": game.pawn_leap_col
             },
-            "contents": str(self.socketId) + " subscribed to gameId " + gameId
+            "contents": str(self.socketId) + " subscribed to gameId " + str(gameId)
         })
 
     def handleUpdate(self, fields):
