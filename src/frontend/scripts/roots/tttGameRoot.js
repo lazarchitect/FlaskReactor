@@ -38,7 +38,7 @@ function tttSocketConnect(setBoardstate, setYourTurn) {
 	tttSocket.onopen = (() => tttSocketSubscribe(tttSocket));
 
     tttSocket.onmessage = (message) => {
-		const data = JSON.parse(message.data);
+		const data = JSON.parse(message.tileData);
 		if(data.command === "updateBoard"){
 
 			setStatus(determineStatus(payload, data))

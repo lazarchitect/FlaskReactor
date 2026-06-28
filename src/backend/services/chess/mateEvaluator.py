@@ -4,13 +4,13 @@ from src.backend.services.chess.chessConsts import ROYAL_OFFSETS, ROOK_OFFSETS, 
 from src.backend.services.chess.chessUtils import pieceAt, inCheck, outOfBounds, tileAt, sameColor
 
 
-def hasNoLegalMoves(boardstate, playerColor):
+def hasNoLegalMoves(boardstate, color):
 
     for row in range(8):
         for col in range(8):
             coords = (row, col)
-            if tileAt(boardstate, coords).hasA(playerColor, "any"):
-                if canMove(boardstate, coords, playerColor):
+            if tileAt(boardstate, coords).hasA(color, "any"):
+                if canMove(boardstate, coords, color):
                     return False # early return if any move at all is found
     return True
 

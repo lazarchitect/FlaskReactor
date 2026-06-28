@@ -39,7 +39,7 @@ sql = {
 	"getChessGames": f"SELECT * FROM {chessGamesTable} where (white_player=%s OR black_player=%s) ORDER BY last_move DESC",
 	"getChessGame": f"SELECT * FROM {chessGamesTable} WHERE id=%s",
 	"updateChessGame": f"UPDATE {chessGamesTable} SET boardstate=%s, last_move=%s, active_player=%s, notation=%s, blackKingMoved=%s, whiteKingMoved=%s, bqr_moved=%s, bkr_moved=%s, wqr_moved=%s, wkr_moved=%s, pawn_leapt=%s, pawn_leap_col=%s WHERE id=%s",
-	"endChessGame": f"UPDATE {chessGamesTable} SET completed=true, time_ended=%s, winner=%s WHERE id=%s",
+	"endChessGame": f"UPDATE {chessGamesTable} SET completed=true, boardstate=%s, time_ended=%s, winner=%s WHERE id=%s",
 
 	# Tic-Tac-Toe
 	"createTttGame": f"INSERT INTO {tttGamesTable} (id, x_player, o_player, completed, time_started, last_move, time_ended, player_turn, winner, boardstate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
@@ -197,7 +197,7 @@ class Pgdb:
 		self.__execute(query, values)
 		self.conn.commit()
 
-	def getChessGame(self, gameId) -> ChessGame:
+	def getChessGame(self, gameId) -> ChessGame | None:
 		query = sql['getChessGame']
 		values = [gameId]
 		self.__execute(query, values)
@@ -219,9 +219,9 @@ class Pgdb:
 		self.__execute(query, values)
 		self.conn.commit()
 
-	def endChessGame(self, end_time, winner, gameId):
+	def endChessGame(self, boardstate, end_time, winner, gameId):
 		query = sql['endChessGame']
-		values = [end_time, winner, gameId]
+		values = [Json(boardstate), end_time, winner, gameId]
 		self.__execute(query, values)
 		self.conn.commit()
 

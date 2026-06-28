@@ -25,7 +25,7 @@ class MockPgdb:
 	def createChessGame(self, g):
 		pass
 
-	def getChessGame(self, gameId) -> ChessGame:
+	def getChessGame(self, gameId) -> ChessGame | None:
 		return ChessGame.dbLoad(['FAKE8dd7-e30d-42d7-8c3a-94483dfc4af3', 'MockUser1', 'MockUser2', chessJson, False, None, None, None, 'MockUser1', None,None,None,None,None,None,None,None,None, -1])
 		
 	def getChessGames(self, username):

@@ -95,11 +95,12 @@ main {
 }
 
 .playArea {
-    margin-top: 3%;
+    margin-top: 4%;
     margin-left: 1%;
 }
 
 #chessboard {
+    position: absolute;
     display: inline-block;
 }
 
@@ -111,6 +112,7 @@ main {
     width: 60px;
     height: 60px;
     display: inline-block;
+    position: relative;
 }
 
 .lightTile {
@@ -136,6 +138,55 @@ main {
     margin-left: 10%;
     margin-top: 10%;
     pointer-events: none;
+}
+
+#promotionModal {
+    z-index: 100;
+    position: absolute;
+    width: 250px;
+    height: 70px;
+    border-radius: 100px;
+}
+
+.promotionModalWhite { /* black background for white pieces */
+    background: #00000099;
+}
+
+.promotionModalBlack { /* white background for black pieces */
+    background: #ffffff99;
+}
+
+#promotionPieceDiv {
+    border-radius: 200px;
+    display: inline-block;
+    position: relative;
+    height: 60px;
+    width: 60px;
+    top: 5px;
+    left: 2%;
+}
+
+.promotionPieceDivWhite:hover { /* for white pieces */
+    background-color: #ffffff99;
+}
+
+.promotionPieceDivBlack:hover { /* for black pieces */
+    background: #00000099;
+}
+
+.promotionPiece {
+    position: relative;
+    left: 15%;
+    top: 15%;
+    height: 70%; /* proportionate to nearest absolute parent */
+    width: 70%;
+    opacity: 1;
+    pointer-events: none;
+}
+
+#chessStatus {
+    position: relative;
+    top: 500px;
 }
 
 #createGameDiv {

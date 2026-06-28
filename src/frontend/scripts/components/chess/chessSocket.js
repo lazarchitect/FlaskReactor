@@ -2,12 +2,24 @@ import {webSocketConnect} from "../common/SocketConnection";
 
 let socket = null;
 
-export function sendMoveUpdate(tileId, activeTile) {
+export function sendMoveUpdate(src, dest) {
     const updateObj = {
         "player": payload.player,
         "userId": payload.userId,
-        "src": activeTile,
-        "dest": tileId
+        "src": src,
+        "dest": dest
+    }
+    socket.sendUpdate(updateObj);
+}
+
+export function sendPromotionMoveUpdate(src, dest, typeChoice) {
+    const updateObj = {
+        "promotion": true,
+        "typeChoice": typeChoice,
+        "player": payload.player,
+        "userId": payload.userId,
+        "src": src,
+        "dest": dest
     }
     socket.sendUpdate(updateObj);
 }
