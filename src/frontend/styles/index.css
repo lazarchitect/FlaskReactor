@@ -100,6 +100,7 @@ main {
 }
 
 #chessboard {
+    position: absolute;
     display: inline-block;
 }
 
@@ -139,13 +140,11 @@ main {
     pointer-events: none;
 }
 
-.promotionModal {
+#promotionModal {
     z-index: 100;
     position: absolute;
     width: 250px;
     height: 70px;
-    left: -95px; /* chosen based on appearance of tiles bisecting piece images */
-    bottom: 75%;
     border-radius: 100px;
 }
 
@@ -157,7 +156,7 @@ main {
     background: #ffffff99;
 }
 
-.promotionPieceDiv {
+#promotionPieceDiv {
     border-radius: 200px;
     display: inline-block;
     position: relative;
@@ -182,6 +181,12 @@ main {
     height: 70%; /* proportionate to nearest absolute parent */
     width: 70%;
     opacity: 1;
+    pointer-events: none;
+}
+
+#chessStatus {
+    position: relative;
+    top: 500px;
 }
 
 #createGameDiv {
