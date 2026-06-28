@@ -16,45 +16,70 @@ export function Chessboard() {
 	const [gameDetails, setGameDetails] = useState([]); // gets populated during socket connect
 
 	const [highlightedTiles, setHighlightedTiles] = useState([]);
-	const [activeTileId, setActiveTileId] = useState(""); // refers to tile where the piece that's selected for movement is located
+	const [activePieceInfo, setActivePieceInfo] = useState({}); // concerning the piece that's selected for movement
+
+	let [displayPromotionModal, setDisplayPromotionModal] = useState(false);
+	let [promotionTileId, setPromotionTileId] = useState("");
 
 	// useEffect ensures the component has rendered at least once before the ws connection, which syncs with the chessboard, is made.
 	// note - this only triggers on the first render, due to the empty dependency array. (no dependencies => no ongoing effect)
 	useEffect(() => chessSocketConnect(setBoardstate, setGameDetails), []);
 
+	function removeTemporaryState() {
+		setHighlightedTiles([]);
+		setActivePieceInfo({});
+		setDisplayPromotionModal(false);
+		setPromotionTileId("");
+	}
 
 	let boardOnClick = (mouseEvent) => {
 
 		if (gameDetails.activePlayer !== payload.username) return;
 
-		const clickedTileId = mouseEvent.target.id;
+		const clickedId = mouseEvent.target.id;
 
-		const piece = pieceAt(boardstate, clickedTileId);
+		console.log(clickedId);
 
-		if(highlightedTiles.includes(clickedTileId)) {
+		if (clickedId.includes("promotion")) {
+			if (clickedId === "promotionPieceDiv") {
+				removeTemporaryState();
+			}
+			return; // promotion components have their own onClick behavior
+		}
+		const piece = pieceAt(boardstate, clickedId);
 
-			if (isPromotion(piece, clickedTileId, activeTileId)) {
+		if(highlightedTiles.includes(clickedId)) {
+
+			if (isPromotion(activePieceInfo, clickedId)) {
+				// display modal but do not send any server message or update any state just yet
+				console.log("we got here");
+				setDisplayPromotionModal(true);
+				setPromotionTileId(clickedId);
+				promotionTileId = clickedId;
 				return;
 			}
 
-			sendMoveUpdate(clickedTileId, activeTileId);
-			setHighlightedTiles([]);
-			setActiveTileId("");
+			sendMoveUpdate(activePieceInfo.tileId, clickedId);
+			removeTemporaryState();
 		}
 		else if (piece !== undefined && piece.color === payload.userColor) {
 			setHighlightedTiles(generateMoves(boardstate, gameDetails, piece));
-			setActiveTileId(clickedTileId);
+			setActivePieceInfo({color: piece.color, type: piece.type, tileId: clickedId});
+			setDisplayPromotionModal(false);
+			setPromotionTileId("");
 		}
 		else {
-			setHighlightedTiles([]);
-			setActiveTileId("");
+			removeTemporaryState();
 		}
 
 	};
 
 	return (
 		<div id="chessboard" onClick={boardOnClick}>
-			{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val} highlightedTiles={highlightedTiles} />)}
+			<ActivePieceContext.Provider value={activePieceInfo}>
+				{boardstate.map((val, i)=><Row key={i.toString()} rowIndex={i} tiles={val} highlightedTiles={highlightedTiles} />)}
+				{ displayPromotionModal && <PromotionModal tileId={promotionTileId} /> }
+			</ActivePieceContext.Provider>
 		</div>
 	);
 }
