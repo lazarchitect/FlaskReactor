@@ -197,7 +197,7 @@ class Pgdb:
 		self.__execute(query, values)
 		self.conn.commit()
 
-	def getChessGame(self, gameId) -> ChessGame:
+	def getChessGame(self, gameId) -> ChessGame | None:
 		query = sql['getChessGame']
 		values = [gameId]
 		self.__execute(query, values)
