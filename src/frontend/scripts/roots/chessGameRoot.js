@@ -14,7 +14,9 @@ let page = (
         <main>
             <div className="playArea">
                 <Chessboard />
-                <p>Status: <span id="status"></span></p>
+                <p id={"chessStatus"}>
+                    Status: <span id="status"/>
+                </p>
             </div>
 
             {isPlayer && <Chatbox expanded={false} />}
