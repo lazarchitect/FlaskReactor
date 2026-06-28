@@ -4,9 +4,9 @@ from datetime import datetime
 from tornado.websocket import WebSocketHandler
 
 import src.backend.utils as utils
-from src.backend.services.chess.Move import Move, executeMove, executeRookJump, deletePiece
+from src.backend.services.chess.Move import Move, executeMove, executeRookJump, deletePiece, promotePawn
 from src.backend.services.chess.chessConsts import *
-from src.backend.services.chess.chessUtils import inCheck, numberToLetter
+from src.backend.services.chess.chessUtils import inCheck, numberToLetter, pieceLetter
 from src.backend.services.chess.mateEvaluator import hasNoLegalMoves
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
@@ -147,10 +147,12 @@ class ChessHandler(WebSocketHandler):
     def handleUpdate(self, fields):
         
         gameId = fields["gameId"]
-        
+
+        isPromotion = True if fields.get("promotion") else False
+        promotionChoice = fields.get("typeChoice") if isPromotion else None
+
         game = self.pgdb.getChessGame(gameId)
         boardstate = game.boardstate
-
 
         srcTileId = fields["src"]
         destTileId = fields["dest"]
@@ -178,9 +180,13 @@ class ChessHandler(WebSocketHandler):
         if game.notation is None:
             game.notation = ""
 
-        move = Move(srcTileId, destTileId, srcPiece, game.pawn_leapt, game.pawn_leap_col)
+        move = Move(srcTileId, destTileId, srcPiece, game.pawn_leapt, game.pawn_leap_col, isPromotion, promotionChoice)
 
         executeMove(boardstate, srcTileId, destTileId)
+
+        if move.isPromotion():
+            promotePawn(boardstate, move)
+            moveNotation += pieceLetter(promotionChoice)
 
         if move.isCastling():
             executeRookJump(boardstate, move)

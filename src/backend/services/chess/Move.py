@@ -1,7 +1,7 @@
 from src.backend.services.chess.chessConsts import *
 
 class Move:
-	def __init__(self, srcTileId, destTileId, srcPiece, pawn_leapt, pawn_leap_col):
+	def __init__(self, srcTileId, destTileId, srcPiece, pawn_leapt, pawn_leap_col, promotion, promotionChoice):
 		self.color = srcPiece["color"]
 		self.side = determineSide(destTileId)
 		self.piece = srcPiece
@@ -11,6 +11,11 @@ class Move:
 		self.destCoords = (int(destTileId[0]), int(destTileId[1]))
 		self.pawn_leapt = pawn_leapt
 		self.pawn_leap_col = pawn_leap_col
+		self.promotion = promotion
+		self.promotionChoice = promotionChoice
+
+	def isPromotion(self) -> bool:
+		return self.promotion
 
 	def isEnPassant(self) -> bool:
 		if self.piece["type"] != PAWN or not self.pawn_leapt: return False
@@ -41,6 +46,7 @@ def determineSide(destTileId):
 
 def executeMove(boardstate, srcTileId, destTileId):
 
+	# TODO can we replace these with self. fields?
 	srcRow, srcCol = (int(srcTileId[0]), int(srcTileId[1]))
 	destRow, destCol = (int(destTileId[0]), int(destTileId[1]))
 
@@ -68,3 +74,14 @@ def executeRookJump(boardstate, move: Move):
 def deletePiece(boardstate, tileId):
 	row, col = (int(tileId[0]), int(tileId[1]))
 	boardstate[row][col] = {}
+
+def promotePawn(boardstate, move: Move):
+
+	destRow, destCol = move.destCoords
+
+	pawn = boardstate[destRow][destCol]["piece"]
+	newType = move.promotionChoice
+	color = pawn["color"]
+	existingId = pawn["id"]
+
+	boardstate[destRow][destCol] = {"piece": {"row": destRow, "col": destCol, "type": newType, "color": color, "id": "promoted_" + existingId}}

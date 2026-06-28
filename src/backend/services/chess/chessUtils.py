@@ -119,3 +119,7 @@ def numberToLetter(i):
     if i > 7 or i < 0:
         return None
     return 'abcdefgh'[i]
+
+def pieceLetter(pieceType):
+    if pieceType == "Knight": return "N"
+    return pieceType[0]
