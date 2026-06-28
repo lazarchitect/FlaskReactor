@@ -9,6 +9,7 @@ export function webSocketConnect({path, onMessage}) {
     socket = new WebSocket(payload.wsBaseUrl + path);
 
     socket.onopen = () => {
+        console.log(`socket connection to ${path} established!`);
         socket.send(JSON.stringify({
             "request": "subscribe",
             "gameId": payload.game.id,
