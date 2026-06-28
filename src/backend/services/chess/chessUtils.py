@@ -42,9 +42,9 @@ def pieceAt(boardstate, coords) -> Piece | None:
     """fetches piece at given location, which might be None. assumes coords is not out of bounds """
     return tileAt(boardstate, coords).piece
 
-def sameColor(piece1, piece2):
-    if piece1 is None or piece2 is None: return False
-    return piece1.color == piece2.color
+def sameColor(srcColor, targetPiece):
+    if srcColor is None or targetPiece is None: return False
+    return srcColor == targetPiece.color
 
 def getKingCoords(boardstate, color):
     for row in range(8):
