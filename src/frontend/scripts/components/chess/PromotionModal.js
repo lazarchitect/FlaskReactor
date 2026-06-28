@@ -39,7 +39,7 @@ function PromotionChoice ({piece, tileId}) {
     const activePieceInfo = useContext(ActivePieceContext);
 
     let onClick = () => {
-        sendPromotionMoveUpdate(tileId, activePieceInfo.tileId, piece.type);
+        sendPromotionMoveUpdate(activePieceInfo.tileId, tileId, piece.type);
     };
 
     let {imagePath, altText} = generatePieceMetadata(piece);
