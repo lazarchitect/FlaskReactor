@@ -3,7 +3,7 @@ import {useDrag} from 'react-dnd';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 
 import {TorusSVG} from './TorusSVG';
-import {isYourTurn} from "./QuadSocket";
+import {isYourTurn} from "./quadSocket";
 
 export function Torus ({ tileData }) {
 

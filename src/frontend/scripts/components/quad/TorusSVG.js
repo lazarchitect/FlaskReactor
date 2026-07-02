@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {isYourTurn} from "./QuadSocket";
+import {isYourTurn} from "./quadSocket";
 
 const playerColors = {
     "red":    ["#e72424", "#6e0b0b"], "redHighlight":     ["#FF0000", "#CC0000"],
