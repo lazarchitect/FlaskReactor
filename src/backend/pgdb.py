@@ -137,7 +137,7 @@ class Pgdb:
 
 	### General
 
-	def getUser(self, username: str):
+	def getUser(self, username):
 		query = sql['getUser']
 		values = [username]
 		self.__execute(query, values)
