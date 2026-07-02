@@ -6,8 +6,9 @@ import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
 
-let isPlayer = payload.players.includes(payload.username);
-
+const isPlayer = payload.players.includes(payload.username);
+const useChat = payload.preferences.useChat;
+console.log(useChat);
 let page = (
 	<>
         <SiteHeader />
@@ -19,7 +20,7 @@ let page = (
                 </p>
             </div>
 
-            {isPlayer && <Chatbox expanded={false} />}
+            {isPlayer && useChat && <Chatbox expanded={false} />}
         </main>
     </>
 );
