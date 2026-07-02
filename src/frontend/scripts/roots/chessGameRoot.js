@@ -2,7 +2,7 @@
 
 import React from 'react'; // used by Webpack
 import {createRoot} from 'react-dom/client';
-import {SiteHeader} from '../components/common/SiteHeader';
+import SiteHeader from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
 

@@ -4,7 +4,7 @@
 
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import {SiteHeader} from '../components/common/SiteHeader';
+import SiteHeader from '../components/common/SiteHeader';
 import styled from 'styled-components';
 
 const {quadGames, chessGames, tttGames} = payload;
