@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import SiteHeader from '../components/common/SiteHeader';
+import {SiteHeader} from '../components/common/SiteHeader';
 
 function Warning ({message}) {
 	return <span style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</span>;
