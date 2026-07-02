@@ -13,6 +13,7 @@ class User:
         self.quad_color_pref = "red"
         self.quad_color_backup = "blue"
         self.use_chat = True
+        # add other pref defaults here
 
     @staticmethod
     def dbLoad(userDict):

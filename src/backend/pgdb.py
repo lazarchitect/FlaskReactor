@@ -23,7 +23,7 @@ quadGamesTable = schema + ".quadradius_games"
 sql = {
 
 	#Users
-	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup) VALUES (%s, %s, %s, %s, %s, %s, %s)",
+	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup, use_chat) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
 	"getUser": f"SELECT * FROM {usersTable} WHERE lower(name)=lower(%s)",
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
