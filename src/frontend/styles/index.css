@@ -332,20 +332,21 @@ main {
 /* possible improvement - make it slide up and down for show/hide */
 #chatbox-text-area {
     position: absolute;
-    right: 2.5%;
     top: -750%;
-    width: 98%;
+    width: 100%;
     height: 750%;
 }
 
 #chatbox-log {
+    box-sizing: border-box;
     position: absolute;
-    height: 86.1%;
+    height: 90%;
     width: 100%;
     resize: none;
 }
 
 #chatbox-input{
+    box-sizing: border-box;
     position: absolute;
     bottom: 0.5%;
     height: 10%;
