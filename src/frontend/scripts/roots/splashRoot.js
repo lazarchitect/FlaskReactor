@@ -30,7 +30,7 @@ function SignupArea() {
 	let [repeatedLength, setRepeatedLength] = React.useState(0);
 	let [passwordsMatch, setPasswordsMatch] = React.useState(false);
 
-	document.addEventListener("keyup", (e) => {
+	document.addEventListener("keyup", () => {
 		const username = document.getElementById('signupUsername').value;
 		const password = document.getElementById('signupPassword').value;
 		const repeated = document.getElementById('signupRepeated').value;
