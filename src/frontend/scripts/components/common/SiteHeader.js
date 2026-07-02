@@ -4,7 +4,7 @@ import React from 'react';
 import {SettingsGearSVG} from "./SettingsGearSVG";
 import {SettingsPane} from "./SettingsPane";
 
-export function SiteHeader () {
+export default function SiteHeader () {
 
 	let {deployVersion, username} = payload;
 

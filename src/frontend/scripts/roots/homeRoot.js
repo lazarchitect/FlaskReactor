@@ -2,9 +2,9 @@
 
 'use strict';
 
-import React from 'react';
+import React, {useState} from 'react';
 import {createRoot} from 'react-dom/client';
-import {SiteHeader} from '../components/common/SiteHeader';
+import SiteHeader from '../components/common/SiteHeader';
 import styled from 'styled-components';
 
 const {quadGames, chessGames, tttGames} = payload;
@@ -67,27 +67,36 @@ function GameDisplay ({gameType}) {
 	);
 }
 
+function CreateGameArea() {
+
+	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+
+	const usernameFieldBehavior = () => {
+		const opponentName = document.getElementById("opponentName").value;
+		setSubmitButtonDisabled(opponentName.length === 0);
+	};
+
+	return <form action="/create-game" method="POST" id="createGameDiv">
+		<h4>Create Game</h4>
+
+		<select name="gameType"> {/*The name attribute is used to reference the form data*/}
+			{gameTypes.map((type) => <option key={type} value={type}>{gameDefs[type].displayName}</option>)}
+		</select>
+		<br/>
+
+		Opponent Username: <input type="text" name="opponent" id="opponentName" onKeyUp={usernameFieldBehavior} />
+		<input type="submit" value="Create" id="submitCreateGame" disabled={submitButtonDisabled} />
+	</form>;
+}
+
 const page = (
 	<>
 		<SiteHeader/>
 		<main>
-			<form action="/create-game" method="POST" id="createGameDiv">
-				<h4>Create Game</h4>
-
-				<select name="gameType"> {/*The name attribute is used to reference the form data*/}
-					{gameTypes.map((type) => <option key={type} value={type}>{gameDefs[type].displayName}</option>)}
-				</select>
-				<br/>
-
-				Opponent Username: <input type="text" name="opponent"/>
-
-				{/*TODO disable this button (and enter key submit) if 'opponent' field is empty*/}
-				<input type="submit" value="Create"/>
-			</form>
-
+			<CreateGameArea />
 			<div id="gameDisplaysArea">
 				{gameTypes.map((gameType) =>
-					<GameDisplay key={gameType} gameType={gameType} />
+					<GameDisplay key={gameType} gameType={gameType}/>
 				)}
 			</div>
 

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import {createRoot} from 'react-dom/client';
-import {SiteHeader} from '../components/common/SiteHeader';
+import SiteHeader from '../components/common/SiteHeader';
 
 function Warning ({message}) {
 	return <span style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</span>;
@@ -30,7 +30,7 @@ function SignupArea() {
 	let [repeatedLength, setRepeatedLength] = React.useState(0);
 	let [passwordsMatch, setPasswordsMatch] = React.useState(false);
 
-	document.addEventListener("keyup", (e) => {
+	document.addEventListener("keyup", () => {
 		const username = document.getElementById('signupUsername').value;
 		const password = document.getElementById('signupPassword').value;
 		const repeated = document.getElementById('signupRepeated').value;
