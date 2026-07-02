@@ -6,14 +6,19 @@ import SiteHeader from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
 
-const isPlayer = payload.players.includes(payload.username);
 const useChat = payload.preferences.useChat;
+
+let {players} = payload;
+const isPlayer = players.includes(payload.username);
+const opponentName = isPlayer ? players.filter(player => player.username !== payload.username).pop() : null;
+
 console.log(useChat);
 let page = (
 	<>
         <SiteHeader />
         <main>
             <div className="playArea">
+                {isPlayer && <h3>Chess game vs. {opponentName}</h3>}
                 <Chessboard />
                 <p id={"chessStatus"}>
                     Status: <span id="status"/>
