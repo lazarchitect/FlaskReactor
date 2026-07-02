@@ -195,12 +195,12 @@ def signup():
     password = request.form['password']
     password_repeat = request.form['password_repeat']
 
-    if(password != password_repeat):
-        return ("Your passwords did not match.")
+    if password != password_repeat:
+        return "Your passwords did not match."
 
     usernameTaken = pgdb.getUser(username) is not None
-    if(usernameTaken):
-        return("That username is taken! sorry fam")
+    if usernameTaken:
+        return "That username is taken! sorry fam"
 
     password_hash = generateHash(password)
 
@@ -236,19 +236,18 @@ def createGame():
 
     opponent_name = request.form['opponent'].strip()
 
-    if(session.get('loggedIn') == False):
+    if session.get('loggedIn') == False:
         return "not logged in?" # shouldn't happen
 
-    if(opponent_name == ""):
+    if opponent_name == "":
         return "enter a name, doofbury."
 
-    if(player_name == opponent_name):
+    if player_name == opponent_name:
         return "you can't vs yourself, bubso."
 
     opponent = pgdb.getUser(opponent_name)
-    opponentExists = opponent is not None
 
-    if(opponentExists == False):
+    if opponent is None:
         return "We didn't find a user with that name. Check spelling and special characters."
 
     opponent_name = opponent.name # if the user typed in wrongly cased letters, we silently fix it here
@@ -256,7 +255,7 @@ def createGame():
     if game_type == "Chess":
         color = random.choice(['white', 'black'])
 
-        if(color == "white"):
+        if color == "white":
             white_player = player_name
             black_player = opponent_name
 
@@ -270,7 +269,7 @@ def createGame():
 
     elif game_type == "Ttt":
         role = random.choice(['X', 'O'])
-        if(role == 'X'):
+        if role == 'X':
             x_player = player_name
             o_player = opponent_name
         else:
