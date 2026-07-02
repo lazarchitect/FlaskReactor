@@ -10,11 +10,10 @@ let chatSocket = null;
 // initial value (chats so far) populated during ws subscription process
 let chatLogGlobal = [];
 
-
-// TODO possible enhancement - ignore rendering for users who opt out. User settings is in v0.7.0
 export function Chatbox ( {expanded} ) {
 
-    const [currentlyExpanded, setCurrentlyExpanded] = useState(expanded);
+    // TODO can we just set initial state to false and drop the prop?
+    const [isCurrentlyExpanded, setIsCurrentlyExpanded] = useState(expanded);
     
     const [chatLog, setChatLog] = useState("null");
     React.useEffect(() => chatSocketConnect(setChatLog), []); // initializes chat connection, pulls chats
@@ -22,7 +21,7 @@ export function Chatbox ( {expanded} ) {
 
     return (
         <div id="chatbox">
-            {currentlyExpanded && 
+            {isCurrentlyExpanded &&
                 <div id="chatbox-text-area">
                     <ChatBoxLog log={chatLog} />
                     <ChatBoxInput />		
@@ -32,9 +31,9 @@ export function Chatbox ( {expanded} ) {
                 <span id='chatbox-label'>Chat</span>
                 <span id='chatbox-indicator'
                     onClick={() => {
-                        setCurrentlyExpanded(!currentlyExpanded); // toggle
-                        let nowExpanded = !currentlyExpanded;
-                        document.getElementById('chatbox-indicator').innerText = nowExpanded ? 'Hide' : 'Expand';
+                        let isNowExpanded = !isCurrentlyExpanded;
+                        setIsCurrentlyExpanded(!isCurrentlyExpanded); // toggle
+                        document.getElementById('chatbox-indicator').innerText = isNowExpanded ? 'Hide' : 'Expand';
                     }}>
                 
                     Expand
