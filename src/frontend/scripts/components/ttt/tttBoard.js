@@ -1,6 +1,6 @@
 import React from "react";
 import {TttBoardRow} from "./tttElements";
-import {tttSocketConnect} from "./tttSocket";
+import {sendUpdate, tttSocketConnect} from "./tttSocket";
 
 export function TttBoard() {
 
@@ -10,8 +10,14 @@ export function TttBoard() {
 
     React.useEffect(() => tttSocketConnect(setBoardstate, setYourTurn), []);
 
+    function onclick (mouseClick) {
+        if (mouseClick.target.className !== "tttCell activeTttCell") return;
+        const boardIndex = mouseClick.target.id;
+        sendUpdate(boardIndex);
+    }
+
     return (
-        <div id="tttBoard">
+        <div id="tttBoard" onClick={onclick}>
 
             <svg id="octothorpe" width="400px" height="400px" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
                 <rect x="125" y="0" width="12" height="400" rx="5"/>

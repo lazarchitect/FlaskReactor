@@ -1,18 +1,10 @@
+import {webSocketConnect} from "../common/SocketConnection";
 
-const gameId = payload.game.gameId;
+const gameId = payload.game.id;
 
-function tttSocketSubscribe(tttSocket) {
-    const subscribeObj = {
-        "request": "subscribe",
-        "ws_token": payload.ws_token,
-        "gameId": gameId,
-        "username": payload.username
-    };
-    const subscribeJSON = JSON.stringify(subscribeObj);
-    tttSocket.send(subscribeJSON);
-}
+let socket = null;
 
-function tttSocketUpdate(tttSocket, boardIndex) {
+export function sendUpdate(boardIndex) {
     const updateObj = {
         "request": "update",
         "ws_token": payload.ws_token,
@@ -23,52 +15,44 @@ function tttSocketUpdate(tttSocket, boardIndex) {
         "userId": payload.userId
     };
     const updateStr = JSON.stringify(updateObj);
-    tttSocket.send(updateStr);
+    socket.send(updateStr);
 }
 
 export function tttSocketConnect(setBoardstate, setYourTurn) {
 
-    const tttSocket = new WebSocket(payload.wsBaseUrl + "/ttt")
     const statSocket = new WebSocket(payload.wsBaseUrl + "/stat")
 
-    tttSocket.onopen = (() => tttSocketSubscribe(tttSocket));
+    socket = webSocketConnect({
+        path: "/ttt",
+        onMessage: (message) => {
+            const data = JSON.parse(message.data);
+            if (data.command === "updateBoard") {
 
-    tttSocket.onmessage = (message) => {
-        const data = JSON.parse(message.tileData);
-        if (data.command === "updateBoard") {
+                setStatus(determineStatus(payload, data))
+                setBoardstate(data.newBoardstate);
+                setYourTurn(payload.username === data.activePlayer);
 
-            setStatus(determineStatus(payload, data))
-            setBoardstate(data.newBoardstate);
-            setYourTurn(payload.username === data.activePlayer);
-
-        } else if (data.command === "endGame") {
-            setStatus(determineStatus(payload, data));
-            setYourTurn(payload.username === data.activePlayer);
-            // call out to server - update this user's stats
-            const messageObj = {
-                "request": "updateStat",
-                "ws_token": payload.ws_token,
-                "gameType": "ttt",
-                "gameId": gameId,
-                "userId": payload.userId,
-                "username": payload.username
-            };
-            const message = JSON.stringify(messageObj);
-            statSocket.send(message); // TODO wouldn't this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
-        } else if (data.command === "info") {
-            setStatus(determineStatus(payload, data));
-        } else if (data.command === "error") {
-            alert(data.contents);
+            } else if (data.command === "endGame") {
+                setStatus(determineStatus(payload, data));
+                setYourTurn(payload.username === data.activePlayer);
+                // call out to server - update this user's stats
+                const messageObj = {
+                    "request": "updateStat",
+                    "ws_token": payload.ws_token,
+                    "gameType": "ttt",
+                    "gameId": gameId,
+                    "userId": payload.userId,
+                    "username": payload.username
+                };
+                const message = JSON.stringify(messageObj);
+                statSocket.send(message); // TODO wouldn't this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
+            } else if (data.command === "info") {
+                setStatus(determineStatus(payload, data));
+            } else if (data.command === "error") {
+                alert(data.contents);
+            }
         }
-
-    };
-
-    const board = document.getElementById("tttBoard");
-    board.onclick = function (mouseClick) {
-        if (mouseClick.target.className !== "tttCell activeTttCell") return;
-        const boardIndex = mouseClick.target.id;
-        tttSocketUpdate(tttSocket, boardIndex);
-    };
+    });
 }
 
 function setStatus(status) {
@@ -107,5 +91,4 @@ function determineStatus(payload, data) {
         }
     }
     return retval;
-
 }
