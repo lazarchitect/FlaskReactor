@@ -10,7 +10,7 @@ import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {QuadBoard} from '../components/quad/QuadBoard';
 import {TorusDragLayer} from '../components/quad/TorusDragLayer';
-import {quadSocketConnect} from "../components/quad/QuadSocket";
+import {quadSocketConnect} from "../components/quad/quadSocket";
 import {Legend} from "../components/quad/Legend";
 
 const isPlayer = [payload.game.player1, payload.game.player2].includes(payload.username);

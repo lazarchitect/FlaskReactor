@@ -1,6 +1,6 @@
 import {useDrop} from "react-dnd";
 import {Torus} from "./Torus";
-import {sendMoveUpdate} from "./QuadSocket";
+import {sendMoveUpdate} from "./quadSocket";
 
 export function useTorusDrop(targetTileData){
     return useDrop({
