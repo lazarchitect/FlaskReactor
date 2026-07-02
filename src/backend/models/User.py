@@ -12,6 +12,7 @@ class User:
         self.userId = generateId()
         self.quad_color_pref = "red"
         self.quad_color_backup = "blue"
+        self.use_chat = True
 
     @staticmethod
     def dbLoad(userDict):
@@ -20,6 +21,7 @@ class User:
         u.id = userDict['id']
         u.quad_color_pref = userDict['quad_color_pref']
         u.quad_color_backup = userDict['quad_color_backup']
+        u.use_chat = userDict['use_chat']
         # add other prefs here
         return u
         
@@ -31,4 +33,5 @@ class User:
             self.userId,
             self.ws_token,
             self.quad_color_pref,
-            self.quad_color_backup)
+            self.quad_color_backup,
+            self.use_chat)

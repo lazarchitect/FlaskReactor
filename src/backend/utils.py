@@ -31,7 +31,7 @@ def updateAll(connections, message):
 			#print(str(connectionDetails['id']) + " was closed i guess? nvm...")
 
 
-### TIC TAC TOE ###
+### TIC-TAC-TOE ###
 
 def isWinner(a, b, c):
 	return a == b and b == c and a != ''
@@ -48,8 +48,12 @@ def tttGameEnded(b):
 
 ### Misc ###
 
-def buildPreferences(session):
+# user can be None if not logged in
+def buildPreferences(user=None):
+	if user is None:
+		return {}
 	return {
-		"quadColorPref": session.get("quadColorPref"),
-		"quadColorBackup": session.get("quadColorBackup")
+		"quadColorPref": user.quad_color_pref,
+		"quadColorBackup": user.quad_color_backup,
+		"useChat": user.use_chat
 	}
