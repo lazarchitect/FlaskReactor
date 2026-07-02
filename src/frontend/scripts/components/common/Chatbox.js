@@ -2,13 +2,11 @@
 'use strict';
 
 import React, {useEffect, useRef, useState} from 'react';
+import {chatSocketConnect} from "./chatSocket";
 
 // global socket object, used in many functions here and created during a return-less useEffect block.
 // instantiated during ChatBox mount. 
 let chatSocket = null;
-
-// initial value (chats so far) populated during ws subscription process
-let chatLogGlobal = [];
 
 export function Chatbox ( {expanded} ) {
 
@@ -43,62 +41,6 @@ export function Chatbox ( {expanded} ) {
 
         </div>
     );
-}
-
-
-function chatSocketConnect(setChatLog) {
-
-    // TODO return immediately if user is not one of the players
-
-    chatSocket = new WebSocket(payload.wsBaseUrl + "/chat");
-
-    chatSocket.onopen = (() => chatSocketSubscribe());
-
-    chatSocket.onmessage = (messageEvent) => {
-
-        let data = JSON.parse(messageEvent.data);
-
-        if (data.command === "initialize") {
-            chatLogGlobal = data.chats;
-            setChatLog(buildFormattedChatLog(chatLogGlobal));
-        }
-
-        else if (data.command === "append") {
-            chatLogGlobal.push(data.chat);
-            setChatLog(buildFormattedChatLog(chatLogGlobal));
-        }
-        else if (data.command === "error") {
-            alert(data.message);
-        }
-    }
-
-}
-
-
-function chatSocketSubscribe () {
-
-    chatSocket.send(
-        JSON.stringify({
-            "request": "subscribe",
-            "gameId": payload.game.id,
-            "game_type": payload.game_type,
-            "username": payload.username,
-            "ws_token": payload.ws_token
-        })
-    );
-}
-
-/** returns a single concatenated string containing full formatted chat log */
-function buildFormattedChatLog(chatLog) {
-
-    let retval = "";
-
-    chatLog.forEach(chat => {
-        retval += chat['username'] + ": " + chat['content'] + "\n";
-    });
-
-    return retval;
-
 }
 
 /** Read-only text box that displays history of chats between players, since the game started.
