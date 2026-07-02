@@ -184,6 +184,7 @@ function TttBoard(){
 }
 
 const isPlayer = payload.players.includes(payload.username);
+const useChat = payload.preferences.useChat;
 
 const page = (
 	<>
@@ -193,7 +194,7 @@ const page = (
 				<TttBoard/>
 				<p>Status: <span id="status"></span></p>
 			</div>
-			{isPlayer && <Chatbox expanded={false}/>}
+			{isPlayer && useChat && <Chatbox expanded={false}/>}
 		</main>
 	</>
 );

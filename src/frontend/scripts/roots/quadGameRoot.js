@@ -14,7 +14,7 @@ import {quadSocketConnect} from "../components/quad/QuadSocket";
 import {Legend} from "../components/quad/Legend";
 
 const isPlayer = [payload.game.player1, payload.game.player2].includes(payload.username);
-
+const useChat = payload.preferences.useChat;
 
 const isPlayer1 = payload.game.player1 === payload.username;
 const powersList = isPlayer ? (isPlayer1 ? payload.game.player1_powers : payload.game.player2_powers) : null;
@@ -38,7 +38,7 @@ function Page() {
                 <p>Status: <span id="status"></span></p>
             </div>
             <Legend legendState={legendState} />
-            { isPlayer && <Chatbox expanded={false} /> }
+            {isPlayer && useChat && <Chatbox expanded={false} />}
         </main>
     </>;
 }

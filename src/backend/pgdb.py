@@ -137,7 +137,7 @@ class Pgdb:
 
 	### General
 
-	def getUser(self, username: str):
+	def getUser(self, username):
 		query = sql['getUser']
 		values = [username]
 		self.__execute(query, values)
@@ -308,7 +308,7 @@ class Pgdb:
 
 	def getAllGames(self, username):
 		"""Retrieves all games of all types where the given user is a player."""
-		return [ # option to use JOIN instead of three queries if performance issues arise.
+		return [ # option to use a single query with JOIN instead of three queries if performance issues arise.
 			self.getChessGames(username),
 			self.getTttGames(username),
 			self.getQuadradiusGames(username)

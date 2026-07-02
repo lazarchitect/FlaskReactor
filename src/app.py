@@ -54,15 +54,16 @@ with app.test_request_context():
 def homepage():
 
     if notLoggedIn(session):
-        payload = json.dumps({"deployVersion": deployVersion, "preferences": buildPreferences(session)})
+        payload = json.dumps({"deployVersion": deployVersion, "preferences": None})
         return render_template("splash.html", payload = payload)
 
     else:
-        chessGames, tttGames, quadGames = pgdb.getAllGames(session.get('username'))
+        username = session.get('username')
+        chessGames, tttGames, quadGames = pgdb.getAllGames(username)
 
         payload = {
-            "username": session.get('username'),
-            "preferences": buildPreferences(session),
+            "username": username,
+            "preferences": buildPreferences(pgdb.getUser(username)),
             "chessGames": chessGames,
             "tttGames": tttGames,
             "quadGames": quadGames,
@@ -75,10 +76,10 @@ def homepage():
 @app.route('/games/chess/<gameId>')
 def chessGame(gameId):
     game = pgdb.getChessGame(gameId)
-
+    username = session.get('username')
     if game is None:
         return render_template("game_not_found.html", payload=json.dumps({
-            "preferences": buildPreferences(session),
+            "preferences": buildPreferences(pgdb.getUser(username)),
             "deployVersion": deployVersion
         }, default=str))
 
@@ -92,7 +93,7 @@ def chessGame(gameId):
         "game": vars(game),
         "username": username,
         "game_type": "chess", # field used by common component
-        "preferences": buildPreferences(session),
+        "preferences": buildPreferences(pgdb.getUser(username)),
 
         # TODO following three lines' values already derive from "game" and "username", redundant payload fields. let UI figure it out
         "players": [game.white_player, game.black_player],
@@ -112,9 +113,10 @@ def chessGame(gameId):
 @app.route("/games/quad/<gameId>")
 def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
+    username = session.get('username')
     if game is None:
         return render_template("game_not_found.html", payload=json.dumps({
-            "preferences": buildPreferences(session),
+            "preferences": buildPreferences(pgdb.getUser(username)),
             "deployVersion": deployVersion
         }, default=str))
 
@@ -122,7 +124,7 @@ def quadGame(gameId):
         "deployVersion": deployVersion,
         "wsBaseUrl": wsBaseUrl,
         "game": vars(game),
-        "preferences": buildPreferences(session),
+        "preferences": buildPreferences(pgdb.getUser(username)),
         "username": session.get('username'), #can be null if not logged in
         "userId": session.get('userId'),
         "game_type": "quadradius",
@@ -137,9 +139,10 @@ def quadGame(gameId):
 @app.route('/games/ttt/<gameId>')
 def tttGame(gameId):
     game = pgdb.getTttGame(gameId)
+    username = session.get('username')
     if game is None:
         return render_template("game_not_found.html", payload=json.dumps({
-            "preferences": buildPreferences(session),
+            "preferences": buildPreferences(pgdb.getUser(username)),
             "deployVersion": deployVersion
         }, default=str))
     # TODO thoughts -
@@ -152,7 +155,7 @@ def tttGame(gameId):
         "ws_token": session.get('ws_token'),
         "game_type": "ttt", # field used by common component
         "username": session.get('username'), #can be null if not logged in
-        "preferences": buildPreferences(session),
+        "preferences": buildPreferences(pgdb.getUser(username)),
         "userId": session.get('userId'),
         # TODO simplify payload - next three lines can be derived from "game" on client side
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
@@ -183,6 +186,7 @@ def login():
         session['ws_token'] = existingUser.ws_token
         session['quadColorPref'] = existingUser.quad_color_pref
         session['quadColorBackup'] = existingUser.quad_color_backup
+        session['useChat'] = existingUser.use_chat
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -195,12 +199,12 @@ def signup():
     password = request.form['password']
     password_repeat = request.form['password_repeat']
 
-    if(password != password_repeat):
-        return ("Your passwords did not match.")
+    if password != password_repeat:
+        return "Your passwords did not match."
 
     usernameTaken = pgdb.getUser(username) is not None
-    if(usernameTaken):
-        return("That username is taken! sorry fam")
+    if usernameTaken:
+        return "That username is taken! sorry fam"
 
     password_hash = generateHash(password)
 
@@ -236,19 +240,18 @@ def createGame():
 
     opponent_name = request.form['opponent'].strip()
 
-    if(session.get('loggedIn') == False):
+    if session.get('loggedIn') == False:
         return "not logged in?" # shouldn't happen
 
-    if(opponent_name == ""):
+    if opponent_name == "":
         return "enter a name, doofbury."
 
-    if(player_name == opponent_name):
+    if player_name == opponent_name:
         return "you can't vs yourself, bubso."
 
     opponent = pgdb.getUser(opponent_name)
-    opponentExists = opponent is not None
 
-    if(opponentExists == False):
+    if opponent is None:
         return "We didn't find a user with that name. Check spelling and special characters."
 
     opponent_name = opponent.name # if the user typed in wrongly cased letters, we silently fix it here
@@ -256,7 +259,7 @@ def createGame():
     if game_type == "Chess":
         color = random.choice(['white', 'black'])
 
-        if(color == "white"):
+        if color == "white":
             white_player = player_name
             black_player = opponent_name
 
@@ -270,7 +273,7 @@ def createGame():
 
     elif game_type == "Ttt":
         role = random.choice(['X', 'O'])
-        if(role == 'X'):
+        if role == 'X':
             x_player = player_name
             o_player = opponent_name
         else:
@@ -327,6 +330,9 @@ def receiveSettings():
         case "quadColorBackup":
             color = body["data"]["color"]
             pgdb.updateSetting("quad_color_backup", color, username)
+        case "useChat":
+            value = body["data"]["value"]
+            pgdb.updateSetting("use_chat", value, username)
     return "ACCEPTED", 202
 
 is_closing = False
