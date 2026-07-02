@@ -13,21 +13,22 @@ const isPlayer = players.includes(payload.username);
 const opponentName = isPlayer ? players.filter(player => player.username !== payload.username).pop() : null;
 
 console.log(useChat);
-let page = (
-	<>
-        <SiteHeader />
+
+function Page() {
+    return <>
+        <SiteHeader/>
         <main>
             <div className="playArea">
                 {isPlayer && <h3>Chess game vs. {opponentName}</h3>}
-                <Chessboard />
+                <Chessboard/>
                 <p id={"chessStatus"}>
                     Status: <span id="status"/>
                 </p>
             </div>
 
-            {isPlayer && useChat && <Chatbox expanded={false} />}
+            {isPlayer && useChat && <Chatbox expanded={false}/>}
         </main>
     </>
-);
+}
 
-createRoot(document.getElementById('root')).render(page);
+createRoot(document.getElementById('root')).render(<Page/>);
