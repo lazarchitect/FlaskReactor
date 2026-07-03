@@ -5,7 +5,7 @@ let socket = null;
 // initial value (chats so far) populated during ws subscription process
 let chatLogGlobal = [];
 
-export function chatSocketConnect(setChatLog) {
+export function chatSocketConnect(setChatLog, incrementNotifCount) {
 
     socket = webSocketConnect({
         path: '/chat',
@@ -17,6 +17,7 @@ export function chatSocketConnect(setChatLog) {
                 chatLogGlobal = data.chats;
                 setChatLog(buildFormattedChatLog(chatLogGlobal));
             } else if (data.command === "append") {
+                incrementNotifCount();
                 chatLogGlobal.push(data.chat);
                 setChatLog(buildFormattedChatLog(chatLogGlobal));
             } else if (data.command === "error") {

@@ -7,11 +7,28 @@ import {chatSocketConnect, sendChatUpdate} from "./chatSocket";
 // possible enhancement - keep the chatbox expanded if user expanded it previously
 export function Chatbox ( {expanded} ) {
 
+    const [chatLog, setChatLog] = useState("loading chats...");
     const [isCurrentlyExpanded, setIsCurrentlyExpanded] = useState(expanded);
-    
-    const [chatLog, setChatLog] = useState("null");
-    React.useEffect(() => chatSocketConnect(setChatLog), []); // initializes chat connection, pulls chats
+    const [notifCount, setNotifCount] = useState(0);
+    const [indicatorText, setIndicatorText] = useState("Expand");
+    const isExpandedRef = useRef(isCurrentlyExpanded);
 
+    let incrementNotifCount = () => {
+        console.log(isExpandedRef.current);
+        if (!isExpandedRef.current) {
+            setNotifCount((prevCount) => prevCount + 1);
+        }
+    }
+
+    let onExpanderClick = () => {
+        let isNowExpanded = !isCurrentlyExpanded; // toggle
+        isExpandedRef.current = isNowExpanded;
+        setIsCurrentlyExpanded(() => isNowExpanded);
+        setIndicatorText(isNowExpanded ? "Hide" : "Expand");
+        if (isNowExpanded) setNotifCount(0);
+    }
+    
+    React.useEffect(() => chatSocketConnect(setChatLog, incrementNotifCount), []); // initializes chat connection, pulls chats
 
     return (
         <div id="chatbox">
@@ -22,17 +39,9 @@ export function Chatbox ( {expanded} ) {
                 </div>
             }
             <div id="chatbox-base">
-                <span id='chatbox-label'>Chat</span>
-                {/* TODO: indicator needs some type of notification if it's unexpanded while a message arrives */}
-                <span id='chatbox-indicator'
-                    onClick={() => {
-                        let isNowExpanded = !isCurrentlyExpanded;
-                        setIsCurrentlyExpanded(!isCurrentlyExpanded); // toggle
-                        document.getElementById('chatbox-indicator').innerText = isNowExpanded ? 'Hide' : 'Expand';
-                    }}>
-                
-                    Expand
-                
+                <span id="chatbox-label">Chat</span>
+                <span id="chatbox-indicator" onClick={onExpanderClick}>
+                    {notifCount === 0 ? indicatorText : <NotifText indicatorText={indicatorText} notifCount={notifCount}/> }
                 </span>
             </div>
 
@@ -78,3 +87,9 @@ function ChatBoxInput() {
     return <textarea id="chatbox-input" onKeyDown={enterListener} form="chatbox-form" rows="2" />;
 }
 
+function NotifText ({indicatorText, notifCount}) {
+    return <>
+        <span>{indicatorText}</span>
+        <span style={{color: "red"}}>{` (${notifCount})`}</span>
+</>;
+}
