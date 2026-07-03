@@ -165,7 +165,7 @@ class QuadHandler(WebSocketHandler):
 
 		# authenticate user by checking if the provided ws_token matches what's in the DB
 		user = self.pgdb.getUser(fields['username']) # possible improvement - let the users receive and pass back an encrypted string containing their ws_token
-		if (fields['ws_token'] != user.ws_token):
+		if fields['ws_token'] != user.ws_token:
 			print("debug: this user is claiming to have a different WS token? malicious?")
 			return #this guy's a phony!
 

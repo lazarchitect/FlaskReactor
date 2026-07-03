@@ -193,9 +193,9 @@ class TttHandler(WebSocketHandler):
         winner = oldActivePlayer if (gameEnded == "Win") else None
 
         if gameEnded:
-            self.endTttGame(fields, otherPlayer, winner, gameId, player, tttGame)
+            self.endTttGame(otherPlayer, winner, gameId)
                 
-    def endTttGame(self, fields, otherPlayer, winner, gameId, player, tttGame):
+    def endTttGame(self, otherPlayer, winner, gameId):
         message = {
             "command": "endGame",
             "gameEnded": True,
