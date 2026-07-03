@@ -108,9 +108,11 @@ class ChessHandler(WebSocketHandler):
 
         game = self.pgdb.getChessGame(gameId)
 
-        # if game is None:
-        #     pass
-        #     #TODO If game is None, we should error alert the UI and halt here
+        if game is None:
+            self.write_message({
+                "command": "error",
+                "message": "game not found on server during connection handshake"
+            })
 
         if game.white_player == game.active_player:
             otherPlayer = game.black_player
