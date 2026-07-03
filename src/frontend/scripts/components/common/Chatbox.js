@@ -2,7 +2,7 @@
 'use strict';
 
 import React, {useEffect, useRef, useState} from 'react';
-import {chatSocketConnect} from "./chatSocket";
+import {chatSocketConnect, sendChatUpdate} from "./chatSocket";
 
 // global socket object, used in many functions here and created during a return-less useEffect block.
 // instantiated during ChatBox mount. 
@@ -22,7 +22,7 @@ export function Chatbox ( {expanded} ) {
             {isCurrentlyExpanded &&
                 <div id="chatbox-text-area">
                     <ChatBoxLog log={chatLog} />
-                    <ChatBoxInput />		
+                    <ChatBoxInput />
                 </div>
             }
             <div id="chatbox-base">
@@ -71,13 +71,7 @@ function ChatBoxInput() {
             let trimmedInput = inputField.value.trim();
 
             if (trimmedInput.length !== 0) {
-                chatSocket.send(JSON.stringify({
-                    "request": "update",
-                    "ws_token": payload.ws_token,
-                    "gameId": payload.game.id,
-                    "username": payload.username,
-                    "content": trimmedInput,
-                }));
+                sendChatUpdate({username: payload.username, content: trimmedInput});
 
                 inputField.value = '';
             }

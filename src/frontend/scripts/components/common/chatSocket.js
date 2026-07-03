@@ -28,6 +28,10 @@ export function chatSocketConnect(setChatLog) {
     })
 }
 
+export function sendChatUpdate({username, content}) {
+    socket.sendUpdate({username, content});
+}
+
 /** returns a single concatenated string containing full formatted chat log */
 function buildFormattedChatLog(chatLog) {
 
