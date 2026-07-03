@@ -7,8 +7,6 @@ let chatLogGlobal = [];
 
 export function chatSocketConnect(setChatLog) {
 
-    // TODO return immediately if user is not one of the players
-
     socket = webSocketConnect({
         path: '/chat',
         onMessage: (messageEvent) => {

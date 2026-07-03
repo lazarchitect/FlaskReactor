@@ -320,7 +320,7 @@ def createGame():
 
 @app.route("/receive_settings", methods=["PATCH"])
 def receiveSettings():
-    # todo authenticate (session?)
+    # todo authenticate (session?) presumably we can use ws_token similarly
     body = request.json
     username = body["username"]
     match(body.get("command", None)):

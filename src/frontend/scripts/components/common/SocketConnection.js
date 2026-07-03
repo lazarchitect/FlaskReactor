@@ -3,7 +3,9 @@
 const sockets = {}; // k: path, v: WebSocket object
 const retryTimers = {}; // k: path, v: integer retry delay
 
-/** Underlying socket behavior governing all client-server connections. Establishes socket open and close behavior, and handles repeated data passing, for all socket types.
+/** Underlying socket behavior governing all client-server connections.
+ * Establishes socket open and close behavior, and handles repeated data passing, for all socket types.
+ * Immediately connects to socket path by sending a subscribe message with payload details, including game ID.
  * @returns a socket with some preset connection details and logic, so that the consumer layer can focus solely on application logic. */
 export function webSocketConnect({path, onMessage}) {
 

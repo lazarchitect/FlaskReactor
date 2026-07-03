@@ -1,8 +1,21 @@
 import {outOfBounds, pieceAt, tileIdOf} from "./chessUtils";
 import {
-    BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS,
-    bkbStartTile, bknStartTile, bkStartTile, bqbStartTile, bqnStartTile, bqStartTile,
-    wkbStartTile, wknStartTile, wkStartTile, wqbStartTile, wqnStartTile, wqStartTile
+    BISHOP_OFFSETS,
+    bkbStartTile,
+    bknStartTile,
+    bkStartTile,
+    bqbStartTile,
+    bqnStartTile,
+    bqStartTile,
+    KNIGHT_OFFSETS,
+    ROOK_OFFSETS,
+    ROYAL_OFFSETS,
+    wkbStartTile,
+    wknStartTile,
+    wkStartTile,
+    wqbStartTile,
+    wqnStartTile,
+    wqStartTile
 } from "./chessConsts";
 import isSafeMove from "./moveSafetyVerifier";
 
@@ -24,7 +37,6 @@ function generatePawnMoves(boardstate, gameDetails, activePiece) {
 
     const srcCoords = [activePiece.row, activePiece.col];
     const pieceDirection = activePiece.color === "Black" ? 1 : -1;
-    const finalRow = activePiece.color === "Black" ? 7 : 0;
     const initialRow = activePiece.color === "Black" ? 1 : 6;
     const enemyLeapRow = activePiece.color === "Black" ? 4 : 3;
     const enPassantTargetRow = enemyLeapRow + pieceDirection;
@@ -33,8 +45,6 @@ function generatePawnMoves(boardstate, gameDetails, activePiece) {
     const advanceTwoCoords =  [activePiece.row + (pieceDirection * 2), activePiece.col]
     const leftTargetCoords =  [activePiece.row + pieceDirection, activePiece.col - 1];
     const rightTargetCoords = [activePiece.row + pieceDirection, activePiece.col + 1];
-
-    if (activePiece.row === finalRow) return []; // will never happen under promotion, TODO remove this later
 
     // advance 1
     if (pieceAt(boardstate, advanceOneCoords) === undefined) {

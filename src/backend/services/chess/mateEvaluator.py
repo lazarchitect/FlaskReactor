@@ -9,7 +9,7 @@ def hasNoLegalMoves(boardstate, color):
     for row in range(8):
         for col in range(8):
             coords = (row, col)
-            if tileAt(boardstate, coords).hasA(color, "any"):
+            if tileAt(boardstate, coords).occupiedBy(color):
                 if canMove(boardstate, coords, color):
                     return False # early return if any move at all is found
     return True
@@ -50,12 +50,15 @@ def pawnCanMove(boardstate, coords, pieceColor):
 
     direction = 1 if pieceColor == "Black" else -1
 
-    # look at 1 tile ahead to see if no pieces are there
     advance1Coords = (coords[0] + direction, coords[1])
-    if pieceAt(boardstate, advance1Coords) is None:
+    emptyTileAhead = pieceAt(boardstate, advance1Coords) is None
+    if emptyTileAhead:
         return True
 
-    ### TODO advance 2 aka pawnLeap is needed here, right?
+    advance2Coords = (coords[0] + (direction*2), coords[1])
+    emptyTileTwoAhead = pieceAt(boardstate, advance2Coords) is None
+    if emptyTileAhead and emptyTileTwoAhead:
+        return True
 
     # see if there are enemies in diagonal attack vectors
     rightAttackCoords = (coords[0] + direction, coords[1] + 1)
@@ -93,7 +96,7 @@ def kingCanMove(boardstate, srcCoords, pieceColor):
         if outOfBounds(targetCoords):
             continue
 
-        if not tileAt(boardstate, targetCoords).hasA(pieceColor, "any"):
+        if not tileAt(boardstate, targetCoords).occupiedBy(pieceColor):
             newBoardstate = deepCopy(boardstate)
             newBoardstate[targetCoords[0]][targetCoords[1]] = newBoardstate[srcRow][srcCol]
             newBoardstate[srcRow][srcCol] = {}

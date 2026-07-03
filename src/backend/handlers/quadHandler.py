@@ -86,7 +86,7 @@ class QuadHandler(WebSocketHandler):
 		# performance issue to do a DB read every single move? maybe just have them send what we need?
 		game = self.pgdb.getQuadradiusGame(gameId)
 
-		# TODO for posterity: there are multiple types of updates. Moves, power activations on tori, power effect outcomes.
+		# for posterity: there are multiple types of updates. Moves, power activations on tori, power effect outcomes.
 
 		### MOVE LOGIC ###
 		# modify game.boardstate based on src and dest. Destroy tori where appropriate.
@@ -129,7 +129,6 @@ class QuadHandler(WebSocketHandler):
 
 		updateAll(clientConnections[fields['gameId']], responseToClient)
 
-		# TODO determine new active player and double check the rest of these
 		self.pgdb.updateQuadradiusGame(game.boardstate, newActivePlayer, datetime.now(), newTurnNumber, newOrbCountdown, game.player1_powers, game.player2_powers, gameId)
 
 
