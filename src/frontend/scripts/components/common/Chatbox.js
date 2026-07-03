@@ -4,13 +4,9 @@
 import React, {useEffect, useRef, useState} from 'react';
 import {chatSocketConnect, sendChatUpdate} from "./chatSocket";
 
-// global socket object, used in many functions here and created during a return-less useEffect block.
-// instantiated during ChatBox mount. 
-let chatSocket = null;
-
+// possible enhancement - keep the chatbox expanded if user expanded it previously
 export function Chatbox ( {expanded} ) {
 
-    // TODO can we just set initial state to false and drop the prop?
     const [isCurrentlyExpanded, setIsCurrentlyExpanded] = useState(expanded);
     
     const [chatLog, setChatLog] = useState("null");
@@ -27,6 +23,7 @@ export function Chatbox ( {expanded} ) {
             }
             <div id="chatbox-base">
                 <span id='chatbox-label'>Chat</span>
+                {/* TODO: indicator needs some type of notification if it's unexpanded while a message arrives */}
                 <span id='chatbox-indicator'
                     onClick={() => {
                         let isNowExpanded = !isCurrentlyExpanded;
