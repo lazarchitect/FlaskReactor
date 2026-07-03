@@ -143,7 +143,7 @@ class TttHandler(WebSocketHandler):
         tttGame = self.pgdb.getTttGame(gameId)
 
         if player != tttGame.player_turn:
-            #uhhh what? the requester is not even the active player?
+            #uh what? the requester is not even the active player?
             self.write_message({
                 "command": "error",
                 "contents": "NOT YOUR TURN!"
