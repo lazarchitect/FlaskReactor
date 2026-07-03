@@ -229,7 +229,7 @@ def logout():
 def createGame():
 
     # TODO refactoring /create-game into smaller subroutines
-    # there should be a widespread service layer to handle back end logic, this file should just be setup and endpoint routing
+    # there should be a widespread service layer to handle back end service logic, this file should just be setup and endpoint routing
     # bad input handling can be handled outside this file
     # game_type should be a match/case statement with subfunctions in other files
     # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
@@ -289,7 +289,6 @@ def createGame():
         playerColorPrefs = pgdb.getPreferredTorusColors(player_name)
         opponentColorPrefs = pgdb.getPreferredTorusColors(opponent_name)
 
-        # TODO use .get(str, default) (and make the field name better?)
         if playerColorPrefs['quad_color_pref'] != opponentColorPrefs['quad_color_pref']:
             player_color = playerColorPrefs['quad_color_pref']
             opponent_color = opponentColorPrefs['quad_color_pref']
@@ -351,12 +350,12 @@ if __name__ == "__main__":
     application = Application(
         default_host=host,
         handlers=[
-            ("/ws/ttt",     TttHandler,      {"pgdb": pgdb}),
-            ("/ws/chat",    ChatHandler,     {"pgdb": pgdb}),
-            ("/ws/stat",    StatHandler,     {"pgdb": pgdb}),
-            ("/ws/quad",    QuadHandler,     {"pgdb": pgdb}),
-            ("/ws/chess",   ChessHandler,    {"pgdb": pgdb}),
-            (".*",          FallbackHandler, {"fallback": flaskApp})
+            ("/ws/ttt",   TttHandler,      {"pgdb": pgdb}),
+            ("/ws/chat",  ChatHandler,     {"pgdb": pgdb}),
+            ("/ws/stat",  StatHandler,     {"pgdb": pgdb}),
+            ("/ws/quad",  QuadHandler,     {"pgdb": pgdb}),
+            ("/ws/chess", ChessHandler,    {"pgdb": pgdb}),
+            (".*",        FallbackHandler, {"fallback": flaskApp})
         ]
     )
     application.listen(port)

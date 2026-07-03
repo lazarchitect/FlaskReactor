@@ -3,7 +3,8 @@ from datetime import datetime
 
 from tornado.websocket import WebSocketHandler
 
-from src.backend.utils import tttGameEnded, isEmpty, generateId, updateAll
+from src.backend.services.ttt.tttUtils import tttGameEnded
+from src.backend.utils import isEmpty, generateId, updateAll
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
