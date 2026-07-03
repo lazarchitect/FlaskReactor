@@ -105,7 +105,7 @@ class TttHandler(WebSocketHandler):
         if game is None:
             self.write_message({
                 "command": "error",
-                "contents": "game with ID '" + gameId + "' not found in database." 
+                "contents": "game with ID '" + str(gameId) + "' not found in database."
             })
 
         if game.x_player == game.player_turn:
@@ -119,7 +119,7 @@ class TttHandler(WebSocketHandler):
                 "activePlayer": game.player_turn,
                 "otherPlayer": otherPlayer,
                 "winner": game.winner,
-                "contents": str(self.socketId) + " subscribed to gameId " + gameId
+                "contents": str(self.socketId) + " subscribed to gameId " + str(gameId)
         })
         
 
