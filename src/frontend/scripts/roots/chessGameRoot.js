@@ -12,7 +12,7 @@ let {players} = payload;
 const isPlayer = players.includes(payload.username);
 const opponentName = isPlayer ? players.filter(player => player.username !== payload.username).pop() : null;
 
-const titleAddition = " " + (isPlayer ? "Vs. " + players.filter(player => player.username !== payload.username).pop() : players[0] + " Vs. " + players[1]);
+const titleAddition = " " + (isPlayer ? "Vs. " + opponentName : players[0] + " Vs. " + players[1]);
 document.querySelector("title").innerText += titleAddition;
 
 console.log(useChat);
@@ -22,7 +22,7 @@ function Page() {
         <SiteHeader/>
         <main>
             <div className="playArea">
-                {isPlayer && <h3>Chess game vs. {opponentName}</h3>}
+                <h3>Chess {titleAddition}</h3>
                 <Chessboard/>
                 <p id={"chessStatus"}>
                     Status: <span id="status"/>
