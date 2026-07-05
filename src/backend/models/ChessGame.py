@@ -1,9 +1,7 @@
 
 import json
 from datetime import datetime
-
 from psycopg.types.json import Json
-
 from src.backend.utils import generateId
 
 
@@ -64,18 +62,7 @@ class ChessGame:
     # e.g. query = "INSERT INTO schema.table (num, data) VALUES (%(num)s, %(data)s)"
     # cur.execute(query, my_dict)
     def convertToInsertable(self):
-        """creates a database-friendly tuple of the object for inserting. Excludes DB defaults."""
-        # TODO dont need to insert stuff like winner/completed/time_ended/last_move if we can use defaults, right?
-        #  same applies to other db record classes
-        return (
-            self.id, # UUID
-            self.white_player,
-            self.black_player,
-            Json(self.boardstate),
-            self.completed,
-            self.time_started,
-            self.last_move, # timestamp
-            self.time_ended,
-            self.active_player,
-            self.winner
-        )
+        """creates a database-friendly dict of the object for inserting. Excludes DB defaults."""
+        gameDict = vars(self)
+        gameDict["boardstate"] = Json(gameDict["boardstate"])
+        return gameDict

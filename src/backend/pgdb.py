@@ -33,8 +33,9 @@ sql = {
 	"getQuadradiusGame": f"SELECT * FROM {quadGamesTable} WHERE id = %s",
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
 	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s, active_player=%s, last_move=%s, turn_number=%s, orb_counter=%s, player1_powers=%s, player2_powers=%s where id=%s",
+
 	# Chess
-	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, active_player, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, active_player, boardstate, time_started) VALUES (%(id)s, %(white_player)s, %(black_player)s, %(white_player)s, %(boardstate)s, %(time_started)s)",
 	"getCompletedChessGames": f"SELECT * FROM {chessGamesTable} where completed=true AND (white_player=%s OR black_player=%s)",
 	"getChessGames": f"SELECT * FROM {chessGamesTable} where (white_player=%s OR black_player=%s) ORDER BY last_move DESC",
 	"getChessGame": f"SELECT * FROM {chessGamesTable} WHERE id=%s",
@@ -192,8 +193,8 @@ class Pgdb:
 
 	def createChessGame(self, g: ChessGame):
 		query = sql['createChessGame']
-		values = g.convertToInsertable()
-		self.__execute(query, values)
+		gameDict = g.convertToInsertable()
+		self.__execute(query, gameDict)
 		self.conn.commit()
 
 	def getChessGame(self, gameId) -> ChessGame | None:
