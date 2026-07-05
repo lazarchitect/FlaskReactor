@@ -236,7 +236,7 @@ main {
 }
 
 .orb {
-    background-color: #444; /* TODO use SVG for orbs instead of a solid color */
+    background-color: #444;
     position: absolute;
     top:    30%;
     left:   27%;
