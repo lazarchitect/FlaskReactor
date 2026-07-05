@@ -44,6 +44,8 @@ def determineSide(destTileId):
 
 	return None
 
+# possible idea for the future: encapsulate all Move logic within Move class.
+# Then, we can call self->castling/en passant/promotion code from inside this function
 def executeMove(boardstate, srcTileId, destTileId):
 
 	srcRow, srcCol = (int(srcTileId[0]), int(srcTileId[1]))
