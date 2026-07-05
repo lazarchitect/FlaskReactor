@@ -59,12 +59,14 @@ class ChessGame:
         g.pawn_leap_col = gameDict['pawn_leap_col']
         return g
 
-    # TODO can we get rid of all the toTuple methods if psycopg supports inserting by __dict__?
-    #  ANSWER - YES, BUT THE INSERT QUERIES NEED TO SPECIFY EACH COLUMN NAME AT THE PLACEHOLDERS.
-    #  query = "INSERT INTO schema.table (num, data) VALUES (%(num)s, %(data)s)"
-    #  cur.execute(query, my_dict)
-    def toTuple(self):
-        """creates a database-friendly format of the object."""
+    # We could remove these convert methods since psycopg supports inserting by __dict__
+    # However, the insert queries need to specify each column name at the placeholders.
+    # e.g. query = "INSERT INTO schema.table (num, data) VALUES (%(num)s, %(data)s)"
+    # cur.execute(query, my_dict)
+    def convertToInsertable(self):
+        """creates a database-friendly tuple of the object for inserting. Excludes DB defaults."""
+        # TODO dont need to insert stuff like winner/completed/time_ended/last_move if we can use defaults, right?
+        #  same applies to other db record classes
         return (
             self.id, # UUID
             self.white_player,
@@ -72,7 +74,7 @@ class ChessGame:
             Json(self.boardstate),
             self.completed,
             self.time_started,
-            self.last_move,
+            self.last_move, # timestamp
             self.time_ended,
             self.active_player,
             self.winner

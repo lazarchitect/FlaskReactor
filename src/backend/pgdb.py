@@ -137,6 +137,12 @@ class Pgdb:
 
 	### General
 
+	def createUser(self, u: User):
+		query = sql['createUser']
+		values = u.convertToInsertable()
+		self.__execute(query, values)
+		self.conn.commit()
+
 	def getUser(self, username):
 		query = sql['getUser']
 		values = [username]
@@ -146,18 +152,11 @@ class Pgdb:
 			return None
 		return User.dbLoad(userDict)
 
-	def createUser(self, user):
-		query = sql['createUser']
-		values = user.toTuple()
-		self.__execute(query, values)
-		self.conn.commit()
-
-
 	### Quadradius
 
-	def createQuadradiusGame(self, g):
+	def createQuadradiusGame(self, g: QuadradiusGame):
 		query = sql['createQuadradiusGame']
-		values = g.toTuple()
+		values = g.convertToInsertable()
 		self.__execute(query, values)
 		self.conn.commit()
 
@@ -191,9 +190,9 @@ class Pgdb:
 
 	### Chess
 
-	def createChessGame(self, g):
+	def createChessGame(self, g: ChessGame):
 		query = sql['createChessGame']
-		values = g.toTuple()
+		values = g.convertToInsertable()
 		self.__execute(query, values)
 		self.conn.commit()
 
@@ -227,6 +226,12 @@ class Pgdb:
 
 	### Tic-Tac-Toe
 
+	def createTttGame(self, g: TttGame):
+		query = sql['createTttGame']
+		values = g.convertToInsertable()
+		self.__execute(query, values)
+		self.conn.commit()
+
 	def getTttGame(self, gameId):
 		query = sql['getTttGame']
 		values = [gameId]
@@ -242,12 +247,6 @@ class Pgdb:
 		values = [username, username]
 		self.__execute(query, values)
 		return self.cursor.fetchall()
-
-	def createTttGame(self, g):
-		query = sql['createTttGame']
-		values = g.toTuple()
-		self.__execute(query, values)
-		self.conn.commit()
 
 	def updateTttGame(self, boardstate, last_updated, otherPlayer, gameId):
 		query = sql['updateTttGame']

@@ -36,15 +36,15 @@ class TttGame:
         g.boardstate = gameDict['boardstate']
         return g
 
-    def toTuple(self):
-        """creates a database-friendly format of the object."""
+    def convertToInsertable(self):
+        """creates a database-friendly tuple of the object for inserting."""
         return (
             self.id,
             self.x_player, 
             self.o_player, 
             self.completed, 
             self.time_started, 
-            self.last_move, 
+            self.last_move, #timestamp
             self.time_ended,
             self.active_player,
             self.winner,

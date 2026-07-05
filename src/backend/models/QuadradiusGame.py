@@ -53,8 +53,8 @@ class QuadradiusGame:
 
         return g
 
-    def toTuple(self):
-        """creates a database-friendly format of the object."""
+    def convertToInsertable(self):
+        """creates a database-friendly tuple of the object for inserting."""
         return (
             self.id,
             self.player1, self.player2,
@@ -63,7 +63,7 @@ class QuadradiusGame:
             self.completed,
             self.active_player,
             self.time_started,
-            self.last_move,
+            self.last_move, # timestamp
             self.time_ended,
             self.winner,
             self.turn_number,

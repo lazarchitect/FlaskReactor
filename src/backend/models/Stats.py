@@ -25,7 +25,3 @@ class Stats:
         s.won_white = statsDict['won_white']
         s.won_black = statsDict['won_black']
         return s
-
-    def toTuple(self):
-        return (self.userId, self.games_played, self.wins, self.win_percent, 
-        self.played_white, self.played_black, self.won_white, self.won_black)

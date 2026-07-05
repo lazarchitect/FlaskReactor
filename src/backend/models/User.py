@@ -25,8 +25,9 @@ class User:
         u.use_chat = userDict['use_chat']
         # add other prefs here
         return u
-        
-    def toTuple(self):
+
+    def convertToInsertable(self):
+        """creates a database-friendly tuple of the object for inserting."""
         return (
             self.name,
             self.password_hash,
