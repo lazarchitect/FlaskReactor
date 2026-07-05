@@ -46,7 +46,6 @@ def determineSide(destTileId):
 
 def executeMove(boardstate, srcTileId, destTileId):
 
-	# TODO can we replace these with self. fields?
 	srcRow, srcCol = (int(srcTileId[0]), int(srcTileId[1]))
 	destRow, destCol = (int(destTileId[0]), int(destTileId[1]))
 
