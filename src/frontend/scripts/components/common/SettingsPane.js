@@ -51,7 +51,7 @@ function QuadColorSelector({current, stateSetter, command}) {
 }
 
 function updateSettings(command, settingsData) {
-    fetch("/receive_settings", {
+    fetch("/update_settings", {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({

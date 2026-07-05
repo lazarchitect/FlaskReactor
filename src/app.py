@@ -317,8 +317,8 @@ def createGame():
 
     return redirect('/')
 
-@app.route("/receive_settings", methods=["PATCH"])
-def receiveSettings():
+@app.route("/update_settings", methods=["PATCH"])
+def updateSettings():
     # todo authenticate (session?) presumably we can use ws_token similarly
     body = request.json
     username = body["username"]
