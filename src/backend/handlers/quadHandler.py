@@ -4,6 +4,7 @@ from random import randint
 
 from tornado.websocket import WebSocketHandler
 
+from src.backend import utils
 from src.backend.utils import generateId, isEmpty, updateAll
 
 clientConnections = dict()
@@ -153,9 +154,6 @@ class QuadHandler(WebSocketHandler):
 			})
 			return
 
-		#used for easy search during later deletion
-		self.gameId = gameId
-
 		if isEmpty(fields.get('ws_token')):
 			self.write_message({
 				"command": "info",
@@ -163,14 +161,19 @@ class QuadHandler(WebSocketHandler):
 				"details": str(connectionDetails)
 			})
 
-		# authenticate user by checking if the provided ws_token matches what's in the DB
-		user = self.pgdb.getUser(fields['username']) # possible improvement - let the users receive and pass back an encrypted string containing their ws_token
-		if fields['ws_token'] != user.ws_token:
-			print("debug: this user is claiming to have a different WS token? malicious?")
-			return #this guy's a phony!
+		if utils.isEmpty(fields.get('ws_token')):
+			self.write_message({
+				"command": "info",
+				"message": "server did not receive a ws_token from the client",
+				"details": str(connectionDetails)
+			})
 
-		# used for authentication during updates
-		self.ws_token = fields['ws_token']
+		else:
+			# used for authentication during updates
+			self.ws_token = fields['ws_token']
+
+		#used for easy search during later deletion
+		self.gameId = gameId
 
 		if gameId not in clientConnections:
 			clientConnections[gameId] = [connectionDetails]
