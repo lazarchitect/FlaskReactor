@@ -13,12 +13,16 @@ import {TorusDragLayer} from '../components/quad/TorusDragLayer';
 import {quadSocketConnect} from "../components/quad/quadSocket";
 import {Legend} from "../components/quad/Legend";
 
-const isPlayer = [payload.game.player1, payload.game.player2].includes(payload.username);
+const players = [payload.game.player1, payload.game.player2];
+const isPlayer = players.includes(payload.username);
 const useChat = payload.preferences.useChat;
 
 const isPlayer1 = payload.game.player1 === payload.username;
 const powersList = isPlayer ? (isPlayer1 ? payload.game.player1_powers : payload.game.player2_powers) : null;
 const legendData = {powersList: powersList, orb_countdown: payload.game.orb_countdown, turn_number: payload.game.turn_number };
+
+const titleAddition = " " + (isPlayer ? "Vs. " + players.filter(player => player.username !== payload.username).pop() : payload.game.player1 + " Vs. " + payload.game.player2);
+document.querySelector("title").innerText += titleAddition;
 
 function Page() {
 
