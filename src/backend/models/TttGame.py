@@ -19,7 +19,7 @@ class TttGame:
         self.time_started = datetime.now()
         self.last_move = self.time_started
         self.time_ended = None
-        self.player_turn = random.choice([x_player, o_player]) # move this 'random' logic outside this class
+        self.active_player = random.choice([x_player, o_player])
         self.winner = None
         self.boardstate = ['','','','','','','','',''] # 9 empty strings
 
@@ -31,7 +31,7 @@ class TttGame:
         g.time_started = gameDict['time_started']
         g.last_move = gameDict['last_move']
         g.time_ended = gameDict['time_ended']
-        g.player_turn = gameDict['player_turn']
+        g.active_player = gameDict['active_player']
         g.winner = gameDict['winner']
         g.boardstate = gameDict['boardstate']
         return g
@@ -46,7 +46,7 @@ class TttGame:
             self.time_started, 
             self.last_move, 
             self.time_ended,
-            self.player_turn,
+            self.active_player,
             self.winner,
             self.boardstate
         )

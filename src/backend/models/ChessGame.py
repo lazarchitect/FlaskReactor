@@ -20,7 +20,7 @@ class ChessGame:
         # else, use defaults
         self.id = generateId()
         self.boardstate = json.loads(open('resources/initialChessLayout.json', 'r').read())
-        self.active_player = white_player # TODO as we changed this to 'g.active_player' here and in DB, do so in TTT as well
+        self.active_player = white_player
         self.completed = False
         self.time_started = datetime.now()
         self.last_move = self.time_started

@@ -160,7 +160,7 @@ def tttGame(gameId):
         # TODO simplify payload - next three lines can be derived from "game" on client side
         "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
         "players": [game.x_player, game.o_player],
-        "yourTurn": game.player_turn == session.get('username'),
+        "yourTurn": game.active_player == session.get('username'),
         "deployVersion": deployVersion
     }
     payload = json.dumps(payload, default=str)

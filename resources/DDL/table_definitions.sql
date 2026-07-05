@@ -35,7 +35,7 @@ create table flaskreactor.chess_games (
     time_started timestamp NOT NULL,
     last_move timestamp,
     time_ended timestamp,
-    player_turn text NOT NULL, -- username of active player
+    active_player text NOT NULL,
     winner text, 
     notation text,
     whitekingmoved boolean NOT NULL DEFAULT false,
@@ -56,7 +56,7 @@ create table flaskreactor.tictactoe_games (
     time_started timestamp NOT NULL,
     last_move timestamp,
     time_ended timestamp,
-    player_turn text NOT NULL,
+    active_player text NOT NULL,
     winner text,
     boardstate char[] NOT NULL
 );

@@ -42,11 +42,11 @@ sql = {
 	"endChessGame": f"UPDATE {chessGamesTable} SET completed=true, boardstate=%s, time_ended=%s, winner=%s WHERE id=%s",
 
 	# Tic-Tac-Toe
-	"createTttGame": f"INSERT INTO {tttGamesTable} (id, x_player, o_player, completed, time_started, last_move, time_ended, player_turn, winner, boardstate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createTttGame": f"INSERT INTO {tttGamesTable} (id, x_player, o_player, completed, time_started, last_move, time_ended, active_player, winner, boardstate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	"getTTTGames": f"SELECT * FROM {tttGamesTable} where (x_player=%s OR o_player=%s) ORDER BY last_move DESC",
 	"getTttGame": f"SELECT * FROM {tttGamesTable} where id=%s",
-	"updateTttGame": f"UPDATE {tttGamesTable} SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
-	"endTttGame": f"UPDATE {tttGamesTable} SET completed=true, time_ended=%s, player_turn='', winner=%s WHERE id=%s",
+	"updateTttGame": f"UPDATE {tttGamesTable} SET boardstate=%s, last_move=%s, active_player=%s WHERE id=%s",
+	"endTttGame": f"UPDATE {tttGamesTable} SET completed=true, time_ended=%s, active_player='', winner=%s WHERE id=%s",
 
 	# Stats
 	"createStat": f"INSERT INTO {statsTable} (userid) VALUES (%s)",

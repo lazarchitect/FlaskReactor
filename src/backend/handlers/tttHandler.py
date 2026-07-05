@@ -108,7 +108,7 @@ class TttHandler(WebSocketHandler):
                 "contents": "game with ID '" + str(gameId) + "' not found in database."
             })
 
-        if game.x_player == game.player_turn:
+        if game.x_player == game.active_player:
             otherPlayer = game.o_player
         else:
             otherPlayer = game.x_player
@@ -116,7 +116,7 @@ class TttHandler(WebSocketHandler):
         self.write_message({
                 "command": "info",
                 "gameEnded": game.completed,
-                "activePlayer": game.player_turn,
+                "activePlayer": game.active_player,
                 "otherPlayer": otherPlayer,
                 "winner": game.winner,
                 "contents": str(self.socketId) + " subscribed to gameId " + str(gameId)
@@ -142,8 +142,7 @@ class TttHandler(WebSocketHandler):
         #issue: gameId can be invalid ttt game?
         tttGame = self.pgdb.getTttGame(gameId)
 
-        if player != tttGame.player_turn:
-            #uh what? the requester is not even the active player?
+        if player != tttGame.active_player:
             self.write_message({
                 "command": "error",
                 "contents": "NOT YOUR TURN!"
@@ -172,9 +171,7 @@ class TttHandler(WebSocketHandler):
         
         last_updated = datetime.now()
 
-        # 'player' has been verified at this point to match the database record for 'player_turn', 
-        # aka the player currently taking a turn.
-        # pgdb should update that field to the OTHER player now.
+        # active_player has been verified at this point, so now update that column to the OTHER player
         self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
 
         newActivePlayer = otherPlayer
