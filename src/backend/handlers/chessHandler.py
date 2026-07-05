@@ -132,7 +132,7 @@ class ChessHandler(WebSocketHandler):
         wkrMoved = game.wkr_moved
 
         self.write_message({
-            "command": "info",
+            "command": "initialize",
             "gameEnded": game.completed,
             "whiteInCheck": whiteInCheck,
             "blackInCheck": blackInCheck,

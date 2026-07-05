@@ -114,7 +114,7 @@ class TttHandler(WebSocketHandler):
             otherPlayer = game.x_player
 
         self.write_message({
-                "command": "info",
+                "command": "initialize",
                 "gameEnded": game.completed,
                 "activePlayer": game.active_player,
                 "otherPlayer": otherPlayer,

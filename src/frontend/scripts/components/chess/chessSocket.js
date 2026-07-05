@@ -32,20 +32,23 @@ export function chessSocketConnect(setBoardstate, setGameDetails) {
 
             const data = JSON.parse(messageEvent.data);
 
-            if(data.command === "updateBoard"){
+            if (data.command === "updateBoard"){
                 setStatus(determineStatus(payload, data));
                 setBoardstate(data.newBoardstate);
                 setGameDetails(data.gameDetails);
             }
-            else if(data.command === "info"){
+            else if (data.command === "initialize") {
                 setGameDetails(data.gameDetails);
                 setStatus(determineStatus(payload, data));
             }
-            else if(data.command === "endGame"){
+            else if (data.command === "endGame"){
                 setBoardstate(data.newBoardstate);
                 setStatus(determineStatus(payload, data))
             }
-            else if(data.command === "error"){
+            else if (data.command === "info"){
+                console.log(data);
+            }
+            else if (data.command === "error"){
                 alert(data.message)
             }
         }

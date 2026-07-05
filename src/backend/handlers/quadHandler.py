@@ -4,7 +4,6 @@ from random import randint
 
 from tornado.websocket import WebSocketHandler
 
-from src.backend import utils
 from src.backend.utils import generateId, isEmpty, updateAll
 
 clientConnections = dict()
@@ -161,13 +160,6 @@ class QuadHandler(WebSocketHandler):
 				"details": str(connectionDetails)
 			})
 
-		if utils.isEmpty(fields.get('ws_token')):
-			self.write_message({
-				"command": "info",
-				"message": "server did not receive a ws_token from the client",
-				"details": str(connectionDetails)
-			})
-
 		else:
 			# used for authentication during updates
 			self.ws_token = fields['ws_token']
@@ -183,7 +175,7 @@ class QuadHandler(WebSocketHandler):
 		game = self.pgdb.getQuadradiusGame(gameId)
 
 		self.write_message({
-			"command": "info",
+			"command": "initialize",
 			"active_player": game.active_player,
 			"inactive_player": game.player1 if game.active_player == game.player2 else game.player2,
 			"contents": str(self.socketId) + " subscribed to gameId " + gameId

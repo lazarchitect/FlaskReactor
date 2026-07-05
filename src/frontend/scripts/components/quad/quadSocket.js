@@ -30,11 +30,14 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
                 setBoardstate(data.newBoardstate);
                 yourTurn = payload.username === data.active_player;
             }
-            if (data.command === "updateLegend") {
+            else if (data.command === "updateLegend") {
                 setLegendState(data.newLegendState);
             }
-            else if (data.command === "info") {
+            else if (data.command === "initialize") {
                 setStatus(determineStatus(payload, data));
+            }
+            else if (data.command === "info"){
+                console.log(data);
             }
             else if (data.command === "endGame") {
                 setStatus(determineStatus(payload, data))
