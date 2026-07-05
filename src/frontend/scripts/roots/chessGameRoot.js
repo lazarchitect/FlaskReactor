@@ -5,24 +5,20 @@ import {createRoot} from 'react-dom/client';
 import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
-
-const useChat = payload.preferences.useChat;
+import {configureTitleAddition} from "./rootUtil";
 
 let {players} = payload;
 const isPlayer = players.includes(payload.username);
-const opponentName = isPlayer ? players.filter(player => player.username !== payload.username).pop() : null;
+const titleAddition = configureTitleAddition(players);
 
-const titleAddition = " " + (isPlayer ? "Vs. " + opponentName : players[0] + " Vs. " + players[1]);
-document.querySelector("title").innerText += titleAddition;
-
-console.log(useChat);
+const useChat = payload.preferences.useChat;
 
 function Page() {
     return <>
         <SiteHeader/>
         <main>
             <div className="playArea">
-                <h3>Chess {titleAddition}</h3>
+                <h3>Chess{titleAddition}</h3>
                 <Chessboard/>
                 <p id={"chessStatus"}>
                     Status: <span id="status"/>
