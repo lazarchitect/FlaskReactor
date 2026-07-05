@@ -111,8 +111,8 @@ class Pgdb:
 
 	def __execute(self, query, values):
 		"""
-		executes some generic query on the DB, which might read, update, create, or destroy records.
-		this private function should only be called from other meaningful Pgdb methods,
+		Executes some generic query on the DB, which might read, update, create, or destroy records.
+		This private function should only be called from other meaningful Pgdb methods,
 		which formulate specific query arguments.
 		"""
 

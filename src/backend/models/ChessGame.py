@@ -76,5 +76,4 @@ class ChessGame:
             self.time_ended,
             self.active_player,
             self.winner
-            # unspecified attributes are initialized to defaults (NULL, FALSE, or -1)
         )
