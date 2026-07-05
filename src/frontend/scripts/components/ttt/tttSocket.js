@@ -20,8 +20,6 @@ export function sendUpdate(boardIndex) {
 
 export function tttSocketConnect(setBoardstate, setYourTurn) {
 
-    const statSocket = new WebSocket(payload.wsBaseUrl + "/stat")
-
     socket = webSocketConnect({
         path: "/ttt",
         onMessage: (message) => {
@@ -34,18 +32,7 @@ export function tttSocketConnect(setBoardstate, setYourTurn) {
 
             } else if (data.command === "endGame") {
                 setStatus(determineStatus(payload, data));
-                setYourTurn(payload.username === data.activePlayer);
-                // call out to server - update this user's stats
-                const messageObj = {
-                    "request": "updateStat",
-                    "ws_token": payload.ws_token,
-                    "gameType": "ttt",
-                    "gameId": gameId,
-                    "userId": payload.userId,
-                    "username": payload.username
-                };
-                const message = JSON.stringify(messageObj);
-                statSocket.send(message); // TODO wouldn't this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
+                setYourTurn(false);
             } else if (data.command === "info") {
                 setStatus(determineStatus(payload, data));
             } else if (data.command === "error") {
