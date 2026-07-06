@@ -28,7 +28,7 @@ sql = {
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
 	# Quadradius
-	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, completed, active_player, time_started, last_move, time_ended, winner, turn_number, orb_counter, player1_powers,  player2_powers) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, time_started) values (%(id)s, %(player1)s, %(player2)s, %(player1_color)s, %(player2_color)s, %(boardstate)s, %(active_player)s, %(time_started)s)",
 	"getQuadradiusGames": f"SELECT * FROM {quadGamesTable} WHERE player1 = %s OR player2 = %s ORDER BY last_move DESC",
 	"getQuadradiusGame": f"SELECT * FROM {quadGamesTable} WHERE id = %s",
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
