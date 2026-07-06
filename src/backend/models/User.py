@@ -8,7 +8,7 @@ def newUser(name, password_hash, email, ws_token):
         "ws_token": ws_token,
         "id": generateId(),
 
-        # following are defaults
+        # TODO following are defaults, set as such in DB?
         "quad_color_pref": "red",
         "quad_color_backup": "blue",
         "use_chat": True

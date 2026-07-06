@@ -19,15 +19,8 @@ def newQuadradiusGame(player1, player2, player1_color, player2_color, active_pla
         "active_player": active_player,
         "id": generateId(),
         "boardstate": boardstate,
-        "completed": False,
         "time_started": datetime.now(),
-        "last_move": None, # I believe we don't need to call out the defaults here
-        "time_ended": None,
-        "winner": None,
-        "turn_number": 0,
-        "orb_countdown": random.choice([2,4,8]),
-        "player1_powers": {},
-        "player2_powers": {}
+        "orb_countdown": random.choice([2,4,8])
     }
     
 def populatePlayerColors(boardstate, player1_color, player2_color):

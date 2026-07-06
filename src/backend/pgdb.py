@@ -24,14 +24,14 @@ sql = {
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
 	# Quadradius
-	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, time_started) values (%(id)s, %(player1)s, %(player2)s, %(player1_color)s, %(player2_color)s, %(boardstate)s, %(active_player)s, %(time_started)s)",
+	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, orb_countdown) values (%(id)s, %(player1)s, %(player2)s, %(player1_color)s, %(player2_color)s, %(boardstate)s, %(active_player)s, %(orb_countdown)s)",
 	"getQuadradiusGames": f"SELECT * FROM {quadGamesTable} WHERE player1 = %s OR player2 = %s ORDER BY last_move DESC",
 	"getQuadradiusGame": f"SELECT * FROM {quadGamesTable} WHERE id = %s",
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
 	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s, active_player=%s, last_move=%s, turn_number=%s, orb_countdown=%s, player1_powers=%s, player2_powers=%s where id=%s",
 
 	# Chess
-	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, active_player, boardstate, time_started) VALUES (%(id)s, %(white_player)s, %(black_player)s, %(white_player)s, %(boardstate)s, %(time_started)s)",
+	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, active_player, boardstate) VALUES (%(id)s, %(white_player)s, %(black_player)s, %(white_player)s, %(boardstate)s)",
 	"getCompletedChessGames": f"SELECT * FROM {chessGamesTable} where completed=true AND (white_player=%s OR black_player=%s)",
 	"getChessGames": f"SELECT * FROM {chessGamesTable} where (white_player=%s OR black_player=%s) ORDER BY last_move DESC",
 	"getChessGame": f"SELECT * FROM {chessGamesTable} WHERE id=%s",
