@@ -1,13 +1,14 @@
 
 import json
 from datetime import datetime
+
 from psycopg.types.json import Json
+
 from src.backend.utils import generateId
 
 
 class ChessGame:
-    """Python object representing a specific chess game between two players, with all schema fields that a game record has.
-    These are easier to work with than the tuples that psycopg returns, and can be converted back to a database record easily."""
+    """Python object representing a specific chess game between two players, with all schema fields that a game record has. """
     
     def __init__(self, white_player, black_player, isDbLoad):
 
