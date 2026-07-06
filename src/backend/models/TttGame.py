@@ -4,49 +4,17 @@ from datetime import datetime
 from src.backend.utils import generateId
 
 
-class TttGame:
-    """Python object representing a specific Ttt game between two players, with all schema fields that a game record has.
-    These are easier to work with than the tuples that psycopg returns, and can be converted back to a database record easily."""
-    
-    def __init__(self, x_player, o_player, isDbLoad):
+def newTttGame(x_player, o_player):
 
-        self.x_player = x_player
-        self.o_player = o_player
-        if isDbLoad: return
-
-        self.id = generateId()
-        self.completed = False
-        self.time_started = datetime.now()
-        self.last_move = self.time_started
-        self.time_ended = None
-        self.active_player = random.choice([x_player, o_player])
-        self.winner = None
-        self.boardstate = ['','','','','','','','',''] # 9 empty strings
-
-    @staticmethod
-    def dbLoad(gameDict):
-        g = TttGame(gameDict['x_player'], gameDict['o_player'], isDbLoad=True)
-        g.id = gameDict['id']
-        g.completed = gameDict['completed']
-        g.time_started = gameDict['time_started']
-        g.last_move = gameDict['last_move']
-        g.time_ended = gameDict['time_ended']
-        g.active_player = gameDict['active_player']
-        g.winner = gameDict['winner']
-        g.boardstate = gameDict['boardstate']
-        return g
-
-    def convertToInsertable(self):
-        """creates a database-friendly tuple of the object for inserting."""
-        return (
-            self.id,
-            self.x_player, 
-            self.o_player, 
-            self.completed, 
-            self.time_started, 
-            self.last_move, #timestamp
-            self.time_ended,
-            self.active_player,
-            self.winner,
-            self.boardstate
-        )
+    return {
+        "x_player": x_player,
+        "o_player": o_player,
+        "boardstate": ['','','','','','','','',''], # 9 empty strings
+        "id": generateId(),
+        "completed": False,
+        "time_started": datetime.now(),
+        "last_move": None,
+        "time_ended": None,
+        "active_player": random.choice([x_player, o_player]),
+        "winner": None
+    }

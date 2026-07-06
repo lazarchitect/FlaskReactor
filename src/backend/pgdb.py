@@ -6,11 +6,7 @@ from psycopg.errors import InFailedSqlTransaction
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
-from src.backend.MockPgdb import MockPgdb
-from src.backend.models.ChessGame import ChessGame
-from src.backend.models.QuadradiusGame import QuadradiusGame
-from src.backend.models.TttGame import TttGame
-from src.backend.models.User import User
+from src.backend.dbUtils import makeInsertSafe, convertToObject
 
 schema = "flaskreactor"
 usersTable = schema + ".users"
@@ -23,7 +19,7 @@ quadGamesTable = schema + ".quadradius_games"
 sql = {
 
 	#Users
-	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup, use_chat) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup, use_chat) VALUES (%(name)s, %(password_hash)s, %(email)s, %(id)s, %(ws_token)s, %(quad_color_pref)s, %(quad_color_backup)s, %(use_chat)s)",
 	"getUser": f"SELECT * FROM {usersTable} WHERE lower(name)=lower(%s)",
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
@@ -32,7 +28,7 @@ sql = {
 	"getQuadradiusGames": f"SELECT * FROM {quadGamesTable} WHERE player1 = %s OR player2 = %s ORDER BY last_move DESC",
 	"getQuadradiusGame": f"SELECT * FROM {quadGamesTable} WHERE id = %s",
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
-	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s, active_player=%s, last_move=%s, turn_number=%s, orb_counter=%s, player1_powers=%s, player2_powers=%s where id=%s",
+	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s, active_player=%s, last_move=%s, turn_number=%s, orb_countdown=%s, player1_powers=%s, player2_powers=%s where id=%s",
 
 	# Chess
 	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, active_player, boardstate, time_started) VALUES (%(id)s, %(white_player)s, %(black_player)s, %(white_player)s, %(boardstate)s, %(time_started)s)",
@@ -43,7 +39,7 @@ sql = {
 	"endChessGame": f"UPDATE {chessGamesTable} SET completed=true, boardstate=%s, time_ended=%s, winner=%s WHERE id=%s",
 
 	# Tic-Tac-Toe
-	"createTttGame": f"INSERT INTO {tttGamesTable} (id, x_player, o_player, completed, time_started, last_move, time_ended, active_player, winner, boardstate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createTttGame": f"INSERT INTO {tttGamesTable} (id, x_player, o_player, active_player, boardstate) VALUES (%(id)s, %(x_player)s, %(o_player)s, %(active_player)s, %(boardstate)s)",
 	"getTTTGames": f"SELECT * FROM {tttGamesTable} where (x_player=%s OR o_player=%s) ORDER BY last_move DESC",
 	"getTttGame": f"SELECT * FROM {tttGamesTable} where id=%s",
 	"updateTttGame": f"UPDATE {tttGamesTable} SET boardstate=%s, last_move=%s, active_player=%s WHERE id=%s",
@@ -73,18 +69,14 @@ class Pgdb:
 		if not cls._instance: # first time instantiating
 
 			env = postgres_config['env']
-			if env not in ['local', 'remote', 'none']:
+			if env not in ['local', 'remote']:
 				print('Invalid postgres env value in app_config:', env)
 				exit()
 
 			cls.db_env = env
 			print("connecting to environment:", cls.db_env)
 
-			if cls.db_env == "none": # dev only!
-				print('setting DB client to MockPgdb')
-				cls._instance = MockPgdb()
-			else:
-				cls._instance = super().__new__(cls)
+			cls._instance = super().__new__(cls)
 
 		return cls._instance
 
@@ -138,10 +130,10 @@ class Pgdb:
 
 	### General
 
-	def createUser(self, u: User):
+	def createUser(self, userDict):
 		query = sql['createUser']
-		values = u.convertToInsertable()
-		self.__execute(query, values)
+		makeInsertSafe(userDict)
+		self.__execute(query, userDict)
 		self.conn.commit()
 
 	def getUser(self, username):
@@ -151,14 +143,14 @@ class Pgdb:
 		userDict = self.cursor.fetchone()
 		if userDict is None:
 			return None
-		return User.dbLoad(userDict)
+		return convertToObject(userDict)
 
 	### Quadradius
 
-	def createQuadradiusGame(self, g: QuadradiusGame):
+	def createQuadradiusGame(self, gameDict):
 		query = sql['createQuadradiusGame']
-		values = g.convertToInsertable()
-		self.__execute(query, values)
+		makeInsertSafe(gameDict)
+		self.__execute(query, gameDict)
 		self.conn.commit()
 
 	def getQuadradiusGames(self, username):
@@ -175,7 +167,7 @@ class Pgdb:
 		if gameDict is None:
 			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
-		return QuadradiusGame.dbLoad(gameDict)
+		return convertToObject(gameDict)
 
 	def getPreferredTorusColors(self, user):
 		query = sql['getPreferredTorusColors']
@@ -183,21 +175,21 @@ class Pgdb:
 		self.__execute(query, values)
 		return self.cursor.fetchone()
 
-	def updateQuadradiusGame(self, boardstate, active_player, last_move, turn_number, orb_counter, player1_powers, player2_powers, gameId):
+	def updateQuadradiusGame(self, boardstate, active_player, last_move, turn_number, orb_countdown, player1_powers, player2_powers, gameId):
 		query = sql['updateQuadradiusGame']
-		values = (Json(boardstate), active_player, last_move, turn_number, orb_counter, Json(player1_powers), Json(player2_powers), gameId)
+		values = (Json(boardstate), active_player, last_move, turn_number, orb_countdown, Json(player1_powers), Json(player2_powers), gameId)
 		self.__execute(query, values)
 		self.conn.commit()
 
 	### Chess
 
-	def createChessGame(self, g: ChessGame):
+	def createChessGame(self, gameDict):
 		query = sql['createChessGame']
-		gameDict = g.convertToInsertable()
+		makeInsertSafe(gameDict)
 		self.__execute(query, gameDict)
 		self.conn.commit()
 
-	def getChessGame(self, gameId) -> ChessGame | None:
+	def getChessGame(self, gameId):
 		query = sql['getChessGame']
 		values = [gameId]
 		self.__execute(query, values)
@@ -205,7 +197,7 @@ class Pgdb:
 		if record is None:
 			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
-		return ChessGame.dbLoad(record)
+		return convertToObject(record)
 
 	def getChessGames(self, username):
 		query = sql['getChessGames']
@@ -227,10 +219,10 @@ class Pgdb:
 
 	### Tic-Tac-Toe
 
-	def createTttGame(self, g: TttGame):
+	def createTttGame(self, gameDict):
 		query = sql['createTttGame']
-		values = g.convertToInsertable()
-		self.__execute(query, values)
+		# makeInsertSafe(gameDict)
+		self.__execute(query, gameDict)
 		self.conn.commit()
 
 	def getTttGame(self, gameId):
@@ -241,7 +233,7 @@ class Pgdb:
 		if record is None:
 			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
-		return TttGame.dbLoad(record)
+		return convertToObject(record)
 
 	def getTttGames(self, username):
 		query = sql["getTTTGames"]

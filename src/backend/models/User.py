@@ -1,39 +1,16 @@
 from src.backend.utils import generateId
 
-class User:
+def newUser(name, password_hash, email, ws_token):
+    return {
+        "name": name,
+        "password_hash": password_hash,
+        "email": email,
+        "ws_token": ws_token,
+        "id": generateId(),
 
-    def __init__(self, name, password_hash, email, ws_token, isDbLoad):
-        self.name = name
-        self.password_hash = password_hash
-        self.email = email
-        self.ws_token = ws_token
-        if isDbLoad: return
-
-        self.userId = generateId()
-        self.quad_color_pref = "red"
-        self.quad_color_backup = "blue"
-        self.use_chat = True
+        # following are defaults
+        "quad_color_pref": "red",
+        "quad_color_backup": "blue",
+        "use_chat": True
         # add other pref defaults here
-
-    @staticmethod
-    def dbLoad(userDict):
-        u = User(userDict['name'], userDict['password_hash'], userDict['email'], userDict['ws_token'], isDbLoad=True)
-
-        u.id = userDict['id']
-        u.quad_color_pref = userDict['quad_color_pref']
-        u.quad_color_backup = userDict['quad_color_backup']
-        u.use_chat = userDict['use_chat']
-        # add other prefs here
-        return u
-
-    def convertToInsertable(self):
-        """creates a database-friendly tuple of the object for inserting."""
-        return (
-            self.name,
-            self.password_hash,
-            self.email,
-            self.userId,
-            self.ws_token,
-            self.quad_color_pref,
-            self.quad_color_backup,
-            self.use_chat)
+    }

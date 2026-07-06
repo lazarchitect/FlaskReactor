@@ -16,10 +16,10 @@ from src.backend.handlers.chessHandler import ChessHandler
 from src.backend.handlers.quadHandler import QuadHandler
 from src.backend.handlers.statHandler import StatHandler
 from src.backend.handlers.tttHandler import TttHandler
-from src.backend.models.ChessGame import ChessGame
-from src.backend.models.QuadradiusGame import QuadradiusGame
-from src.backend.models.TttGame import TttGame
-from src.backend.models.User import User
+from src.backend.models.ChessGame import newChessGame
+from src.backend.models.QuadradiusGame import newQuadradiusGame
+from src.backend.models.TttGame import newTttGame
+from src.backend.models.User import newUser
 from src.backend.pgdb import Pgdb
 from src.backend.utils import generateId, generateHash, notLoggedIn, buildPreferences
 
@@ -208,12 +208,11 @@ def signup():
 
     password_hash = generateHash(password)
 
-    userid = str(generateId())
     ws_token = str(generateId())[:8]
 
-    newUser = User(username, password_hash, email, ws_token, isDbLoad=False)
-    pgdb.createUser(newUser)
-    pgdb.createStat(userid)
+    user = newUser(username, password_hash, email, ws_token)
+    pgdb.createUser(user)
+    pgdb.createStat(user['id']) # can align this with other create fns later
 
     session['loggedIn'] = True
     session['username'] = request.form['username']
@@ -267,7 +266,7 @@ def createGame():
             white_player = opponent_name
             black_player = player_name
 
-        game = ChessGame(white_player, black_player, isDbLoad=False)
+        game = newChessGame(white_player, black_player)
 
         pgdb.createChessGame(game)
 
@@ -280,7 +279,7 @@ def createGame():
             o_player = player_name
             x_player = opponent_name
 
-        game = TttGame(x_player, o_player, isDbLoad=False)
+        game = newTttGame(x_player, o_player)
 
         pgdb.createTttGame(game)
 
@@ -305,13 +304,12 @@ def createGame():
 
         print(players)
 
-        game = QuadradiusGame(
+        game = newQuadradiusGame(
             player1=players[0][0],
             player2=players[1][0],
             player1_color=players[0][1],
             player2_color=players[1][1],
-            active_player=players[0][0],
-            isDbLoad=False) # users will be able to update their preferred & backup Torus colors
+            active_player=players[0][0])
 
         pgdb.createQuadradiusGame(game)
 
