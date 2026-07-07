@@ -24,7 +24,6 @@ def updateAll(connections, message):
 			connectionDetails['conn'].write_message(json.dumps(message))
 		except WebSocketClosedError:
 			pass
-			#print(str(connectionDetails['id']) + " was closed i guess? nvm...")
 
 # user can be None if not logged in
 def buildPreferences(user=None):

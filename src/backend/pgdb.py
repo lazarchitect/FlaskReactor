@@ -63,7 +63,6 @@ class Pgdb:
 	_instance = None
 
 	# overriding new in order to use a Singleton approach, no need to reinstantiate for every Handler that comes up
-	# and also to allow for MockPgdb to be used without impacting code in any other file
 	def __new__(cls, postgres_config):
 
 		if not cls._instance: # first time instantiating
