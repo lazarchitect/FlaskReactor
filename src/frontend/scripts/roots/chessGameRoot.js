@@ -11,7 +11,7 @@ let {players} = payload;
 const isPlayer = players.includes(payload.username);
 const titleAddition = configureTitleAddition(players);
 
-const useChat = payload.preferences.useChat;
+const use_chat = payload.preferences.use_chat;
 
 function Page() {
     return <>
@@ -25,7 +25,7 @@ function Page() {
                 </p>
             </div>
 
-            {isPlayer && useChat && <Chatbox expanded={false}/>}
+            {isPlayer && use_chat && <Chatbox expanded={false}/>}
         </main>
     </>
 }

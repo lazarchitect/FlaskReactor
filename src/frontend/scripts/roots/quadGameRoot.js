@@ -16,7 +16,7 @@ import {configureTitleAddition} from "./rootUtil";
 
 const players = [payload.game.player1, payload.game.player2]; // send players array itself in payload?
 const isPlayer = players.includes(payload.username);
-const useChat = payload.preferences.useChat;
+const use_chat = payload.preferences.use_chat;
 
 const isPlayer1 = payload.game.player1 === payload.username;
 const powersList = isPlayer ? (isPlayer1 ? payload.game.player1_powers : payload.game.player2_powers) : null;
@@ -43,7 +43,7 @@ function Page() {
                 <p>Status: <span id="status"></span></p>
             </div>
             <Legend legendState={legendState} />
-            {isPlayer && useChat && <Chatbox expanded={false} />}
+            {isPlayer && use_chat && <Chatbox expanded={false} />}
         </main>
     </>;
 }

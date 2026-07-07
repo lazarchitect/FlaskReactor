@@ -6,7 +6,7 @@ import {TttBoard} from "../components/ttt/tttBoard";
 import {configureTitleAddition} from "./rootUtil";
 
 const isPlayer = payload.players.includes(payload.username);
-const useChat = payload.preferences.useChat;
+const use_chat = payload.preferences.use_chat;
 
 const titleAddition = configureTitleAddition(payload.players);
 
@@ -19,7 +19,7 @@ function Page(){
 				<TttBoard/>
 				<p>Status: <span id="status"></span></p>
 			</div>
-			{isPlayer && useChat && <Chatbox expanded={false}/>}
+			{isPlayer && use_chat && <Chatbox expanded={false}/>}
 		</main>
 	</>
 }
