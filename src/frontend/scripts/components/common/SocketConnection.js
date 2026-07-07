@@ -36,9 +36,9 @@ export function webSocketConnect({path, onMessage}) {
 
     socket.sendUpdate = (message) => {
         const updateObj = {
-            request: "update",
-            ws_token: payload.ws_token,
-            gameId: payload.game.id,
+            "request": "update",
+            "ws_token": payload.ws_token,
+            "gameId": payload.game.id,
             ...message
         };
         socket.send(JSON.stringify(updateObj));
