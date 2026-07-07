@@ -25,15 +25,15 @@ export function tttSocketConnect(setBoardstate, setYourTurn) {
         onMessage: (message) => {
             const data = JSON.parse(message.data);
             if (data.command === "updateBoard") {
-                setStatus(determineStatus(payload, data))
+                setStatus(determineStatus(data))
                 setBoardstate(data.newBoardstate);
                 setYourTurn(payload.username === data.activePlayer);
             }
             else if (data.command === "initialize") {
-                setStatus(determineStatus(payload, data));
+                setStatus(determineStatus(data));
             }
             else if (data.command === "endGame") {
-                setStatus(determineStatus(payload, data));
+                setStatus(determineStatus(data));
                 setYourTurn(false);
             }
             else if (data.command === "info"){
@@ -52,7 +52,7 @@ function setStatus(status) {
 
 /* Returns the updated status string,
    which gets displayed to the user at all times. */
-function determineStatus(payload, data) {
+function determineStatus(data) {
 
     let retval = "";
     if (data.gameEnded) {

@@ -33,17 +33,17 @@ export function chessSocketConnect(setBoardstate, setGameDetails) {
             const data = JSON.parse(messageEvent.data);
 
             if (data.command === "updateBoard"){
-                setStatus(determineStatus(payload, data));
+                setStatus(determineStatus(data));
                 setBoardstate(data.newBoardstate);
                 setGameDetails(data.gameDetails);
             }
             else if (data.command === "initialize") {
                 setGameDetails(data.gameDetails);
-                setStatus(determineStatus(payload, data));
+                setStatus(determineStatus(data));
             }
             else if (data.command === "endGame"){
                 setBoardstate(data.newBoardstate);
-                setStatus(determineStatus(payload, data))
+                setStatus(determineStatus(data))
             }
             else if (data.command === "info"){
                 console.log(data);
@@ -59,7 +59,7 @@ function playerInCheck(yourColor, whiteInCheck, blackInCheck) {
     return (yourColor === "White" && whiteInCheck) || (yourColor === "Black" && blackInCheck);
 }
 
-function determineStatus(payload, data){
+function determineStatus(data){
     let status = "";
     if(data.gameEnded){
         status += "Game ended"
