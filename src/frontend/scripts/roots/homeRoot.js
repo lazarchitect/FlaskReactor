@@ -1,5 +1,3 @@
-/* Script to build the home.html template. */
-
 'use strict';
 
 import React, {useState} from 'react';
