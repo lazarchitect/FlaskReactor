@@ -49,7 +49,7 @@ class ChatHandler(WebSocketHandler):
             self.handleUpdate(fields)
 
     def on_close(self):
-        print("WebSocket closed")
+        print("chatSocket closed:", self.socketId)
 
     def handleUpdate(self, fields):
 

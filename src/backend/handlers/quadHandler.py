@@ -77,7 +77,7 @@ class QuadHandler(WebSocketHandler):
 			self.handleUpdate(fields)
 
 	def on_close(self):
-		print("WebSocket closed")
+		print("quadSocket closed:", self.socketId)
 
 	def handleUpdate(self, fields):
 
