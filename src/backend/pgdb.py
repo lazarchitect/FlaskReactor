@@ -275,6 +275,9 @@ class Pgdb:
 	### Chat
 
 	def createChat(self, gameId, content, username):
+		# note - game IDs are inserted here but can originate from any game table, meaning uniqueness is not enforced.
+		# For now, I suspect our use of UUIDs will give us some safety.
+		# But, we can enforce uniqueness by storing a game type column, then using that as a filter during SELECT.
 		query = sql['createChat']
 		values = [gameId, content, username]
 		self.__execute(query, values)
