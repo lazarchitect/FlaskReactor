@@ -1,27 +1,22 @@
-import React, {useState} from "react";
+import React, {useContext} from "react";
+import {PreferenceContext} from "./SiteHeader";
 
-export function SettingsPane({isLoggedIn}) {
+export function SettingsPane({isLoggedIn, expanded}) {
 
-    let {preferences} = payload;
-
-    const [quadColorPref, setQuadColorPref] = useState(preferences?.quadColorPref);
-    const [quadColorBackup, setQuadColorBackup] = useState(preferences?.quadColorBackup);
-    const [useChat, setUseChat] = useState(preferences?.useChat);
-
-    return <div id="settingsPane">
+    // for performance reasons, we simply edit style instead of re-rendering for every click
+    return <div id="settingsPane" style={{display: expanded ? 'block' : 'none'}}>
         Settings (refresh to see changes)
         <br/>
         {isLoggedIn ?
             <>
                 <span>Quadradius Color Preference: </span>
-                <QuadColorSelector command="quadColorPref" stateSetter={setQuadColorPref} current={quadColorPref}/>
+                <QuadColorDropdown setting="quad_color_pref" />
                 <br/>
                 <span>Quadradius Color Backup: </span>
-                <QuadColorSelector command="quadColorBackup" stateSetter={setQuadColorBackup}
-                                   current={quadColorBackup}/>
+                <QuadColorDropdown setting="quad_color_backup" />
                 <br/>
                 <label htmlFor="useChatToggle">Use Chat?</label>
-                <BooleanSelector id="useChatToggle" command="useChat" stateSetter={setUseChat} current={useChat}/>
+                <Toggle id="useChatToggle" setting="use_chat"/>
             </>
             : //  else - settings visible while logged out? uses cookies?
             <></>
@@ -29,40 +24,49 @@ export function SettingsPane({isLoggedIn}) {
     </div>
 }
 
-function BooleanSelector({id, current, stateSetter, command}) {
+function Toggle({id, setting}) {
+
+    let {preferencesState, setPreferencesState} = useContext(PreferenceContext);
+    let current = preferencesState[setting];
+
     let onChange = () => {
-        stateSetter(!current);
-        updateSettings(command, {"value": !current});
+        setPreferencesState((prevState) => ({...prevState, [setting]: !current}));
+        updateSettings(setting, {"value": !current})
     };
+
     return <input type="checkbox" id={id} checked={current} onChange={onChange}/>
 }
 
-function QuadColorSelector({current, stateSetter, command}) {
+// NOTE - users can select pref and backup as the same color, leading to mirror matches?
+function QuadColorDropdown({setting}) {
+
+    let {preferencesState, setPreferencesState} = useContext(PreferenceContext);
+    let current = preferencesState[setting];
+
     const quadColors = ["red", "blue", "green", "teal", "orange", "purple"];
 
-    let onChange = (e) => {
-        stateSetter(e.target.value);
-        updateSettings(command, {"color": e.target.value})
+    let onChange = (event) => {
+        setPreferencesState((prevState) => ({...prevState, [setting]: event.target.value}));
+        updateSettings(setting, {"value": event.target.value})
     };
 
-    return <select value={current} onChange={onChange}>
+    return <select id={setting} value={current} onChange={onChange}>
         {quadColors.map((item) => <option key={item} value={item}>{item}</option>)}
     </select>
 }
 
+/** sends new settings preference to server for persistence. */
 function updateSettings(command, settingsData) {
     fetch("/update_settings", {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            "command": command,
+            "setting": command,
             "username": payload.username,
-            // TODO need to authenticate this user somehow
+            "ws_token": payload.ws_token,
             "data": settingsData
         })
-    })
-        .then(response => {
-            if (response.statusText !== "ACCEPTED") alert("Settings update failed.");
-        });
-
+    }).then(response => {
+        if (response.statusText !== "ACCEPTED") alert("Settings update failed.");
+    });
 }

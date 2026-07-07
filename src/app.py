@@ -63,6 +63,7 @@ def homepage():
 
         payload = {
             "username": username,
+            "ws_token": session.get('ws_token'),
             "preferences": buildPreferences(pgdb.getUser(username)),
             "chessGames": chessGames,
             "tttGames": tttGames,
@@ -317,19 +318,22 @@ def createGame():
 
 @app.route("/update_settings", methods=["PATCH"])
 def updateSettings():
-    # todo authenticate (session?) presumably we can use ws_token similarly
+
     body = request.json
-    username = body["username"]
-    match(body.get("command", None)):
-        case "quadColorPref":
-            color = body["data"]["color"]
-            pgdb.updateSetting("quad_color_pref", color, username)
-        case "quadColorBackup":
-            color = body["data"]["color"]
-            pgdb.updateSetting("quad_color_backup", color, username)
-        case "useChat":
-            value = body["data"]["value"]
-            pgdb.updateSetting("use_chat", value, username)
+    username = body.get("username")
+    ws_token = body.get("ws_token")
+    setting = body.get("setting")
+
+    user = pgdb.getUser(username)
+    if user.ws_token != ws_token:
+        return "UNAUTHORIZED", 401
+
+    VALID_SETTINGS = ['quad_color_pref', 'quad_color_backup', 'use_chat']
+
+    if setting in VALID_SETTINGS:
+        value = body["data"]["value"]
+        pgdb.updateSetting(setting, value, username)
+
     return "ACCEPTED", 202
 
 is_closing = False

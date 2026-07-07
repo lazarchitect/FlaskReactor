@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from tornado.websocket import WebSocketClosedError
 
+
 def generateId():
 	return uuid4()
 
@@ -30,7 +31,7 @@ def buildPreferences(user=None):
 	if user is None:
 		return {}
 	return {
-		"quadColorPref": user.quad_color_pref,
-		"quadColorBackup": user.quad_color_backup,
-		"useChat": user.use_chat
+		"quad_color_pref": user.quad_color_pref,
+		"quad_color_backup": user.quad_color_backup,
+		"use_chat": user.use_chat
 	}
