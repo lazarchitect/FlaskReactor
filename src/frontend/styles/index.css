@@ -53,6 +53,9 @@ header {
     position: fixed;
     top: 10%;
     width: fit-content;
+    padding: 6px;
+    outline: 1px solid black;
+    outline-offset: -3px;
 }
 
 #headerUserText {
