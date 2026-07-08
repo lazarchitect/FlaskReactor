@@ -164,12 +164,6 @@ def logout():
 @app.route("/create-game", methods=["POST"])
 def createGame():
 
-    # TODO: refactoring /create-game into smaller subroutines CHECK!
-    #  There should be a widespread service layer to handle back end service logic. This file should focus on app setup and routing. CHECK!
-    #  Bad input handling can be handled outside this file. CHECK!
-    #  game_type should be a match/case statement with subfunctions in other files. CHECK!
-    #  In general, we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge. OKAY!
-
     try:
         validator.validateCreateGame(request)
     except ValidationError as ve:
