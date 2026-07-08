@@ -6,7 +6,7 @@ from psycopg.errors import InFailedSqlTransaction
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
-from src.backend.dbUtils import makeInsertSafe, convertToObject
+from src.backend.dbUtils import convertToObject
 
 schema = "flaskreactor"
 usersTable = schema + ".users"
@@ -138,7 +138,6 @@ class Pgdb:
 
 	def createUser(self, userDict):
 		query = sql['createUser']
-		makeInsertSafe(userDict)
 		self.__execute(query, userDict)
 		self.conn.commit()
 
@@ -155,7 +154,6 @@ class Pgdb:
 
 	def createQuadradiusGame(self, gameDict):
 		query = sql['createQuadradiusGame']
-		makeInsertSafe(gameDict)
 		self.__execute(query, gameDict)
 		self.conn.commit()
 
@@ -191,7 +189,6 @@ class Pgdb:
 
 	def createChessGame(self, gameDict):
 		query = sql['createChessGame']
-		makeInsertSafe(gameDict)
 		self.__execute(query, gameDict)
 		self.conn.commit()
 

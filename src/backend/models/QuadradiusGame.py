@@ -3,6 +3,8 @@ import json
 import random
 from datetime import datetime
 
+from psycopg.types.json import Json
+
 from src.backend.utils import generateId
 
 
@@ -18,7 +20,7 @@ def newQuadradiusGame(player1, player2, player1_color, player2_color, active_pla
         "player2_color": player2_color,
         "active_player": active_player,
         "id": generateId(),
-        "boardstate": boardstate,
+        "boardstate": Json(boardstate),
         "time_started": datetime.now(),
         "orb_countdown": random.choice([2,4,8])
     }
