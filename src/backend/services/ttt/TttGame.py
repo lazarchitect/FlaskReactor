@@ -3,9 +3,10 @@ import random
 from src.backend.pgdb import getPgdb
 from src.backend.utils import generateId
 
-pgdb = getPgdb()
 
 def createTttGame(player_name, opponent_name):
+
+    pgdb = getPgdb()
 
     if random.choice(["Heads", "Tails"]) == "Heads":
         x_player = player_name
@@ -16,7 +17,7 @@ def createTttGame(player_name, opponent_name):
 
     game = newTttGame(x_player, o_player)
 
-    getPgdb().createTttGame(game)
+    pgdb.createTttGame(game)
 
 def newTttGame(x_player, o_player):
 

@@ -7,9 +7,10 @@ from psycopg.types.json import Json
 from src.backend.pgdb import getPgdb
 from src.backend.utils import generateId
 
-pgdb = getPgdb()
 
 def createChessGame(player_name, opponent_name):
+
+    pgdb = getPgdb()
 
     if random.choice(["Heads", "Tails"]) == "Heads":
         white_player = player_name

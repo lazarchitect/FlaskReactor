@@ -8,9 +8,10 @@ from psycopg.types.json import Json
 from src.backend.pgdb import getPgdb
 from src.backend.utils import generateId
 
-pgdb = getPgdb()
 
 def createQuadGame(player_name, opponent_name):
+
+    pgdb = getPgdb()
 
     playerColorPrefs = pgdb.getPreferredTorusColors(player_name)
     opponentColorPrefs = pgdb.getPreferredTorusColors(opponent_name)
