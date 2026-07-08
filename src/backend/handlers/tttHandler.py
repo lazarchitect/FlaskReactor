@@ -188,7 +188,7 @@ class TttHandler(WebSocketHandler):
         updateAll(clientConnections[gameId], message)
 
         gameEnded = tttGameEnded(boardstate)
-        winner = oldActivePlayer if (gameEnded == "Win") else None
+        winner = oldActivePlayer if gameEnded else None
 
         if gameEnded:
             self.endTttGame(otherPlayer, winner, gameId)
