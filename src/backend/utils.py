@@ -1,5 +1,6 @@
 import json
 from hashlib import sha256
+from types import SimpleNamespace
 from uuid import uuid4
 
 from tornado.websocket import WebSocketClosedError
@@ -34,3 +35,7 @@ def buildPreferences(user=None):
 		"quad_color_backup": user.quad_color_backup,
 		"use_chat": user.use_chat
 	}
+
+def convertToObject(gameDict):
+	"""Helpful for using dot notation instead of dict key access."""
+	return SimpleNamespace(**gameDict)

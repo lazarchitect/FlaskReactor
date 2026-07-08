@@ -6,7 +6,7 @@ from psycopg.errors import InFailedSqlTransaction
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
-from src.backend.dbUtils import convertToObject
+from src.backend.utils import convertToObject
 
 schema = "flaskreactor"
 usersTable = schema + ".users"
