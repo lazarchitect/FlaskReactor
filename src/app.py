@@ -120,7 +120,7 @@ def tttGame(gameId):
     game = pgdb.getTttGame(gameId)
     username = session.get('username')
     if game is None:
-        return render_template("game_not_found.html", payload=json.dumps(basePayload(), default=str))
+        return render_template("game_not_found.html", payload=json.dumps(basePayload(username), default=str))
 
     tttPayload = {
         "game_type": "ttt", # used in WebSocketConnect for chatSocket
