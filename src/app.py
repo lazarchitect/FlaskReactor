@@ -1,7 +1,6 @@
 #!usr/bin/env python
 
 import json
-import random
 from os import environ
 from signal import signal as onSignal, SIGINT
 
@@ -16,11 +15,11 @@ from src.backend.handlers.chessHandler import ChessHandler
 from src.backend.handlers.quadHandler import QuadHandler
 from src.backend.handlers.statHandler import StatHandler
 from src.backend.handlers.tttHandler import TttHandler
-from src.backend.models.ChessGame import newChessGame
-from src.backend.models.QuadradiusGame import newQuadradiusGame
-from src.backend.models.TttGame import newTttGame
 from src.backend.models.User import newUser
 from src.backend.pgdb import Pgdb
+from src.backend.services.chess.ChessGame import createChessGame
+from src.backend.services.quad.QuadGame import createQuadGame
+from src.backend.services.ttt.TttGame import createTttGame
 from src.backend.utils import generateId, generateHash, notLoggedIn, buildPreferences
 
 app = Flask(__name__, static_folder="frontend", static_url_path='/frontend', template_folder="frontend/templates")
@@ -180,10 +179,8 @@ def createGame():
     #  In general, we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
 
     player_name = session['username']
-
-    game_type = request.form['gameType']
-
     opponent_name = request.form['opponent'].strip()
+    game_type = request.form['gameType']
 
     if session.get('loggedIn') == False:
         return "not logged in?" # shouldn't happen
@@ -201,63 +198,10 @@ def createGame():
 
     opponent_name = opponent.name # if the user typed in wrongly cased letters, we silently fix it here
 
-    if game_type == "Chess":
-        color = random.choice(['white', 'black'])
-
-        if color == "white":
-            white_player = player_name
-            black_player = opponent_name
-
-        else:
-            white_player = opponent_name
-            black_player = player_name
-
-        game = newChessGame(white_player, black_player)
-
-        pgdb.createChessGame(game)
-
-    elif game_type == "Ttt":
-        role = random.choice(['X', 'O'])
-        if role == 'X':
-            x_player = player_name
-            o_player = opponent_name
-        else:
-            o_player = player_name
-            x_player = opponent_name
-
-        game = newTttGame(x_player, o_player)
-
-        pgdb.createTttGame(game)
-
-    elif game_type == "Quad":
-
-        playerColorPrefs = pgdb.getPreferredTorusColors(player_name)
-        opponentColorPrefs = pgdb.getPreferredTorusColors(opponent_name)
-
-        if playerColorPrefs['quad_color_pref'] != opponentColorPrefs['quad_color_pref']:
-            player_color = playerColorPrefs['quad_color_pref']
-            opponent_color = opponentColorPrefs['quad_color_pref']
-        else:
-            if random.choice(["Heads", "Tails"]) == "Heads":
-                player_color = playerColorPrefs['quad_color_pref']
-                opponent_color = opponentColorPrefs['quad_color_backup']
-            else:
-                player_color = playerColorPrefs['quad_color_backup']
-                opponent_color = opponentColorPrefs['quad_color_pref']
-
-        players = [[player_name, player_color], [opponent_name, opponent_color]]
-        random.shuffle(players)
-
-        print(players)
-
-        game = newQuadradiusGame(
-            player1=players[0][0],
-            player2=players[1][0],
-            player1_color=players[0][1],
-            player2_color=players[1][1],
-            active_player=players[0][0])
-
-        pgdb.createQuadradiusGame(game)
+    match game_type:
+        case "Ttt":   createTttGame(player_name, opponent_name)
+        case "Quad":  createQuadGame(player_name, opponent_name)
+        case "Chess": createChessGame(player_name, opponent_name)
 
     return redirect('/')
 
