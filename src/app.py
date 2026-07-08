@@ -15,12 +15,14 @@ from src.backend.handlers.chessHandler import ChessHandler
 from src.backend.handlers.quadHandler import QuadHandler
 from src.backend.handlers.statHandler import StatHandler
 from src.backend.handlers.tttHandler import TttHandler
-from src.backend.models.User import newUser
 from src.backend.pgdb import Pgdb
 from src.backend.services.chess.ChessGame import createChessGame
+from src.backend.services.common import validator
+from src.backend.services.common.User import createUser
+from src.backend.services.common.validator import ValidationError
 from src.backend.services.quad.QuadGame import createQuadGame
 from src.backend.services.ttt.TttGame import createTttGame
-from src.backend.utils import generateId, generateHash, notLoggedIn, buildPreferences
+from src.backend.utils import notLoggedIn, buildPreferences
 
 app = Flask(__name__, static_folder="frontend", static_url_path='/frontend', template_folder="frontend/templates")
 
@@ -88,7 +90,8 @@ def chessGame(gameId):
 def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
     if game is None:
-        return render_template("game_not_found.html", payload=basePayload(), default=str)
+        payload = json.dumps(basePayload(), default=str)
+        return render_template("game_not_found.html", payload=payload)
 
     quadGamePayload = {
         "game_type": "quadradius",
@@ -105,7 +108,8 @@ def tttGame(gameId):
     game = pgdb.getTttGame(gameId)
 
     if game is None:
-        return render_template("game_not_found.html", payload=json.dumps(basePayload(), default=str))
+        payload = json.dumps(basePayload(), default=str)
+        return render_template("game_not_found.html", payload=payload)
 
     tttPayload = {
         "game_type": "ttt", # used in WebSocketConnect for chatSocket
@@ -117,51 +121,39 @@ def tttGame(gameId):
 
 @app.route('/login', methods=["POST"])
 def login():
+
+    try:
+        validator.validateLogin(request)
+    except ValidationError as ve:
+        return ve.message
+
     input_username = request.form['username']
-    input_password = request.form['password']
-    input_password_hash = generateHash(input_password)
 
     existingUser = pgdb.getUser(input_username)
 
-    if existingUser is None:
-        return "User " + input_username + " does not exist."
+    session['loggedIn'] = True
+    session['username'] = existingUser.name
+    session['userId'] = existingUser.id # probably not doing anything
+    return redirect('/')
 
-    correctPassword = input_password_hash == existingUser.password_hash
-    if correctPassword:
-        session['loggedIn'] = True
-        session['username'] = existingUser.name
-        session['userId'] = existingUser.id # probably not doing anything
-        session['ws_token'] = existingUser.ws_token
-        return redirect('/')
-    else:
-        return "Username or password incorrect. Please check your details and try again."
 
 
 @app.route('/signup', methods=["POST"])
 def signup():
+
+    try:
+        validator.validateSignup(request)
+    except ValidationError as ve:
+        return ve.message
+
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
-    password_repeat = request.form['password_repeat']
 
-    if password != password_repeat:
-        return "Your passwords did not match."
-
-    usernameTaken = pgdb.getUser(username) is not None
-    if usernameTaken:
-        return "That username is taken! sorry fam"
-
-    password_hash = generateHash(password)
-
-    ws_token = str(generateId())[:8]
-
-    user = newUser(username, password_hash, email, ws_token)
-    pgdb.createUser(user)
-    pgdb.createStat(user['id']) # can align this with other create fns later
+    createUser(email, password, username)
 
     session['loggedIn'] = True
     session['username'] = request.form['username']
-    session['ws_token'] = ws_token
     return redirect('/')
 
 @app.route("/logout", methods=["POST"])
@@ -172,31 +164,23 @@ def logout():
 @app.route("/create-game", methods=["POST"])
 def createGame():
 
-    # TODO: refactoring /create-game into smaller subroutines
-    #  There should be a widespread service layer to handle back end service logic. This file should focus on app setup and routing.
-    #  Bad input handling can be handled outside this file.
-    #  game_type should be a match/case statement with subfunctions in other files
-    #  In general, we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
+    # TODO: refactoring /create-game into smaller subroutines CHECK!
+    #  There should be a widespread service layer to handle back end service logic. This file should focus on app setup and routing. CHECK!
+    #  Bad input handling can be handled outside this file. CHECK!
+    #  game_type should be a match/case statement with subfunctions in other files. CHECK!
+    #  In general, we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge. OKAY!
+
+    try:
+        validator.validateCreateGame(request)
+    except ValidationError as ve:
+        return ve.message
 
     player_name = session['username']
     opponent_name = request.form['opponent'].strip()
     game_type = request.form['gameType']
 
-    if session.get('loggedIn') == False:
-        return "not logged in?" # shouldn't happen
-
-    if opponent_name == "":
-        return "enter a name, doofbury."
-
-    if player_name == opponent_name:
-        return "you can't vs yourself, bubso."
-
     opponent = pgdb.getUser(opponent_name)
-
-    if opponent is None:
-        return "We didn't find a user with that name. Check spelling and special characters."
-
-    opponent_name = opponent.name # if the user typed in wrongly cased letters, we silently fix it here
+    opponent_name = opponent.name # postgres lower() ensures case-insensitive username handling
 
     match game_type:
         case "Ttt":   createTttGame(player_name, opponent_name)
@@ -229,15 +213,16 @@ def basePayload():
 
     deployVersion = environ.get('DEPLOY_VERSION', default="Local")
     username = session.get('username') # session fields will be None if not logged in
+    user = pgdb.getUser(username)
+    ws_token = user.ws_token if user is not None else None
 
     return {
         "deployVersion": deployVersion,
         "username": username,
         "wsBaseUrl": wsBaseUrl,
-        "ws_token": session.get('ws_token'),
-        "preferences": buildPreferences(pgdb.getUser(username))
+        "ws_token": ws_token,
+        "preferences": buildPreferences(user)
     }
-
 
 if __name__ == "__main__":
 
