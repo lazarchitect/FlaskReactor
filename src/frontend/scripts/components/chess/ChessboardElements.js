@@ -28,13 +28,13 @@ function Tile({isDarkTile, isHighlightedTile, tileId, tileData}) {
 
     return (
         <span key={tileId} className={className} id={tileId}>
-			{ tileData.piece != null && <Piece piece={tileData.piece}/> }
+			{ tileData.piece != null && <Piece pieceData={tileData.piece}/> }
 		</span>
     );
 }
 
-export function Piece({piece}) {
+export function Piece({pieceData}) {
 
-    let {imagePath, altText} = generatePieceMetadata(piece);
+    let {imagePath, altText} = generatePieceMetadata(pieceData);
     return <img src={imagePath} className="pieceImg" alt={altText}/>;
 }

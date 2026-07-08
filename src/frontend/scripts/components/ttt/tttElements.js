@@ -1,5 +1,19 @@
 import React from "react";
 
+export function TttBoardRow({yourTurn, rowIndex, values}) {
+    // values is an array containing three cell data, e.g. ["X", "X", "O"]
+    return (values).map((cellContents, colIndex) =>
+        <span
+            key={colIndex}
+            className={"tttCell" + ((yourTurn && cellContents === "" && payload.username !== "") ? " activeTttCell" : "")}
+            id={colIndex + (rowIndex * 3)}
+            style={{left: 7 + (colIndex * 34) + "%", top: 7 + (rowIndex * 35) + "%"}}
+        >
+				{cellContents === "" ? "" : (cellContents === 'X' ? <X_Piece/> : <O_Piece/>)}
+			</span>
+    );
+}
+
 function X_Piece() {
     return (
         <svg width="70" height="70" xmlns="http://www.w3.org/2000/svg">
@@ -14,19 +28,5 @@ function O_Piece() {
         <svg width="70" height="70" xmlns="http://www.w3.org/2000/svg">
             <circle cx="35" cy="35" r="27" stroke="#2f6cf1" strokeWidth="9" fill="transparent"/>
         </svg>
-    );
-}
-
-export function TttBoardRow({yourTurn, rowIndex, values}) {
-    // values is an array containing three cell data, e.g. ["X", "X", "O"]
-    return (values).map((cellContents, colIndex) =>
-        <span
-            key={colIndex}
-            className={"tttCell" + ((yourTurn && cellContents === "" && payload.username !== "") ? " activeTttCell" : "")}
-            id={colIndex + (rowIndex * 3)}
-            style={{left: 7 + (colIndex * 34) + "%", top: 7 + (rowIndex * 35) + "%"}}
-        >
-				{cellContents === "" ? "" : (cellContents === 'X' ? <X_Piece/> : <O_Piece/>)}
-			</span>
     );
 }

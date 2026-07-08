@@ -6,11 +6,7 @@ from psycopg.errors import InFailedSqlTransaction
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
-from src.backend.MockPgdb import MockPgdb
-from src.backend.models.ChessGame import ChessGame
-from src.backend.models.QuadradiusGame import QuadradiusGame
-from src.backend.models.TttGame import TttGame
-from src.backend.models.User import User
+from src.backend.dbUtils import convertToObject
 
 schema = "flaskreactor"
 usersTable = schema + ".users"
@@ -23,18 +19,19 @@ quadGamesTable = schema + ".quadradius_games"
 sql = {
 
 	#Users
-	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token, quad_color_pref, quad_color_backup, use_chat) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token) VALUES (%(name)s, %(password_hash)s, %(email)s, %(id)s, %(ws_token)s)",
 	"getUser": f"SELECT * FROM {usersTable} WHERE lower(name)=lower(%s)",
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
 
 	# Quadradius
-	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, completed, active_player, time_started, last_move, time_ended, winner, turn_number, orb_counter, player1_powers,  player2_powers) values (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, orb_countdown) values (%(id)s, %(player1)s, %(player2)s, %(player1_color)s, %(player2_color)s, %(boardstate)s, %(active_player)s, %(orb_countdown)s)",
 	"getQuadradiusGames": f"SELECT * FROM {quadGamesTable} WHERE player1 = %s OR player2 = %s ORDER BY last_move DESC",
 	"getQuadradiusGame": f"SELECT * FROM {quadGamesTable} WHERE id = %s",
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
-	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s, active_player=%s, last_move=%s, turn_number=%s, orb_counter=%s, player1_powers=%s, player2_powers=%s where id=%s",
+	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s, active_player=%s, last_move=%s, turn_number=%s, orb_countdown=%s, player1_powers=%s, player2_powers=%s where id=%s",
+
 	# Chess
-	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, boardstate, completed, time_started, last_move, time_ended, active_player, winner) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createChessGame": f"INSERT INTO {chessGamesTable} (id, white_player, black_player, active_player, boardstate) VALUES (%(id)s, %(white_player)s, %(black_player)s, %(white_player)s, %(boardstate)s)",
 	"getCompletedChessGames": f"SELECT * FROM {chessGamesTable} where completed=true AND (white_player=%s OR black_player=%s)",
 	"getChessGames": f"SELECT * FROM {chessGamesTable} where (white_player=%s OR black_player=%s) ORDER BY last_move DESC",
 	"getChessGame": f"SELECT * FROM {chessGamesTable} WHERE id=%s",
@@ -42,11 +39,11 @@ sql = {
 	"endChessGame": f"UPDATE {chessGamesTable} SET completed=true, boardstate=%s, time_ended=%s, winner=%s WHERE id=%s",
 
 	# Tic-Tac-Toe
-	"createTttGame": f"INSERT INTO {tttGamesTable} (id, x_player, o_player, completed, time_started, last_move, time_ended, player_turn, winner, boardstate) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+	"createTttGame": f"INSERT INTO {tttGamesTable} (id, x_player, o_player, active_player, boardstate) VALUES (%(id)s, %(x_player)s, %(o_player)s, %(active_player)s, %(boardstate)s)",
 	"getTTTGames": f"SELECT * FROM {tttGamesTable} where (x_player=%s OR o_player=%s) ORDER BY last_move DESC",
 	"getTttGame": f"SELECT * FROM {tttGamesTable} where id=%s",
-	"updateTttGame": f"UPDATE {tttGamesTable} SET boardstate=%s, last_move=%s, player_turn=%s WHERE id=%s",
-	"endTttGame": f"UPDATE {tttGamesTable} SET completed=true, time_ended=%s, player_turn='', winner=%s WHERE id=%s",
+	"updateTttGame": f"UPDATE {tttGamesTable} SET boardstate=%s, last_move=%s, active_player=%s WHERE id=%s",
+	"endTttGame": f"UPDATE {tttGamesTable} SET completed=true, time_ended=%s, active_player='', winner=%s WHERE id=%s",
 
 	# Stats
 	"createStat": f"INSERT INTO {statsTable} (userid) VALUES (%s)",
@@ -59,37 +56,26 @@ sql = {
 
 }
 
+pgdb_instance = None
+
+def getPgdb():
+	return pgdb_instance
+
 class Pgdb:
 	"""interacts with a Postgres database of Flaskreactor users and games, for CRUD operations on records."""
 
-	db_env = None
-	_instance = None
-
-	# overriding new in order to use a Singleton approach, no need to reinstantiate for every Handler that comes up
-	# and also to allow for MockPgdb to be used without impacting code in any other file
-	def __new__(cls, postgres_config):
-
-		if not cls._instance: # first time instantiating
-
-			env = postgres_config['env']
-			if env not in ['local', 'remote', 'none']:
-				print('Invalid postgres env value in app_config:', env)
-				exit()
-
-			cls.db_env = env
-			print("connecting to environment:", cls.db_env)
-
-			if cls.db_env == "none": # dev only!
-				print('setting DB client to MockPgdb')
-				cls._instance = MockPgdb()
-			else:
-				cls._instance = super().__new__(cls)
-
-		return cls._instance
-
 	def __init__(self, postgres_config):
+		""" Should only be called once, during app startup. All other accesses should go through the global instance getter"""
 
 		self.config = postgres_config
+
+		env = postgres_config['env']
+		if env not in ['local', 'remote']:
+			print('Invalid postgres env value in app_config:', env)
+			exit()
+
+		self.db_env = env
+		print("connecting to environment:", self.db_env)
 
 		try:
 			self.conn = connect(
@@ -98,8 +84,9 @@ class Pgdb:
 				user     = self.config['user'],
 				password = self.config['password']
 			)
-
 			self.cursor = self.conn.cursor(row_factory=dict_row)
+			global pgdb_instance
+			pgdb_instance = self
 
 		except OperationalError as oe:
 			print(oe)
@@ -111,8 +98,8 @@ class Pgdb:
 
 	def __execute(self, query, values):
 		"""
-		executes some generic query on the DB, which might read, update, create, or destroy records.
-		this private function should only be called from other meaningful Pgdb methods,
+		Executes some generic query on the DB, which might read, update, create, or destroy records.
+		This private function should only be called from other meaningful Pgdb methods,
 		which formulate specific query arguments.
 		"""
 
@@ -137,6 +124,11 @@ class Pgdb:
 
 	### General
 
+	def createUser(self, userDict):
+		query = sql['createUser']
+		self.__execute(query, userDict)
+		self.conn.commit()
+
 	def getUser(self, username):
 		query = sql['getUser']
 		values = [username]
@@ -144,21 +136,13 @@ class Pgdb:
 		userDict = self.cursor.fetchone()
 		if userDict is None:
 			return None
-		return User.dbLoad(userDict)
-
-	def createUser(self, user):
-		query = sql['createUser']
-		values = user.toTuple()
-		self.__execute(query, values)
-		self.conn.commit()
-
+		return convertToObject(userDict)
 
 	### Quadradius
 
-	def createQuadradiusGame(self, g):
+	def createQuadradiusGame(self, gameDict):
 		query = sql['createQuadradiusGame']
-		values = g.toTuple()
-		self.__execute(query, values)
+		self.__execute(query, gameDict)
 		self.conn.commit()
 
 	def getQuadradiusGames(self, username):
@@ -175,7 +159,7 @@ class Pgdb:
 		if gameDict is None:
 			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
-		return QuadradiusGame.dbLoad(gameDict)
+		return convertToObject(gameDict)
 
 	def getPreferredTorusColors(self, user):
 		query = sql['getPreferredTorusColors']
@@ -183,21 +167,20 @@ class Pgdb:
 		self.__execute(query, values)
 		return self.cursor.fetchone()
 
-	def updateQuadradiusGame(self, boardstate, active_player, last_move, turn_number, orb_counter, player1_powers, player2_powers, gameId):
+	def updateQuadradiusGame(self, boardstate, active_player, last_move, turn_number, orb_countdown, player1_powers, player2_powers, gameId):
 		query = sql['updateQuadradiusGame']
-		values = (Json(boardstate), active_player, last_move, turn_number, orb_counter, Json(player1_powers), Json(player2_powers), gameId)
+		values = (Json(boardstate), active_player, last_move, turn_number, orb_countdown, Json(player1_powers), Json(player2_powers), gameId)
 		self.__execute(query, values)
 		self.conn.commit()
 
 	### Chess
 
-	def createChessGame(self, g):
+	def createChessGame(self, gameDict):
 		query = sql['createChessGame']
-		values = g.toTuple()
-		self.__execute(query, values)
+		self.__execute(query, gameDict)
 		self.conn.commit()
 
-	def getChessGame(self, gameId) -> ChessGame | None:
+	def getChessGame(self, gameId):
 		query = sql['getChessGame']
 		values = [gameId]
 		self.__execute(query, values)
@@ -205,7 +188,7 @@ class Pgdb:
 		if record is None:
 			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
-		return ChessGame.dbLoad(record)
+		return convertToObject(record)
 
 	def getChessGames(self, username):
 		query = sql['getChessGames']
@@ -227,6 +210,11 @@ class Pgdb:
 
 	### Tic-Tac-Toe
 
+	def createTttGame(self, gameDict):
+		query = sql['createTttGame']
+		self.__execute(query, gameDict)
+		self.conn.commit()
+
 	def getTttGame(self, gameId):
 		query = sql['getTttGame']
 		values = [gameId]
@@ -235,19 +223,13 @@ class Pgdb:
 		if record is None:
 			print("DATABASE READ ERROR: NO GAME FOUND WITH ID " + gameId)
 			return None
-		return TttGame.dbLoad(record)
+		return convertToObject(record)
 
 	def getTttGames(self, username):
 		query = sql["getTTTGames"]
 		values = [username, username]
 		self.__execute(query, values)
 		return self.cursor.fetchall()
-
-	def createTttGame(self, g):
-		query = sql['createTttGame']
-		values = g.toTuple()
-		self.__execute(query, values)
-		self.conn.commit()
 
 	def updateTttGame(self, boardstate, last_updated, otherPlayer, gameId):
 		query = sql['updateTttGame']
@@ -284,6 +266,9 @@ class Pgdb:
 	### Chat
 
 	def createChat(self, gameId, content, username):
+		# note - game IDs are inserted here but can originate from any game table, meaning uniqueness is not enforced.
+		# For now, I suspect our use of UUIDs will give us some safety.
+		# But, we can enforce uniqueness by storing a game type column, then using that as a filter during SELECT.
 		query = sql['createChat']
 		values = [gameId, content, username]
 		self.__execute(query, values)

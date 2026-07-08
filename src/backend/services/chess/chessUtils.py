@@ -10,10 +10,9 @@ class Tile:
         self.row = row
         self.col = col
         self.piece = piece
-    def hasA(self, color, type): # TODO the type param is never used?
-        if type == "any":
-            return self.piece is not None and self.piece.color == color
-        return self.piece is not None and self.piece.color == color and self.piece.type == type
+    def occupiedBy(self, color, piece_type="any"):
+        if self.piece is None or self.piece.color != color: return False
+        return piece_type == "any" or self.piece.type == piece_type
 
 class Piece:
     def __init__(self, pieceData):
@@ -66,7 +65,6 @@ def pieceTowards(boardstate, coords, offset):
     return pieceTowards(boardstate, targetCoords, offset)
 
 
-# TODO move this to MateEvaluator??
 def inCheck(boardstate, yourColor):
 
     enemyColor = WHITE if yourColor == "Black" else BLACK
@@ -93,9 +91,9 @@ def inCheck(boardstate, yourColor):
     pawnDirection = 1 if enemyColor == "White" else -1
     pawnLeftCoords = (kingCoords[0] + pawnDirection, kingCoords[1] - 1)
     pawnRightCoords = (kingCoords[0] + pawnDirection, kingCoords[1] + 1)
-    if not outOfBounds(pawnLeftCoords) and tileAt(boardstate, pawnLeftCoords).hasA(enemyColor, PAWN):
+    if not outOfBounds(pawnLeftCoords) and tileAt(boardstate, pawnLeftCoords).occupiedBy(enemyColor, PAWN):
         return True
-    if not outOfBounds(pawnRightCoords) and tileAt(boardstate, pawnRightCoords).hasA(enemyColor, PAWN):
+    if not outOfBounds(pawnRightCoords) and tileAt(boardstate, pawnRightCoords).occupiedBy(enemyColor, PAWN):
         return True
 
     # LOOK FOR ROOKS/QUEENS

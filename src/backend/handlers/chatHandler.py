@@ -2,6 +2,7 @@ import json
 
 from tornado.websocket import WebSocketHandler
 
+from src.backend.pgdb import getPgdb
 from src.backend.utils import generateId, isEmpty, updateAll
 
 clientConnections = dict()
@@ -22,8 +23,8 @@ class ChatHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self, pgdb):
-        self.pgdb = pgdb
+    def initialize(self):
+        self.pgdb = getPgdb()
     
     def open(self):
         self.socketId = "socket"+ str(generateId())[:8]
@@ -49,7 +50,7 @@ class ChatHandler(WebSocketHandler):
             self.handleUpdate(fields)
 
     def on_close(self):
-        print("WebSocket closed")
+        print("chatSocket closed:", self.socketId)
 
     def handleUpdate(self, fields):
 
@@ -131,9 +132,9 @@ class ChatHandler(WebSocketHandler):
                 print("received game type", fields.get('game_type', None), "invalid or not currently supported for messages")
                 return
 
-        # authenticate user by checking if the provided ws_token matches what's in the DB 
-        user = self.pgdb.getUser(fields['username']) # possible improvement - let the users receive and pass back an encrypted string containing their ws_token
-        if (fields['ws_token'] != user.ws_token):
+        # authenticate user by checking if the provided ws_token matches their records. Spectators should not have chat access even through request spoofing
+        user = self.pgdb.getUser(fields['username'])
+        if fields['ws_token'] != user.ws_token:
             print("debug: this user is claiming to have a different WS token? malicious?")
             return #this guy's a phony!
 

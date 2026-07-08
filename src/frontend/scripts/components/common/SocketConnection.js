@@ -3,7 +3,9 @@
 const sockets = {}; // k: path, v: WebSocket object
 const retryTimers = {}; // k: path, v: integer retry delay
 
-/** Underlying socket behavior governing all client-server connections. Establishes socket open and close behavior, and handles repeated data passing, for all socket types.
+/** Underlying socket behavior governing all client-server connections.
+ * Establishes socket open and close behavior, and handles repeated data passing, for all socket types.
+ * Immediately connects to socket path by sending a subscribe message with payload details, including game ID.
  * @returns a socket with some preset connection details and logic, so that the consumer layer can focus solely on application logic. */
 export function webSocketConnect({path, onMessage}) {
 
@@ -27,7 +29,6 @@ export function webSocketConnect({path, onMessage}) {
 
     socket.onclose = () => {
         // attempt increasingly delayed looping reconnect ( + random jitter) when connection is lost.
-        // TODO need some way to communicate temporary outage to user. Can display a "network reconnecting..." modal while state is not CONNECTED
         setTimeout(() => webSocketConnect({path, onMessage}), retryTimers[path]);
         retryTimers[path] += Math.floor(Math.random()*1000);
         console.log("socket connection to " + path + " closed. reopening in " + retryTimers[path] + "ms");
@@ -35,9 +36,9 @@ export function webSocketConnect({path, onMessage}) {
 
     socket.sendUpdate = (message) => {
         const updateObj = {
-            request: "update",
-            ws_token: payload.ws_token,
-            gameId: payload.game.id,
+            "request": "update",
+            "ws_token": payload.ws_token,
+            "gameId": payload.game.id,
             ...message
         };
         socket.send(JSON.stringify(updateObj));

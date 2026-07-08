@@ -4,6 +4,9 @@ import React from 'react';
 import {SettingsGearSVG} from "./SettingsGearSVG";
 import {SettingsPane} from "./SettingsPane";
 
+// when we go to add more preferences, this may need to get moved to a site-wide component that renders all roots within it. Would be used for stuff like dark mode
+export const PreferenceContext = React.createContext({});
+
 export function SiteHeader () {
 
 	let {deployVersion, username} = payload;
@@ -11,6 +14,7 @@ export function SiteHeader () {
 	const isLoggedIn = username != null;
 
 	const [settingsExpanded, setSettingsExpanded] = React.useState(false);
+	const [preferencesState, setPreferencesState] = React.useState(payload.preferences);
 
 	return (
 		<header>
@@ -25,7 +29,9 @@ export function SiteHeader () {
 					<SettingsGearSVG />
 				</div>
 
-				{settingsExpanded && <SettingsPane isLoggedIn={isLoggedIn} />}
+				<PreferenceContext.Provider value={{preferencesState, setPreferencesState}}>
+					<SettingsPane expanded={settingsExpanded} isLoggedIn={isLoggedIn} />
+				</PreferenceContext.Provider>
 
 				{isLoggedIn?
 					<span id="headerUserText">

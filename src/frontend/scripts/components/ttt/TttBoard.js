@@ -6,7 +6,7 @@ export function TttBoard() {
 
     const [boardstate, setBoardstate] = React.useState(payload.game.boardstate);
 
-    const [yourTurn, setYourTurn] = React.useState(payload.yourTurn);
+    const [yourTurn, setYourTurn] = React.useState(false); // initialized during socket subscribe
 
     React.useEffect(() => tttSocketConnect(setBoardstate, setYourTurn), []);
 

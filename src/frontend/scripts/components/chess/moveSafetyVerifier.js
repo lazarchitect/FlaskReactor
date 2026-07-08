@@ -1,4 +1,4 @@
-import {BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS} from "./chessConsts";
+import {BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS} from "./chessConsts";
 import {outOfBounds, pieceAt} from "./chessUtils";
 
 /** Determines if the given move from src to dest would NOT introduce check, or that it would escape any existing check.
@@ -27,13 +27,6 @@ function inCheck(boardstate, yourColor) {
         return true;
     if (pieceAt(boardstate, pawnRightCoords)?.is(enemyColor, "Pawn"))
         return true;
-
-    // look for adjacent Kings. TODO can honestly be removed at some point, this will never be true in a real game
-    for (const offset of ROYAL_OFFSETS) {
-        const targetCoords = [kingCoords[0] + offset[0], kingCoords[1] + offset[1]];
-        if (pieceAt(boardstate, targetCoords)?.is(enemyColor, "King"))
-            return true;
-    }
 
     // look for Knights
     for (const offset of KNIGHT_OFFSETS) {

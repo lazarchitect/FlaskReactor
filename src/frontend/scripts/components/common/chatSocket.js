@@ -5,9 +5,7 @@ let socket = null;
 // initial value (chats so far) populated during ws subscription process
 let chatLogGlobal = [];
 
-export function chatSocketConnect(setChatLog) {
-
-    // TODO return immediately if user is not one of the players
+export function chatSocketConnect(setChatLog, incrementNotifCount) {
 
     socket = webSocketConnect({
         path: '/chat',
@@ -19,6 +17,7 @@ export function chatSocketConnect(setChatLog) {
                 chatLogGlobal = data.chats;
                 setChatLog(buildFormattedChatLog(chatLogGlobal));
             } else if (data.command === "append") {
+                incrementNotifCount();
                 chatLogGlobal.push(data.chat);
                 setChatLog(buildFormattedChatLog(chatLogGlobal));
             } else if (data.command === "error") {

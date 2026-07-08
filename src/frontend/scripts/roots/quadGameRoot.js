@@ -12,13 +12,17 @@ import {QuadBoard} from '../components/quad/QuadBoard';
 import {TorusDragLayer} from '../components/quad/TorusDragLayer';
 import {quadSocketConnect} from "../components/quad/quadSocket";
 import {Legend} from "../components/quad/Legend";
+import {configureTitleAddition} from "./rootUtil";
 
-const isPlayer = [payload.game.player1, payload.game.player2].includes(payload.username);
-const useChat = payload.preferences.useChat;
+const players = [payload.game.player1, payload.game.player2]; // send players array itself in payload?
+const isPlayer = players.includes(payload.username);
+const use_chat = payload.preferences.use_chat;
 
 const isPlayer1 = payload.game.player1 === payload.username;
 const powersList = isPlayer ? (isPlayer1 ? payload.game.player1_powers : payload.game.player2_powers) : null;
 const legendData = {powersList: powersList, orb_countdown: payload.game.orb_countdown, turn_number: payload.game.turn_number };
+
+const titleAddition = configureTitleAddition(players);
 
 function Page() {
 
@@ -31,6 +35,7 @@ function Page() {
         <SiteHeader />
         <main>
             <div className="playArea">
+                <h3>Quadradius{titleAddition}</h3>
                 <DndProvider backend={HTML5Backend}>
                     <QuadBoard boardstate={boardstate} />
                     <TorusDragLayer />
@@ -38,7 +43,7 @@ function Page() {
                 <p>Status: <span id="status"></span></p>
             </div>
             <Legend legendState={legendState} />
-            {isPlayer && useChat && <Chatbox expanded={false} />}
+            {isPlayer && use_chat && <Chatbox expanded={false} />}
         </main>
     </>;
 }

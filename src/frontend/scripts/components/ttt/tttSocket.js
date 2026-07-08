@@ -20,35 +20,27 @@ export function sendUpdate(boardIndex) {
 
 export function tttSocketConnect(setBoardstate, setYourTurn) {
 
-    const statSocket = new WebSocket(payload.wsBaseUrl + "/stat")
-
     socket = webSocketConnect({
         path: "/ttt",
         onMessage: (message) => {
             const data = JSON.parse(message.data);
             if (data.command === "updateBoard") {
-
-                setStatus(determineStatus(payload, data))
+                setStatus(determineStatus(data))
                 setBoardstate(data.newBoardstate);
                 setYourTurn(payload.username === data.activePlayer);
-
-            } else if (data.command === "endGame") {
-                setStatus(determineStatus(payload, data));
+            }
+            else if (data.command === "initialize") {
+                setStatus(determineStatus(data));
                 setYourTurn(payload.username === data.activePlayer);
-                // call out to server - update this user's stats
-                const messageObj = {
-                    "request": "updateStat",
-                    "ws_token": payload.ws_token,
-                    "gameType": "ttt",
-                    "gameId": gameId,
-                    "userId": payload.userId,
-                    "username": payload.username
-                };
-                const message = JSON.stringify(messageObj);
-                statSocket.send(message); // TODO wouldn't this send incrementing stat updates for EVERYONE currently connected?? socketHandler should check who the user is?
-            } else if (data.command === "info") {
-                setStatus(determineStatus(payload, data));
-            } else if (data.command === "error") {
+            }
+            else if (data.command === "endGame") {
+                setStatus(determineStatus(data));
+                setYourTurn(false);
+            }
+            else if (data.command === "info"){
+                console.log(data);
+            }
+            else if (data.command === "error") {
                 alert(data.contents);
             }
         }
@@ -61,7 +53,7 @@ function setStatus(status) {
 
 /* Returns the updated status string,
    which gets displayed to the user at all times. */
-function determineStatus(payload, data) {
+function determineStatus(data) {
 
     let retval = "";
     if (data.gameEnded) {

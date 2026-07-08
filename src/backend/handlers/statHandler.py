@@ -4,15 +4,18 @@ import json
 from tornado.websocket import WebSocketHandler
 
 import src.backend.utils as utils
+from src.backend.pgdb import getPgdb
 
+
+# this is broken now apparently. In the future, create ticket for adding full stats functionality to all game types
 
 class StatHandler(WebSocketHandler):
 
 	def check_origin(self, origin):
 		return True
 
-	def initialize(self, pgdb):
-		self.pgdb = pgdb
+	def initialize(self):
+		self.pgdb = getPgdb()
 
 	def open(self):
 		self.socketId = "socket"+ str(utils.generateId())[:8]
@@ -48,7 +51,8 @@ class StatHandler(WebSocketHandler):
 			# used for authentication during updates
 			self.ws_token = fields['ws_token']
 
-		#TODO build out broadcast logic here. Players and spectators should know immediately when stats change
+		# build out broadcast logic here. Players and spectators should know immediately when stats change
+		# actually - stats can be an AJAX call once at the end of the game, doesn't really need sockets, right...?
 
 	def updateTttStat(self, fields):
 		gameId = fields['gameId']
@@ -60,7 +64,6 @@ class StatHandler(WebSocketHandler):
 		tttGame = self.pgdb.getTttGame(gameId)
 		winner = tttGame.winner
 
-		# TODO this is broken now apparently. create ticket for adding full stats functionality to TTT and Chess?
 		ttt_games_played = stat['ttt_games_played'] + 1
 		ttt_wins = stat['ttt_wins'] + (1 if winner == username else 0)
 		ttt_win_percent = ttt_wins/ttt_games_played

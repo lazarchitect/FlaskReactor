@@ -3,7 +3,9 @@ from datetime import datetime
 
 from tornado.websocket import WebSocketHandler
 
-from src.backend.utils import tttGameEnded, isEmpty, generateId, updateAll
+from src.backend.pgdb import getPgdb
+from src.backend.services.ttt.tttUtils import tttGameEnded
+from src.backend.utils import isEmpty, generateId, updateAll
 
 # keys are gameIds. values are lists of WS connections to inform of updates.
 clientConnections = dict()
@@ -20,8 +22,8 @@ class TttHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self, pgdb):
-        self.pgdb = pgdb
+    def initialize(self):
+        self.pgdb = getPgdb()
 
     def open(self):
         self.socketId = "socket"+ str(generateId())[:8]
@@ -104,21 +106,21 @@ class TttHandler(WebSocketHandler):
         if game is None:
             self.write_message({
                 "command": "error",
-                "contents": "game with ID '" + gameId + "' not found in database." 
+                "contents": "game with ID '" + str(gameId) + "' not found in database."
             })
 
-        if game.x_player == game.player_turn:
+        if game.x_player == game.active_player:
             otherPlayer = game.o_player
         else:
             otherPlayer = game.x_player
 
         self.write_message({
-                "command": "info",
+                "command": "initialize",
                 "gameEnded": game.completed,
-                "activePlayer": game.player_turn,
+                "activePlayer": game.active_player,
                 "otherPlayer": otherPlayer,
                 "winner": game.winner,
-                "contents": str(self.socketId) + " subscribed to gameId " + gameId
+                "contents": str(self.socketId) + " subscribed to gameId " + str(gameId)
         })
         
 
@@ -141,8 +143,7 @@ class TttHandler(WebSocketHandler):
         #issue: gameId can be invalid ttt game?
         tttGame = self.pgdb.getTttGame(gameId)
 
-        if player != tttGame.player_turn:
-            #uhhh what? the requester is not even the active player?
+        if player != tttGame.active_player:
             self.write_message({
                 "command": "error",
                 "contents": "NOT YOUR TURN!"
@@ -171,9 +172,7 @@ class TttHandler(WebSocketHandler):
         
         last_updated = datetime.now()
 
-        # 'player' has been verified at this point to match the database record for 'player_turn', 
-        # aka the player currently taking a turn.
-        # pgdb should update that field to the OTHER player now.
+        # active_player has been verified at this point, so now update that column to the OTHER player
         self.pgdb.updateTttGame(boardstate, last_updated, otherPlayer, gameId)
 
         newActivePlayer = otherPlayer
@@ -189,12 +188,12 @@ class TttHandler(WebSocketHandler):
         updateAll(clientConnections[gameId], message)
 
         gameEnded = tttGameEnded(boardstate)
-        winner = oldActivePlayer if (gameEnded == "Win") else None
+        winner = oldActivePlayer if gameEnded else None
 
         if gameEnded:
-            self.endTttGame(fields, otherPlayer, winner, gameId, player, tttGame)
+            self.endTttGame(otherPlayer, winner, gameId)
                 
-    def endTttGame(self, fields, otherPlayer, winner, gameId, player, tttGame):
+    def endTttGame(self, otherPlayer, winner, gameId):
         message = {
             "command": "endGame",
             "gameEnded": True,

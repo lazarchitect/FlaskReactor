@@ -25,17 +25,22 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
 
             const data = JSON.parse(messageEvent.data);
 
-            if (data.command === "updateBoard") { // TODO should be like "updateGame" or something wider
-                setStatus(determineStatus(payload, data));
+            if (data.command === "updateBoard") {
+                setStatus(determineStatus(data));
                 setBoardstate(data.newBoardstate);
-                setLegendState(data.newLegendState);
                 yourTurn = payload.username === data.active_player;
             }
-            else if (data.command === "info") {
-                setStatus(determineStatus(payload, data));
+            else if (data.command === "updateLegend") {
+                setLegendState(data.newLegendState);
+            }
+            else if (data.command === "initialize") {
+                setStatus(determineStatus(data));
+            }
+            else if (data.command === "info"){
+                console.log(data);
             }
             else if (data.command === "endGame") {
-                setStatus(determineStatus(payload, data))
+                setStatus(determineStatus(data))
             }
             else if (data.command === "error") {
                 alert(data.message);
@@ -44,7 +49,7 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
     });
 }
 
-function determineStatus(payload, data){
+function determineStatus(data){
     let status = "";
     if(data.gameEnded) {
         status += "Game over."

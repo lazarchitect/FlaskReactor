@@ -4,6 +4,7 @@ from random import randint
 
 from tornado.websocket import WebSocketHandler
 
+from src.backend.pgdb import getPgdb
 from src.backend.utils import generateId, isEmpty, updateAll
 
 clientConnections = dict()
@@ -49,8 +50,8 @@ class QuadHandler(WebSocketHandler):
 	def check_origin(self, origin):
 		return True
 
-	def initialize(self, pgdb):
-		self.pgdb = pgdb
+	def initialize(self):
+		self.pgdb = getPgdb()
 
 	def open(self):
 		self.socketId = "socket"+ str(generateId())[:8]
@@ -77,7 +78,7 @@ class QuadHandler(WebSocketHandler):
 			self.handleUpdate(fields)
 
 	def on_close(self):
-		print("WebSocket closed")
+		print("quadSocket closed:", self.socketId)
 
 	def handleUpdate(self, fields):
 
@@ -86,7 +87,7 @@ class QuadHandler(WebSocketHandler):
 		# performance issue to do a DB read every single move? maybe just have them send what we need?
 		game = self.pgdb.getQuadradiusGame(gameId)
 
-		# TODO for posterity: there are multiple types of updates. Moves, power activations on tori, power effect outcomes.
+		# for posterity: there are multiple types of updates. Moves, power activations on tori, power effect outcomes.
 
 		### MOVE LOGIC ###
 		# modify game.boardstate based on src and dest. Destroy tori where appropriate.
@@ -129,7 +130,6 @@ class QuadHandler(WebSocketHandler):
 
 		updateAll(clientConnections[fields['gameId']], responseToClient)
 
-		# TODO determine new active player and double check the rest of these
 		self.pgdb.updateQuadradiusGame(game.boardstate, newActivePlayer, datetime.now(), newTurnNumber, newOrbCountdown, game.player1_powers, game.player2_powers, gameId)
 
 
@@ -154,9 +154,6 @@ class QuadHandler(WebSocketHandler):
 			})
 			return
 
-		#used for easy search during later deletion
-		self.gameId = gameId
-
 		if isEmpty(fields.get('ws_token')):
 			self.write_message({
 				"command": "info",
@@ -164,14 +161,12 @@ class QuadHandler(WebSocketHandler):
 				"details": str(connectionDetails)
 			})
 
-		# authenticate user by checking if the provided ws_token matches what's in the DB
-		user = self.pgdb.getUser(fields['username']) # possible improvement - let the users receive and pass back an encrypted string containing their ws_token
-		if (fields['ws_token'] != user.ws_token):
-			print("debug: this user is claiming to have a different WS token? malicious?")
-			return #this guy's a phony!
+		else:
+			# used for authentication during updates
+			self.ws_token = fields['ws_token']
 
-		# used for authentication during updates
-		self.ws_token = fields['ws_token']
+		#used for easy search during later deletion
+		self.gameId = gameId
 
 		if gameId not in clientConnections:
 			clientConnections[gameId] = [connectionDetails]
@@ -181,7 +176,7 @@ class QuadHandler(WebSocketHandler):
 		game = self.pgdb.getQuadradiusGame(gameId)
 
 		self.write_message({
-			"command": "info",
+			"command": "initialize",
 			"active_player": game.active_player,
 			"inactive_player": game.player1 if game.active_player == game.player2 else game.player2,
 			"contents": str(self.socketId) + " subscribed to gameId " + gameId

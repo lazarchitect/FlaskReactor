@@ -1,9 +1,9 @@
 #!usr/bin/env python
 
 import json
-import os
 import random
-from signal import signal, SIGINT
+from os import environ
+from signal import signal as onSignal, SIGINT
 
 import tornado
 from flask import Flask, render_template, redirect, request, session
@@ -16,10 +16,10 @@ from src.backend.handlers.chessHandler import ChessHandler
 from src.backend.handlers.quadHandler import QuadHandler
 from src.backend.handlers.statHandler import StatHandler
 from src.backend.handlers.tttHandler import TttHandler
-from src.backend.models.ChessGame import ChessGame
-from src.backend.models.QuadradiusGame import QuadradiusGame
-from src.backend.models.TttGame import TttGame
-from src.backend.models.User import User
+from src.backend.models.ChessGame import newChessGame
+from src.backend.models.QuadradiusGame import newQuadradiusGame
+from src.backend.models.TttGame import newTttGame
+from src.backend.models.User import newUser
 from src.backend.pgdb import Pgdb
 from src.backend.utils import generateId, generateHash, notLoggedIn, buildPreferences
 
@@ -41,11 +41,6 @@ except KeyError as ke:
     print("app_config missing a key:", ke.args[0])
     exit()
 
-try:
-    deployVersion = os.environ['DEPLOY_VERSION']
-except KeyError:
-    deployVersion = "Local"
-
 with app.test_request_context():
     print("session cleared")
     session.clear()
@@ -54,22 +49,19 @@ with app.test_request_context():
 def homepage():
 
     if notLoggedIn(session):
-        payload = json.dumps({"deployVersion": deployVersion, "preferences": None})
+        payload = json.dumps(basePayload(), default=str)
         return render_template("splash.html", payload = payload)
 
     else:
         username = session.get('username')
         chessGames, tttGames, quadGames = pgdb.getAllGames(username)
 
-        payload = {
-            "username": username,
-            "preferences": buildPreferences(pgdb.getUser(username)),
+        homePayload = {
             "chessGames": chessGames,
             "tttGames": tttGames,
-            "quadGames": quadGames,
-            "deployVersion": deployVersion
+            "quadGames": quadGames
         }
-        payload = json.dumps(payload, default=str)
+        payload = json.dumps(basePayload() | homePayload, default=str)
         return render_template("/home.html", payload=payload)
 
 
@@ -78,92 +70,49 @@ def chessGame(gameId):
     game = pgdb.getChessGame(gameId)
     username = session.get('username')
     if game is None:
-        return render_template("game_not_found.html", payload=json.dumps({
-            "preferences": buildPreferences(pgdb.getUser(username)),
-            "deployVersion": deployVersion
-        }, default=str))
-
-    username = session.get('username')
+        payload = json.dumps(basePayload(), default=str)
+        return render_template("game_not_found.html", payload=payload)
 
     colors = {game.white_player: "White", game.black_player: "Black"}
     userColor = colors.get(username) # defaults to None if user is not a player (not logged in, other acct, etc.)
-    enemyColor = "Black" if userColor == "White" else ("White" if userColor == "Black" else None)
 
-    payload = {
+    chessPayload = {
+        "game_type": "chess", # used in WebSocketConnect for chatSocket
         "game": vars(game),
-        "username": username,
-        "game_type": "chess", # field used by common component
-        "preferences": buildPreferences(pgdb.getUser(username)),
-
-        # TODO following three lines' values already derive from "game" and "username", redundant payload fields. let UI figure it out
-        "players": [game.white_player, game.black_player],
-        "activePlayer": game.active_player,
-        "otherPlayer": (game.white_player if userColor == "Black" else game.black_player),
-
-        "wsBaseUrl": wsBaseUrl,
-        "ws_token": session.get('ws_token'),
-        "userColor": userColor,
-        "enemyColor": enemyColor,
-        "deployVersion": deployVersion
+        "userColor": userColor
     }
-    payload = json.dumps(payload, default=str)
+    payload = json.dumps(basePayload() | chessPayload, default=str)
 
     return render_template("chessGame.html", payload=payload)
 
 @app.route("/games/quad/<gameId>")
 def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
-    username = session.get('username')
     if game is None:
-        return render_template("game_not_found.html", payload=json.dumps({
-            "preferences": buildPreferences(pgdb.getUser(username)),
-            "deployVersion": deployVersion
-        }, default=str))
+        return render_template("game_not_found.html", payload=basePayload(), default=str)
 
-    payload = {
-        "deployVersion": deployVersion,
-        "wsBaseUrl": wsBaseUrl,
-        "game": vars(game),
-        "preferences": buildPreferences(pgdb.getUser(username)),
-        "username": session.get('username'), #can be null if not logged in
-        "userId": session.get('userId'),
+    quadGamePayload = {
         "game_type": "quadradius",
-        "ws_token": session.get('ws_token'),
-        "yourTurn": game.active_player == session.get('username')
+        "game": vars(game)
     }
 
-    payload = json.dumps(payload, default=str)
+    payload = json.dumps(basePayload() | quadGamePayload, default=str)
     return render_template("quadGame.html", payload=payload)
 
 
 @app.route('/games/ttt/<gameId>')
 def tttGame(gameId):
+
     game = pgdb.getTttGame(gameId)
-    username = session.get('username')
+
     if game is None:
-        return render_template("game_not_found.html", payload=json.dumps({
-            "preferences": buildPreferences(pgdb.getUser(username)),
-            "deployVersion": deployVersion
-        }, default=str))
-    # TODO thoughts -
-    #  username, preferences, and deployVersion are common to all payloads.
-    #  Should there be a common payloadBuilder?
-    #  should Payload be a class?
-    payload = {
-        "wsBaseUrl": wsBaseUrl,
+        return render_template("game_not_found.html", payload=json.dumps(basePayload(), default=str))
+
+    tttPayload = {
+        "game_type": "ttt", # used in WebSocketConnect for chatSocket
         "game": vars(game),
-        "ws_token": session.get('ws_token'),
-        "game_type": "ttt", # field used by common component
-        "username": session.get('username'), #can be null if not logged in
-        "preferences": buildPreferences(pgdb.getUser(username)),
-        "userId": session.get('userId'),
-        # TODO simplify payload - next three lines can be derived from "game" on client side
-        "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
-        "players": [game.x_player, game.o_player],
-        "yourTurn": game.player_turn == session.get('username'),
-        "deployVersion": deployVersion
     }
-    payload = json.dumps(payload, default=str)
+    payload = json.dumps(basePayload() | tttPayload, default=str)
     return render_template("tttGame.html", payload=payload)
 
 
@@ -182,11 +131,8 @@ def login():
     if correctPassword:
         session['loggedIn'] = True
         session['username'] = existingUser.name
-        session['userId'] = existingUser.id
+        session['userId'] = existingUser.id # probably not doing anything
         session['ws_token'] = existingUser.ws_token
-        session['quadColorPref'] = existingUser.quad_color_pref
-        session['quadColorBackup'] = existingUser.quad_color_backup
-        session['useChat'] = existingUser.use_chat
         return redirect('/')
     else:
         return "Username or password incorrect. Please check your details and try again."
@@ -208,12 +154,11 @@ def signup():
 
     password_hash = generateHash(password)
 
-    userid = str(generateId())
     ws_token = str(generateId())[:8]
 
-    newUser = User(username, password_hash, email, ws_token, isDbLoad=False)
-    pgdb.createUser(newUser)
-    pgdb.createStat(userid)
+    user = newUser(username, password_hash, email, ws_token)
+    pgdb.createUser(user)
+    pgdb.createStat(user['id']) # can align this with other create fns later
 
     session['loggedIn'] = True
     session['username'] = request.form['username']
@@ -229,10 +174,10 @@ def logout():
 def createGame():
 
     # TODO refactoring /create-game into smaller subroutines
-    # there should be a widespread service layer to handle back end logic, this file should just be setup and endpoint routing
-    # bad input handling can be handled outside this file
-    # game_type should be a match/case statement with subfunctions in other files
-    # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
+    #  There should be a widespread service layer to handle back end service logic. This file should focus on app setup and routing.
+    #  Bad input handling can be handled outside this file.
+    #  game_type should be a match/case statement with subfunctions in other files
+    #  In general, we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
 
     player_name = session['username']
 
@@ -267,7 +212,7 @@ def createGame():
             white_player = opponent_name
             black_player = player_name
 
-        game = ChessGame(white_player, black_player, isDbLoad=False)
+        game = newChessGame(white_player, black_player)
 
         pgdb.createChessGame(game)
 
@@ -280,7 +225,7 @@ def createGame():
             o_player = player_name
             x_player = opponent_name
 
-        game = TttGame(x_player, o_player, isDbLoad=False)
+        game = newTttGame(x_player, o_player)
 
         pgdb.createTttGame(game)
 
@@ -289,7 +234,6 @@ def createGame():
         playerColorPrefs = pgdb.getPreferredTorusColors(player_name)
         opponentColorPrefs = pgdb.getPreferredTorusColors(opponent_name)
 
-        # TODO use .get(str, default) (and make the field name better?)
         if playerColorPrefs['quad_color_pref'] != opponentColorPrefs['quad_color_pref']:
             player_color = playerColorPrefs['quad_color_pref']
             opponent_color = opponentColorPrefs['quad_color_pref']
@@ -306,44 +250,50 @@ def createGame():
 
         print(players)
 
-        game = QuadradiusGame(
+        game = newQuadradiusGame(
             player1=players[0][0],
             player2=players[1][0],
             player1_color=players[0][1],
             player2_color=players[1][1],
-            active_player=players[0][0],
-            isDbLoad=False) # users will be able to update their preferred & backup Torus colors
+            active_player=players[0][0])
 
         pgdb.createQuadradiusGame(game)
 
     return redirect('/')
 
-@app.route("/receive_settings", methods=["PATCH"])
-def receiveSettings():
-    # todo authenticate (session?)
+@app.route("/update_settings", methods=["PATCH"])
+def updateSettings():
+
     body = request.json
-    username = body["username"]
-    match(body.get("command", None)):
-        case "quadColorPref":
-            color = body["data"]["color"]
-            pgdb.updateSetting("quad_color_pref", color, username)
-        case "quadColorBackup":
-            color = body["data"]["color"]
-            pgdb.updateSetting("quad_color_backup", color, username)
-        case "useChat":
-            value = body["data"]["value"]
-            pgdb.updateSetting("use_chat", value, username)
+    username = body.get("username")
+    ws_token = body.get("ws_token")
+    setting = body.get("setting")
+
+    user = pgdb.getUser(username)
+    if user.ws_token != ws_token:
+        return "UNAUTHORIZED", 401
+
+    VALID_SETTINGS = ['quad_color_pref', 'quad_color_backup', 'use_chat']
+
+    if setting in VALID_SETTINGS:
+        value = body["data"]["value"]
+        pgdb.updateSetting(setting, value, username)
+
     return "ACCEPTED", 202
 
-is_closing = False
+def basePayload():
 
-def signal_handler(signum, frame):
-    global is_closing
-    is_closing = True
+    deployVersion = environ.get('DEPLOY_VERSION', default="Local")
+    username = session.get('username') # session fields will be None if not logged in
 
-def try_exit():
-    if is_closing:
-        tornado.ioloop.IOLoop.instance().stop()
+    return {
+        "deployVersion": deployVersion,
+        "username": username,
+        "wsBaseUrl": wsBaseUrl,
+        "ws_token": session.get('ws_token'),
+        "preferences": buildPreferences(pgdb.getUser(username))
+    }
+
 
 if __name__ == "__main__":
 
@@ -351,12 +301,12 @@ if __name__ == "__main__":
     application = Application(
         default_host=host,
         handlers=[
-            ("/ws/ttt",     TttHandler,      {"pgdb": pgdb}),
-            ("/ws/chat",    ChatHandler,     {"pgdb": pgdb}),
-            ("/ws/stat",    StatHandler,     {"pgdb": pgdb}),
-            ("/ws/quad",    QuadHandler,     {"pgdb": pgdb}),
-            ("/ws/chess",   ChessHandler,    {"pgdb": pgdb}),
-            (".*",          FallbackHandler, {"fallback": flaskApp})
+            ("/ws/ttt",   TttHandler),
+            ("/ws/chat",  ChatHandler),
+            ("/ws/stat",  StatHandler),
+            ("/ws/quad",  QuadHandler),
+            ("/ws/chess", ChessHandler),
+            (".*",        FallbackHandler, {"fallback": flaskApp})
         ]
     )
     application.listen(port)
@@ -365,8 +315,7 @@ if __name__ == "__main__":
     print("---running server on port " + str(port) + "---")
 
     parse_command_line()
-    signal(SIGINT, signal_handler)
+    onSignal(SIGINT, lambda signum, frame: tornado.ioloop.IOLoop.instance().stop())
     application.listen(8888)
-    tornado.ioloop.PeriodicCallback(try_exit, 1000).start()
 
-    tornado.ioloop.IOLoop.instance().start() #runs until killed
+    tornado.ioloop.IOLoop.instance().start() #runs until stopped

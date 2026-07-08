@@ -4,6 +4,7 @@ from datetime import datetime
 from tornado.websocket import WebSocketHandler
 
 import src.backend.utils as utils
+from src.backend.pgdb import getPgdb
 from src.backend.services.chess.Move import Move, executeMove, executeRookJump, deletePiece, promotePawn
 from src.backend.services.chess.chessConsts import *
 from src.backend.services.chess.chessUtils import inCheck, numberToLetter, pieceLetter
@@ -24,8 +25,8 @@ class ChessHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self, pgdb):
-        self.pgdb = pgdb
+    def initialize(self):
+        self.pgdb = getPgdb()
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
@@ -108,9 +109,11 @@ class ChessHandler(WebSocketHandler):
 
         game = self.pgdb.getChessGame(gameId)
 
-        # if game is None:
-        #     pass
-        #     #TODO If game is None, we should error alert the UI and halt here
+        if game is None:
+            self.write_message({
+                "command": "error",
+                "message": "game not found on server during connection handshake"
+            })
 
         if game.white_player == game.active_player:
             otherPlayer = game.black_player
@@ -130,7 +133,7 @@ class ChessHandler(WebSocketHandler):
         wkrMoved = game.wkr_moved
 
         self.write_message({
-            "command": "info",
+            "command": "initialize",
             "gameEnded": game.completed,
             "whiteInCheck": whiteInCheck,
             "blackInCheck": blackInCheck,
