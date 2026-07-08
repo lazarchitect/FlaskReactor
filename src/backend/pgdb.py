@@ -212,7 +212,6 @@ class Pgdb:
 
 	def createTttGame(self, gameDict):
 		query = sql['createTttGame']
-		# makeInsertSafe(gameDict)
 		self.__execute(query, gameDict)
 		self.conn.commit()
 
