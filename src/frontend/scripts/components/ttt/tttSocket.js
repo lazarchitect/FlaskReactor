@@ -31,6 +31,7 @@ export function tttSocketConnect(setBoardstate, setYourTurn) {
             }
             else if (data.command === "initialize") {
                 setStatus(determineStatus(data));
+                setYourTurn(payload.username === data.activePlayer);
             }
             else if (data.command === "endGame") {
                 setStatus(determineStatus(data));

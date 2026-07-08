@@ -2,13 +2,15 @@ import React from 'react'; // used by Webpack
 import {createRoot} from 'react-dom/client';
 import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
-import {TttBoard} from "../components/ttt/tttBoard";
+import {TttBoard} from "../components/ttt/TttBoard";
 import {configureTitleAddition} from "./rootUtil";
 
-const isPlayer = payload.players.includes(payload.username);
+const players = [payload.game.x_player, payload.game.o_player];
+const isPlayer = players.includes(payload.username);
+
 const use_chat = payload.preferences.use_chat;
 
-const titleAddition = configureTitleAddition(payload.players);
+const titleAddition = configureTitleAddition(players);
 
 function Page(){
 	return <>

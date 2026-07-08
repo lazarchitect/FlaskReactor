@@ -49,7 +49,7 @@ with app.test_request_context():
 def homepage():
 
     if notLoggedIn(session):
-        payload = json.dumps(basePayload(username=None), default=str)
+        payload = json.dumps(basePayload(), default=str)
         return render_template("splash.html", payload = payload)
 
     else:
@@ -61,7 +61,7 @@ def homepage():
             "tttGames": tttGames,
             "quadGames": quadGames
         }
-        payload = json.dumps(basePayload(username) | homePayload, default=str)
+        payload = json.dumps(basePayload() | homePayload, default=str)
         return render_template("/home.html", payload=payload)
 
 
@@ -70,67 +70,50 @@ def chessGame(gameId):
     game = pgdb.getChessGame(gameId)
     username = session.get('username')
     if game is None:
-        payload = json.dumps(basePayload(username), default=str)
+        payload = json.dumps(basePayload(), default=str)
         return render_template("game_not_found.html", payload=payload)
 
     colors = {game.white_player: "White", game.black_player: "Black"}
     userColor = colors.get(username) # defaults to None if user is not a player (not logged in, other acct, etc.)
-    enemyColor = "Black" if userColor == "White" else ("White" if userColor == "Black" else None)
 
     chessPayload = {
+        "game_type": "chess", # used in WebSocketConnect for chatSocket
         "game": vars(game),
-        "username": username,
-        "game_type": "chess", # field used by common component
-        "preferences": buildPreferences(pgdb.getUser(username)),
-
-        # TODO following three lines' values already derive from "game" and "username", redundant payload fields. let UI figure it out
-        "players": [game.white_player, game.black_player],
-        "activePlayer": game.active_player,
-        "otherPlayer": (game.white_player if userColor == "Black" else game.black_player),
-
-        "userColor": userColor,
-        "enemyColor": enemyColor,
+        "userColor": userColor
     }
-    payload = json.dumps(basePayload(username) | chessPayload, default=str)
+    payload = json.dumps(basePayload() | chessPayload, default=str)
 
     return render_template("chessGame.html", payload=payload)
 
 @app.route("/games/quad/<gameId>")
 def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
-    username = session.get('username')
     if game is None:
-        return render_template("game_not_found.html", payload=basePayload(username), default=str)
+        return render_template("game_not_found.html", payload=basePayload(), default=str)
 
     quadGamePayload = {
         "game_type": "quadradius",
-        "game": vars(game),
-        "wsBaseUrl": wsBaseUrl,
-        "ws_token": session.get('ws_token'),
-        # TODO same simplification as others
-        "yourTurn": game.active_player == session.get('username')
+        "game": vars(game)
     }
 
-    payload = json.dumps(basePayload(username) | quadGamePayload, default=str)
+    payload = json.dumps(basePayload() | quadGamePayload, default=str)
     return render_template("quadGame.html", payload=payload)
 
 
 @app.route('/games/ttt/<gameId>')
 def tttGame(gameId):
+
     game = pgdb.getTttGame(gameId)
     username = session.get('username')
+
     if game is None:
-        return render_template("game_not_found.html", payload=json.dumps(basePayload(username), default=str))
+        return render_template("game_not_found.html", payload=json.dumps(basePayload(), default=str))
 
     tttPayload = {
         "game_type": "ttt", # used in WebSocketConnect for chatSocket
         "game": vars(game),
-        # TODO simplify payload - next three lines can be derived from "game" on client side
-        "otherPlayer": game.o_player if session.get('username') == game.x_player else game.x_player,
-        "players": [game.x_player, game.o_player],
-        "yourTurn": game.active_player == session.get('username')
     }
-    payload = json.dumps(basePayload(username) | tttPayload, default=str)
+    payload = json.dumps(basePayload() | tttPayload, default=str)
     return render_template("tttGame.html", payload=payload)
 
 
@@ -299,13 +282,14 @@ def updateSettings():
 
     return "ACCEPTED", 202
 
-def basePayload(username):
+def basePayload():
 
     deployVersion = environ.get('DEPLOY_VERSION', default="Local")
+    username = session.get('username') # session fields will be None if not logged in
 
     return {
         "deployVersion": deployVersion,
-        "username": session.get('username'), # session fields will be null if not logged in
+        "username": username,
         "wsBaseUrl": wsBaseUrl,
         "ws_token": session.get('ws_token'),
         "preferences": buildPreferences(pgdb.getUser(username))
