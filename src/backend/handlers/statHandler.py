@@ -4,6 +4,7 @@ import json
 from tornado.websocket import WebSocketHandler
 
 import src.backend.utils as utils
+from src.backend.pgdb import getPgdb
 
 
 # this is broken now apparently. In the future, create ticket for adding full stats functionality to all game types
@@ -13,8 +14,8 @@ class StatHandler(WebSocketHandler):
 	def check_origin(self, origin):
 		return True
 
-	def initialize(self, pgdb):
-		self.pgdb = pgdb
+	def initialize(self):
+		self.pgdb = getPgdb()
 
 	def open(self):
 		self.socketId = "socket"+ str(utils.generateId())[:8]

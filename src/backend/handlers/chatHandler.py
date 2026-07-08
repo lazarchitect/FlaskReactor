@@ -2,6 +2,7 @@ import json
 
 from tornado.websocket import WebSocketHandler
 
+from src.backend.pgdb import getPgdb
 from src.backend.utils import generateId, isEmpty, updateAll
 
 clientConnections = dict()
@@ -22,8 +23,8 @@ class ChatHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self, pgdb):
-        self.pgdb = pgdb
+    def initialize(self):
+        self.pgdb = getPgdb()
     
     def open(self):
         self.socketId = "socket"+ str(generateId())[:8]

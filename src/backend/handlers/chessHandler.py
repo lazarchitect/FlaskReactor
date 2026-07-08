@@ -4,6 +4,7 @@ from datetime import datetime
 from tornado.websocket import WebSocketHandler
 
 import src.backend.utils as utils
+from src.backend.pgdb import getPgdb
 from src.backend.services.chess.Move import Move, executeMove, executeRookJump, deletePiece, promotePawn
 from src.backend.services.chess.chessConsts import *
 from src.backend.services.chess.chessUtils import inCheck, numberToLetter, pieceLetter
@@ -24,8 +25,8 @@ class ChessHandler(WebSocketHandler):
     def check_origin(self, origin):
         return True
 
-    def initialize(self, pgdb):
-        self.pgdb = pgdb
+    def initialize(self):
+        self.pgdb = getPgdb()
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
