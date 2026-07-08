@@ -3,7 +3,7 @@ def newStat(userId):
     return {
         "userId": userId,
 
-        # following are defaults. also these need "chess_" prefixed on to them
+        # following are defaults, can likely remove later since DB will use the baked-in defaults. also the columns need "chess_" prefixed on to them
         "games_played": 0,
         "wins": 0,
         "win_percent": 0,
