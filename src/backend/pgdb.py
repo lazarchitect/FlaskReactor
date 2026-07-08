@@ -6,7 +6,7 @@ from psycopg.errors import InFailedSqlTransaction
 from psycopg.rows import dict_row
 from psycopg.types.json import Json
 
-from src.backend.dbUtils import convertToObject
+from src.backend.utils import convertToObject
 
 schema = "flaskreactor"
 usersTable = schema + ".users"
@@ -75,16 +75,10 @@ class Pgdb:
 			exit()
 
 		self.db_env = env
-		print("connecting to environment:", self.db_env)
+		print("connecting to DB environment:", self.db_env)
 
 		try:
-			self.conn = connect(
-				host     = self.config['local_ip' if self.db_env=='local' else 'remote_ip'],
-				dbname   = self.config['database'],
-				user     = self.config['user'],
-				password = self.config['password']
-			)
-			self.cursor = self.conn.cursor(row_factory=dict_row)
+			self.__connect()
 			global pgdb_instance
 			pgdb_instance = self
 
@@ -97,28 +91,28 @@ class Pgdb:
 			exit()
 
 	def __execute(self, query, values):
-		"""
-		Executes some generic query on the DB, which might read, update, create, or destroy records.
+		""" Executes some generic query on the DB, which might read, update, create, or destroy records.
 		This private function should only be called from other meaningful Pgdb methods,
-		which formulate specific query arguments.
-		"""
+		which formulate specific query arguments."""
 
 		try:
 			self.cursor.execute(query, values)
 		except (InterfaceError, OperationalError):
-			#Connection was closed. reset conn and cursor. (this happens due to idle timeouts.)
-			self.conn = connect(
-				host     = self.config['local_ip' if self.db_env=='local' else 'remote_ip'],
-				dbname   = self.config['database'],
-				user     = self.config['user'],
-				password = self.config['password']
-			)
-			self.cursor = self.conn.cursor(row_factory=dict_row)
+			#Connection was closed, so reconnect. (this happens due to idle timeouts.)
+			self.__connect()
 			self.__execute(query, values)
 
 		except InFailedSqlTransaction: # type: ignore
 			self.conn.rollback()
 
+	def __connect(self):
+		self.conn = connect(
+			host=self.config['local_ip' if self.db_env == 'local' else 'remote_ip'],
+			dbname=self.config['database'],
+			user=self.config['user'],
+			password=self.config['password']
+		)
+		self.cursor = self.conn.cursor(row_factory=dict_row)
 
 	###### DB QUERY METHODS ######
 

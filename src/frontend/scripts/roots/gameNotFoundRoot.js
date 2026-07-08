@@ -8,7 +8,10 @@ let page = (
         <main>
             <p>
                 Sorry, no game was found with that ID.
+                <br/>
                 Please try navigating to your game again and avoid manually changing the game ID.
+                <br/>
+                <a href={"/"}>Return to Home</a>
             </p>
         </main>
     </>
