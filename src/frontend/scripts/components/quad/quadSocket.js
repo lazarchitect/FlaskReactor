@@ -2,7 +2,7 @@ import {webSocketConnect} from "../common/SocketConnection";
 
 let socket = null;
 
-let yourTurn = payload.yourTurn;
+let yourTurn = payload.username === payload.game.active_player;
 
 export function isYourTurn() {
     return yourTurn;
