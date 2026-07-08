@@ -175,10 +175,10 @@ def logout():
 def createGame():
 
     # TODO refactoring /create-game into smaller subroutines
-    # there should be a widespread service layer to handle back end service logic, this file should just be setup and endpoint routing
-    # bad input handling can be handled outside this file
-    # game_type should be a match/case statement with subfunctions in other files
-    # we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
+    #  There should be a widespread service layer to handle back end service logic. This file should focus on app setup and routing.
+    #  Bad input handling can be handled outside this file.
+    #  game_type should be a match/case statement with subfunctions in other files
+    #  In general, we should stop adding meaningful logic (beyond basic endpoint routing) to app.py, this file is getting huge.
 
     player_name = session['username']
 
