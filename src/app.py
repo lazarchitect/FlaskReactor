@@ -104,7 +104,6 @@ def quadGame(gameId):
 def tttGame(gameId):
 
     game = pgdb.getTttGame(gameId)
-    username = session.get('username')
 
     if game is None:
         return render_template("game_not_found.html", payload=json.dumps(basePayload(), default=str))
@@ -302,7 +301,7 @@ if __name__ == "__main__":
     application = Application(
         default_host=host,
         handlers=[
-            ("/ws/ttt",   TttHandler,      {"pgdb": pgdb}),
+            ("/ws/ttt",   TttHandler),
             ("/ws/chat",  ChatHandler,     {"pgdb": pgdb}),
             ("/ws/stat",  StatHandler,     {"pgdb": pgdb}),
             ("/ws/quad",  QuadHandler,     {"pgdb": pgdb}),
@@ -319,4 +318,4 @@ if __name__ == "__main__":
     onSignal(SIGINT, lambda signum, frame: tornado.ioloop.IOLoop.instance().stop())
     application.listen(8888)
 
-    tornado.ioloop.IOLoop.instance().start() #runs until killed
+    tornado.ioloop.IOLoop.instance().start() #runs until stopped

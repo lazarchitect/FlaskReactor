@@ -56,6 +56,11 @@ sql = {
 
 }
 
+pgdb_instance = None
+
+def getPgdb():
+	return pgdb_instance
+
 class Pgdb:
 	"""interacts with a Postgres database of Flaskreactor users and games, for CRUD operations on records."""
 
@@ -76,6 +81,8 @@ class Pgdb:
 			print("connecting to environment:", cls.db_env)
 
 			cls._instance = super().__new__(cls)
+			global pgdb_instance
+			pgdb_instance = cls._instance
 
 		return cls._instance
 
