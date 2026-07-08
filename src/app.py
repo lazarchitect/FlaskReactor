@@ -256,7 +256,7 @@ if __name__ == "__main__":
     application.listen(port)
     print("listening for secure websocket requests to " + host)
 
-    print("---running server on port " + str(port) + "---")
+    print("---running Flask server on port " + str(port) + "---")
 
     parse_command_line()
     onSignal(SIGINT, lambda signum, frame: tornado.ioloop.IOLoop.instance().stop())

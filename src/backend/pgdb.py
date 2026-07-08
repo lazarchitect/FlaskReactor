@@ -75,7 +75,7 @@ class Pgdb:
 			exit()
 
 		self.db_env = env
-		print("connecting to environment:", self.db_env)
+		print("connecting to DB environment:", self.db_env)
 
 		try:
 			self.__connect()
