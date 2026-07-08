@@ -302,10 +302,10 @@ if __name__ == "__main__":
         default_host=host,
         handlers=[
             ("/ws/ttt",   TttHandler),
-            ("/ws/chat",  ChatHandler,     {"pgdb": pgdb}),
-            ("/ws/stat",  StatHandler,     {"pgdb": pgdb}),
-            ("/ws/quad",  QuadHandler,     {"pgdb": pgdb}),
-            ("/ws/chess", ChessHandler,    {"pgdb": pgdb}),
+            ("/ws/chat",  ChatHandler),
+            ("/ws/stat",  StatHandler),
+            ("/ws/quad",  QuadHandler),
+            ("/ws/chess", ChessHandler),
             (".*",        FallbackHandler, {"fallback": flaskApp})
         ]
     )

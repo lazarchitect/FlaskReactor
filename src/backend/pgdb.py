@@ -64,31 +64,18 @@ def getPgdb():
 class Pgdb:
 	"""interacts with a Postgres database of Flaskreactor users and games, for CRUD operations on records."""
 
-	db_env = None
-	_instance = None
-
-	# overriding new in order to use a Singleton approach, no need to reinstantiate for every Handler that comes up
-	def __new__(cls, postgres_config):
-
-		if not cls._instance: # first time instantiating
-
-			env = postgres_config['env']
-			if env not in ['local', 'remote']:
-				print('Invalid postgres env value in app_config:', env)
-				exit()
-
-			cls.db_env = env
-			print("connecting to environment:", cls.db_env)
-
-			cls._instance = super().__new__(cls)
-			global pgdb_instance
-			pgdb_instance = cls._instance
-
-		return cls._instance
-
 	def __init__(self, postgres_config):
+		""" Should only be called once, during app startup. All other accesses should go through the global instance getter"""
 
 		self.config = postgres_config
+
+		env = postgres_config['env']
+		if env not in ['local', 'remote']:
+			print('Invalid postgres env value in app_config:', env)
+			exit()
+
+		self.db_env = env
+		print("connecting to environment:", self.db_env)
 
 		try:
 			self.conn = connect(
@@ -97,8 +84,9 @@ class Pgdb:
 				user     = self.config['user'],
 				password = self.config['password']
 			)
-
 			self.cursor = self.conn.cursor(row_factory=dict_row)
+			global pgdb_instance
+			pgdb_instance = self
 
 		except OperationalError as oe:
 			print(oe)
