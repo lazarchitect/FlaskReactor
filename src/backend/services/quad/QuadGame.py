@@ -11,6 +11,7 @@ from src.backend.utils import generateId
 pgdb = getPgdb()
 
 def createQuadGame(player_name, opponent_name):
+
     playerColorPrefs = pgdb.getPreferredTorusColors(player_name)
     opponentColorPrefs = pgdb.getPreferredTorusColors(opponent_name)
 

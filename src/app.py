@@ -172,7 +172,7 @@ def logout():
 @app.route("/create-game", methods=["POST"])
 def createGame():
 
-    # TODO refactoring /create-game into smaller subroutines
+    # TODO: refactoring /create-game into smaller subroutines
     #  There should be a widespread service layer to handle back end service logic. This file should focus on app setup and routing.
     #  Bad input handling can be handled outside this file.
     #  game_type should be a match/case statement with subfunctions in other files
