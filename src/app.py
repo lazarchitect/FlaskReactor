@@ -3,6 +3,7 @@
 import json
 from os import environ
 from signal import signal as onSignal, SIGINT
+from threading import Timer
 
 import tornado
 from flask import Flask, render_template, redirect, request, session
@@ -22,7 +23,7 @@ from src.backend.services.common.User import createUser
 from src.backend.services.common.validator import ValidationError
 from src.backend.services.quad.QuadGame import createQuadGame
 from src.backend.services.ttt.TttGame import createTttGame
-from src.backend.utils import notLoggedIn, buildPreferences
+from src.backend.utils import notLoggedIn, buildPreferences, generateId, isEmpty
 
 app = Flask(__name__, static_folder="frontend", static_url_path='/frontend', template_folder="frontend/templates")
 
@@ -202,6 +203,38 @@ def updateSettings():
 
     pgdb.updateSetting(setting, value, username)
     return "ACCEPTED", 202
+
+
+@app.route("/request_password_reset", methods=["PATCH"])
+def requestPasswordReset():
+
+    body = request.json
+    username = body['username']
+
+    user = pgdb.getUser(username)
+    if user is None:
+        return "User not found", 400
+
+    if isEmpty(user.email):
+        return "No email address associated with that account", 400
+
+    token = str(generateId()).replace('-', '')[:20] # should this be cryptographically tied to the user?
+    pgdb.setPwResetToken(username, token)
+    ### TODO #66.II.1.a send password reset email to user
+
+    Timer(60*15, pgdb.removePwResetToken, [username]).start()
+
+    return "OK", 200
+
+@app.route("/perform_password_reset/<token>")
+def performPasswordReset(token):
+
+    user = pgdb.getUser(username=None, token=token)
+    ## TODO Issue #66.2.1.2: page for performing password reset. the receiving of the new PW will come in a separate fn I guess
+
+    # pgdb.removePwResetToken(username)
+
+    return render_template("performPasswordReset.html")
 
 def basePayload():
 

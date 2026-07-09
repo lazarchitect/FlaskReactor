@@ -75,6 +75,16 @@ main {
     padding: 0 2% 0 2%;
 }
 
+#forgotPassword {
+    position: fixed;
+    top: 10%;
+    width: 96%;
+
+    background: white;
+    text-align: "center";
+    transition: left 0.3s;
+}
+
 #gameDisplaysArea {
     display: flex;
     width: 100%;

@@ -8,7 +8,32 @@ function Warning ({message}) {
 	return <span style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</span>;
 }
 
+function requestPasswordReset(setMessage) {
+	fetch("/request_password_reset", {
+		method: "PATCH",
+		headers: {"Content-Type": "application/json"},
+		body: JSON.stringify({
+			"username": document.getElementById("forgotPasswordUsername").value
+		})
+	}).then(response => {
+		if (response.statusText !== "OK") alert(response.text());
+		else setMessage("Check your email on file for a link to reset your password. The link will deactivate after 15 minutes.");
+	});
+}
+
+function ResetPasswordModal() {
+	const [message, setMessage] = React.useState('');
+	return <div id="forgotPassword">
+		Enter username here to send a reset link to the email on file, if you provided one.
+		Username: <input id={"forgotPasswordUsername"}/>
+		<button onClick={() => requestPasswordReset(setMessage)}>Submit</button>
+		<span>{message}</span>
+	</div>
+}
+
 function LoginArea () {
+
+	const [showForgotPasswordModal, setShowForgotPasswordModal] = React.useState(false);
 
 	return <div>
 		<h1>Log In</h1>
@@ -25,6 +50,10 @@ function LoginArea () {
 			<br/><br/>
 			<input type="submit" value="Submit"/>
 		</form>
+		<button onClick={() => {setShowForgotPasswordModal(true)}}>
+			Forgot password?
+		</button>
+		{ showForgotPasswordModal && <ResetPasswordModal /> }
 	</div>
 }
 
