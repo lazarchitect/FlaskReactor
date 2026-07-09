@@ -15,8 +15,8 @@ function requestPasswordReset(setMessage) {
 		body: JSON.stringify({
 			"username": document.getElementById("forgotPasswordUsername").value
 		})
-	}).then(response => {
-		if (response.statusText !== "OK") alert(response.text());
+	}).then(async response => {
+		if (response.statusText !== "OK") alert(await response.text());
 		else setMessage("Check your email on file for a link to reset your password. The link will deactivate after 15 minutes.");
 	});
 }
