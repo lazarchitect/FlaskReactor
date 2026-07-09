@@ -31,7 +31,7 @@ function Toggle({id, setting}) {
 
     let onChange = () => {
         setPreferencesState((prevState) => ({...prevState, [setting]: !current}));
-        updateSettings(setting, {"value": !current})
+        updateSettings(setting, !current)
     };
 
     return <input type="checkbox" id={id} checked={current} onChange={onChange}/>
@@ -43,11 +43,11 @@ function QuadColorDropdown({setting}) {
     let {preferencesState, setPreferencesState} = useContext(PreferenceContext);
     let current = preferencesState[setting];
 
-    const quadColors = ["red", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"];
+    const quadColors = ["james", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"];
 
     let onChange = (event) => {
         setPreferencesState((prevState) => ({...prevState, [setting]: event.target.value}));
-        updateSettings(setting, {"value": event.target.value})
+        updateSettings(setting, event.target.value)
     };
 
     return <select id={setting} value={current} onChange={onChange}>
@@ -56,15 +56,15 @@ function QuadColorDropdown({setting}) {
 }
 
 /** sends new settings preference to server for persistence. */
-function updateSettings(command, settingsData) {
+function updateSettings(setting, value) {
     fetch("/update_settings", {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({
-            "setting": command,
+            "setting": setting,
             "username": payload.username,
             "ws_token": payload.ws_token,
-            "data": settingsData
+            "value": value
         })
     }).then(response => {
         if (response.statusText !== "ACCEPTED") alert("Settings update failed.");

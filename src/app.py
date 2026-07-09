@@ -191,20 +191,16 @@ def createGame():
 def updateSettings():
 
     body = request.json
-    username = body.get("username")
-    ws_token = body.get("ws_token")
-    setting = body.get("setting")
+    try:
+        validator.validateUpdateSettings(request.json)
+    except ValidationError as ve:
+        return ve.message, ve.code
 
-    user = pgdb.getUser(username)
-    if user.ws_token != ws_token:
-        return "UNAUTHORIZED", 401
+    setting = body["setting"]
+    username = body["username"]
+    value = body["value"]
 
-    VALID_SETTINGS = ['quad_color_pref', 'quad_color_backup', 'use_chat']
-
-    if setting in VALID_SETTINGS:
-        value = body["data"]["value"]
-        pgdb.updateSetting(setting, value, username)
-
+    pgdb.updateSetting(setting, value, username)
     return "ACCEPTED", 202
 
 def basePayload():

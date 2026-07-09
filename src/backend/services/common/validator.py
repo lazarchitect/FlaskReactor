@@ -4,10 +4,13 @@ from src.backend.pgdb import getPgdb
 from src.backend.utils import generateHash
 
 VALID_GAME_TYPES = ["Ttt", "Chess", "Quad"]
+VALID_SETTINGS = ['quad_color_pref', 'quad_color_backup', 'use_chat']
+VALID_QUAD_COLORS = ["red", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"]
 
 class ValidationError(Exception):
 	def __init__(self, message):
 		self.message = message
+		self.code = 401 if message == "UNAUTHORIZED" else 400
 
 def validateCreateGame(request):
 
@@ -35,9 +38,9 @@ def validateCreateGame(request):
 
 def validateSignup(request):
 
-	username = request.form['username']
-	password = request.form['password']
-	password_repeat = request.form['password_repeat']
+	username = getOrError(request.form, 'username')
+	password = getOrError(request.form, 'password')
+	password_repeat = getOrError(request.form, 'password_repeat')
 
 	if password != password_repeat:
 		raise ValidationError("Your passwords did not match.")
@@ -48,15 +51,37 @@ def validateSignup(request):
 
 
 def validateLogin(request):
-	input_username = request.form['username']
-	input_password = request.form['password']
+	input_username = getOrError(request.form, 'username')
+	input_password = getOrError(request.form, 'password')
 	input_password_hash = generateHash(input_password)
 
 	existingUser = getPgdb().getUser(input_username)
 
 	if existingUser is None:
-		raise ValidationError("User " + input_username + " does not exist.")
+		raise ValidationError(f"User ${input_username} does not exist.")
 
-	correctPassword = input_password_hash == existingUser.password_hash
-	if not correctPassword:
+	if input_password_hash != existingUser.password_hash:
 		raise ValidationError("Username or password incorrect. Please check your details and try again.")
+
+def validateUpdateSettings(body: dict):
+
+	ws_token = getOrError(body, "ws_token")
+	username = getOrError(body, "username")
+	setting  = getOrError(body, "setting")
+	value    = getOrError(body, "value")
+
+	user = getPgdb().getUser(username)
+	if user.ws_token != ws_token:
+		raise ValidationError("UNAUTHORIZED")
+
+	if setting not in VALID_SETTINGS:
+		raise ValidationError("Invalid setting")
+
+	if "quad_color" in setting and value not in VALID_QUAD_COLORS:
+		raise ValidationError("Invalid color")
+
+def getOrError(obj: dict, key: str):
+	value = obj.get(key)
+	if value is None:
+		raise ValidationError(f"missing ${key} in input")
+	return value
