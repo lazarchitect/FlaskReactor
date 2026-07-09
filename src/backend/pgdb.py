@@ -22,6 +22,7 @@ sql = {
 	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token) VALUES (%(name)s, %(password_hash)s, %(email)s, %(id)s, %(ws_token)s)",
 	"getUser": f"SELECT * FROM {usersTable} WHERE lower(name)=lower(%s)",
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
+	"clearPwResetTokens": f"UPDATE {usersTable} SET password_reset_token = null",
 
 	# Quadradius
 	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, orb_countdown) values (%(id)s, %(player1)s, %(player2)s, %(player1_color)s, %(player2_color)s, %(boardstate)s, %(active_player)s, %(orb_countdown)s)",
@@ -97,6 +98,7 @@ class Pgdb:
 
 		try:
 			self.cursor.execute(query, values)
+			self.conn.commit()
 		except (InterfaceError, OperationalError):
 			#Connection was closed, so reconnect. (this happens due to idle timeouts.)
 			self.__connect()
@@ -131,6 +133,11 @@ class Pgdb:
 		if userDict is None:
 			return None
 		return convertToObject(userDict)
+
+	def clearPwResetTokens(self):
+		query = sql['clearPwResetTokens']
+		self.__execute(query, values=None)
+		self.conn.commit()
 
 	### Quadradius
 

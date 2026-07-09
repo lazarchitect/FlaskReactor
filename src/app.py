@@ -46,6 +46,10 @@ with app.test_request_context():
     print("session cleared")
     session.clear()
 
+# clear out any reset tokens on startup in case the app crashed during the timeout window
+pgdb.clearPwResetTokens()
+print("password reset tokens cleared")
+
 @app.route('/')
 def homepage():
 
