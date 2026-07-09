@@ -9,12 +9,12 @@ from psycopg.types.json import Json
 from src.backend.utils import convertToObject
 
 schema = "flaskreactor"
-usersTable = schema + ".users"
-statsTable = schema + ".stats"
-chatsTable = schema + ".chats"
-chessGamesTable = schema + ".chess_games"
-tttGamesTable = schema + ".tictactoe_games"
-quadGamesTable = schema + ".quadradius_games"
+usersTable = f"{schema}.users"
+statsTable = f"{schema}.stats"
+chatsTable = f"{schema}.chats"
+chessGamesTable = f"{schema}.chess_games"
+tttGamesTable = f"{schema}.tictactoe_games"
+quadGamesTable = f"{schema}.quadradius_games"
 
 sql = {
 
