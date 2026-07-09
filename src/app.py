@@ -229,7 +229,7 @@ def requestPasswordReset():
 @app.route("/perform_password_reset/<token>")
 def performPasswordReset(token):
 
-    user = pgdb.getUser(username=None, token=token)
+    user = pgdb.getUserByToken(token)
     ## TODO Issue #66.2.1.2: page for performing password reset. the receiving of the new PW will come in a separate fn I guess
 
     # pgdb.removePwResetToken(username)
