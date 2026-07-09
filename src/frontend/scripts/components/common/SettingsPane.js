@@ -43,7 +43,7 @@ function QuadColorDropdown({setting}) {
     let {preferencesState, setPreferencesState} = useContext(PreferenceContext);
     let current = preferencesState[setting];
 
-    const quadColors = ["red", "blue", "green", "teal", "orange", "purple"];
+    const quadColors = ["red", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"];
 
     let onChange = (event) => {
         setPreferencesState((prevState) => ({...prevState, [setting]: event.target.value}));
