@@ -13,12 +13,16 @@ function LoginArea () {
 	return <div>
 		<h1>Log In</h1>
 		<form action="/login" method="POST">
-			<label>Username:</label>
-			<input type="text" name="username" autoComplete="username"/>
-			<br/><br/><br/>
-			<label>Password:</label>
-			<input type="password" name="password" autoComplete='current-password'/>
-			<br/>
+			<label>
+				Username:
+				<input type="text" name="username" autoComplete="username"/>
+			</label>
+			<br/><br/>
+			<label>
+				Password:
+				<input type="password" name="password" autoComplete='current-password'/>
+			</label>
+			<br/><br/>
 			<input type="submit" value="Submit"/>
 		</form>
 	</div>
@@ -54,20 +58,28 @@ function SignupArea() {
 	return <div>
 		<h1>Sign Up</h1>
 		<form action="/signup" method="POST">
-			<label>Username:</label>
-			<input type="text" id="signupUsername" name="username" autoComplete="username"/>
-			<br/>
-			<label>Password:</label>
-			<input type="password" id="signupPassword" name="password" autoComplete="new-password"/>
+			<label>
+				Username:
+				<input type="text" id="signupUsername" name="username" autoComplete="username"/>
+			</label><br/>
+			<label>
+				Password:
+				<input type="password" id="signupPassword" name="password" autoComplete="new-password"/>
+			</label>
 			{passwordLengthWarning && <Warning message="Passwords must be longer than 8 characters." />}
 			<br/>
-			<label>Repeat Password:</label>
-			<input type="password" id="signupRepeated" name="password_repeat" autoComplete="new-password"/>
+			<label>
+				Repeat Password:
+				<input type="password" id="signupRepeated" name="password_repeat" autoComplete="new-password"/>
+			</label>
 			{!passwordLengthWarning && passwordsMatchWarning && <Warning message="Passwords must match." />}
 			<br/>
-			<label>Email (optional):</label>
-			<input type="email" name="email" autoComplete="email"/>
+			<label>
+				Email (optional):
+				<input type="email" name="email" autoComplete="email"/>
+			</label>
 			<br/>
+
 			<input type="submit" id="signupSubmit" value="Submit"/>
 		</form>
 	</div>
