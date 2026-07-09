@@ -1,7 +1,7 @@
 from flask import session
 
 from src.backend.pgdb import getPgdb
-from src.backend.utils import generateHash
+from src.backend.utils import generateHash, isEmpty
 
 VALID_GAME_TYPES = ["Ttt", "Chess", "Quad"]
 VALID_SETTINGS = ['quad_color_pref', 'quad_color_backup', 'use_chat']
@@ -58,7 +58,7 @@ def validateLogin(request):
 	existingUser = getPgdb().getUser(input_username)
 
 	if existingUser is None:
-		raise ValidationError(f"User ${input_username} does not exist.")
+		raise ValidationError(f"User {input_username} does not exist.")
 
 	if input_password_hash != existingUser.password_hash:
 		raise ValidationError("Username or password incorrect. Please check your details and try again.")
@@ -82,6 +82,6 @@ def validateUpdateSettings(body: dict):
 
 def getOrError(obj: dict, key: str):
 	value = obj.get(key)
-	if value is None:
-		raise ValidationError(f"missing ${key} in input")
+	if isEmpty(value):
+		raise ValidationError(f"missing {key} in input")
 	return value
