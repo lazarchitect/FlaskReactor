@@ -77,7 +77,7 @@ def chessGame(gameId):
     username = session.get('username')
     if game is None:
         payload = json.dumps(basePayload(), default=str)
-        return render_template("game_not_found.html", payload=payload)
+        return render_template("gameNotFound.html", payload=payload)
 
     colors = {game.white_player: "White", game.black_player: "Black"}
     userColor = colors.get(username) # defaults to None if user is not a player (not logged in, other acct, etc.)
@@ -96,7 +96,7 @@ def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
     if game is None:
         payload = json.dumps(basePayload(), default=str)
-        return render_template("game_not_found.html", payload=payload)
+        return render_template("gameNotFound.html", payload=payload)
 
     quadGamePayload = {
         "game_type": "quadradius",
@@ -114,7 +114,7 @@ def tttGame(gameId):
 
     if game is None:
         payload = json.dumps(basePayload(), default=str)
-        return render_template("game_not_found.html", payload=payload)
+        return render_template("gameNotFound.html", payload=payload)
 
     tttPayload = {
         "game_type": "ttt", # used in WebSocketConnect for chatSocket
