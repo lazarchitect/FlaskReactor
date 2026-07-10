@@ -121,8 +121,6 @@ class ChatHandler(AbstractWebSocketHandler):
 
     def handleUpdate(self, fields):
 
-        print(fields)
-        
         index = 0 # doesn't matter, but we could set it to max(indexes so far)
         username = fields['username']
         content = fields['content']
