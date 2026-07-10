@@ -15,7 +15,7 @@ from tornado.options import parse_command_line
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 
-from src.backend.handlers.chatHandler import ChatHandler, getChatSocketConnections
+from src.backend.handlers.chatHandler import ChatHandler
 from src.backend.handlers.chessHandler import ChessHandler, getChessSocketConnections
 from src.backend.handlers.quadHandler import QuadHandler, getQuadSocketConnections
 from src.backend.handlers.statHandler import StatHandler
@@ -173,9 +173,17 @@ def signup():
     session['username'] = request.form['username']
     return redirect('/')
 
+
+def printAllSocketConnections():
+    print("Quad", getQuadSocketConnections())
+    print("Chess", getChessSocketConnections())
+    print("Chat", ChatHandler.instance.getClientConnections())
+    print("Ttt", getTttSocketConnections())
+
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
+    printAllSocketConnections()
     return redirect("/")
 
 @app.route("/create-game", methods=["POST"])

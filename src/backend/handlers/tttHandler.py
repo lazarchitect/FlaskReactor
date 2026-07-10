@@ -11,6 +11,9 @@ from src.backend.utils import isEmpty, generateId, updateAll
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
 clientConnections = dict()
 
+def getTttSocketConnections():
+    return clientConnections
+
 def deleteConnection(gameId, socketId):
     gameConnectionList = clientConnections[gameId]
     for x in gameConnectionList:

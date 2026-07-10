@@ -11,6 +11,9 @@ from src.backend.utils import generateId, isEmpty, updateAll
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
 clientConnections = dict()
 
+def getQuadSocketConnections():
+	return clientConnections
+
 def deleteConnection(gameId, socketId):
 	gameConnectionList = clientConnections[gameId]
 	for conn in gameConnectionList:
