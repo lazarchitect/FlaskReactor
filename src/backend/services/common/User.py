@@ -21,3 +21,8 @@ def newUser(name, password_hash, email, ws_token):
         "ws_token": ws_token,
         "id": generateId()
     }
+
+def updatePassword(username, password):
+    pgdb = getPgdb()
+    password_hash = generateHash(password)
+    pgdb.updatePassword(username, password_hash)

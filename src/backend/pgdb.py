@@ -27,6 +27,7 @@ sql = {
 	"clearAllPwResetTokens": f"UPDATE {usersTable} SET password_reset_token = null",
 	"setPwResetToken": f"UPDATE {usersTable} SET password_reset_token = %s where name=%s",
 	"removePwResetToken": f"UPDATE {usersTable} SET password_reset_token = null where name=%s",
+	"updatePassword": f"UPDATE {usersTable} SET password_hash=%s where name=%s",
 
 	# Quadradius
 	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, orb_countdown) values (%(id)s, %(player1)s, %(player2)s, %(player1_color)s, %(player2_color)s, %(boardstate)s, %(active_player)s, %(orb_countdown)s)",
@@ -161,6 +162,11 @@ class Pgdb:
 		query = sql['removePwResetToken']
 		values = [username]
 		self.__execute(query,values)
+
+	def updatePassword(self, username, password_hash):
+		query = sql['updatePassword']
+		values = [password_hash, username]
+		self.__execute(query, values)
 
 	### Quadradius
 
