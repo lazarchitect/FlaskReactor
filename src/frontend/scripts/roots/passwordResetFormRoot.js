@@ -37,7 +37,7 @@ function PasswordResetArea() {
 
         const formElement = document.getElementById('passwordResetForm');
         const requestData = new FormData(formElement);
-        requestData.append("username", payload.username);
+        requestData.append("username", payload.tempUsername);
         requestData.append("token", payload.token);
         console.log([...requestData.entries()]);
         const requestObject = Object.fromEntries(requestData.entries());
@@ -55,7 +55,7 @@ function PasswordResetArea() {
     return <div>
         <h1>Password Reset</h1>
         <form id="passwordResetForm" onSubmit={onPasswordResetSubmit} action="/confirm_password_reset" method="POST">
-            Your Username: {payload.username}
+            Your Username: {payload.tempUsername}
             <br/>
             <label>
                 New Password:
@@ -70,7 +70,7 @@ function PasswordResetArea() {
             {!passwordLengthWarning && passwordsMatchWarning && <InputError message="Passwords must match." />}
             <br/>
 
-            <input type="submit" id="passwordResetSubmit" value="Submit" disabled/>
+            <input type="submit" id="passwordResetSubmit" value="Confirm Password Reset" disabled/>
         </form>
     </div>
 }

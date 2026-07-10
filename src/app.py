@@ -257,10 +257,7 @@ def PasswordResetForm(token):
     if user is None: # provided token is not stored in the DB for any user
        return "403 FORBIDDEN"
 
-    # put this in the PW received route?
-    # pgdb.removePwResetToken(user.name)
-
-    payload = buildPayload({"username": user.name, "token": token})
+    payload = json.dumps({"tempUsername": user.name, "token": token})
     return render_template("passwordResetForm.html", payload=payload)
 
 @app.route('/confirm_password_reset', methods=["PATCH"])
