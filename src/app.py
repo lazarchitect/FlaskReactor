@@ -23,7 +23,7 @@ from src.backend.handlers.tttHandler import TttHandler, getTttSocketConnections
 from src.backend.pgdb import Pgdb
 from src.backend.services.chess.ChessGame import createChessGame
 from src.backend.services.common import validator
-from src.backend.services.common.User import createUser
+from src.backend.services.common.User import createUser, updatePassword
 from src.backend.services.common.emailSender import sendPasswordResetEmail
 from src.backend.services.common.validator import ValidationError
 from src.backend.services.quad.QuadGame import createQuadGame
@@ -251,11 +251,34 @@ def requestPasswordReset():
 def PasswordResetForm(token):
 
     user = pgdb.getUserByToken(token)
-    ## TODO Issue #66.2.1.2: page for performing password reset. the receiving of the new PW will come in a separate fn I guess
 
-    # pgdb.removePwResetToken(username)
+    if user is None: # provided token is not stored in the DB for any user
+       return "403 FORBIDDEN"
 
-    return render_template("performPasswordReset.html")
+    # put this in the PW received route?
+    # pgdb.removePwResetToken(user.name)
+
+    payload = buildPayload({"username": user.name, "token": token})
+    return render_template("passwordResetForm.html", payload=payload)
+
+@app.route('/confirm_password_reset', methods=["PATCH"])
+def confirmPasswordReset():
+
+    # try:
+    #     validator.validatePasswordReset(request)
+    # except ValidationError as ve:
+    #     return ve.message
+    body = request.json
+    username = body['username']
+    password = body['password']
+    repeated = body['password_repeat']
+
+    if password != repeated:
+        return "BAD REQUEST - you didn't match the passwords correctly. That's legit sus...", 400
+
+    updatePassword(username, password)
+
+    return "ACCEPTED", 200
 
 def basePayload():
 
@@ -271,6 +294,9 @@ def basePayload():
         "ws_token": ws_token,
         "preferences": buildPreferences(user)
     }
+
+def buildPayload(dataDict):
+    return json.dumps(basePayload() | dataDict, default=str)
 
 if __name__ == "__main__":
 
