@@ -1,4 +1,3 @@
-import logging
 import os
 
 import resend
@@ -19,5 +18,4 @@ def sendPasswordResetEmail(to_addr, reset_URL):
 				This message was sent from an send-only mailbox, so please do not reply to this email.<br/><br/>
 				Thanks,<br/>Official FlaskReactor Team"""
 	}
-	email = resend.Emails.send(params)
-	logging.log(1, email)
+	resend.Emails.send(params)
