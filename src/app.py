@@ -240,7 +240,9 @@ def requestPasswordReset():
 
     token = str(generateId()).replace('-', '')[:20] # should this be cryptographically tied to the user?
     pgdb.setPwResetToken(username, token)
-    ### TODO #66.II.1.a send password reset email to user
+
+    reset_URL = f"{protocol}://{host}/password_reset_form/{token}"
+    sendPasswordResetEmail(user.email, reset_URL)
 
     Timer(60*15, pgdb.removePwResetToken, [username]).start()
 
