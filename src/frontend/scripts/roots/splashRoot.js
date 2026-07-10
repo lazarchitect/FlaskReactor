@@ -77,7 +77,7 @@ function SignupArea() {
 	});
 
 	let passwordFocus = document.getElementById('signupPassword') === document.activeElement;
-	let repeatedFocus = document.getElementById('signupPassword') === document.activeElement;
+	let repeatedFocus = document.getElementById('signupPassword') === document.activeElement; // TODO is this ID wrong?
 	let passwordLengthWarning = !passwordFocus && passwordLength > 0 && passwordLength <= 8;
 	let passwordsMatchWarning = !repeatedFocus && !passwordsMatch && passwordLength > 0 && repeatedLength > 0;
 
