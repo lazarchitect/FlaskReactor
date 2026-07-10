@@ -68,7 +68,6 @@ def validateUpdateSettings(body: dict):
 	ws_token = getOrError(body, "ws_token")
 	username = getOrError(body, "username")
 	setting  = getOrError(body, "setting")
-	value    = getOrError(body, "value")
 
 	user = getPgdb().getUser(username)
 	if user.ws_token != ws_token:
@@ -77,8 +76,14 @@ def validateUpdateSettings(body: dict):
 	if setting not in VALID_SETTINGS:
 		raise ValidationError("Invalid setting")
 
-	if "quad_color" in setting and value not in VALID_QUAD_COLORS:
-		raise ValidationError("Invalid color")
+	if "quad_color" in setting:
+		value = getOrError(body, "value")
+		if value not in VALID_QUAD_COLORS:
+			raise ValidationError("Invalid color")
+
+	value = body.get('value') # non-String
+	if value is None:
+		raise ValidationError(f"missing value in input")
 
 def getOrError(obj: dict, key: str):
 	value = obj.get(key)
