@@ -8,7 +8,7 @@ from src.backend.utils import generateId
 
 
 class AbstractWebSocketHandler(WebSocketHandler):
-	clientConnections = None  # each subclass initializes this
+	clientConnections = dict()  # each subclass overwrites this
 
 	def initialize(self):
 		self.pgdb = getPgdb()
