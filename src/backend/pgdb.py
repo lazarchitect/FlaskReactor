@@ -1,5 +1,6 @@
 """provides a set of tools for interfacing with FlaskReactor's custom Postgres Database (PGDB) instance,
 containing game data, users, and more."""
+import logging
 
 from psycopg import connect, InterfaceError, OperationalError
 from psycopg.errors import InFailedSqlTransaction
@@ -79,7 +80,7 @@ class Pgdb:
 			exit()
 
 		self.db_env = env
-		print("connecting to DB environment:", self.db_env)
+		logging.info("connecting to DB environment: " + self.db_env)
 
 		try:
 			self.__connect()
