@@ -42,10 +42,12 @@ try:
     config = json.loads(open("resources/app_config.json", "r").read())
     host = config['host']
     port = config['port']
+    protocol = config.get('protocol', "https")
     wsProtocol = config['websocket']['protocol']
     wsBaseUrl = wsProtocol + "://" + host + "/ws"
     app.secret_key = config['secret_key']
     pgdb = Pgdb(config['postgres'])
+    os.environ['resend_api_key'] = config['resend']['api_key']
 
 except FileNotFoundError:
     print("you need to add resources/app_config.json for the server to run.")
