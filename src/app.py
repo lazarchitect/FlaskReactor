@@ -167,6 +167,7 @@ def signup():
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
+    # TODO check password repeat matches?
 
     createUser(email, password, username)
 
