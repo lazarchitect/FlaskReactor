@@ -30,6 +30,13 @@ from src.backend.services.quad.QuadGame import createQuadGame
 from src.backend.services.ttt.TttGame import createTttGame
 from src.backend.utils import notLoggedIn, buildPreferences, generateId, isEmpty
 
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s - %(message)s (%(filename)s:%(lineno)s)'))
+logging.getLogger().addHandler(handler)
+logging.getLogger().setLevel(INFO)
+logging.getLogger("tornado.access").setLevel(logging.WARN)
+
 app = Flask(__name__, static_folder="frontend", static_url_path='/frontend', template_folder="frontend/templates")
 
 try:
@@ -47,12 +54,6 @@ except FileNotFoundError:
 except KeyError as ke:
     print("app_config missing a key:", ke.args[0])
     exit()
-
-handler = logging.StreamHandler(sys.stdout)
-handler.setLevel(logging.INFO)
-handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s - %(message)s (%(filename)s:%(lineno)s)'))
-logging.getLogger().addHandler(handler)
-logging.getLogger().setLevel(INFO)
 
 with app.test_request_context():
     logging.info("session cleared")
