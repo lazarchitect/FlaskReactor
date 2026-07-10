@@ -16,8 +16,8 @@ def sendPasswordResetEmail(to_addr, reset_URL):
 				This custom link will only remain active for 15 minutes, and will only work once. 
 				If you did not initiate a password reset, disregard the link. Someone else may be attempting to access your account.
 				<br/><br/>
-				This message was sent from an send-only mailbox, so please do not reply to this email.<br/>
-				Thanks, Official FlaskReactor Team"""
+				This message was sent from an send-only mailbox, so please do not reply to this email.<br/><br/>
+				Thanks,<br/>Official FlaskReactor Team"""
 	}
 	email = resend.Emails.send(params)
 	logging.log(1, email)
