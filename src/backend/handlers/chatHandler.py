@@ -1,10 +1,12 @@
 import json
+import logging
 
 from tornado.websocket import WebSocketHandler
 
 from src.backend.pgdb import getPgdb
 from src.backend.utils import generateId, isEmpty, updateAll
 
+# keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
 clientConnections = dict()
 
 # lots of code here which is exactly the same across the handler scripts. Time to DRY it?
@@ -28,7 +30,7 @@ class ChatHandler(WebSocketHandler):
     
     def open(self):
         self.socketId = "socket"+ str(generateId())[:8]
-        print("messageSocket opened:", str(self.socketId))
+        logging.info("chatSocket opened: " + self.socketId)
 
     def on_message(self, message):
 
@@ -50,7 +52,12 @@ class ChatHandler(WebSocketHandler):
             self.handleUpdate(fields)
 
     def on_close(self):
-        print("chatSocket closed:", self.socketId)
+        if not hasattr(self, "gameId"):
+            print("chatSocket was not subscribed? not sure why this would happen")
+            return
+
+        deleteConnection(self.gameId, self.socketId)
+        logging.info("chatSocket closed: " + self.socketId)
 
     def handleUpdate(self, fields):
 

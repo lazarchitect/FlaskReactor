@@ -1,6 +1,10 @@
 #!usr/bin/env python
 
 import json
+import logging
+import os
+import sys
+from logging import INFO
 from os import environ
 from signal import signal as onSignal, SIGINT
 from threading import Timer
@@ -11,15 +15,16 @@ from tornado.options import parse_command_line
 from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 
-from src.backend.handlers.chatHandler import ChatHandler
-from src.backend.handlers.chessHandler import ChessHandler
-from src.backend.handlers.quadHandler import QuadHandler
+from src.backend.handlers.chatHandler import ChatHandler, getChatSocketConnections
+from src.backend.handlers.chessHandler import ChessHandler, getChessSocketConnections
+from src.backend.handlers.quadHandler import QuadHandler, getQuadSocketConnections
 from src.backend.handlers.statHandler import StatHandler
-from src.backend.handlers.tttHandler import TttHandler
+from src.backend.handlers.tttHandler import TttHandler, getTttSocketConnections
 from src.backend.pgdb import Pgdb
 from src.backend.services.chess.ChessGame import createChessGame
 from src.backend.services.common import validator
 from src.backend.services.common.User import createUser
+from src.backend.services.common.emailSender import sendPasswordResetEmail
 from src.backend.services.common.validator import ValidationError
 from src.backend.services.quad.QuadGame import createQuadGame
 from src.backend.services.ttt.TttGame import createTttGame
@@ -43,13 +48,19 @@ except KeyError as ke:
     print("app_config missing a key:", ke.args[0])
     exit()
 
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s - %(message)s (%(filename)s:%(lineno)s)'))
+logging.getLogger().addHandler(handler)
+logging.getLogger().setLevel(INFO)
+
 with app.test_request_context():
-    print("session cleared")
+    logging.info("session cleared")
     session.clear()
 
 # clear out any reset tokens on startup in case the app crashed during the timeout window
 pgdb.clearPwResetTokens()
-print("password reset tokens cleared")
+logging.info("password reset tokens cleared")
 
 @app.route('/')
 def homepage():
@@ -266,9 +277,9 @@ if __name__ == "__main__":
         ]
     )
     application.listen(port)
-    print("listening for secure websocket requests to " + host)
+    logging.info("listening for secure websocket requests to " + host)
 
-    print("---running Flask server on port " + str(port) + "---")
+    logging.info("---running Flask server on port " + str(port) + "---")
 
     parse_command_line()
     onSignal(SIGINT, lambda signum, frame: tornado.ioloop.IOLoop.instance().stop())

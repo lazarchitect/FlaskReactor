@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime
 
 from tornado.websocket import WebSocketHandler
@@ -7,7 +8,7 @@ from src.backend.pgdb import getPgdb
 from src.backend.services.ttt.tttUtils import tttGameEnded
 from src.backend.utils import isEmpty, generateId, updateAll
 
-# keys are gameIds. values are lists of WS connections to inform of updates.
+# keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
 clientConnections = dict()
 
 def deleteConnection(gameId, socketId):
@@ -27,7 +28,7 @@ class TttHandler(WebSocketHandler):
 
     def open(self):
         self.socketId = "socket"+ str(generateId())[:8]
-        print("tttSocket opened:", str(self.socketId))
+        logging.info("tttSocket opened: " + self.socketId)
 
     def on_message(self, message):
         """handler for incoming websocket messages. expect to see this format: message = {"request": "subscribe", "gameId": "whatever", ...}"""
@@ -50,13 +51,12 @@ class TttHandler(WebSocketHandler):
             self.wsUpdate(fields)
         
     def on_close(self):
-        print("tttSocket closed: " + str(self.socketId))
-        
         if not hasattr(self, "gameId"):
             print("tttSocket was not subscribed? not sure why this would happen")
             return
-        
+
         deleteConnection(self.gameId, self.socketId)
+        logging.info("chessSocket closed: " + self.socketId)
 
     ###############################
     ## Message Handler functions ##
