@@ -266,17 +266,16 @@ def PasswordResetForm(token):
 @app.route('/confirm_password_reset', methods=["PATCH"])
 def confirmPasswordReset():
 
-    # try:
-    #     validator.validatePasswordReset(request)
-    # except ValidationError as ve:
-    #     return ve.message
+    try:
+        validator.validateConfirmPasswordReset(request.json)
+    except ValidationError as ve:
+        return ve.message
+
     body = request.json
     username = body['username']
     password = body['password']
-    repeated = body['password_repeat']
 
-    if password != repeated:
-        return "BAD REQUEST - you didn't match the passwords correctly. That's legit sus...", 400
+    pgdb.removePwResetToken(username)
 
     updatePassword(username, password)
 
