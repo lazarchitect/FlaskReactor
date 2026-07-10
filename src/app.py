@@ -32,10 +32,9 @@ from src.backend.utils import notLoggedIn, buildPreferences, generateId, isEmpty
 
 handler = logging.StreamHandler(sys.stdout)
 handler.setLevel(logging.INFO)
-handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s - %(message)s (%(filename)s:%(lineno)s)'))
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s (%(filename)s:%(lineno)s)'))
 logging.getLogger().addHandler(handler)
 logging.getLogger().setLevel(INFO)
-logging.getLogger("tornado.access").setLevel(logging.WARN)
 
 app = Flask(__name__, static_folder="frontend", static_url_path='/frontend', template_folder="frontend/templates")
 
