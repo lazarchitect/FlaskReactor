@@ -109,7 +109,7 @@ function SignupArea() {
 			</label>
 			<br/>
 
-			<input type="submit" id="signupSubmit" value="Submit"/>
+			<input type="submit" id="signupSubmit" value="Submit" disabled/>
 		</form>
 	</div>
 }
