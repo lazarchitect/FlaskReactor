@@ -1,7 +1,7 @@
 import React from "react";
 import {createRoot} from "react-dom/client";
 import {SiteHeader} from "../components/common/SiteHeader";
-import {Warning} from "../components/common/loginElements";
+import {InputError} from "../components/common/loginElements";
 
 function PasswordResetArea() {
 
@@ -61,13 +61,13 @@ function PasswordResetArea() {
                 New Password:
                 <input type="password" id="newPassword" name="password" autoComplete="new-password"/>
             </label>
-            {passwordLengthWarning && <Warning message="Passwords must be longer than 8 characters." />}
+            {passwordLengthWarning && <InputError message="Passwords must be longer than 8 characters." />}
             <br/>
             <label>
                 Repeat Password:
                 <input type="password" id="newPasswordRepeat" name="password_repeat" autoComplete="new-password"/>
             </label>
-            {!passwordLengthWarning && passwordsMatchWarning && <Warning message="Passwords must match." />}
+            {!passwordLengthWarning && passwordsMatchWarning && <InputError message="Passwords must match." />}
             <br/>
 
             <input type="submit" id="passwordResetSubmit" value="Submit" disabled/>
