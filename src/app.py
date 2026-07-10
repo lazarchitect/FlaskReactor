@@ -177,7 +177,7 @@ def signup():
 def printAllSocketConnections():
     print("Quad", getQuadSocketConnections())
     print("Chess", getChessSocketConnections())
-    print("Chat", ChatHandler.instance.getClientConnections())
+    print("Chat", ChatHandler.clientConnections)
     print("Ttt", getTttSocketConnections())
 
 @app.route("/logout", methods=["POST"])

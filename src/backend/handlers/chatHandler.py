@@ -5,13 +5,11 @@ from src.backend.utils import isEmpty
 
 
 class ChatHandler(AbstractWebSocketHandler):
-    instance = None
     clientConnections = dict()
 
     def initialize(self):
         super().initialize()
         self.handlerType = "chat"
-        ChatHandler.instance = self # TODO remove later, only used for clientConnections logging
 
     def on_message(self, message):
 
