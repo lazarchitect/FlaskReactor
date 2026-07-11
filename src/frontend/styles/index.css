@@ -75,14 +75,24 @@ main {
     padding: 0 2% 0 2%;
 }
 
-#forgotPassword {
+#forgotPasswordModal {
+    border-radius: 10px;
+    opacity: 0;
+    padding: 2%;
     position: fixed;
-    top: 10%;
-    width: 96%;
-
+    top: 20%;
+    width: fit-content;
+    left: 25%;
     background: white;
+    border: 1px solid black;
     text-align: "center";
-    transition: left 0.3s;
+    transition: opacity 1s, visibility 1.2s;
+    visibility: hidden;
+}
+
+#forgotPasswordModal.active {
+    opacity: 1;
+    visibility: visible;
 }
 
 #gameDisplaysArea {

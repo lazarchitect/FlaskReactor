@@ -6,8 +6,9 @@ export function InputError({message}) {
 
 function ResetPasswordModal() {
     const [message, setMessage] = React.useState('');
-    return <div id="forgotPassword">
+    return <div id="forgotPasswordModal">
         Enter username here to send a reset link to the email on file, if you provided one.
+        <br/><br/>
         Username: <input id={"forgotPasswordUsername"}/>
         <button onClick={() => requestPasswordReset(setMessage)}>Submit</button>
         <span>{message}</span>
@@ -15,8 +16,6 @@ function ResetPasswordModal() {
 }
 
 export function LoginArea() {
-
-    const [showForgotPasswordModal, setShowForgotPasswordModal] = React.useState(false);
 
     function enableSubmitButton() {
         const username = document.getElementById('loginUsername').value;
@@ -46,11 +45,12 @@ export function LoginArea() {
             <input type="submit" id="loginSubmit" value="Log In" disabled/>
         </form>
         <button onClick={() => {
-            setShowForgotPasswordModal(true)
+            // setShowForgotPasswordModal(true)
+            document.getElementById("forgotPasswordModal").classList.add('active');
         }}>
             Forgot password?
         </button>
-        {showForgotPasswordModal && <ResetPasswordModal/>}
+        <ResetPasswordModal/>
     </div>
 }
 
