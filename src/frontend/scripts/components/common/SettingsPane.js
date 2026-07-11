@@ -1,10 +1,10 @@
 import React, {useContext} from "react";
 import {PreferenceContext} from "./SiteHeader";
 
-export function SettingsPane({isLoggedIn, expanded}) {
+export function SettingsPane({expanded, isLoggedIn}) {
 
     // for performance reasons, we simply edit style instead of re-rendering for every click
-    return <div id="settingsPane" style={{display: expanded ? 'block' : 'none'}}>
+    return <div id="settingsPane" className={expanded ? 'active' : ''}>
         Settings (refresh to see changes)
         <br/>
         {isLoggedIn ?
@@ -43,7 +43,7 @@ function QuadColorDropdown({setting}) {
     let {preferencesState, setPreferencesState} = useContext(PreferenceContext);
     let current = preferencesState[setting];
 
-    const quadColors = ["james", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"];
+    const quadColors = ["red", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"];
 
     let onChange = (event) => {
         setPreferencesState((prevState) => ({...prevState, [setting]: event.target.value}));
