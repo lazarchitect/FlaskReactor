@@ -93,6 +93,13 @@ main {
 #forgotPasswordModal.active {
     opacity: 1;
     visibility: visible;
+    transition: opacity 1s, visibility 1.2s;
+    visibility: hidden;
+}
+
+#forgotPasswordModal.active {
+    opacity: 1;
+    visibility: visible;
 }
 
 #gameDisplaysArea {
