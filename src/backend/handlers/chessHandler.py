@@ -59,6 +59,9 @@ class ChessHandler(WebSocketHandler):
         elif request == "update":
             self.handleUpdate(fields)
 
+        elif request == "resign":
+            self.handleResign(fields)
+
     def on_close(self):
         if not hasattr(self, "gameId"):
             print("chessSocket was not subscribed? not sure why this would happen")
@@ -271,3 +274,22 @@ class ChessHandler(WebSocketHandler):
                 bqrMoved, bkrMoved, wqrMoved, wkrMoved,
                 newPawnLeapt, newPawnLeapCol,
                 gameId)
+
+    def handleResign(self, fields):
+        gameId = fields['gameId']
+        resigner = fields['player']
+        game = self.pgdb.getChessGame(gameId)
+        winner = game.white_player if resigner == game.black_player else game.black_player
+        messageToSubscribers = {
+            "command": "endGame",
+            "newBoardstate": game.boardstate,
+            "gameDetails": {"activePlayer": None},
+            "gameEnded": True,
+            "mate": "Checkmate",
+            "winner": winner,
+            "loser": resigner
+        }
+
+        utils.updateAll(clientConnections[gameId], messageToSubscribers)
+
+        self.pgdb.endChessGame(game.boardstate, datetime.now(), winner, gameId)

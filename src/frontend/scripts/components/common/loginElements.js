@@ -5,17 +5,23 @@ export function InputError({message}) {
 }
 
 function ResetPasswordModal() {
-    const [message, setMessage] = React.useState('');
+    const [submitSuccess, setSubmitSuccess] = React.useState(false);
+    const message = submitSuccess ?
+        "Check your email on file for a link to reset your password. The link will deactivate after 15 minutes." :
+        "Enter your username here to send a reset link to the email on file, if you provided an email address during sign up."
     const bye = () => document.getElementById("forgotPasswordModal").classList.remove('active');
+
     return <div id="forgotPasswordModal">
         <div className="closeX" onClick={bye}>X</div>
-        Enter your username here to send a reset link to the email on file,
-        if you provided an email address during sign up.
-        <br/><br/>
-        Username: <input id="forgotPasswordUsername"/>
-        <button onClick={() => requestPasswordReset(setMessage)}>Submit</button>
-        <br/><br/>
         <span>{message}</span>
+        <br/><br/>
+        {!submitSuccess &&
+            <form onSubmit={(e)=>e.preventDefault()}>
+                Username: <input id="forgotPasswordUsername"/>
+                <input type="submit" value="Submit" onClick={() => {requestPasswordReset(setSubmitSuccess)}}/>
+                <br/><br/>
+            </form>
+        }
     </div>
 }
 
@@ -28,12 +34,12 @@ export function LoginArea() {
         const hasPassword = password.length > 8;
 
         const allConditionsMet = hasUsername && hasPassword;
-        document.getElementById('loginSubmit').disabled = !allConditionsMet;
+        document.getElementById('loginSubmit').disabled = false;//!allConditionsMet;
     }
 
     return <div>
         <h1>Log In</h1>
-        <form action="/login" method="POST">
+        <form id="loginForm" action="/login" method="POST">
             <label>
                 Username:
                 <input type="text" id="loginUsername" name="username" autoComplete="username"
@@ -48,11 +54,9 @@ export function LoginArea() {
             <br/><br/>
             <input type="submit" id="loginSubmit" value="Log In" disabled/>
         </form>
-        <button onClick={() => {
-            document.getElementById("forgotPasswordModal").classList.add('active');
-        }}>
-            Forgot password?
-        </button>
+        <span id="forgotPasswordText" onClick={() => {document.getElementById("forgotPasswordModal").classList.add('active');}}>
+            (Forgot password?)
+        </span>
         <ResetPasswordModal/>
     </div>
 }
@@ -116,14 +120,13 @@ export function SignupArea() {
                 Email (optional):
                 <input type="email" name="email" autoComplete="email"/> (needed only for password recovery)
             </label>
-            <br/>
-
+            <br/><br/>
             <input type="submit" id="signupSubmit" value="Sign Up" disabled/>
         </form>
     </div>
 }
 
-function requestPasswordReset(setMessage) {
+function requestPasswordReset(setSubmitSuccess) {
     fetch("/request_password_reset", {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
@@ -132,6 +135,6 @@ function requestPasswordReset(setMessage) {
         })
     }).then(async response => {
         if (response.statusText !== "OK") alert(await response.text());
-        else setMessage("Check your email on file for a link to reset your password. The link will deactivate after 15 minutes.");
+        else setSubmitSuccess(true);
     });
 }
