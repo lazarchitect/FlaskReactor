@@ -6,6 +6,7 @@ import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
 import {configureTitleAddition} from "./rootUtil";
+import {sendResignation} from "../components/chess/chessSocket";
 
 let players = [payload.game.white_player, payload.game.black_player];
 const isPlayer = players.includes(payload.username);
@@ -20,9 +21,10 @@ function Page() {
             <div className="playArea">
                 <h3>Chess{titleAddition}</h3>
                 <Chessboard/>
-                <p id={"chessStatus"}>
-                    Status: <span id="status"/>
-                </p>
+                <div id="belowChessboard">
+                    <span id="chessStatus">Status: <span id="status"/></span>
+                    <button onClick={sendResignation}>Resign?</button>
+                </div>
             </div>
 
             {isPlayer && use_chat && <Chatbox expanded={false}/>}

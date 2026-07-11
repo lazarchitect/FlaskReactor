@@ -2,6 +2,13 @@ import {webSocketConnect} from "../common/SocketConnection";
 
 let socket = null;
 
+export function sendResignation() {
+    socket.sendUpdate({
+        "request": "resign", // overwrites the update request field
+        "player": payload.username
+    });
+}
+
 export function sendMoveUpdate(src, dest) {
     const updateObj = {
         "player": payload.player,
