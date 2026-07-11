@@ -5,50 +5,51 @@ import {InputError} from "../components/common/loginElements";
 
 function PasswordResetArea() {
 
-    const [passwordLength, setPasswordLength] = React.useState(0);
-    const [repeatedLength, setRepeatedLength] = React.useState(0);
-    const [passwordsMatch, setPasswordsMatch] = React.useState(false);
+    const [showPasswordTooShortError, setShowPasswordTooShortError] = React.useState(false);
+    const [showPasswordsDontMatchError, setShowPasswordsDontMatchError] = React.useState(false);
 
-    const [passwordLengthWarning, setPasswordLengthWarning] = React.useState(false);
-    const [passwordsMatchWarning, setPasswordsMatchWarning] = React.useState(false);
-
-    document.addEventListener("keyup", () => {
+    function displayErrors() {
         const password = document.getElementById('newPassword').value;
         const repeated = document.getElementById('newPasswordRepeat').value;
         const hasPassword = password.length > 8;
-        const matchingPws = password === repeated;
+        const passwordsMatch = password === repeated;
 
-        setPasswordLength(password.length);
-        setRepeatedLength(repeated.length);
-        setPasswordsMatch(matchingPws);
-
-        const allConditionsMet = hasPassword && matchingPws;
+        const allConditionsMet = hasPassword && passwordsMatch;
         document.getElementById('passwordResetSubmit').disabled = !allConditionsMet;
 
-        let passwordFocus = document.getElementById('newPassword') === document.activeElement;
-        let repeatedFocus = document.getElementById('newPasswordRepeat') === document.activeElement;
-        setPasswordLengthWarning(!passwordFocus && passwordLength > 0 && passwordLength <= 8);
-        setPasswordsMatchWarning(!repeatedFocus && !passwordsMatch && passwordLength > 0 && repeatedLength > 0);
-    });
+        setShowPasswordTooShortError(password.length > 0 && password.length <= 8);
+        setShowPasswordsDontMatchError(!passwordsMatch && password.length > 0 && repeated.length > 0);
+    }
+
+    function removeErrors() {
+        const password = document.getElementById('newPassword').value;
+        const repeated = document.getElementById('newPasswordRepeat').value;
+        const passwordsMatch = password === repeated;
+        if (password.length > 8) setShowPasswordTooShortError(false);
+        if (passwordsMatch) setShowPasswordsDontMatchError(false);
+        if (password.length > 8 && passwordsMatch) document.getElementById('passwordResetSubmit').disabled = false;
+    }
 
     function onPasswordResetSubmit(event) {
 
         event.preventDefault();
 
         const formElement = document.getElementById('passwordResetForm');
-        const requestData = new FormData(formElement);
-        requestData.append("username", payload.tempUsername);
-        requestData.append("token", payload.token);
-        console.log([...requestData.entries()]);
-        const requestObject = Object.fromEntries(requestData.entries());
-        console.log(JSON.stringify(requestObject));
+        const formData = new FormData(formElement);
+        const requestObject = Object.fromEntries(formData.entries());
+        requestObject["username"] = payload.tempUsername;
+        requestObject["token"] = payload.token;
+        console.log(requestObject);
 
         fetch("/confirm_password_reset", {
             method: "PATCH",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(requestObject)
         }).then(
-            async (response) => alert(await response.text()))
+            async (response) => {
+                if (response.ok) alert("Password reset successfully! Please return to the home page to log in.");
+                else alert("Failed to reset password: " + await response.text());
+            })
     }
 
 
@@ -59,15 +60,15 @@ function PasswordResetArea() {
             <br/>
             <label>
                 New Password:
-                <input type="password" id="newPassword" name="password" autoComplete="new-password"/>
+                <input type="password" id="newPassword" name="password" autoComplete="new-password" onBlur={displayErrors} onKeyUp={removeErrors} />
             </label>
-            {passwordLengthWarning && <InputError message="Passwords must be longer than 8 characters." />}
+            {showPasswordTooShortError && <InputError message="Passwords must be longer than 8 characters." />}
             <br/>
             <label>
                 Repeat Password:
-                <input type="password" id="newPasswordRepeat" name="password_repeat" autoComplete="new-password"/>
+                <input type="password" id="newPasswordRepeat" name="password_repeat" autoComplete="new-password" onBlur={displayErrors} onKeyUp={removeErrors} />
             </label>
-            {!passwordLengthWarning && passwordsMatchWarning && <InputError message="Passwords must match." />}
+            {!showPasswordTooShortError && showPasswordsDontMatchError && <InputError message="Passwords must match." />}
             <br/>
 
             <input type="submit" id="passwordResetSubmit" value="Confirm Password Reset" disabled/>
@@ -80,6 +81,7 @@ let page = (
         <SiteHeader />
         <main>
             <PasswordResetArea />
+            <a href={"/"}>Return to Home</a>
         </main>
     </>
 );
