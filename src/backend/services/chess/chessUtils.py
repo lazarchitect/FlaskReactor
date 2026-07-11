@@ -45,6 +45,10 @@ def sameColor(srcColor, targetPiece):
     if srcColor is None or targetPiece is None: return False
     return srcColor == targetPiece.color
 
+def isEnemyColor(srcColor, targetPiece): # used for checking pawn attack movements
+    if srcColor is None or targetPiece is None: return False
+    return srcColor != targetPiece.color
+
 def getKingCoords(boardstate, color):
     for row in range(8):
         for col in range(8):

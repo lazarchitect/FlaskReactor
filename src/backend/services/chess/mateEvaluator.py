@@ -1,7 +1,7 @@
 from copy import deepcopy as deepCopy
 
 from src.backend.services.chess.chessConsts import ROYAL_OFFSETS, ROOK_OFFSETS, BISHOP_OFFSETS, KNIGHT_OFFSETS
-from src.backend.services.chess.chessUtils import pieceAt, inCheck, outOfBounds, tileAt, sameColor
+from src.backend.services.chess.chessUtils import pieceAt, inCheck, outOfBounds, tileAt, sameColor, isEnemyColor
 
 
 def hasNoLegalMoves(boardstate, color):
@@ -56,17 +56,18 @@ def pawnCanMove(boardstate, coords, pieceColor):
         return True
 
     advance2Coords = (coords[0] + (direction*2), coords[1])
-    emptyTileTwoAhead = pieceAt(boardstate, advance2Coords) is None
-    if emptyTileAhead and emptyTileTwoAhead:
-        return True
+    if not outOfBounds(advance2Coords):
+        emptyTileTwoAhead = pieceAt(boardstate, advance2Coords) is None
+        if emptyTileAhead and emptyTileTwoAhead:
+            return True
 
     # see if there are enemies in diagonal attack vectors
     rightAttackCoords = (coords[0] + direction, coords[1] + 1)
-    if not outOfBounds(rightAttackCoords) and not sameColor(pieceColor, pieceAt(boardstate, rightAttackCoords)):
+    if not outOfBounds(rightAttackCoords) and isEnemyColor(pieceColor, pieceAt(boardstate, rightAttackCoords)):
         return True
 
     leftAttackCoords = (coords[0] + direction, coords[1] + -1)
-    if not outOfBounds(leftAttackCoords) and not sameColor(pieceColor, pieceAt(boardstate, leftAttackCoords)):
+    if not outOfBounds(leftAttackCoords) and isEnemyColor(pieceColor, pieceAt(boardstate, leftAttackCoords)):
         return True
 
     return False
