@@ -6,11 +6,15 @@ export function InputError({message}) {
 
 function ResetPasswordModal() {
     const [message, setMessage] = React.useState('');
+    const bye = () => document.getElementById("forgotPasswordModal").classList.remove('active');
     return <div id="forgotPasswordModal">
-        Enter username here to send a reset link to the email on file, if you provided one.
+        <div className="closeX" onClick={bye}>X</div>
+        Enter your username here to send a reset link to the email on file,
+        if you provided an email address during sign up.
         <br/><br/>
-        Username: <input id={"forgotPasswordUsername"}/>
+        Username: <input id="forgotPasswordUsername"/>
         <button onClick={() => requestPasswordReset(setMessage)}>Submit</button>
+        <br/><br/>
         <span>{message}</span>
     </div>
 }
@@ -45,7 +49,6 @@ export function LoginArea() {
             <input type="submit" id="loginSubmit" value="Log In" disabled/>
         </form>
         <button onClick={() => {
-            // setShowForgotPasswordModal(true)
             document.getElementById("forgotPasswordModal").classList.add('active');
         }}>
             Forgot password?

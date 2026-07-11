@@ -100,29 +100,40 @@ main {
 
 #forgotPasswordModal {
     border-radius: 10px;
-    opacity: 0;
-    padding: 2%;
+    padding: 40px 40px 30px 30px;
     position: fixed;
     top: 20%;
-    width: fit-content;
-    left: 25%;
-    background: white;
+    width: 21.5%;
+    background: #b7e0ff;
     border: 1px solid black;
-    text-align: "center";
-    transition: opacity 1s, visibility 1.2s;
+    text-align: justify;
+    font-family: Garamond, sans-serif;
+    text-justify: inter-word;
+    transition: left .8s cubic-bezier(0.7, -0.8, 0.5, 5.01), visibility 1s;
     visibility: hidden;
+    left: -100%;
 }
 
 #forgotPasswordModal.active {
-    opacity: 1;
+    transition: left .8s cubic-bezier(0.7, 1.05, 0.3, 1.02), visibility 1s;
+    left: 30%;
     visibility: visible;
-    transition: opacity 1s, visibility 1.2s;
-    visibility: hidden;
 }
 
-#forgotPasswordModal.active {
-    opacity: 1;
-    visibility: visible;
+#forgotPasswordUsername {
+    margin-right: 3px;
+}
+
+.closeX {
+    position: absolute;
+    top: 3%;
+    right: 2%;
+    padding: 0 2px 0 2px;
+    font-size: 30px;
+    font-family: "Lucida Console", sans-serif;
+}
+.closeX:hover {
+    color: #a61b1b;
 }
 
 #gameDisplaysArea {
