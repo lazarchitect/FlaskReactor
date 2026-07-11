@@ -1,37 +1,18 @@
 import json
-import logging
 from datetime import datetime
 
-from tornado.websocket import WebSocketHandler
+from src.backend.handlers.AbstractWebSocketHandler import AbstractWebSocketHandler
+from src.backend.services.ttt.tttUtils import tttGameOutcome
+from src.backend.utils import isEmpty
 
-from src.backend.pgdb import getPgdb
-from src.backend.services.ttt.tttUtils import tttGameEnded
-from src.backend.utils import isEmpty, generateId, updateAll
 
-# keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
-clientConnections = dict()
-
-def getTttSocketConnections():
-    return clientConnections
-
-def deleteConnection(gameId, socketId):
-    gameConnectionList = clientConnections[gameId]
-    for x in gameConnectionList:
-        if x['id'] == socketId:
-            gameConnectionList.remove(x)
-            return
-
-class TttHandler(WebSocketHandler):
-
-    def check_origin(self, origin):
-        return True
+class TttHandler(AbstractWebSocketHandler):
+    # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
+    clientConnections = dict()
 
     def initialize(self):
-        self.pgdb = getPgdb()
-
-    def open(self):
-        self.socketId = "socket"+ str(generateId())[:8]
-        logging.info("tttSocket opened: " + self.socketId)
+        super().initialize()
+        self.handlerType = "ttt"
 
     def on_message(self, message):
         """handler for incoming websocket messages. expect to see this format: message = {"request": "subscribe", "gameId": "whatever", ...}"""
@@ -52,18 +33,6 @@ class TttHandler(WebSocketHandler):
 
         elif request == "update":
             self.wsUpdate(fields)
-        
-    def on_close(self):
-        if not hasattr(self, "gameId"):
-            print("tttSocket was not subscribed? not sure why this would happen")
-            return
-
-        deleteConnection(self.gameId, self.socketId)
-        logging.info("chessSocket closed: " + self.socketId)
-
-    ###############################
-    ## Message Handler functions ##
-    ###############################
 
     def wsSubscribe(self, fields: dict):
 
@@ -99,10 +68,10 @@ class TttHandler(WebSocketHandler):
         #used for easy search during later deletion
         self.gameId = gameId
 
-        if gameId not in clientConnections:
-            clientConnections[gameId] = [connectionDetails]
+        if gameId not in self.clientConnections:
+            self.clientConnections[gameId] = [connectionDetails]
         else:
-            clientConnections[gameId].append(connectionDetails)
+            self.clientConnections[gameId].append(connectionDetails)
 
         game = self.pgdb.getTttGame(gameId)
 
@@ -181,30 +150,30 @@ class TttHandler(WebSocketHandler):
         newActivePlayer = otherPlayer
         oldActivePlayer = player
 
-        message = {
+        messageToSubscribers = {
             "command": "updateBoard",
             "newBoardstate": boardstate,
             "activePlayer": newActivePlayer,
             "otherPlayer": oldActivePlayer
         }
 
-        updateAll(clientConnections[gameId], message)
+        self.updateAll(gameId, messageToSubscribers)
 
-        gameEnded = tttGameEnded(boardstate)
-        winner = oldActivePlayer if gameEnded else None
+        gameOutcome = tttGameOutcome(boardstate)
 
-        if gameEnded:
+        if gameOutcome is not None:
+            winner = oldActivePlayer if gameOutcome == "Win" else None
             self.endTttGame(otherPlayer, winner, gameId)
                 
     def endTttGame(self, otherPlayer, winner, gameId):
-        message = {
+        messageToSubscribers = {
             "command": "endGame",
             "gameEnded": True,
             "otherPlayer": otherPlayer,
             "winner": winner # None for a tie
         }
 
-        updateAll(clientConnections[gameId], message)
+        self.updateAll(gameId, messageToSubscribers)
 
         self.pgdb.endTttGame(datetime.now(), winner, gameId)
 

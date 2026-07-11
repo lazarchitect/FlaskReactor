@@ -19,7 +19,7 @@ from src.backend.handlers.chatHandler import ChatHandler
 from src.backend.handlers.chessHandler import ChessHandler
 from src.backend.handlers.quadHandler import QuadHandler, getQuadSocketConnections
 from src.backend.handlers.statHandler import StatHandler
-from src.backend.handlers.tttHandler import TttHandler, getTttSocketConnections
+from src.backend.handlers.tttHandler import TttHandler
 from src.backend.pgdb import Pgdb
 from src.backend.services.chess.ChessGame import createChessGame
 from src.backend.services.common import validator
@@ -179,7 +179,7 @@ def printAllSocketConnections():
     print("Quad", getQuadSocketConnections())
     print("Chess", ChessHandler.clientConnections)
     print("Chat", ChatHandler.clientConnections)
-    print("Ttt", getTttSocketConnections())
+    print("Ttt", TttHandler.clientConnections)
 
 @app.route("/logout", methods=["POST"])
 def logout():
