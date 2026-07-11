@@ -30,7 +30,6 @@ class AbstractWebSocketHandler(WebSocketHandler):
 			return
 		self.deleteConnection(self.gameId, self.socketId)
 		logging.error(f"{self.handlerType}Socket closed: " + self.socketId)
-		# TODO: so, when do sockets close?
 
 	def deleteConnection(self, gameId, socketId):
 		gameConnectionList = self.clientConnections[gameId]
