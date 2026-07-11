@@ -32,20 +32,30 @@ function LoginArea () {
 
 	const [showForgotPasswordModal, setShowForgotPasswordModal] = React.useState(false);
 
+	function enableSubmitButton() {
+		const username = document.getElementById('loginUsername').value;
+		const password = document.getElementById('loginPassword').value;
+		const hasUsername = username.length > 0;
+		const hasPassword = password.length > 8;
+
+		const allConditionsMet = hasUsername && hasPassword;
+		document.getElementById('loginSubmit').disabled = !allConditionsMet;
+	}
+
 	return <div>
 		<h1>Log In</h1>
 		<form action="/login" method="POST">
 			<label>
 				Username:
-				<input type="text" name="username" autoComplete="username"/>
+				<input type="text" id="loginUsername" name="username" autoComplete="username" onKeyUp={enableSubmitButton}/>
 			</label>
 			<br/><br/>
 			<label>
 				Password:
-				<input type="password" name="password" autoComplete='current-password'/>
+				<input type="password" id="loginPassword" name="password" autoComplete='current-password' onKeyUp={enableSubmitButton}/>
 			</label>
 			<br/><br/>
-			<input type="submit" value="Submit"/>
+			<input type="submit" id="loginSubmit" value="Log In" disabled />
 		</form>
 		<button onClick={() => {setShowForgotPasswordModal(true)}}>
 			Forgot password?
@@ -56,30 +66,33 @@ function LoginArea () {
 
 function SignupArea() {
 
-	let [passwordLength, setPasswordLength] = React.useState(0);
-	let [repeatedLength, setRepeatedLength] = React.useState(0);
-	let [passwordsMatch, setPasswordsMatch] = React.useState(false);
+	let [showPasswordTooShortError, setShowPasswordTooShortError] = React.useState(false);
+	let [showPasswordsDontMatchError, setShowPasswordsDontMatchError] = React.useState(false);
 
-	document.addEventListener("keyup", () => {
+	function displayWarnings() {
 		const username = document.getElementById('signupUsername').value;
 		const password = document.getElementById('signupPassword').value;
 		const repeated = document.getElementById('signupRepeated').value;
 		const hasUsername = username.length > 0;
 		const hasPassword = password.length > 8;
-		const matchingPws = password === repeated;
+		const passwordsMatch = password === repeated;
 
-		setPasswordLength(password.length);
-		setRepeatedLength(repeated.length);
-		setPasswordsMatch(matchingPws);
-
-		const allConditionsMet = hasUsername && hasPassword && matchingPws;
+		const allConditionsMet = hasUsername && hasPassword && passwordsMatch;
 		document.getElementById('signupSubmit').disabled = !allConditionsMet;
-	});
 
-	let passwordFocus = document.getElementById('signupPassword') === document.activeElement;
-	let repeatedFocus = document.getElementById('signupPassword') === document.activeElement; // TODO is this ID wrong?
-	let passwordLengthWarning = !passwordFocus && passwordLength > 0 && passwordLength <= 8;
-	let passwordsMatchWarning = !repeatedFocus && !passwordsMatch && passwordLength > 0 && repeatedLength > 0;
+		setShowPasswordTooShortError(password.length > 0 && password.length <= 8);
+		setShowPasswordsDontMatchError(!passwordsMatch && password.length > 0 && repeated.length > 0);
+
+	}
+
+	function removeWarnings() {
+		const password = document.getElementById('signupPassword').value;
+		const repeated = document.getElementById('signupRepeated').value;
+		const passwordsMatch = password === repeated;
+		if (password.length > 8) setShowPasswordTooShortError(false);
+		if (passwordsMatch) setShowPasswordsDontMatchError(false);
+
+	}
 
 	return <div>
 		<h1>Sign Up</h1>
@@ -90,23 +103,23 @@ function SignupArea() {
 			</label><br/>
 			<label>
 				Password:
-				<input type="password" id="signupPassword" name="password" autoComplete="new-password"/>
+				<input type="password" id="signupPassword" name="password" autoComplete="new-password" onBlur={displayWarnings} onKeyUp={removeWarnings}/>
 			</label>
-			{passwordLengthWarning && <Warning message="Passwords must be longer than 8 characters." />}
+			{showPasswordTooShortError && <InputError message="Passwords must be longer than 8 characters." />}
 			<br/>
 			<label>
 				Repeat Password:
-				<input type="password" id="signupRepeated" name="password_repeat" autoComplete="new-password"/>
+				<input type="password" id="signupRepeated" name="password_repeat" autoComplete="new-password" onBlur={displayWarnings} onKeyUp={removeWarnings}/>
 			</label>
-			{!passwordLengthWarning && passwordsMatchWarning && <Warning message="Passwords must match." />}
+			{!showPasswordTooShortError && showPasswordsDontMatchError && <InputError message="Passwords must match." />}
 			<br/>
 			<label>
 				Email (optional):
-				<input type="email" name="email" autoComplete="email"/>
+				<input type="email" name="email" autoComplete="email"/> (needed only for password recovery)
 			</label>
 			<br/>
 
-			<input type="submit" id="signupSubmit" value="Submit" disabled/>
+			<input type="submit" id="signupSubmit" value="Sign Up" disabled/>
 		</form>
 	</div>
 }
