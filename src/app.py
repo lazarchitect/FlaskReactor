@@ -266,7 +266,7 @@ def confirmPasswordReset():
     try:
         validator.validateConfirmPasswordReset(request.json)
     except ValidationError as ve:
-        return ve.message
+        return ve.message, ve.code
 
     body = request.json
     username = body['username']
