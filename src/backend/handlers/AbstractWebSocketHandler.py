@@ -31,12 +31,13 @@ class AbstractWebSocketHandler(WebSocketHandler):
 		self.deleteConnection(self.gameId, self.socketId)
 		logging.info(f"{self.handlerType}Socket closed: " + self.socketId)
 
-	# TODO wipe gameID from the dict entirely if it is empty after removal of connection. Possible data loss due to async behavior - resubscribe?
 	def deleteConnection(self, gameId, socketId):
 		gameConnectionList = self.clientConnections[gameId]
 		for x in gameConnectionList:
 			if x['id'] == socketId:
 				gameConnectionList.remove(x)
+				if len(gameConnectionList) == 0:
+					del self.clientConnections[gameId] # possible unexpected behavior due to async subscribe/update during this
 				return
 
 	def getClientConnections(self): # DEBUG
