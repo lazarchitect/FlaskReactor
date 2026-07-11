@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime
 from random import randint
 
@@ -7,7 +8,11 @@ from tornado.websocket import WebSocketHandler
 from src.backend.pgdb import getPgdb
 from src.backend.utils import generateId, isEmpty, updateAll
 
+# keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
 clientConnections = dict()
+
+def getQuadSocketConnections():
+	return clientConnections
 
 def deleteConnection(gameId, socketId):
 	gameConnectionList = clientConnections[gameId]
@@ -55,7 +60,7 @@ class QuadHandler(WebSocketHandler):
 
 	def open(self):
 		self.socketId = "socket"+ str(generateId())[:8]
-		print("quadSocket opened:", str(self.socketId))
+		logging.info("quadSocket opened: " + self.socketId)
 
 	def on_message(self, message):
 
@@ -78,7 +83,12 @@ class QuadHandler(WebSocketHandler):
 			self.handleUpdate(fields)
 
 	def on_close(self):
-		print("quadSocket closed:", self.socketId)
+		if not hasattr(self, "gameId"):
+			print("quadSocket was not subscribed? not sure why this would happen")
+			return
+
+		deleteConnection(self.gameId, self.socketId)
+		logging.info("quadSocket closed: " + self.socketId)
 
 	def handleUpdate(self, fields):
 

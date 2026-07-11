@@ -5,7 +5,7 @@ import React, {createContext, useEffect, useState} from 'react';
 import generateMoves from "./moveGenerator";
 import {chessSocketConnect, sendMoveUpdate} from "./chessSocket";
 import {isPromotion, pieceAt} from "./chessUtils";
-import {Row} from "./ChessboardElements";
+import {Row} from "./chessboardElements";
 import PromotionModal from "./PromotionModal";
 
 export const ActivePieceContext = createContext({});

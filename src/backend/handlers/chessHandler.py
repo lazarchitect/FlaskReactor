@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime
 
 from tornado.websocket import WebSocketHandler
@@ -10,8 +11,11 @@ from src.backend.services.chess.chessConsts import *
 from src.backend.services.chess.chessUtils import inCheck, numberToLetter, pieceLetter
 from src.backend.services.chess.mateEvaluator import hasNoLegalMoves
 
-# keys are gameIds. values are lists of WS connections to inform of updates.
+# keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
 clientConnections = dict()
+
+def getChessSocketConnections():
+    return clientConnections
 
 def deleteConnection(gameId, socketId):
     gameConnectionList = clientConnections[gameId]
@@ -30,7 +34,7 @@ class ChessHandler(WebSocketHandler):
 
     def open(self):
         self.socketId = "socket"+ str(utils.generateId())[:8]
-        print("chessSocket opened:", str(self.socketId))
+        logging.info("chessSocket opened: " + self.socketId)
 
     def on_message(self, message):
         """
@@ -56,13 +60,12 @@ class ChessHandler(WebSocketHandler):
             self.handleUpdate(fields)
 
     def on_close(self):
-        print("chessSocket closed: " + str(self.socketId))
-
         if not hasattr(self, "gameId"):
             print("chessSocket was not subscribed? not sure why this would happen")
             return
 
         deleteConnection(self.gameId, self.socketId)
+        logging.info("chessSocket closed: " + self.socketId)
 
     ###############################
     ## Message Handler functions ##

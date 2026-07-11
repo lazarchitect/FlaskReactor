@@ -1,8 +1,13 @@
 #!usr/bin/env python
 
 import json
+import logging
+import os
+import sys
+from logging import INFO
 from os import environ
 from signal import signal as onSignal, SIGINT
+from threading import Timer
 
 import tornado
 from flask import Flask, render_template, redirect, request, session
@@ -11,18 +16,25 @@ from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 
 from src.backend.handlers.chatHandler import ChatHandler
-from src.backend.handlers.chessHandler import ChessHandler
-from src.backend.handlers.quadHandler import QuadHandler
+from src.backend.handlers.chessHandler import ChessHandler, getChessSocketConnections
+from src.backend.handlers.quadHandler import QuadHandler, getQuadSocketConnections
 from src.backend.handlers.statHandler import StatHandler
-from src.backend.handlers.tttHandler import TttHandler
+from src.backend.handlers.tttHandler import TttHandler, getTttSocketConnections
 from src.backend.pgdb import Pgdb
 from src.backend.services.chess.ChessGame import createChessGame
 from src.backend.services.common import validator
-from src.backend.services.common.User import createUser
+from src.backend.services.common.User import createUser, updatePassword
+from src.backend.services.common.emailSender import sendPasswordResetEmail
 from src.backend.services.common.validator import ValidationError
 from src.backend.services.quad.QuadGame import createQuadGame
 from src.backend.services.ttt.TttGame import createTttGame
-from src.backend.utils import notLoggedIn, buildPreferences
+from src.backend.utils import notLoggedIn, buildPreferences, generateId, isEmpty
+
+handler = logging.StreamHandler(sys.stdout)
+handler.setLevel(logging.INFO)
+handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(message)s (%(filename)s:%(lineno)s)'))
+logging.getLogger().addHandler(handler)
+logging.getLogger().setLevel(INFO)
 
 app = Flask(__name__, static_folder="frontend", static_url_path='/frontend', template_folder="frontend/templates")
 
@@ -30,10 +42,12 @@ try:
     config = json.loads(open("resources/app_config.json", "r").read())
     host = config['host']
     port = config['port']
+    protocol = config.get('protocol', "https")
     wsProtocol = config['websocket']['protocol']
     wsBaseUrl = wsProtocol + "://" + host + "/ws"
     app.secret_key = config['secret_key']
     pgdb = Pgdb(config['postgres'])
+    os.environ['resend_api_key'] = config['resend']['api_key']
 
 except FileNotFoundError:
     print("you need to add resources/app_config.json for the server to run.")
@@ -43,8 +57,12 @@ except KeyError as ke:
     exit()
 
 with app.test_request_context():
-    print("session cleared")
+    logging.info("session cleared")
     session.clear()
+
+# clear out any reset tokens on startup in case the app crashed during the timeout window
+pgdb.clearPwResetTokens()
+logging.info("password reset tokens cleared")
 
 @app.route('/')
 def homepage():
@@ -72,7 +90,7 @@ def chessGame(gameId):
     username = session.get('username')
     if game is None:
         payload = json.dumps(basePayload(), default=str)
-        return render_template("game_not_found.html", payload=payload)
+        return render_template("gameNotFound.html", payload=payload)
 
     colors = {game.white_player: "White", game.black_player: "Black"}
     userColor = colors.get(username) # defaults to None if user is not a player (not logged in, other acct, etc.)
@@ -91,7 +109,7 @@ def quadGame(gameId):
     game = pgdb.getQuadradiusGame(gameId)
     if game is None:
         payload = json.dumps(basePayload(), default=str)
-        return render_template("game_not_found.html", payload=payload)
+        return render_template("gameNotFound.html", payload=payload)
 
     quadGamePayload = {
         "game_type": "quadradius",
@@ -109,7 +127,7 @@ def tttGame(gameId):
 
     if game is None:
         payload = json.dumps(basePayload(), default=str)
-        return render_template("game_not_found.html", payload=payload)
+        return render_template("gameNotFound.html", payload=payload)
 
     tttPayload = {
         "game_type": "ttt", # used in WebSocketConnect for chatSocket
@@ -156,9 +174,17 @@ def signup():
     session['username'] = request.form['username']
     return redirect('/')
 
+
+def printAllSocketConnections():
+    print("Quad", getQuadSocketConnections())
+    print("Chess", getChessSocketConnections())
+    print("Chat", ChatHandler.clientConnections)
+    print("Ttt", getTttSocketConnections())
+
 @app.route("/logout", methods=["POST"])
 def logout():
     session.clear()
+    printAllSocketConnections()
     return redirect("/")
 
 @app.route("/create-game", methods=["POST"])
@@ -187,21 +213,70 @@ def createGame():
 def updateSettings():
 
     body = request.json
-    username = body.get("username")
-    ws_token = body.get("ws_token")
-    setting = body.get("setting")
+    try:
+        validator.validateUpdateSettings(request.json)
+    except ValidationError as ve:
+        return ve.message, ve.code
+
+    setting = body["setting"]
+    username = body["username"]
+    value = body["value"]
+
+    pgdb.updateSetting(setting, value, username)
+    return "ACCEPTED", 202
+
+
+@app.route("/request_password_reset", methods=["PATCH"])
+def requestPasswordReset():
+
+    body = request.json
+    username = body['username']
 
     user = pgdb.getUser(username)
-    if user.ws_token != ws_token:
-        return "UNAUTHORIZED", 401
+    if user is None:
+        return "User not found", 400
 
-    VALID_SETTINGS = ['quad_color_pref', 'quad_color_backup', 'use_chat']
+    if isEmpty(user.email):
+        return "No email address associated with that account", 400
 
-    if setting in VALID_SETTINGS:
-        value = body["data"]["value"]
-        pgdb.updateSetting(setting, value, username)
+    token = str(generateId()).replace('-', '')[:20] # should this be cryptographically tied to the user?
+    pgdb.setPwResetToken(username, token)
 
-    return "ACCEPTED", 202
+    reset_URL = f"{protocol}://{host}/password_reset_form/{token}"
+    sendPasswordResetEmail(user.email, reset_URL)
+
+    Timer(60*15, pgdb.removePwResetToken, [username]).start()
+
+    return "OK", 200
+
+@app.route("/password_reset_form/<token>")
+def PasswordResetForm(token):
+
+    user = pgdb.getUserByToken(token)
+
+    if user is None: # provided token is not stored in the DB for any user
+       return "403 FORBIDDEN"
+
+    payload = json.dumps({"tempUsername": user.name, "token": token})
+    return render_template("passwordResetForm.html", payload=payload)
+
+@app.route('/confirm_password_reset', methods=["PATCH"])
+def confirmPasswordReset():
+
+    try:
+        validator.validateConfirmPasswordReset(request.json)
+    except ValidationError as ve:
+        return ve.message, ve.code
+
+    body = request.json
+    username = body['username']
+    password = body['password']
+
+    pgdb.removePwResetToken(username)
+
+    updatePassword(username, password)
+
+    return "ACCEPTED", 200
 
 def basePayload():
 
@@ -218,6 +293,9 @@ def basePayload():
         "preferences": buildPreferences(user)
     }
 
+def buildPayload(dataDict):
+    return json.dumps(basePayload() | dataDict, default=str)
+
 if __name__ == "__main__":
 
     flaskApp = WSGIContainer(app)
@@ -233,9 +311,9 @@ if __name__ == "__main__":
         ]
     )
     application.listen(port)
-    print("listening for secure websocket requests to " + host)
+    logging.info("listening for secure websocket requests to " + host)
 
-    print("---running Flask server on port " + str(port) + "---")
+    logging.info("---running Flask server on port " + str(port) + "---")
 
     parse_command_line()
     onSignal(SIGINT, lambda signum, frame: tornado.ioloop.IOLoop.instance().stop())

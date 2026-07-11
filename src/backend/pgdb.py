@@ -1,5 +1,6 @@
 """provides a set of tools for interfacing with FlaskReactor's custom Postgres Database (PGDB) instance,
 containing game data, users, and more."""
+import logging
 
 from psycopg import connect, InterfaceError, OperationalError
 from psycopg.errors import InFailedSqlTransaction
@@ -9,19 +10,24 @@ from psycopg.types.json import Json
 from src.backend.utils import convertToObject
 
 schema = "flaskreactor"
-usersTable = schema + ".users"
-statsTable = schema + ".stats"
-chatsTable = schema + ".chats"
-chessGamesTable = schema + ".chess_games"
-tttGamesTable = schema + ".tictactoe_games"
-quadGamesTable = schema + ".quadradius_games"
+usersTable = f"{schema}.users"
+statsTable = f"{schema}.stats"
+chatsTable = f"{schema}.chats"
+chessGamesTable = f"{schema}.chess_games"
+tttGamesTable = f"{schema}.tictactoe_games"
+quadGamesTable = f"{schema}.quadradius_games"
 
 sql = {
 
 	#Users
 	"createUser": f"INSERT INTO {usersTable} (name, password_hash, email, id, ws_token) VALUES (%(name)s, %(password_hash)s, %(email)s, %(id)s, %(ws_token)s)",
 	"getUser": f"SELECT * FROM {usersTable} WHERE lower(name)=lower(%s)",
+	"getUserByToken": f"SELECT * FROM {usersTable} WHERE password_reset_token=%s",
 	"updateSetting": f"UPDATE {usersTable} SET _SETTING_=%s WHERE name=%s",
+	"clearAllPwResetTokens": f"UPDATE {usersTable} SET password_reset_token = null",
+	"setPwResetToken": f"UPDATE {usersTable} SET password_reset_token = %s where name=%s",
+	"removePwResetToken": f"UPDATE {usersTable} SET password_reset_token = null where name=%s",
+	"updatePassword": f"UPDATE {usersTable} SET password_hash=%s where name=%s",
 
 	# Quadradius
 	"createQuadradiusGame": f"INSERT INTO {quadGamesTable}  (id, player1, player2, player1_color, player2_color, boardstate, active_player, orb_countdown) values (%(id)s, %(player1)s, %(player2)s, %(player1_color)s, %(player2_color)s, %(boardstate)s, %(active_player)s, %(orb_countdown)s)",
@@ -75,7 +81,7 @@ class Pgdb:
 			exit()
 
 		self.db_env = env
-		print("connecting to DB environment:", self.db_env)
+		logging.info("connecting to DB environment: " + self.db_env)
 
 		try:
 			self.__connect()
@@ -97,6 +103,7 @@ class Pgdb:
 
 		try:
 			self.cursor.execute(query, values)
+			self.conn.commit()
 		except (InterfaceError, OperationalError):
 			#Connection was closed, so reconnect. (this happens due to idle timeouts.)
 			self.__connect()
@@ -131,6 +138,35 @@ class Pgdb:
 		if userDict is None:
 			return None
 		return convertToObject(userDict)
+
+	def getUserByToken(self, token):
+		query = sql['getUserByToken']
+		values = [token]
+		self.__execute(query, values)
+		userDict = self.cursor.fetchone()
+		if userDict is None:
+			return None
+		return convertToObject(userDict)
+
+	def clearPwResetTokens(self):
+		query = sql['clearAllPwResetTokens']
+		self.__execute(query, values=None)
+		self.conn.commit()
+
+	def setPwResetToken(self, username: str, token: str):
+		query = sql['setPwResetToken']
+		values = [token, username]
+		self.__execute(query,values)
+
+	def removePwResetToken(self, username: str):
+		query = sql['removePwResetToken']
+		values = [username]
+		self.__execute(query,values)
+
+	def updatePassword(self, username, password_hash):
+		query = sql['updatePassword']
+		values = [password_hash, username]
+		self.__execute(query, values)
 
 	### Quadradius
 

@@ -25,7 +25,9 @@ export function SiteHeader () {
 
 			<div id="headerRight">
 
-				<div id="settings" onClick={() => setSettingsExpanded(!settingsExpanded)}>
+				<div id="settings"
+						 onClick={() => setSettingsExpanded(!settingsExpanded)}
+						 className={settingsExpanded? 'active' : ''}>
 					<SettingsGearSVG />
 				</div>
 

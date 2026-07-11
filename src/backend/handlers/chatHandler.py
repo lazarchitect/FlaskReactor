@@ -1,34 +1,15 @@
 import json
 
-from tornado.websocket import WebSocketHandler
+from src.backend.handlers.AbstractWebSocketHandler import AbstractWebSocketHandler
+from src.backend.utils import isEmpty
 
-from src.backend.pgdb import getPgdb
-from src.backend.utils import generateId, isEmpty, updateAll
 
-clientConnections = dict()
-
-# lots of code here which is exactly the same across the handler scripts. Time to DRY it?
-
-def deleteConnection(gameId, socketId):
-    gameConnectionList = clientConnections[gameId]
-    for x in gameConnectionList:
-        if x['id'] == socketId:
-            gameConnectionList.remove(x)
-            return
-
-class ChatHandler(WebSocketHandler):
-
-    # this fn is required due to Flask/Tornado rejecting unspecified origins as Forbidden
-    # unless we allow it explicitly
-    def check_origin(self, origin):
-        return True
+class ChatHandler(AbstractWebSocketHandler):
+    clientConnections = dict()
 
     def initialize(self):
-        self.pgdb = getPgdb()
-    
-    def open(self):
-        self.socketId = "socket"+ str(generateId())[:8]
-        print("messageSocket opened:", str(self.socketId))
+        super().initialize()
+        self.handlerType = "chat"
 
     def on_message(self, message):
 
@@ -48,28 +29,6 @@ class ChatHandler(WebSocketHandler):
 
         elif request == "update":
             self.handleUpdate(fields)
-
-    def on_close(self):
-        print("chatSocket closed:", self.socketId)
-
-    def handleUpdate(self, fields):
-
-        print(fields)
-        
-        index = 0 # doesn't matter, but we could set it to max(indexes so far)
-        username = fields['username']
-        content = fields['content']
-        gameId = fields['gameId']
-
-        messageToSubscribers = {
-            "command": "append",
-            "chat": {"index": index, "username": username, "content": content}
-        }
-
-        updateAll(clientConnections[gameId], messageToSubscribers)
-            
-        self.pgdb.createChat(gameId, fields['content'], fields['username'])
-
 
     def handleSubscribe(self, fields: dict):
 
@@ -101,7 +60,7 @@ class ChatHandler(WebSocketHandler):
                 "message": "server did not receive a ws_token from the client",
                 "details": str(connectionDetails)
             })
-            return #non-logged in viewers should not have chat log access. 
+            return #non-logged in viewers should not have chat log access.
 
         # non-players should not have chat log access
         username = fields.get('username', None)
@@ -141,10 +100,10 @@ class ChatHandler(WebSocketHandler):
         # used for authentication during updates
         self.ws_token = fields['ws_token']
 
-        if gameId not in clientConnections:
-            clientConnections[gameId] = [connectionDetails]
+        if gameId not in self.clientConnections:
+            self.clientConnections[gameId] = [connectionDetails]
         else:
-            clientConnections[gameId].append(connectionDetails)
+            self.clientConnections[gameId].append(connectionDetails)
 
         chats = self.pgdb.getChats(gameId)
 
@@ -157,3 +116,19 @@ class ChatHandler(WebSocketHandler):
             "command": "initialize",
             "chats": chats
         })
+
+    def handleUpdate(self, fields):
+
+        index = 0 # doesn't matter, but we could set it to max(indexes so far)
+        username = fields['username']
+        content = fields['content']
+        gameId = fields['gameId']
+
+        messageToSubscribers = {
+            "command": "append",
+            "chat": {"index": index, "username": username, "content": content}
+        }
+
+        self.updateAll(gameId, messageToSubscribers)
+            
+        self.pgdb.createChat(gameId, fields['content'], fields['username'])
