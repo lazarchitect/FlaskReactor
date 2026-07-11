@@ -11,10 +11,10 @@ export default function PromotionModal({tileId}) {
     const pieces = [BISHOP, KNIGHT, QUEEN, ROOK];
     const pieceColor = row === 7 ? BLACK : WHITE;
 
-    let initialLeft = -93;
+    let initialLeft = -63;
     let left = initialLeft + (60*col);
 
-    let top = pieceColor === WHITE ? -40 : 450;
+    let top = pieceColor === WHITE ? 24 : 506;
 
     // following code "retrieves" the modal if it initially rendered off left side of screen
     React.useEffect(() => {
