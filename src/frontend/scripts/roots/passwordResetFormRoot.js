@@ -54,7 +54,7 @@ function PasswordResetArea() {
 
     return <div>
         <h1>Password Reset</h1>
-        <form id="passwordResetForm" onSubmit={onPasswordResetSubmit} action="/confirm_password_reset" method="POST">
+        <form id="passwordResetForm" onSubmit={onPasswordResetSubmit} method="POST">
             Your Username: {payload.tempUsername}
             <br/>
             <label>

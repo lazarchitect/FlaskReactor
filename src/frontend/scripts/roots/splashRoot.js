@@ -3,7 +3,7 @@
 import React from 'react';
 import {createRoot} from 'react-dom/client';
 import {SiteHeader} from '../components/common/SiteHeader';
-import {Warning} from "../components/common/loginElements";
+import {InputError} from "../components/common/loginElements";
 
 function requestPasswordReset(setMessage) {
 	fetch("/request_password_reset", {
