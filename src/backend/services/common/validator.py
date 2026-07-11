@@ -90,3 +90,22 @@ def getOrError(obj: dict, key: str):
 	if isEmpty(value):
 		raise ValidationError(f"missing {key} in input")
 	return value
+
+
+def validateConfirmPasswordReset(request: dict):
+
+	token = request.get('token')
+	username = request.get('username')
+	password = request.get('password')
+	repeated = request.get('password_repeat')
+
+	user = getPgdb().getUser(username)
+
+	if user is None:
+		raise ValidationError("BAD REQUEST - invalid username passed in password reset confirmation.") # shouldn't happen for normal users
+
+	if token != user.password_reset_token:
+		raise ValidationError("BAD REQUEST - bad security token provided or multiple tries attempted.")
+
+	if password != repeated:
+		raise ValidationError("Provided passwords didn't match.") # shouldn't happen to normal users
