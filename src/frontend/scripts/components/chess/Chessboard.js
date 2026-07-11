@@ -38,8 +38,6 @@ export function Chessboard() {
 
 		const clickedId = mouseEvent.target.id;
 
-		console.log(clickedId);
-
 		if (clickedId.includes("promotion")) {
 			if (clickedId === "promotionPieceDiv") {
 				removeTemporaryState();
