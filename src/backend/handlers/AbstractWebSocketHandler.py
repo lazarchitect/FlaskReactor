@@ -40,8 +40,6 @@ class AbstractWebSocketHandler(WebSocketHandler):
 					del self.clientConnections[gameId] # possible unexpected behavior due to async subscribe/update during this
 				return
 
-	def getClientConnections(self): # DEBUG
-		return self.clientConnections
 
 	def updateAll(self, gameId, message):
 		gameConnections = self.clientConnections[gameId]
