@@ -91,7 +91,6 @@ function SignupArea() {
 		const passwordsMatch = password === repeated;
 		if (password.length > 8) setShowPasswordTooShortError(false);
 		if (passwordsMatch) setShowPasswordsDontMatchError(false);
-
 	}
 
 	return <div>
