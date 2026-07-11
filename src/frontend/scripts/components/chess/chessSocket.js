@@ -10,25 +10,16 @@ export function sendResignation() {
 }
 
 export function sendMoveUpdate(src, dest) {
-    const updateObj = {
-        "player": payload.player,
-        "userId": payload.userId,
-        "src": src,
-        "dest": dest
-    }
-    socket.sendUpdate(updateObj);
+    socket.sendUpdate({"src": src, "dest": dest});
 }
 
 export function sendPromotionMoveUpdate(src, dest, typeChoice) {
-    const updateObj = {
+    socket.sendUpdate({
         "promotion": true,
         "typeChoice": typeChoice,
-        "player": payload.player,
-        "userId": payload.userId,
         "src": src,
         "dest": dest
-    }
-    socket.sendUpdate(updateObj);
+    });
 }
 
 export function chessSocketConnect(setBoardstate, setGameDetails) {
