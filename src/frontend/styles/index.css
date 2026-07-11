@@ -98,6 +98,14 @@ main {
     padding: 0 2% 0 2%;
 }
 
+#loginForm{
+    display: inline;
+}
+
+#forgotPasswordText {margin-left: 1%; text-decoration: underline;}
+#forgotPasswordText:hover {background-color: #1e1e4922;}
+#forgotPasswordText:active {border: 1px solid black;}
+
 #forgotPasswordModal {
     border-radius: 10px;
     padding: 40px 40px 30px 30px;
