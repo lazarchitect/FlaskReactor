@@ -161,11 +161,11 @@ main {
 .playArea {
     margin-top: 1%;
     margin-left: 1%;
+    width: fit-content;
 }
 
 #chessboard {
-    position: absolute;
-    display: inline-block;
+    width: fit-content;
 }
 
 .chessRow {
