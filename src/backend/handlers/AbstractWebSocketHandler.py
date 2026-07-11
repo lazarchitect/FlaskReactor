@@ -22,14 +22,15 @@ class AbstractWebSocketHandler(WebSocketHandler):
 
 	def open(self):
 		self.socketId = "socket"+ str(generateId())[:8]
-		logging.info(f"{self.handlerType}Socket opened: " + self.socketId)
+		logging.error(f"{self.handlerType}Socket opened: " + self.socketId)
 
 	def on_close(self):
 		if not hasattr(self, "gameId"):
 			print(f"{self.handlerType}Socket was not subscribed? not sure why this would happen")
 			return
 		self.deleteConnection(self.gameId, self.socketId)
-		logging.info(f"{self.handlerType}Socket closed: " + self.socketId)
+		logging.error(f"{self.handlerType}Socket closed: " + self.socketId)
+		# TODO: so, when do sockets close?
 
 	def deleteConnection(self, gameId, socketId):
 		gameConnectionList = self.clientConnections[gameId]

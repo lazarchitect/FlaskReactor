@@ -16,7 +16,7 @@ from tornado.web import Application, FallbackHandler
 from tornado.wsgi import WSGIContainer
 
 from src.backend.handlers.chatHandler import ChatHandler
-from src.backend.handlers.chessHandler import ChessHandler, getChessSocketConnections
+from src.backend.handlers.chessHandler import ChessHandler
 from src.backend.handlers.quadHandler import QuadHandler, getQuadSocketConnections
 from src.backend.handlers.statHandler import StatHandler
 from src.backend.handlers.tttHandler import TttHandler, getTttSocketConnections
@@ -177,7 +177,7 @@ def signup():
 
 def printAllSocketConnections():
     print("Quad", getQuadSocketConnections())
-    print("Chess", getChessSocketConnections())
+    print("Chess", ChessHandler.clientConnections)
     print("Chat", ChatHandler.clientConnections)
     print("Ttt", getTttSocketConnections())
 
@@ -308,7 +308,8 @@ if __name__ == "__main__":
             ("/ws/quad",  QuadHandler),
             ("/ws/chess", ChessHandler),
             (".*",        FallbackHandler, {"fallback": flaskApp})
-        ]
+        ],
+        websocket_ping_interval = 20, websocket_ping_timeout = 10
     )
     application.listen(port)
     logging.info("listening for secure websocket requests to " + host)

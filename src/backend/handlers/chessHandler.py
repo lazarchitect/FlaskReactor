@@ -1,46 +1,26 @@
 import json
-import logging
 from datetime import datetime
 
-from tornado.websocket import WebSocketHandler
-
-import src.backend.utils as utils
-from src.backend.pgdb import getPgdb
+from src.backend.handlers.AbstractWebSocketHandler import AbstractWebSocketHandler
 from src.backend.services.chess.Move import Move, executeMove, executeRookJump, deletePiece, promotePawn
 from src.backend.services.chess.chessConsts import *
 from src.backend.services.chess.chessUtils import inCheck, numberToLetter, pieceLetter
 from src.backend.services.chess.mateEvaluator import hasNoLegalMoves
+from src.backend.utils import isEmpty
 
-# keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
-clientConnections = dict()
 
-def getChessSocketConnections():
-    return clientConnections
+class ChessHandler(AbstractWebSocketHandler):
 
-def deleteConnection(gameId, socketId):
-    gameConnectionList = clientConnections[gameId]
-    for x in gameConnectionList:
-        if x['id'] == socketId:
-            gameConnectionList.remove(x)
-            return
-
-class ChessHandler(WebSocketHandler):
-
-    def check_origin(self, origin):
-        return True
+    # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
+    clientConnections = dict()
 
     def initialize(self):
-        self.pgdb = getPgdb()
-
-    def open(self):
-        self.socketId = "socket"+ str(utils.generateId())[:8]
-        logging.info("chessSocket opened: " + self.socketId)
+        super().initialize()
+        self.handlerType = "chess"
 
     def on_message(self, message):
-        """
-        handler for incoming websocket messages.
-        expect to see this format: message = {"request": "some_request", "gameId": "whatever", ...}
-        """
+        """ Logic for handling incoming websocket messages. Expect to see the following format:
+        message = {"request": "some_request", "gameId": "whatever", ...} """
 
         fields = json.loads(message)
         request = fields['request']
@@ -62,18 +42,6 @@ class ChessHandler(WebSocketHandler):
         elif request == "resign":
             self.handleResign(fields)
 
-    def on_close(self):
-        if not hasattr(self, "gameId"):
-            print("chessSocket was not subscribed? not sure why this would happen")
-            return
-
-        deleteConnection(self.gameId, self.socketId)
-        logging.info("chessSocket closed: " + self.socketId)
-
-    ###############################
-    ## Message Handler functions ##
-    ###############################
-
     def handleSubscribe(self, fields: dict):
 
         if self.socketId is None:
@@ -86,7 +54,7 @@ class ChessHandler(WebSocketHandler):
 
         # gameId is given to the frontend by Flask in the payload and then sent back here to confirm
         gameId = fields.get('gameId')
-        if utils.isEmpty(gameId):
+        if isEmpty(gameId):
             self.write_message({
                 "command": "error",
                 "message": "server did not receive a game ID from the client",
@@ -94,7 +62,7 @@ class ChessHandler(WebSocketHandler):
             })
             return
         
-        if utils.isEmpty(fields.get('ws_token')):
+        if isEmpty(fields.get('ws_token')):
             self.write_message({
                 "command": "info",
                 "message": "server did not receive a ws_token from the client",
@@ -102,16 +70,14 @@ class ChessHandler(WebSocketHandler):
             })
         
         else:
-            # used for authentication during updates
-            self.ws_token = fields['ws_token']
-        
-        #used for easy search during later deletion
-        self.gameId = gameId
+            self.ws_token = fields['ws_token'] # used for authentication during updates
 
-        if gameId not in clientConnections:
-            clientConnections[gameId] = [connectionDetails]
+        self.gameId = gameId # used for easy search during later deletion
+
+        if gameId not in self.clientConnections:
+            self.clientConnections[gameId] = [connectionDetails]
         else:
-            clientConnections[gameId].append(connectionDetails)
+            self.clientConnections[gameId].append(connectionDetails)
 
         game = self.pgdb.getChessGame(gameId)
 
@@ -244,7 +210,7 @@ class ChessHandler(WebSocketHandler):
                 "loser": loser
             }
 
-            utils.updateAll(clientConnections[gameId], messageToSubscribers)
+            self.updateAll(gameId, messageToSubscribers)
 
             self.pgdb.endChessGame(boardstate, datetime.now(), winner, gameId)
 
@@ -264,7 +230,7 @@ class ChessHandler(WebSocketHandler):
                 }
             }
 
-            utils.updateAll(clientConnections[gameId], messageToSubscribers)
+            self.updateAll(gameId, messageToSubscribers)
 
             self.pgdb.updateChessGame(
                 boardstate,
@@ -290,6 +256,6 @@ class ChessHandler(WebSocketHandler):
             "loser": resigner
         }
 
-        utils.updateAll(clientConnections[gameId], messageToSubscribers)
+        self.updateAll(gameId, messageToSubscribers)
 
         self.pgdb.endChessGame(game.boardstate, datetime.now(), winner, gameId)
