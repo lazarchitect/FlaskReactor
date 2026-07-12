@@ -80,8 +80,16 @@ def redeploy(commitId):
     client.containers.prune()
 
     logging.info("Running new container...")
+
     # port 5000 inside container links to port 5000 of host machine
-    container = client.containers.run(newImage, name=name, ports = {5000:5000}, environment={"DEPLOY_VERSION": commitId}, detach=True)
+    portMapping = {5000:5000}
+
+    # for securely mounting app_config at run time. Absolute path is needed
+    volumeMapping = {"/home/pi/projects/FlaskReactor/resources/app_config.json": {"bind": "/app/resources/app_config.json", "mode": "ro"}}
+
+    environmentMapping = {"DEPLOY_VERSION": commitId}
+
+    container = client.containers.run(newImage, name=name, ports=portMapping, volumes=volumeMapping, environment=environmentMapping, detach=True)
 
     for line in container.logs(stream=True):
         logging.info(line.decode("utf-8").strip())
