@@ -1,0 +1,16 @@
+
+docker stop app
+
+docker container prune --force
+
+docker build .
+
+
+docker run \
+   -d \
+   --name app \
+   -p 5000:5000 \
+   -v /home/pi/projects/FlaskReactor/resources/app_config.json:/app/resources/app_config.json:ro \
+   -e DEPLOY_VERSION=0.6.0 \
+   flaskreactor:latest
+
