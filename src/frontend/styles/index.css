@@ -96,7 +96,7 @@ main {
     top: 10%;
     width: 96%; /* full width minus L/R padding */
     padding: 0 2% 0 2%;
-    height: 90vh;
+    height: 100%;
 }
 
 #welcomeText {
