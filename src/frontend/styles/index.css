@@ -1,7 +1,6 @@
 
 body {
-    background-color: #5ba7af;
-    margin: 0;
+    margin: 0; /* overrides browser default of 8px */
     height: 100%;
 }
 
@@ -9,7 +8,7 @@ header {
     position: fixed;
     top: 0;
     width: 100%;
-    height: 10%;
+    height: 10vh;
     z-index: 99;
     background-color: mediumaquamarine;
     display: flex;
@@ -92,10 +91,16 @@ header {
 }
 
 main {
+    background-color: #5ba7af;
     position: absolute;
     top: 10%;
     width: 96%; /* full width minus L/R padding */
     padding: 0 2% 0 2%;
+    height: 90vh;
+}
+
+#welcomeText {
+    font-size: large;
 }
 
 #loginForm{
@@ -115,6 +120,7 @@ main {
     background: #b7e0ff;
     border: 1px solid black;
     text-align: justify;
+    color: #1e1e49;
     font-family: Garamond, sans-serif;
     text-justify: inter-word;
     transition: left .8s cubic-bezier(0.7, -0.8, 0.5, 5.01), visibility 1s;
