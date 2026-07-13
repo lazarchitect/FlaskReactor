@@ -1,6 +1,8 @@
 <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" stroke="white" stroke-width="2">
-    <polygon points="
-    200,20
+
+    <ellipse cx="200" cy="20" ry="10" rx="20"/>
+
+    <polygon stroke="none" points="200,20
     240,60
     200,100
     210,110
@@ -8,6 +10,8 @@
     300,120
     200,220
     100,120" />
+
     <rect width="60" height="140" x="170" y ="190"/>
+
     <polygon points="170,320 230,320 270,380 130,380"/>
 </svg>
