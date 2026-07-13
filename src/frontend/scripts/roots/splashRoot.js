@@ -10,7 +10,7 @@ const page = (
 	<>
 		<SiteHeader />
 		<main>
-			<p>FlaskReactor is a site for playing games online with your friends. Gaming will be free of charge for everyone, forever. Please make an account to get started!</p>
+			<p id="welcomeText"> Welcome to FlaskReactor, where you can play games online with your friends. All features will be free of charge for everyone, forever. Please sign up or log in to get started! Or to spectate others' games, simply visit that game's URL. </p>
 			<LoginArea/>
 			<br/><br/>
 			<SignupArea/>
