@@ -58,11 +58,8 @@ export function tileIdOf(coords){
 }
 
 export function generatePieceMetadata(piece) {
+    // let set = payload.preferences.chessSet;
     let imagePath = "/frontend/images/" + piece.color + piece.type + ".png";
     let altText = "A " + piece.color + " " + piece.type + ".";
-
-    if (piece.type === "Bishop" && piece.color === "Black") {
-        imagePath = "/frontend/svg/" + piece.color + piece.type + ".svg";
-    }
     return {imagePath, altText};
 }
