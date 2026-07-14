@@ -1,0 +1,22 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
+     stroke="black" stroke-width="2" fill="white">
+
+    <circle r="10" cx="200" cy="87"/>
+
+    <path d="
+      M
+      150 320
+      C 60 140 340 140
+      250 320
+      "/>
+
+    <path d="
+      M
+      160 198
+      C 100 60 300 60
+      240 198
+      "/>
+
+    <!-- plinth -->
+    <polygon points="150,320 250,320 290,380 110,380"/>
+</svg>

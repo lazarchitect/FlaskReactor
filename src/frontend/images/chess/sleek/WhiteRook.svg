@@ -1,0 +1,15 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
+     stroke="black" stroke-width="2" fill="white">
+
+    <rect width="240" height="90" x="80" y ="100"/>
+
+    <!-- minarets -->
+    <rect width="40" height="60" x="70"  y="50"/>
+    <rect width="30" height="60" x="150" y="50"/>
+    <rect width="30" height="60" x="220" y="50"/>
+    <rect width="40" height="60" x="290" y="50"/>
+
+    <rect width="180" height="140" x="110" y ="190"/>
+
+    <polygon points="100,320 300,320 340,380 60,380"/>
+</svg>

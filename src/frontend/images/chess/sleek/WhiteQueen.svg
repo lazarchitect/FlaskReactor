@@ -1,0 +1,28 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
+     stroke="black" stroke-width="2" fill="white">
+
+    <circle r="8" cx="121" cy="57"/>
+    <circle r="8" cx="140" cy="42"/>
+    <circle r="8" cx="160" cy="31"/>
+    <circle r="8" cx="185" cy="23"/>
+    <circle r="8" cx="215" cy="23"/>
+    <circle r="8" cx="240" cy="31"/>
+    <circle r="8" cx="260" cy="42"/>
+    <circle r="8" cx="279" cy="57"/>
+
+    <!-- crown -->
+    <path d="M 115,75 Q 200,-15 285,75 L115,75"/>
+
+    <rect width="100" height="15" y="75" x="150"/>
+
+    <polygon points="
+      150,320
+      80, 140
+      150,90
+      250,90
+      320,140
+      250,320"/>
+
+    <!-- plinth -->
+    <polygon points="150,320 250,320 290,380 110,380"/>
+</svg>
