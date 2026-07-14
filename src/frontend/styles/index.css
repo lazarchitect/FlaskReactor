@@ -99,6 +99,11 @@ main {
     height: 100%;
 }
 
+main.chess {
+    display: flex;
+    justify-content: center;
+}
+
 #welcomeText {
     font-size: large;
 }
@@ -187,8 +192,8 @@ main {
 }
 
 .tile {
-    width: 60px;
-    height: 60px;
+    width: 80px;
+    height: 80px;
     display: inline-block;
     position: relative;
 }
@@ -263,12 +268,13 @@ main {
 }
 
 #belowChessboard {
-    width: 440px;
+    width: 100%;
     position: relative;
-    padding-right: 20px;
-    padding-top: 20px;
-    padding-left: 20px;
+    padding-right: 5%;
+    padding-top: 4%;
+    padding-left: 5%;
     display: flex;
+    box-sizing: border-box;
     text-align: right;
     justify-content: space-between;
 }

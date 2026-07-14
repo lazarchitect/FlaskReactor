@@ -28,7 +28,7 @@ function Page() {
     const [gameEnded, setGameEnded] = useState(payload.game.completed);
     return <>
         <SiteHeader/>
-        <main>
+        <main className="chess">
             <div className="playArea">
                 <h3>Chess{titleAddition}</h3>
                 <Chessboard/>
