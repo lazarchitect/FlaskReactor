@@ -33,7 +33,8 @@ def buildPreferences(user=None):
 	return {
 		"quad_color_pref": user.quad_color_pref,
 		"quad_color_backup": user.quad_color_backup,
-		"use_chat": user.use_chat
+		"use_chat": user.use_chat,
+		"chess_piece_set": user.chess_piece_set
 	}
 
 def convertToObject(gameDict):

@@ -1,22 +1,29 @@
 import React, {useContext} from "react";
 import {PreferenceContext} from "./SiteHeader";
 
+const QUAD_COLORS = ["red", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"];
+const CHESS_PIECE_SETS = ["default", "sleek"];
+
 export function SettingsPane({expanded, isLoggedIn}) {
 
     // for performance reasons, we simply edit style instead of re-rendering for every click
     return <div id="settingsPane" className={expanded ? 'active' : ''}>
-        Settings (refresh to see changes)
+        <b>Settings</b> (refresh to see changes)
         <br/>
         {isLoggedIn ?
             <>
                 <span>Quadradius Color Preference: </span>
-                <QuadColorDropdown setting="quad_color_pref" />
+                <Dropdown setting="quad_color_pref" options={QUAD_COLORS} />
                 <br/>
+                {/*NOTE - users can select pref and backup as the same color, leading to mirror matches?*/}
                 <span>Quadradius Color Backup: </span>
-                <QuadColorDropdown setting="quad_color_backup" />
+                <Dropdown setting="quad_color_backup" options={QUAD_COLORS} />
                 <br/>
                 <label htmlFor="useChatToggle">Use Chat?</label>
                 <Toggle id="useChatToggle" setting="use_chat"/>
+                <br/>
+                <span>Chess Piece Set: </span>
+                <Dropdown setting="chess_piece_set" options={CHESS_PIECE_SETS}/>
             </>
             : //  else - settings visible while logged out? uses cookies?
             <></>
@@ -37,13 +44,10 @@ function Toggle({id, setting}) {
     return <input type="checkbox" id={id} checked={current} onChange={onChange}/>
 }
 
-// NOTE - users can select pref and backup as the same color, leading to mirror matches?
-function QuadColorDropdown({setting}) {
+function Dropdown({setting, options}) {
 
     let {preferencesState, setPreferencesState} = useContext(PreferenceContext);
     let current = preferencesState[setting];
-
-    const quadColors = ["red", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"];
 
     let onChange = (event) => {
         setPreferencesState((prevState) => ({...prevState, [setting]: event.target.value}));
@@ -51,7 +55,7 @@ function QuadColorDropdown({setting}) {
     };
 
     return <select id={setting} value={current} onChange={onChange}>
-        {quadColors.map((item) => <option key={item} value={item}>{item}</option>)}
+        {options.map((item) => <option key={item} value={item}>{item.toString()}</option>)}
     </select>
 }
 
