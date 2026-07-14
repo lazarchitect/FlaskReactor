@@ -62,8 +62,8 @@ export function tileIdOf(coords){
 export function generatePieceMetadata(piece) {
     let set = payload.preferences.chessSet;
     let ext = SVG_SETS.includes(set) ? "svg" : "png";
-    if(set === undefined) set = "default";
+    if(set === undefined) set = "sleek"; // DEBUG ONLY! SHOULD BE "default"
     let imagePath = `/frontend/images/chess/${set}/${piece.color}${piece.type}.${ext}`;
-    let altText = "A " + piece.color + " " + piece.type + ".";
+    let altText = `A ${piece.color} ${piece.type}.`;
     return {imagePath, altText};
 }
