@@ -94,9 +94,10 @@ main {
     background-color: #5ba7af;
     position: absolute;
     top: 10%;
-    width: 96%; /* full width minus L/R padding */
+    width: 100%; /* full width minus L/R padding */
     padding: 0 2% 0 2%;
-    height: 100%;
+    height: 100vh;
+    box-sizing: border-box;
 }
 
 main.chess {
@@ -110,6 +111,18 @@ main.chess {
 
 #loginForm{
     display: inline;
+}
+
+#signupForm {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 18%;
+    height: 200px;
+    flex-wrap: wrap;
+}
+
+.signupFull {
+    grid-column: 1/-1;
 }
 
 #forgotPasswordText {margin-left: 1%; text-decoration: underline;}
