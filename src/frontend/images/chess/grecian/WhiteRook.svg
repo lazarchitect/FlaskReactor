@@ -1,5 +1,5 @@
 <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
-     stroke="black" stroke-width="5" fill="white">
+     stroke="black" stroke-width="6" fill="white">
 
     <path d="
     M 70,150
@@ -16,5 +16,5 @@
 
     <rect width="260" height="200" x="70" y="150"/>
 
-    <polygon points="60,340 340,340 400,400 0,400"/>
+    <polygon points="60,340 340,340 400,397 0,397"/>
 </svg>

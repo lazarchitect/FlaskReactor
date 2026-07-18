@@ -1,5 +1,5 @@
 <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
-     stroke="white" stroke-width="4" fill="black">
+     stroke="white" stroke-width="5" fill="black">
 
     <!-- crown -->
     <path d="M 80,10 L 79,10 Q 200,160 320,10 L 79,10"/>
