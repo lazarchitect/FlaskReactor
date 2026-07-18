@@ -1,9 +1,8 @@
 import React, {useEffect, useState} from 'react';
-import {createRoot} from "react-dom/client";
 
 export const popupEvents = new EventTarget();
 
-function ReconnectingPopUp() {
+export function ReconnectingPopUp() {
 
     const [display, setDisplay] = useState(false);
 
@@ -22,10 +21,4 @@ function ReconnectingPopUp() {
     return <div id="reconnectingPopUp">
         Server Connection Lost. Reconnecting...
     </div>
-}
-
-export function attachReconnectPopUp() {
-    let container = document.createElement("div");
-    document.body.appendChild(container);
-    createRoot(container).render(<ReconnectingPopUp />);
 }

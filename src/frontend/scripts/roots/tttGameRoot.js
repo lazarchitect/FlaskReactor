@@ -4,7 +4,7 @@ import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {TttBoard} from "../components/ttt/TttBoard";
 import {configureTitleAddition} from "./rootUtil";
-import {attachReconnectPopUp} from "../components/common/ReconnectingPopUp";
+import {ReconnectingPopUp} from "../components/common/ReconnectingPopUp";
 
 const players = [payload.game.x_player, payload.game.o_player];
 const isPlayer = players.includes(payload.username);
@@ -12,8 +12,6 @@ const isPlayer = players.includes(payload.username);
 const use_chat = payload.preferences.use_chat;
 
 const titleAddition = configureTitleAddition(players);
-
-attachReconnectPopUp();
 
 function Page(){
 	return <>
@@ -24,6 +22,7 @@ function Page(){
 				<TttBoard/>
 				<p>Status: <span id="status"></span></p>
 			</div>
+			<ReconnectingPopUp />
 			{isPlayer && use_chat && <Chatbox expanded={false}/>}
 		</main>
 	</>
