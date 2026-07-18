@@ -197,12 +197,31 @@ main.chess {
 
 #reconnectingPopUp {
     position: fixed;
-    bottom: 2vh;
-    left: 1vw;
+    display: flex;
+    bottom: 0;
+    left: 0;
     padding: 1vw 2vh 1vw 2vh;
     background-color: #DDD;
     border-radius: 10px;
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+    visibility: hidden;
+    align-items: center;
+}
+
+#reconnectingPopUp.show {
+    visibility: visible;
+}
+
+#reconnectingText {
+    font-weight: bold;
+}
+
+#reconnectingDots {
+    display: inline;
+    position: relative;
+    height: 30px;
+    width: 30px;
+    left: 10px;
 }
 
 #chessboard {

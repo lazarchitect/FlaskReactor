@@ -17,8 +17,8 @@ export function ReconnectingPopUp() {
         };
     }, []);
 
-    if (!display) return null;
-    return <div id="reconnectingPopUp">
-        Server Connection Lost. Reconnecting...
+    return <div id="reconnectingPopUp" className={display? "show" : "hide"}>
+        <span id="reconnectingText">Server Connection Lost - Reconnecting...</span>
+        <img id="reconnectingDots" src='/frontend/images/common/reconnectingDots.svg' alt='Reconnecting' />
     </div>
 }
