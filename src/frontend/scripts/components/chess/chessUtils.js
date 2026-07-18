@@ -2,7 +2,7 @@
 
 import {BLACK, PAWN, WHITE} from './chessConsts';
 
-let SVG_SETS = ['sleek'];
+let SVG_SETS = ['grecian'];
 
 /** Represents a chess piece.
     Useful mostly for semi-pseudocode readability, like piece.is("Black", "Pawn") instead of a more cumbersome function call.
