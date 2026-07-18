@@ -195,6 +195,16 @@ main.chess {
     width: fit-content;
 }
 
+#reconnectingPopUp {
+    position: fixed;
+    bottom: 2vh;
+    left: 1vw;
+    padding: 1vw 2vh 1vw 2vh;
+    background-color: #DDD;
+    border-radius: 10px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.6);
+}
+
 #chessboard {
     width: fit-content;
 }
