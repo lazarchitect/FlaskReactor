@@ -1,0 +1,20 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
+     stroke="white" stroke-width="5" fill="black">
+
+    <path d="
+    M 70,150
+    l -30 0 l 0 -60 l -10 0
+    l 0 -80 l 45 0 l 0 50
+    l 30 0
+    l 0 -50 l 80 0 l 0 50
+    l 30 0
+    l 0 -50 l 80 0 l 0 50
+    l 30 0
+    l 0 -50 l 45 0 l 0 80
+    l -10 0 l 0 60 l -30 0
+    "/>
+
+    <rect width="260" height="200" x="70" y="150"/>
+
+    <polygon points="60,340 340,340 400,397 0,397"/>
+</svg>

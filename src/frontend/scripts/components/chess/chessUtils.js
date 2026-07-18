@@ -2,6 +2,8 @@
 
 import {BLACK, PAWN, WHITE} from './chessConsts';
 
+let SVG_SETS = ['grecian'];
+
 /** Represents a chess piece.
     Useful mostly for semi-pseudocode readability, like piece.is("Black", "Pawn") instead of a more cumbersome function call.
     Note - these internal row and col references are updated on the server side and refreshed with socket update commands when pieces move.
@@ -58,8 +60,10 @@ export function tileIdOf(coords){
 }
 
 export function generatePieceMetadata(piece) {
-    // let set = payload.preferences.chessSet;
-    let imagePath = "/frontend/images/" + piece.color + piece.type + ".png";
-    let altText = "A " + piece.color + " " + piece.type + ".";
+    let set = payload.preferences.chess_piece_set;
+    let ext = SVG_SETS.includes(set) ? "svg" : "png";
+    if(set === undefined) set = "default";
+    let imagePath = `/frontend/images/chess/${set}/${piece.color}${piece.type}.${ext}`;
+    let altText = `A ${piece.color} ${piece.type}.`;
     return {imagePath, altText};
 }

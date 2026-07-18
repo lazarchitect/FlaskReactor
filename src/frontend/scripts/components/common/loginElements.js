@@ -1,7 +1,7 @@
 import React from "react";
 
 export function InputError({message}) {
-    return <span style={{color: "red", marginTop: "0", marginBottom: "0"}}>{message}</span>;
+    return <span className="signupFull" style={{color: "#a00", marginTop: "0", marginBottom: "0"}}>{message}</span>;
 }
 
 function ResetPasswordModal() {
@@ -97,31 +97,22 @@ export function SignupArea() {
 
     return <div>
         <h1>Sign Up</h1>
-        <form action="/signup" method="POST">
-            <label>
-                Username:
+        <form id="signupForm" action="/signup" method="POST">
+                <b>Username*</b>
                 <input type="text" id="signupUsername" name="username" autoComplete="username"/>
-            </label><br/>
-            <label>
-                Password:
-                <input type="password" id="signupPassword" name="password" autoComplete="new-password"
+                <b>Password*</b>
+                <input type="password" id="signupPassword" name="password" autoComplete="new-password" placeholder="over 9 characters"
                        onBlur={displayWarnings} onKeyUp={removeWarnings}/>
-            </label>
-            {showPasswordTooShortError && <InputError message="Passwords must be longer than 8 characters."/>}
-            <br/>
-            <label>
-                Repeat Password:
-                <input type="password" id="signupRepeated" name="password_repeat" autoComplete="new-password"
+                <b>Repeat Password*</b>
+                <input type="password" id="signupRepeated" name="password_repeat" autoComplete="new-password" placeholder="same as above"
                        onBlur={displayWarnings} onKeyUp={removeWarnings}/>
-            </label>
-            {!showPasswordTooShortError && showPasswordsDontMatchError && <InputError message="Passwords must match."/>}
-            <br/>
-            <label>
-                Email (optional):
-                <input type="email" name="email" autoComplete="email"/> (needed only for password recovery)
-            </label>
-            <br/><br/>
-            <input type="submit" id="signupSubmit" value="Sign Up" disabled/>
+                <b>Email (optional)</b>
+                <input type="email" name="email" autoComplete="email" placeholder="saul@bettercall.tv"/>
+            <span className="signupFull">(email is only used for password recovery)</span>
+            {(!showPasswordTooShortError && showPasswordsDontMatchError) ? <InputError message="Passwords must match."/>
+            : (showPasswordTooShortError ? <InputError message="Passwords must be longer than 8 characters."/> :
+                <span className="signupFull" style={{marginTop: 0, marginBottom: 0}}>Click to create a new account</span>)}
+            <input type="submit" id="signupSubmit" className="signupFull" value="Sign Up" disabled/>
         </form>
     </div>
 }

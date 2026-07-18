@@ -4,7 +4,7 @@ from src.backend.pgdb import getPgdb
 from src.backend.utils import generateHash, isEmpty
 
 VALID_GAME_TYPES = ["Ttt", "Chess", "Quad"]
-VALID_SETTINGS = ['quad_color_pref', 'quad_color_backup', 'use_chat']
+VALID_SETTINGS = ['quad_color_pref', 'quad_color_backup', 'use_chat', 'chess_piece_set']
 VALID_QUAD_COLORS = ["red", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"]
 
 class ValidationError(Exception):
