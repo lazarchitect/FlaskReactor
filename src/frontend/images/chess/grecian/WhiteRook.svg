@@ -1,17 +1,20 @@
 <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
-     stroke="black" stroke-width="2" fill="white">
+     stroke="black" stroke-width="5" fill="white">
 
-    <rect width="320" height="90" x="40" y ="60"/>
+    <path d="
+    M 70,150
+    l -30 0 l 0 -60 l -10 0
+    l 0 -80 l 45 0 l 0 50
+    l 30 0
+    l 0 -50 l 80 0 l 0 50
+    l 30 0
+    l 0 -50 l 80 0 l 0 50
+    l 30 0
+    l 0 -50 l 45 0 l 0 80
+    l -10 0 l 0 60 l -30 0
+    "/>
 
-    <!-- parapets -->
-    <g stroke="none">
-        <rect width="40" height="60" x="30"  y="10"/>
-        <rect width="80" height="60" x="100" y="10"/>
-        <rect width="80" height="60" x="220" y="10"/>
-        <rect width="40" height="60" x="330" y="10"/>
-    </g>
-
-    <rect width="280" height="200" x="60" y="150"/>
+    <rect width="260" height="200" x="70" y="150"/>
 
     <polygon points="60,340 340,340 400,400 0,400"/>
 </svg>
