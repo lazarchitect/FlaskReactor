@@ -1,3 +1,4 @@
+import {popupEvents} from "./ReconnectingPopUp";
 
 /** game webpages have multiple socket connections which need to be tracked independently while page is open */
 const sockets = {}; // k: path, v: WebSocket object
@@ -23,6 +24,7 @@ export function webSocketConnect({path, onMessage}) {
             "ws_token": payload.ws_token
         }));
         retryTimers[path] = 1000;
+        popupEvents.dispatchEvent(new Event("hideReconnecting"));
     }
 
     socket.onmessage = onMessage;
@@ -32,6 +34,7 @@ export function webSocketConnect({path, onMessage}) {
         setTimeout(() => webSocketConnect({path, onMessage}), retryTimers[path]);
         retryTimers[path] += Math.floor(Math.random()*1000);
         console.log("socket connection to " + path + " closed. reopening in " + retryTimers[path] + "ms");
+        popupEvents.dispatchEvent(new Event("showReconnecting"));
     };
 
     socket.sendUpdate = (message) => {

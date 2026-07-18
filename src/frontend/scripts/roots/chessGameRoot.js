@@ -7,6 +7,7 @@ import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
 import {configureTitleAddition} from "./rootUtil";
 import {sendResignation} from "../components/chess/chessSocket";
+import {ReconnectingPopUp} from "../components/common/ReconnectingPopUp";
 
 let players = [payload.game.white_player, payload.game.black_player];
 const isPlayer = players.includes(payload.username);
@@ -37,7 +38,7 @@ function Page() {
                     {!gameEnded && <ResignButton resign={() => setGameEnded(true)}/>}
                 </div>
             </div>
-
+            <ReconnectingPopUp />
             {isPlayer && use_chat && <Chatbox expanded={false}/>}
         </main>
     </>
