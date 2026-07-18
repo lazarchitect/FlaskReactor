@@ -2,6 +2,7 @@
 body {
     margin: 0; /* overrides browser default of 8px */
     height: 100%;
+    background-color: #5ba7af;
 }
 
 header {
@@ -91,12 +92,10 @@ header {
 }
 
 main {
-    background-color: #5ba7af;
     position: absolute;
     top: 10%;
     width: 100%; /* full width minus L/R padding */
     padding: 0 2% 0 2%;
-    height: 100vh;
     box-sizing: border-box;
 }
 

@@ -1,17 +1,18 @@
 <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
      stroke="white" stroke-width="2" fill="black">
 
-    <polygon points="200,20
-    240,60
-    200,100
-    210,110
-    250,70
-    300,120
-    200,220
-    100,120" />
-    <ellipse  cx="200" cy="20" ry="10" rx="20"/>
+    <polygon points="
+    200,10
+    240,50
+    200,90
+    210,100
+    250,60
+    300,110
+    200,210
+    100,110" />
+    <ellipse  cx="200" cy="12" ry="10" rx="20"/>
 
-    <rect width="60" height="140" x="170" y ="190"/>
+    <rect width="80" height="170" x="160" y ="170"/>
 
-    <polygon points="170,320 230,320 270,380 130,380"/>
+    <polygon points="160,340 240,340 300,400 100,400"/>
 </svg>

@@ -1,15 +1,17 @@
 <svg width="400" height="400" xmlns="http://www.w3.org/2000/svg"
      stroke="black" stroke-width="2" fill="white">
 
-    <rect width="240" height="90" x="80" y ="100"/>
+    <rect width="320" height="90" x="40" y ="60"/>
 
-    <!-- minarets -->
-    <rect width="40" height="60" x="70"  y="50"/>
-    <rect width="30" height="60" x="150" y="50"/>
-    <rect width="30" height="60" x="220" y="50"/>
-    <rect width="40" height="60" x="290" y="50"/>
+    <!-- parapets -->
+    <g stroke="none">
+        <rect width="40" height="60" x="30"  y="10"/>
+        <rect width="80" height="60" x="100" y="10"/>
+        <rect width="80" height="60" x="220" y="10"/>
+        <rect width="40" height="60" x="330" y="10"/>
+    </g>
 
-    <rect width="180" height="140" x="110" y ="190"/>
+    <rect width="280" height="200" x="60" y="150"/>
 
-    <polygon points="100,320 300,320 340,380 60,380"/>
+    <polygon points="60,340 340,340 400,400 0,400"/>
 </svg>
