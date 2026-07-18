@@ -7,12 +7,15 @@ import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
 import {configureTitleAddition} from "./rootUtil";
 import {sendResignation} from "../components/chess/chessSocket";
+import {attachReconnectPopUp} from "../components/common/ReconnectingPopUp";
 
 let players = [payload.game.white_player, payload.game.black_player];
 const isPlayer = players.includes(payload.username);
 const titleAddition = configureTitleAddition(players);
 
 const use_chat = payload.preferences.use_chat;
+
+attachReconnectPopUp();
 
 function ResignButton({resign}) {
     const [doubleCheck, setDoubleCheck] = React.useState(false);

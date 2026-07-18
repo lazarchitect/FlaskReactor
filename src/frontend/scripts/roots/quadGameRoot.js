@@ -13,6 +13,7 @@ import {TorusDragLayer} from '../components/quad/TorusDragLayer';
 import {quadSocketConnect} from "../components/quad/quadSocket";
 import {Legend} from "../components/quad/Legend";
 import {configureTitleAddition} from "./rootUtil";
+import {attachReconnectPopUp} from "../components/common/ReconnectingPopUp";
 
 const players = [payload.game.player1, payload.game.player2]; // send players array itself in payload?
 const isPlayer = players.includes(payload.username);
@@ -23,6 +24,8 @@ const powersList = isPlayer ? (isPlayer1 ? payload.game.player1_powers : payload
 const legendData = {powersList: powersList, orb_countdown: payload.game.orb_countdown, turn_number: payload.game.turn_number };
 
 const titleAddition = configureTitleAddition(players);
+
+attachReconnectPopUp();
 
 function Page() {
 
