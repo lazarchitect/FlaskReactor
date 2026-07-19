@@ -350,16 +350,17 @@ main.chess {
     display: grid;
     grid-template-columns: repeat(10, 10%);
     grid-template-rows: repeat(8, 12.5%);
-    width: 640px;
-    height: 512px;
+    width: 90vh;
+    height: 72vh;
     border: 3px solid black;
 }
 
 .quadTile {
-    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this CSS file */
+    background-image: url('../images/quadradius/tile_1.svg'); /* path is relative to this CSS file */
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
+    background-color: #dedede;
     position: relative;
     overflow: hidden;
     border: 1px solid slategray;
@@ -375,12 +376,6 @@ main.chess {
     border-radius: 50%;
 }
 
-.torus {
-    width: 84%;
-    height: 84%;
-    margin: 5%;
-}
-
 .previewTorus {
     height: 50px;
     width: 50px;
@@ -391,30 +386,31 @@ main.chess {
 }
 
 .torusSVGBody {
-    fill: #888;
-    cx: 49.5%;
-    cy: 49%;
-    r: 48.5%;
+    fill: #8e8e8e;
+    cx: 47%;
+    cy: 47%;
+    r: 41.5%;
+    stroke: black;
 }
 
 .torusSVGCore {
-    cx: 49.5%;
-    cy: 49%;
-    r: 20%;
+    cx: 47%;
+    cy: 47%;
+    r: 18%;
 }
 
 .torusSVGPath {
     fill: none;
     stroke: black;
-    stroke-width: 4px;
+    stroke-width: 5px;
 }
 
 .torusSVGPathTop {
-    d: path("M 50,15 C 15,15 15,45 15,50");
+    d: path("M 48,15 C 15,18 15,45 15,48");
 }
 
 .torusSVGPathBottom {
-    d: path("M 50,85 C 85,85 85,50 85,50");
+    d: path("M 46,79 C 79,76 79,51 79,46");
 }
 
 #chatbox { /* overall container */
