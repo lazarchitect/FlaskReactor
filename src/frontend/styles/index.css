@@ -72,6 +72,17 @@ header {
     visibility: hidden;
     opacity: 0;
     top: 0;
+    text-align: end;
+}
+
+#settingsPaneTitle {
+    text-align: center;
+    display: block;
+    color: #002f5c;
+}
+
+#settingsWord {
+    font-weight: bolder;
 }
 
 #settingsPane.active { /* whoosh */
