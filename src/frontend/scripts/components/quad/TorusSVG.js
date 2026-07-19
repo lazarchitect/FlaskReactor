@@ -45,12 +45,10 @@ export function TorusSVG ({ color, isRadiating, isGhost }) {
     let colorGradientId = "torusCoreGradient" + (isPlayer1Torus ? "1" : "2") + gradientType;
     let colorGradientVal = "url(#" + colorGradientId + ")";
 
-    let coreStyle = {cx: "50%", cy: "50%", r: "20%"}
-    coreStyle.filter = hasHalo ? allHalosFilter(color) : "none";
+    let coreStyle = {filter: hasHalo ? allHalosFilter(color) : "none"};
 
     return (
-        <svg className='torusSVG'
-         style={isGhost ? {opacity: "50%"} : {}}
+        <svg viewBox='0 0 100 100' className='torusSVG' style={isGhost ? {opacity: "50%"} : {}}
         onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}
         version="1.1" xmlns="http://www.w3.org/2000/svg">
 
@@ -67,14 +65,14 @@ export function TorusSVG ({ color, isRadiating, isGhost }) {
             <path className='torusSVGPath torusSVGPathTop' />
             <path className='torusSVGPath torusSVGPathBottom' />
             {/*Copilot says consider using an SVG <filter> element with feGaussianBlur + feOffset + feMerge, can improve performance*/}
-            <circle fill={colorGradientVal} style={coreStyle} />
+            <circle className={"torusSVGCore"} fill={colorGradientVal} style={coreStyle} />
         </svg>
     );
 }
 
 function TorusCoreLinearGradient ({ color, id }) {
     return <linearGradient id={id} x1="0" x2="1" y1="0" y2="1">
-        {/*why do we need classNames here?*/}
+        {/* TODO why do we need classNames here? */}
         <stop className="stop1" offset="0%" stopColor={playerColors[color][0]} />
         <stop className="stop2" offset="100%" stopColor={playerColors[color][1]} />
     </linearGradient>;

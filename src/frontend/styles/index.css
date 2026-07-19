@@ -233,8 +233,8 @@ main.chess {
 }
 
 .tile {
-    width: 80px;
-    height: 80px;
+    width: 9vh;
+    height: 9vh;
     display: inline-block;
     position: relative;
 }
@@ -256,11 +256,10 @@ main.chess {
 }
 
 .pieceImg {
-    max-width: 80%;
-    max-height: 80%;
+    width: 80%;
+    height: 80%;
     display: block;
-    margin-left: 10%;
-    margin-top: 10%;
+    margin: 10%;
     pointer-events: none;
 }
 
@@ -377,11 +376,9 @@ main.chess {
 }
 
 .torus {
-    height: 82%;
-    width: 78%;
-    top: 6.5%; /* specific proportions used to line up with tile art */
-    left: 4.5%;
-    position: relative;
+    width: 84%;
+    height: 84%;
+    margin: 5%;
 }
 
 .previewTorus {
@@ -390,31 +387,34 @@ main.chess {
 }
 
 .torusSVG {
-    height: 100%;
-    width: 100%;
     border-radius: 50%;
 }
 
 .torusSVGBody {
-    fill: rgb(150, 150, 150);
-    cx: 50%; /*cx and cy dictate location of circle's origin */
-    cy: 50%;
-    r: 47%; /* radius, slightly lower than 50% to account for black borders on tile */
+    fill: #888;
+    cx: 49.5%;
+    cy: 49%;
+    r: 48.5%;
+}
+
+.torusSVGCore {
+    cx: 49.5%;
+    cy: 49%;
+    r: 20%;
 }
 
 .torusSVGPath {
-    fill: transparent;
+    fill: none;
     stroke: black;
-    stroke-width: 3px;
-    stroke-opacity: 1;
+    stroke-width: 4px;
 }
 
 .torusSVGPathTop {
-    d: path("M 6,26 C 6,15 15,6 24,6");
+    d: path("M 50,15 C 15,15 15,45 15,50");
 }
 
 .torusSVGPathBottom {
-    d: path("M 24,45 C 31,45 43,38 43,26");
+    d: path("M 50,85 C 85,85 85,50 85,50");
 }
 
 #chatbox { /* overall container */
