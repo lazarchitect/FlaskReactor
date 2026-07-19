@@ -361,8 +361,8 @@ main.chess {
     display: grid;
     grid-template-columns: repeat(10, 10%);
     grid-template-rows: repeat(8, 12.5%);
-    width: 90vh;
-    height: 72vh;
+    width: 800px;
+    height: 640px;
     border: 3px solid black;
 }
 
@@ -387,9 +387,14 @@ main.chess {
     border-radius: 50%;
 }
 
-.previewTorus {
-    height: 50px;
-    width: 50px;
+.torusDragLayer {
+    height: 78px; /* (quadboard.width / 10) - 2px */
+    width: 78px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+    left: 0;
+    top: 0;
 }
 
 .torusSVG {
