@@ -2,7 +2,7 @@ import React, {useContext} from "react";
 import {PreferenceContext} from "./SiteHeader";
 
 const QUAD_COLORS = ["red", "blue", "green", "cyan", "pink", "teal", "purple", "yellow", "orange"];
-const CHESS_PIECE_SETS = ["default", "grecian"];
+const CHESS_PIECE_SETS = ["default", "grecian", "capital"];
 
 export function SettingsPane({expanded, isLoggedIn}) {
 

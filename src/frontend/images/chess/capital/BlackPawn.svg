@@ -1,0 +1,20 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+     stroke="white" stroke-width="1" fill="black">
+
+    <path d="
+       M 20,89
+       l 0 -85
+       l 30 0
+       c 40,0 40,43 0,43
+       l -20 0
+       l 0 42
+       M 30 13
+       l 0 26
+       l 25 0
+       c 18,0 22,-26 0 -26
+       z
+
+    "/>
+
+    <polygon points="12,90 88,90 100,99 0,99"/>
+</svg>

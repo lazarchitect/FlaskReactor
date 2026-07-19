@@ -1,0 +1,22 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"
+     stroke="white" stroke-width="1" fill="black">
+
+    <path d="
+    M 40 5
+    C 100,5 100,60 75,77
+    L 88,90
+    L 75,90
+    L 68,83
+    C 50,100 10,85 5,50
+    C 0,20 25,5 40,5
+    M 30,16
+    C -5,28 25,100 64,76
+    l -10 -10
+    l 10 0
+    l 6 6
+    C 100,45 70,0 30,16
+    "/>
+
+    <!-- plinth -->
+    <polygon points="12,90 88,90 100,99 0,99"/>
+</svg>

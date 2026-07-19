@@ -1,0 +1,21 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+     stroke="black" stroke-width="1" fill="white">
+
+    <!-- outline with overlapping counterclockwise internals -->
+    <path d="
+        M 15 90
+        l 0 -80
+        c 80,-10 80,30 40,40
+        l 25 41
+        M 26 21
+        l 0 23
+        c 50,0 60,-29 0 -23
+        M 25,90
+        L 65,90
+        L 42,53
+        L 26,55
+        L 26,90
+    "/>
+
+    <polygon points="12,90 88,90 100,99 0,99"/>
+</svg>
