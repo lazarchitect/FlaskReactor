@@ -72,15 +72,14 @@ export function TorusSVG ({ color, isRadiating, isGhost }) {
 
 function TorusCoreLinearGradient ({ color, id }) {
     return <linearGradient id={id} x1="0" x2="1" y1="0" y2="1">
-        {/* TODO why do we need classNames here? */}
-        <stop className="stop1" offset="0%" stopColor={playerColors[color][0]} />
-        <stop className="stop2" offset="100%" stopColor={playerColors[color][1]} />
+        <stop offset="0%" stopColor={playerColors[color][0]} />
+        <stop offset="100%" stopColor={playerColors[color][1]} />
     </linearGradient>;
 }
 
 function TorusCoreRadialGradient ({ color, id }) {
     return <radialGradient id={id} >
-        <stop className="stop1" offset="0%" stopColor={playerColors[color][0]} />
-        <stop className="stop2" offset="100%" stopColor={playerColors[color][1]} />
+        <stop offset="0%" stopColor={playerColors[color][0]} />
+        <stop offset="100%" stopColor={playerColors[color][1]} />
     </radialGradient>;
 }
