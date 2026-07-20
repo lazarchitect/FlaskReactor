@@ -377,14 +377,27 @@ main.chess {
     border: 1px solid slategray;
 }
 
-.orb {
-    background-color: #444;
+.orbSVG {
     position: absolute;
-    top:    30%;
-    left:   27%;
-    width:  35%;
-    height: 35%;
-    border-radius: 50%;
+    --stop1: #ffffff;
+    --stop2: black;
+}
+
+.orbSVGCore {
+    cx: 47%;
+    cy: 47%;
+    r: 18%;
+    fill: url(#orbGradient);
+    stroke: lightblue;
+    stroke-width: 3;
+    stroke-opacity: 70%;
+}
+
+.orbSVGGlass {
+    cx: 47%;
+    cy: 47%;
+    r: 17%;
+    fill: rgb(111 153 255 / 0.2);
 }
 
 .torusDragLayer {
@@ -398,6 +411,7 @@ main.chess {
 }
 
 .torusSVG {
+    position: absolute;
     border-radius: 50%;
 }
 
