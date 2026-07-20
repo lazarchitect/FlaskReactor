@@ -16,8 +16,7 @@ export function QuadBoard({boardstate}) {
 function QuadRow({ rowIndex, rowData })  {
 
     return Array(10).fill(0).map((_, columnIndex) => {
-        let tileData = {row: rowIndex, col: columnIndex, contents: rowData[columnIndex]};
-        return <QuadTile key={columnIndex} tileData={tileData} />;
+        return <QuadTile key={columnIndex} tileData={{...rowData[columnIndex], row: rowIndex, col: columnIndex}} />;
     })
 
 }

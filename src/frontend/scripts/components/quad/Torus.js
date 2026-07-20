@@ -9,7 +9,7 @@ export function Torus ({ tileData }) {
 
     // useState will be used here for color, powers, buffs, and debuffs later
 
-    const torusData = tileData.contents.torus;
+    const torusData = tileData.torus;
 
     const [{ opacity }, dragRef, dragPreview] = useDrag(
         () => ({
