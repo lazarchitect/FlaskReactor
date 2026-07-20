@@ -108,12 +108,20 @@ class QuadHandler(WebSocketHandler):
 		sourceRow, sourceCol = fields['src']['row'], fields['src']['col']
 		targetRow, targetCol = fields['dest']['row'], fields['dest']['col']
 
+		sourceTile = game.boardstate[sourceRow][sourceCol]
+		targetTile = game.boardstate[targetRow][targetCol]
+
 		if not validMove(sourceCoords, targetCoords):
 			return
 
 		# execute the move. copy torus over to target and then remove source one. any existing torus at target is wiped out.
-		game.boardstate[targetRow][targetCol]["torus"] = game.boardstate[sourceRow][sourceCol]["torus"]
-		del game.boardstate[sourceRow][sourceCol]["torus"]
+		targetTile['torus'] = sourceTile['torus']
+		del sourceTile['torus']
+
+		# if target tile has an Orb, consume it
+		if 'orb' in targetTile: del targetTile['orb']
+		
+		# here is where we grant the Torus a power
 
 		newActivePlayer = game.player1 if game.active_player == game.player2 else game.player2
 		newInactivePlayer = game.player1 if game.active_player == game.player1 else game.player2
