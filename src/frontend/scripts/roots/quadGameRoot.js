@@ -1,6 +1,6 @@
 'use strict';
 
-import React, {useEffect} from 'react';
+import React, {createContext, useEffect} from 'react';
 import {createRoot} from 'react-dom/client';
 
 import {DndProvider} from "react-dnd";
@@ -25,6 +25,8 @@ const legendData = {powersList: powersList, orb_countdown: payload.game.orb_coun
 
 const titleAddition = configureTitleAddition(players);
 
+export const SetBoardstateContext = createContext(null);
+
 function Page() {
 
     const [boardstate, setBoardstate] = React.useState(payload.game.boardstate);
@@ -38,7 +40,9 @@ function Page() {
             <div className="playArea">
                 <h3>Quadradius{titleAddition}</h3>
                 <DndProvider backend={HTML5Backend}>
-                    <QuadBoard boardstate={boardstate} />
+                    <SetBoardstateContext.Provider value={setBoardstate}>
+                        <QuadBoard boardstate={boardstate} />
+                    </SetBoardstateContext.Provider>
                     <TorusDragLayer />
                 </DndProvider>
                 <p>Status: <span id="status"></span></p>
