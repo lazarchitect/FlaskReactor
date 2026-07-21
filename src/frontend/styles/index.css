@@ -358,9 +358,8 @@ main.chess {
 }
 
 #quadboard {
-    display: grid;
+    display: inline-grid;
     grid-template-columns: repeat(10, 10%);
-    grid-template-rows: repeat(8, 12.5%);
     width: 800px;
     height: 640px;
     border: 3px solid black;
@@ -441,6 +440,14 @@ main.chess {
 
 .torusSVGPathBottom {
     d: path("M 46,79 C 79,76 79,51 79,46");
+}
+
+#legend {
+    background-color: #ffffff;
+    display: inline-block;
+    position: relative;
+    margin-top: 2%;
+    left: 2%;
 }
 
 #chatbox { /* overall container */
