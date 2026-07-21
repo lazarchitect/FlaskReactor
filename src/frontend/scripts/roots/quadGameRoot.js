@@ -45,9 +45,9 @@ function Page() {
                     </SetBoardstateContext.Provider>
                     <TorusDragLayer />
                 </DndProvider>
+                <Legend legendState={legendState} />
                 <p>Status: <span id="status"></span></p>
             </div>
-            <Legend legendState={legendState} />
             <ReconnectingPopUp />
             {isPlayer && use_chat && <Chatbox expanded={false} />}
         </main>
