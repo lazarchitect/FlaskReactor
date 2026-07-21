@@ -106,14 +106,28 @@ def chessGame(gameId):
 
 @app.route("/games/quad/<gameId>")
 def quadGame(gameId):
+    username = session.get('username')
     game = pgdb.getQuadradiusGame(gameId)
     if game is None:
         payload = json.dumps(basePayload(), default=str)
         return render_template("gameNotFound.html", payload=payload)
 
+    playerData = {
+        game.player1: (game.player1_color, game.player1_powers),
+        game.player2: (game.player2_color, game.player2_powers)
+    }
+    userData = playerData.get(username, (None, None)) # defaults to Nones if user is not a player (not logged in, spectator, etc.)
+    userColor = userData[0]
+    userPowers = userData[1]
+
+    # avoid sending all powers to all users in payload
+    del game.player1_powers, game.player2_powers
+
     quadGamePayload = {
         "game_type": "quadradius",
-        "game": vars(game)
+        "game": vars(game),
+        "userColor": userColor,
+        "userPowers": userPowers
     }
 
     payload = json.dumps(basePayload() | quadGamePayload, default=str)
