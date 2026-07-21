@@ -9,18 +9,16 @@ export function TorusDragLayer () {
 	const {sourceTileData, initialOffset, currentOffset} = useDragLayer((monitor) => ({
 		sourceTileData: monitor.getItem(),
 		initialOffset: monitor.getInitialSourceClientOffset(),
-		currentOffset: monitor.getSourceClientOffset(),
+		currentOffset: monitor.getSourceClientOffset()
 	}));
 
-	if (sourceTileData?.contents?.torus === undefined) return null; // not dragging anything.
-
-	const torus = sourceTileData.contents.torus;
+	if (sourceTileData?.torus === undefined) return null; // not dragging anything.
 
     const dragStyles = getDragStyles(initialOffset, currentOffset);
 
 	return (
 		<div style={dragStyles} className='torusDragLayer'>
-			<TorusSVG color={torus.color} isRadiating={true}/>
+			<TorusSVG color={sourceTileData.torus.color} isRadiating={true}/>
 		</div>
 	);
 }

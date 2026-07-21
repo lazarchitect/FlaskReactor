@@ -371,7 +371,7 @@ main.chess {
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: #dedede;
+    background-color: rgb(200 200 200);
     position: relative;
     overflow: hidden;
     border: 1px solid slategray;
@@ -379,7 +379,7 @@ main.chess {
 
 .orbSVG {
     position: absolute;
-    --stop1: #ffffff;
+    --stop1: white;
     --stop2: black;
 }
 
@@ -510,4 +510,3 @@ main.chess {
     width: 100%;
     resize: none;
 }
-
