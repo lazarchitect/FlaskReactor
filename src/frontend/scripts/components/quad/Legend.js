@@ -1,18 +1,17 @@
 import React from 'react';
 
 export function Legend({legendState}) {
-
-    return <div>
-        <p>Orb countdown: </p>
-        <div> Powers: <PowersList /> </div>
+    return <div id="legend">
+        Turn number: {legendState.turn_number}<br/>
+        Orb countdown: {legendState.orb_countdown}<br/>
+        Powers: <PowersList powersList={legendState.powersList} />
     </div>
 }
 
-function PowersList({}) {
-
+function PowersList({powersList}) {
     return <div>
-
-    </div>
+        {Object.entries(powersList).map(([name, count]) => <Power key={name} name={name} count={count} />)}
+    </div>;
 }
 
 function Power({name, count}) {

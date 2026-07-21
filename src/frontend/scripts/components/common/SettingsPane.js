@@ -8,8 +8,7 @@ export function SettingsPane({expanded, isLoggedIn}) {
 
     // for performance reasons, we simply edit style instead of re-rendering for every click
     return <div id="settingsPane" className={expanded ? 'active' : ''}>
-        <b>Settings</b> (refresh to see changes)
-        <br/>
+        <div id="settingsPaneTitle"><span id="settingsWord">Settings</span> (refresh to see changes)</div>
         {isLoggedIn ?
             <>
                 <span>Quadradius Color Preference: </span>

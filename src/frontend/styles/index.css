@@ -72,6 +72,17 @@ header {
     visibility: hidden;
     opacity: 0;
     top: 0;
+    text-align: end;
+}
+
+#settingsPaneTitle {
+    text-align: center;
+    display: block;
+    color: #002f5c;
+}
+
+#settingsWord {
+    font-weight: bolder;
 }
 
 #settingsPane.active { /* whoosh */
@@ -233,8 +244,8 @@ main.chess {
 }
 
 .tile {
-    width: 80px;
-    height: 80px;
+    width: 9vh;
+    height: 9vh;
     display: inline-block;
     position: relative;
 }
@@ -256,11 +267,10 @@ main.chess {
 }
 
 .pieceImg {
-    max-width: 80%;
-    max-height: 80%;
+    width: 80%;
+    height: 80%;
     display: block;
-    margin-left: 10%;
-    margin-top: 10%;
+    margin: 10%;
     pointer-events: none;
 }
 
@@ -348,73 +358,96 @@ main.chess {
 }
 
 #quadboard {
-    display: grid;
+    display: inline-grid;
     grid-template-columns: repeat(10, 10%);
-    grid-template-rows: repeat(8, 12.5%);
-    width: 640px;
-    height: 512px;
+    width: 800px;
+    height: 640px;
     border: 3px solid black;
 }
 
 .quadTile {
-    background-image: url('../images/quadradius/tile_1.png'); /* path is relative to this CSS file */
+    background-image: url('../images/quadradius/tile_1.svg'); /* path is relative to this CSS file */
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
+    background-color: rgb(200 200 200);
     position: relative;
     overflow: hidden;
     border: 1px solid slategray;
 }
 
-.orb {
-    background-color: #444;
+.orbSVG {
     position: absolute;
-    top:    30%;
-    left:   27%;
-    width:  35%;
-    height: 35%;
-    border-radius: 50%;
+    --stop1: white;
+    --stop2: black;
 }
 
-.torus {
-    height: 82%;
-    width: 78%;
-    top: 6.5%; /* specific proportions used to line up with tile art */
-    left: 4.5%;
-    position: relative;
+.orbSVGCore {
+    cx: 47%;
+    cy: 47%;
+    r: 18%;
+    fill: url(#orbGradient);
+    stroke: lightblue;
+    stroke-width: 3;
+    stroke-opacity: 70%;
 }
 
-.previewTorus {
-    height: 50px;
-    width: 50px;
+.orbSVGGlass {
+    cx: 47%;
+    cy: 47%;
+    r: 17%;
+    fill: rgb(111 153 255 / 0.2);
+}
+
+.torusDragLayer {
+    height: 78px; /* (quadboard.width / 10) - 2px */
+    width: 78px;
+    position: fixed;
+    pointer-events: none;
+    z-index: 100;
+    left: 0;
+    top: 0;
 }
 
 .torusSVG {
-    height: 100%;
-    width: 100%;
+    position: absolute;
     border-radius: 50%;
 }
 
 .torusSVGBody {
-    fill: rgb(150, 150, 150);
-    cx: 50%; /*cx and cy dictate location of circle's origin */
-    cy: 50%;
-    r: 47%; /* radius, slightly lower than 50% to account for black borders on tile */
+    fill: #8e8e8e;
+    cx: 47%;
+    cy: 47%;
+    r: 41.5%;
+    stroke: black;
+}
+
+.torusSVGCore {
+    cx: 47%;
+    cy: 47%;
+    r: 18%;
 }
 
 .torusSVGPath {
-    fill: transparent;
+    fill: none;
     stroke: black;
-    stroke-width: 3px;
-    stroke-opacity: 1;
+    stroke-width: 5px;
 }
 
 .torusSVGPathTop {
-    d: path("M 6,26 C 6,15 15,6 24,6");
+    d: path("M 48,15 C 15,18 15,45 15,48");
 }
 
 .torusSVGPathBottom {
-    d: path("M 24,45 C 31,45 43,38 43,26");
+    d: path("M 46,79 C 79,76 79,51 79,46");
+}
+
+#legend {
+    background-color: #ffffff;
+    display: inline-block;
+    position: relative;
+    margin-top: 2%;
+    left: 2%;
 }
 
 #chatbox { /* overall container */
@@ -484,4 +517,3 @@ main.chess {
     width: 100%;
     resize: none;
 }
-
