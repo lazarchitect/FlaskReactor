@@ -1,11 +1,13 @@
 import json
 import logging
+import random
 from datetime import datetime
 from random import randint
 
 from tornado.websocket import WebSocketHandler
 
 from src.backend.pgdb import getPgdb
+from src.backend.services.quad.Power import ALL_POWERS
 from src.backend.utils import generateId, isEmpty, updateAll
 
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
@@ -44,7 +46,8 @@ def determineMaxOrbs(turn_number, boardstate):
 
 def validMove(sourceCoords, targetCoords):
 	""" Server side move validation, in case of tricksters.
-	Manhattan distance, elevation +1 or less, target is empty or enemy and is not acid-melted."""
+	Manhattan distance, elevation +1 or less, target tile is empty or has enemy, and is not acid-melted.
+	Also, TODO we need to check that the user sending this move is actually the owner of the sourceTile torus!"""
 	return True
 
 
@@ -118,14 +121,6 @@ class QuadHandler(WebSocketHandler):
 		targetTile['torus'] = sourceTile['torus']
 		del sourceTile['torus']
 
-		# if target tile has an Orb, consume it
-		if 'orb' in targetTile: del targetTile['orb']
-		
-		# here is where we grant the Torus a power
-
-		newActivePlayer = game.player1 if game.active_player == game.player2 else game.player2
-		newInactivePlayer = game.player1 if game.active_player == game.player1 else game.player2
-
 		newTurnNumber = game.turn_number + 1
 
 		newOrbCountdown = game.orb_countdown - 1
@@ -136,25 +131,48 @@ class QuadHandler(WebSocketHandler):
 			for orbSpawn in orbSpawnLocations:
 				game.boardstate[orbSpawn[1]][orbSpawn[0]]["orb"] = True
 
-		responseToClient = {
-			"command": "updateBoard",
-			"turn_number": newTurnNumber,
-			"orb_counter": newOrbCountdown,
+		powersList = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(fields['username'])
+		print(powersList)
+
+		# if target tile has an Orb, consume it
+		if 'orb' in targetTile:
+			del targetTile['orb']
+
+			# get a new random power, assign it to the Torus's list of powers.
+			# Powers info cannot be stored in the boardstate!
+			# this should be sent to each player separately
+			# powers are associated with a Torus, but on the UI, each player will see a list of all their powers.
+			# Powers List is all clickable text, clicking it makes the Torus that has that power glow.
+			# So how do we associate a Power with a Torus???? do we need Torus IDs?
+			# I'm thinking some kind of layered data structure like: {torusId_1: {Power(name:refurb, rcr: radial, count:1), Power(name:acid, rcr: row, count:2) ... } ... }
+			power = random.choice(ALL_POWERS)
+			powersList[power] = powersList.get(power, 0) + 1
+			self.write_message(json.dumps({
+				"command": "updateLegend",
+				"newLegendState": {"powersList": powersList, "turn_number": newTurnNumber, "orb_countdown": newOrbCountdown}
+			}))
+
+			targetTile.torus.powers
+			# here is where we grant the Torus a power
+
+		newActivePlayer = game.player1 if game.active_player == game.player2 else game.player2
+		newInactivePlayer = game.player1 if game.active_player == game.player1 else game.player2
+
+		messageToSubscribers = {
+			"command": "update",
+			"newLegendState": {"turn_number": newTurnNumber, "orb_countdown": newOrbCountdown, "powersList": {}},
 			"newBoardstate": game.boardstate,
 			"active_player": newActivePlayer,
 			"inactive_player": newInactivePlayer
 			# what else?
 		}
 
-		updateAll(clientConnections[fields['gameId']], responseToClient)
+		updateAll(clientConnections[fields['gameId']], messageToSubscribers)
 
 		self.pgdb.updateQuadradiusGame(game.boardstate, newActivePlayer, datetime.now(), newTurnNumber, newOrbCountdown, game.player1_powers, game.player2_powers, gameId)
 
 
 	def handleSubscribe(self, fields: dict):
-
-		if self.socketId is None:
-			print('--------------------\nERROR!!! SOCKET ID NOT ASSIGNED\n---------------')
 
 		connectionDetails = {
 			"id": self.socketId,

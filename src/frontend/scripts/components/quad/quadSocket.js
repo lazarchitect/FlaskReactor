@@ -25,13 +25,21 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
 
             const data = JSON.parse(messageEvent.data);
 
-            if (data.command === "updateBoard") {
+            if (data.command === "update") {
                 setStatus(determineStatus(data));
                 setBoardstate(data.newBoardstate);
+                setLegendState((curr) => ({
+                    ...curr,
+                    orb_countdown: data.newLegendState.orb_countdown,
+                    turn_counter: data.newLegendState.turn_counter
+                }));
                 yourTurn = payload.username === data.active_player;
             }
-            else if (data.command === "updateLegend") {
-                setLegendState(data.newLegendState);
+            if (data.command === "updatePowers") {
+                setLegendState((curr) => ({
+                    ...curr,
+                    powersList: data.newLegendState.powersList
+                }));
             }
             else if (data.command === "initialize") {
                 setStatus(determineStatus(data));
