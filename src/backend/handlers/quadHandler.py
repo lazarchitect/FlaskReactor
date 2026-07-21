@@ -34,7 +34,7 @@ def generateOrbSpawnLocation(boardstate):
 def determineMaxOrbs(turn_number, boardstate):
 
 	maxOrbs = 2 # default at start of game
-	maxOrbs += int(turn_number / 15) # game length factor
+	maxOrbs += min(int(turn_number / 20), 6) # game length factor
 
 	# possible upgrade - increase orb spawn chance when fewer tori are left
 	# maxOrbs += emptyTileCount(boardstate) - 32 # sparser board factor
@@ -130,7 +130,7 @@ class QuadHandler(WebSocketHandler):
 
 		newOrbCountdown = game.orb_countdown - 1
 		if newOrbCountdown == 0:
-			newOrbCountdown = randint(4, 8)
+			newOrbCountdown = 8
 			maxOrbs = determineMaxOrbs(game.turn_number, game.boardstate)
 			orbSpawnLocations = [generateOrbSpawnLocation(game.boardstate) for _ in range(randint(1, maxOrbs))]
 			for orbSpawn in orbSpawnLocations:
