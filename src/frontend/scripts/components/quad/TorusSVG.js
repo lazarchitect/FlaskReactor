@@ -35,7 +35,7 @@ export function TorusSVG ({ color, isRadiating, isGhost }) {
 
     let [isHovering, setIsHovering] = useState(false);
 
-    let hasHalo = isHovering && isYourTurn();
+    let hasHalo = isHovering && isYourTurn() && color === payload.userColor;
 
     // will default to player2's color if the input is not passed in correctly
     if (color == null) console.log("no color passed to TorusSVG display logic");
