@@ -31,7 +31,7 @@ export function Torus ({ tileData }) {
 
     const draggable = (isYourTurn() && torusData.color === payload.userColor) ? dragRef : null;
 
-    return <div className='torus' style={{ cursor: "grab", opacity: opacity }} ref={draggable}>
+    return <div id={torusData.name} className='torus' style={{ cursor: "grab", opacity: opacity }} ref={draggable}>
         <TorusSVG color={torusData.color} isRadiating={false} isGhost={false} />
     </div>;
 }
