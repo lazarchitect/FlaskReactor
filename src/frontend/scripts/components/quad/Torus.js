@@ -1,13 +1,17 @@
-import React, {useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {useDrag} from 'react-dnd';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 
 import {TorusSVG} from './TorusSVG';
 import {QuadContext} from "../../roots/quadGameRoot";
+import {PowerModal} from "./PowerModal";
 
 export function Torus ({ tileData }) {
 
     const {legendState} = useContext(QuadContext);
+
+    const [showPowerModal, setShowPowerModal] = useState(false);
+    const [powerModalPinned, setPowerModalPinned] = useState(false);
 
     const torusData = tileData.torus;
 
@@ -31,14 +35,36 @@ export function Torus ({ tileData }) {
 
     const draggable = dragRef;//(isYourTurn() && torusData.color === payload.userColor) ? dragRef : null;
 
-    function powerTime() {
-        // if (!isYourTurn() || torusData.color !== payload.userColor) return;
-        const powers = legendState.playerPowers[torusData.name];
-        console.log(powers);
-    }
+    const powers = legendState.playerPowers[torusData.name];
+    const torusStyles = { cursor: "grab", opacity: opacity };
+    function showModal(bool) {return () => !powerModalPinned && setShowPowerModal(bool);}
+    const handleClick = () => {
+        setPowerModalPinned((prev) => !prev);
+        setShowPowerModal(true); // ensure it's visible once pinned
+    };
 
-    return <div id={torusData.name} className='torus' style={{ cursor: "grab", opacity: opacity }} onClick={powerTime} ref={draggable}>
+    useEffect(() => {
+        if (!powerModalPinned) return;
+
+        const handleBoardClick = (event) => {
+            const clickedOnThisTorus = event.target.closest(`#${torusData.name}`); // returns falsy null if no ancestor found by that ID
+            if (!clickedOnThisTorus) {
+                setPowerModalPinned(false);
+                setShowPowerModal(false);
+            }
+        };
+
+        document.getElementById("quadboard").addEventListener("mousedown", handleBoardClick);
+        return () => document.getElementById("quadboard").removeEventListener("mousedown", handleBoardClick);
+    }, [powerModalPinned, torusData.name]);
+
+    return <div id={torusData.name} className='torus' style={torusStyles}
+                onMouseEnter={showModal(true)}
+                onMouseLeave={showModal(false)}
+                onClick={handleClick}
+                ref={draggable}>
         <TorusSVG color={torusData.color} isRadiating={false} isGhost={false} />
+        {showPowerModal && <PowerModal powers={powers}/>}
     </div>;
 }
 
