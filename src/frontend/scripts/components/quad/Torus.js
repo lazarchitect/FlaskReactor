@@ -1,13 +1,13 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {useDrag} from 'react-dnd';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 
 import {TorusSVG} from './TorusSVG';
-import {isYourTurn} from "./quadSocket";
+import {QuadContext} from "../../roots/quadGameRoot";
 
 export function Torus ({ tileData }) {
 
-    // useState will be used here for color, powers, buffs, and debuffs later
+    const {legendState} = useContext(QuadContext);
 
     const torusData = tileData.torus;
 
@@ -29,9 +29,15 @@ export function Torus ({ tileData }) {
         [dragPreview]
     );
 
-    const draggable = (isYourTurn() && torusData.color === payload.userColor) ? dragRef : null;
+    const draggable = dragRef;//(isYourTurn() && torusData.color === payload.userColor) ? dragRef : null;
 
-    return <div id={torusData.name} className='torus' style={{ cursor: "grab", opacity: opacity }} ref={draggable}>
+    function powerTime() {
+        // if (!isYourTurn() || torusData.color !== payload.userColor) return;
+        const powers = legendState.playerPowers[torusData.name];
+        console.log(powers);
+    }
+
+    return <div id={torusData.name} className='torus' style={{ cursor: "grab", opacity: opacity }} onClick={powerTime} ref={draggable}>
         <TorusSVG color={torusData.color} isRadiating={false} isGhost={false} />
     </div>;
 }

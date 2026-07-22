@@ -22,7 +22,7 @@ const legendData = {playerPowers: payload.userPowers, orb_countdown: payload.gam
 
 const titleAddition = configureTitleAddition(players);
 
-export const SetBoardstateContext = createContext(null);
+export const QuadContext = createContext(null);
 
 function Page() {
 
@@ -38,9 +38,9 @@ function Page() {
                 <h3>Quadradius{titleAddition}</h3>
 
                 <DndProvider backend={HTML5Backend}>
-                    <SetBoardstateContext.Provider value={setBoardstate}>
+                    <QuadContext.Provider value={{setBoardstate, legendState}}>
                         <QuadBoard boardstate={boardstate} />
-                    </SetBoardstateContext.Provider>
+                    </QuadContext.Provider>
                     <TorusDragLayer />
                 </DndProvider>
                 <Legend legendState={legendState} />
