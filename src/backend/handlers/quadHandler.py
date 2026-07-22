@@ -116,6 +116,15 @@ class QuadHandler(WebSocketHandler):
 		if not validMove(sourceCoords, targetCoords):
 			return
 
+		playerPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(fields['username'])
+
+		if 'torus' in targetTile:
+			# scrub the record of that torus from the opponent's powers
+			opponentName = game.player1 if fields['username'] == game.player2 else game.player2
+			opponentPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(opponentName)
+			crushedTorusName = targetTile['torus']['name']
+			playerPowers.pop(crushedTorusName, None) # USE OPPONENT POWERS HERE
+
 		# execute the move. copy torus over to target and then remove source one. any existing torus at target is wiped out.
 		targetTile['torus'] = sourceTile['torus']
 		del sourceTile['torus']
@@ -129,8 +138,6 @@ class QuadHandler(WebSocketHandler):
 			orbSpawnLocations = [generateOrbSpawnLocation(game.boardstate) for _ in range(randint(1, maxOrbs))]
 			for orbSpawn in orbSpawnLocations:
 				game.boardstate[orbSpawn[1]][orbSpawn[0]]["orb"] = True
-
-		playerPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(fields['username'])
 
 		# if target tile has an Orb, consume it
 		if 'orb' in targetTile:
@@ -146,10 +153,12 @@ class QuadHandler(WebSocketHandler):
 			playerPowers[torusName] = playerPowers.get(torusName, {})
 			torusPowers = playerPowers[torusName]
 			torusPowers[key] = torusPowers.get(key, 0) + 1
-			self.write_message(json.dumps({
-				"command": "updatePowers",
-				"newLegendState": {"playerPowers": playerPowers, "turn_number": newTurnNumber, "orb_countdown": newOrbCountdown}
-			}))
+
+		# players should receive power updates after orb captures or Torus captures.
+		self.write_message(json.dumps({
+			"command": "updatePowers",
+			"newLegendState": {"playerPowers": playerPowers, "turn_number": newTurnNumber, "orb_countdown": newOrbCountdown}
+		}))
 
 		newActivePlayer = game.player1 if game.active_player == game.player2 else game.player2
 		newInactivePlayer = game.player1 if game.active_player == game.player1 else game.player2
