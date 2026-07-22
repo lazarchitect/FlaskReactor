@@ -357,12 +357,17 @@ main.chess {
     background-color: grey;
 }
 
+.quad.playArea {
+    display: grid;
+}
+
 #quadboard {
-    display: inline-grid;
+    display: grid;
     grid-template-columns: repeat(10, 10%);
     width: 800px;
     height: 640px;
     border: 3px solid black;
+    grid-row: 2;
 }
 
 .quadTile {
@@ -444,10 +449,30 @@ main.chess {
 
 #legend {
     background-color: #ffffff;
-    display: inline-block;
-    position: relative;
-    margin-top: 2%;
-    left: 2%;
+    border-radius: 10px;
+    padding: 10px;
+    grid-column: 2;
+    grid-row: 2;
+    margin-left: 50px;
+    font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+#statusBlock {
+    grid-row: 3;
+}
+
+.powerListing {
+    display: block;
+    padding: 3px;
+    border-radius: 5px;
+}
+
+.powerListing:hover {
+    background-color: rgb(221 221 221 / 0.6);
+}
+
+.powerListing:active {
+    background-color: red;
 }
 
 #chatbox { /* overall container */
