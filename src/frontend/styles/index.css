@@ -463,11 +463,11 @@ main.chess {
 }
 
 .powerModalEntry {
-    width: 200%;
-    background-color: rgb(71 71 71 / 0.9);
-    border: 1px solid navy;
-    border-radius: 5px;
-    padding: 1px;
+    width: 222px;
+    background-color: rgb(124 0 0 / 0.9);
+    border: 1px solid rgb(0 0 0 / 0.44);
+    border-radius: 10px;
+    padding: 0 0 0 8px;
     transition: background-color 0.2s ease-out;
     font-family: "Doto", sans-serif;
     font-weight: 800;
@@ -477,11 +477,11 @@ main.chess {
 }
 .powerModalEntry:hover {
     color: lightyellow;
-    background-color: #cf3030;
+    background-color: #e83b3b;
 }
 
 #legend {
-    background-color: rgb(108 108 108 / 0.78);
+    background-color: rgb(103 103 103 / 0.9);
     border-radius: 10px;
     padding: 10px;
     grid-column: 2;
@@ -490,7 +490,7 @@ main.chess {
     font-family: "Doto", sans-serif;
     font-size: larger;
     font-weight: 800;
-    color: #ff1f1f;
+    color: #ff0000;
 }
 
 #statusBlock {
@@ -501,10 +501,13 @@ main.chess {
     display: block;
     padding: 3px;
     border-radius: 5px;
+    transition: background-color 0.2s ease-out;
+
 }
 
 .powerListing:hover {
-    background-color: rgb(221 221 221 / 0.6);
+    color: lightyellow;
+    background-color: #cf3030;
 }
 
 .powerListing:active {

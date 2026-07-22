@@ -24,7 +24,7 @@ function PowersList({playerPowers}) {
     }
 
     return <div>
-        Powers: <br/>
+        Powers <br/>
         {Object.entries(powerTotals).map((powerData) =>
             <span key={powerData[0]} className="powerListing" onClick={() => highlightTori(powerData)}>
                 {`${powerData[1].count}  ${powerData[0]}`}
