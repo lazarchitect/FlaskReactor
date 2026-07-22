@@ -3,6 +3,7 @@ import json
 import random
 from datetime import datetime
 
+import names_generator
 from psycopg.types.json import Json
 
 from src.backend.pgdb import getPgdb
@@ -42,7 +43,7 @@ def createQuadGame(player_name, opponent_name):
 def newQuadGame(player1, player2, player1_color, player2_color, active_player) -> dict:
 
     boardstate = json.loads(open('resources/initialQuadLayout.json', 'r').read())
-    populatePlayerColors(boardstate, player1_color, player2_color)
+    populateTorusDetails(boardstate, player1_color, player2_color)
 
     return {
         "player1": player1,
@@ -56,11 +57,15 @@ def newQuadGame(player1, player2, player1_color, player2_color, active_player) -
         "orb_countdown": random.choice([2,4,8])
     }
 
-def populatePlayerColors(boardstate, player1_color, player2_color):
+def populateTorusDetails(boardstate, player1_color, player2_color):
     for row in range(0, 2):
         for col in range (0, 10):
-            boardstate[row][col]['torus']['color'] = player1_color
+            torus = boardstate[row][col]['torus']
+            torus['color'] = player1_color
+            torus['name'] = names_generator.generate_name()
 
     for row in range(6, 8):
         for col in range (0, 10):
-            boardstate[row][col]['torus']['color'] = player2_color
+            torus = boardstate[row][col]['torus']
+            torus['color'] = player2_color
+            torus['name'] = names_generator.generate_name()

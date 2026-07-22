@@ -6,6 +6,7 @@ from random import randint
 from tornado.websocket import WebSocketHandler
 
 from src.backend.pgdb import getPgdb
+from src.backend.services.quad.Power import Power
 from src.backend.utils import generateId, isEmpty, updateAll
 
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
@@ -44,7 +45,8 @@ def determineMaxOrbs(turn_number, boardstate):
 
 def validMove(sourceCoords, targetCoords):
 	""" Server side move validation, in case of tricksters.
-	Manhattan distance, elevation +1 or less, target is empty or enemy and is not acid-melted."""
+	Manhattan distance, elevation +1 or less, target tile is empty or has enemy, and is not acid-melted.
+	Also, TODO we need to check that the user sending this move is actually the owner of the sourceTile torus!"""
 	return True
 
 
@@ -114,17 +116,18 @@ class QuadHandler(WebSocketHandler):
 		if not validMove(sourceCoords, targetCoords):
 			return
 
+		playerPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(fields['username'])
+
+		if 'torus' in targetTile:
+			# scrub the record of that torus from the opponent's powers
+			opponentName = game.player1 if fields['username'] == game.player2 else game.player2
+			opponentPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(opponentName)
+			crushedTorusName = targetTile['torus']['name']
+			playerPowers.pop(crushedTorusName, None) # USE OPPONENT POWERS HERE
+
 		# execute the move. copy torus over to target and then remove source one. any existing torus at target is wiped out.
 		targetTile['torus'] = sourceTile['torus']
 		del sourceTile['torus']
-
-		# if target tile has an Orb, consume it
-		if 'orb' in targetTile: del targetTile['orb']
-		
-		# here is where we grant the Torus a power
-
-		newActivePlayer = game.player1 if game.active_player == game.player2 else game.player2
-		newInactivePlayer = game.player1 if game.active_player == game.player1 else game.player2
 
 		newTurnNumber = game.turn_number + 1
 
@@ -136,25 +139,45 @@ class QuadHandler(WebSocketHandler):
 			for orbSpawn in orbSpawnLocations:
 				game.boardstate[orbSpawn[1]][orbSpawn[0]]["orb"] = True
 
-		responseToClient = {
-			"command": "updateBoard",
-			"turn_number": newTurnNumber,
-			"orb_counter": newOrbCountdown,
+		# if target tile has an Orb, consume it
+		if 'orb' in targetTile:
+			del targetTile['orb']
+
+			# Create a new power randomly, assign it to the Torus's list of powers.
+			# Powers info cannot be stored in the boardstate, should be sent to each player separately
+			power = Power()
+			torusName = targetTile['torus']['name']
+			match power.rcr:
+				case None: key = power.name
+				case _: key = f"{power.name}:{power.rcr}"
+			playerPowers[torusName] = playerPowers.get(torusName, {})
+			torusPowers = playerPowers[torusName]
+			torusPowers[key] = torusPowers.get(key, 0) + 1
+
+		# players should receive power updates after orb captures or Torus captures.
+		self.write_message(json.dumps({
+			"command": "updatePowers",
+			"newLegendState": {"playerPowers": playerPowers, "turn_number": newTurnNumber, "orb_countdown": newOrbCountdown}
+		}))
+
+		newActivePlayer = game.player1 if game.active_player == game.player2 else game.player2
+		newInactivePlayer = game.player1 if game.active_player == game.player1 else game.player2
+
+		messageToSubscribers = {
+			"command": "update",
+			"newLegendState": {"turn_number": newTurnNumber, "orb_countdown": newOrbCountdown},
 			"newBoardstate": game.boardstate,
 			"active_player": newActivePlayer,
 			"inactive_player": newInactivePlayer
 			# what else?
 		}
 
-		updateAll(clientConnections[fields['gameId']], responseToClient)
+		updateAll(clientConnections[fields['gameId']], messageToSubscribers)
 
 		self.pgdb.updateQuadradiusGame(game.boardstate, newActivePlayer, datetime.now(), newTurnNumber, newOrbCountdown, game.player1_powers, game.player2_powers, gameId)
 
 
 	def handleSubscribe(self, fields: dict):
-
-		if self.socketId is None:
-			print('--------------------\nERROR!!! SOCKET ID NOT ASSIGNED\n---------------')
 
 		connectionDetails = {
 			"id": self.socketId,

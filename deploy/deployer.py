@@ -2,6 +2,7 @@ import hashlib
 import hmac
 import logging
 import os
+import subprocess
 from sys import argv
 from threading import Thread
 
@@ -57,7 +58,7 @@ def redeploy(commitId):
     logging.info("starting redeploy")
 
     logging.info("Pulling latest code repo changes...")
-    os.system("git pull") # runs shell cmd
+    subprocess.run("git pull")
 
     logging.info("Building new image")
     (newImage, buildLogs) = client.images.build(path = "..", tag = tag) # Dockerfile lives in parent folder
@@ -78,6 +79,7 @@ def redeploy(commitId):
 
     logging.info("maintenance: pruning unused containers")
     client.containers.prune()
+    client.images.prune()
 
     logging.info("Running new container...")
 

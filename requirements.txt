@@ -8,3 +8,4 @@ tornado~=6.5.7
 Werkzeug==3.1.8
 docker-py~=1.10.6
 resend
+names_generator

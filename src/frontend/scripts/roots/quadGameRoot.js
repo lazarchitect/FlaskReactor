@@ -18,14 +18,11 @@ import {ReconnectingPopUp} from "../components/common/ReconnectingPopUp";
 const players = [payload.game.player1, payload.game.player2]; // send players array itself in payload?
 const isPlayer = players.includes(payload.username);
 const use_chat = payload.preferences.use_chat;
-
-const isPlayer1 = payload.game.player1 === payload.username;
-const powersList = isPlayer ? (isPlayer1 ? payload.game.player1_powers : payload.game.player2_powers) : null;
-const legendData = {powersList: powersList, orb_countdown: payload.game.orb_countdown, turn_number: payload.game.turn_number };
+const legendData = {playerPowers: payload.userPowers, orb_countdown: payload.game.orb_countdown, turn_number: payload.game.turn_number};
 
 const titleAddition = configureTitleAddition(players);
 
-export const SetBoardstateContext = createContext(null);
+export const QuadContext = createContext(null);
 
 function Page() {
 
@@ -37,16 +34,17 @@ function Page() {
 	return <>
         <SiteHeader />
         <main>
-            <div className="playArea">
+            <div className="quad playArea">
                 <h3>Quadradius{titleAddition}</h3>
+
                 <DndProvider backend={HTML5Backend}>
-                    <SetBoardstateContext.Provider value={setBoardstate}>
+                    <QuadContext.Provider value={{setBoardstate, legendState}}>
                         <QuadBoard boardstate={boardstate} />
-                    </SetBoardstateContext.Provider>
+                    </QuadContext.Provider>
                     <TorusDragLayer />
                 </DndProvider>
                 <Legend legendState={legendState} />
-                <p>Status: <span id="status"></span></p>
+                <p id="statusBlock">Status: <span id="status"></span></p>
             </div>
             <ReconnectingPopUp />
             {isPlayer && use_chat && <Chatbox expanded={false} />}

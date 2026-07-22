@@ -2,11 +2,11 @@ import {useDrop} from "react-dnd";
 import {Torus} from "./Torus";
 import {sendMoveUpdate} from "./quadSocket";
 import {useContext} from "react";
-import {SetBoardstateContext} from "../../roots/quadGameRoot";
+import {QuadContext} from "../../roots/quadGameRoot";
 
 export function useTorusDrop(targetTileData){
 
-    const setBoardstate = useContext(SetBoardstateContext);
+    const {setBoardstate} = useContext(QuadContext);
 
     return useDrop({
         accept: 'Torus',
