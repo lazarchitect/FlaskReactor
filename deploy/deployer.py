@@ -78,6 +78,7 @@ def redeploy(commitId):
 
     logging.info("maintenance: pruning unused containers")
     client.containers.prune()
+    client.images.prune()
 
     logging.info("Running new container...")
 
