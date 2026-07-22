@@ -464,22 +464,33 @@ main.chess {
 
 .powerModalEntry {
     width: 200%;
-    background-color: #fff;
+    background-color: rgb(71 71 71 / 0.9);
     border: 1px solid navy;
     border-radius: 5px;
     padding: 1px;
     transition: background-color 0.2s ease-out;
+    font-family: "Doto", sans-serif;
+    font-weight: 800;
+    color: #ff1f1f;
+    font-size: larger;
+
 }
-.powerModalEntry:hover {background-color: #cdcdf1;}
+.powerModalEntry:hover {
+    color: lightyellow;
+    background-color: #cf3030;
+}
 
 #legend {
-    background-color: #ffffff;
+    background-color: rgb(108 108 108 / 0.78);
     border-radius: 10px;
     padding: 10px;
     grid-column: 2;
     grid-row: 2;
     margin-left: 50px;
-    font-family: "Trebuchet MS", Helvetica, sans-serif;
+    font-family: "Doto", sans-serif;
+    font-size: larger;
+    font-weight: 800;
+    color: #ff1f1f;
 }
 
 #statusBlock {
@@ -497,7 +508,7 @@ main.chess {
 }
 
 .powerListing:active {
-    background-color: red;
+    background-color: #bc0000;
 }
 
 #chatbox { /* overall container */

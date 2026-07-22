@@ -8,7 +8,7 @@ export function PowerModal({powers}) {
     return <div className="powerModal" ref={thisElement}>
         {Object.entries(powers).map((power) =>
             <div className="powerModalEntry" key={power[0]}>
-                {power[0].replace(':', ' ') + ": " + power[1]}
+                {`${power[1]}  ${power[0].replace(':', ' ')}`}
             </div>)
         }
     </div>;

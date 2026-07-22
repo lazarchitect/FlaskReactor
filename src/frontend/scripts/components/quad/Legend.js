@@ -27,13 +27,13 @@ function PowersList({playerPowers}) {
         Powers: <br/>
         {Object.entries(powerTotals).map((powerData) =>
             <span key={powerData[0]} className="powerListing" onClick={() => highlightTori(powerData)}>
-                {powerData[0]}: {powerData[1].count}
+                {`${powerData[1].count}  ${powerData[0]}`}
             </span>)}
     </div>
 }
 
 /** returns a dict indicating what powers a player has. Each power has a count and a list of associated tori.
- * @return e.g. {name: "Refurb:Radial", {tori: ["elegant_smith", "powered_winston"], count: 2}} */
+ * @return e.g. {name: "Refurb Radial", {tori: ["elegant_smith", "powered_winston"], count: 2}} */
 function collatePowerTotals(playerPowers) {
     const powerTotals = {};
     Object.entries(playerPowers).forEach(torusPowerInfo => {
