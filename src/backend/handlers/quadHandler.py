@@ -1,13 +1,12 @@
 import json
 import logging
-import random
 from datetime import datetime
 from random import randint
 
 from tornado.websocket import WebSocketHandler
 
 from src.backend.pgdb import getPgdb
-from src.backend.services.quad.Power import ALL_POWERS
+from src.backend.services.quad.Power import Power
 from src.backend.utils import generateId, isEmpty, updateAll
 
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
@@ -131,36 +130,33 @@ class QuadHandler(WebSocketHandler):
 			for orbSpawn in orbSpawnLocations:
 				game.boardstate[orbSpawn[1]][orbSpawn[0]]["orb"] = True
 
-		powersList = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(fields['username'])
-		print(powersList)
+		playerPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(fields['username'])
 
 		# if target tile has an Orb, consume it
 		if 'orb' in targetTile:
 			del targetTile['orb']
 
-			# get a new random power, assign it to the Torus's list of powers.
-			# Powers info cannot be stored in the boardstate!
-			# this should be sent to each player separately
-			# powers are associated with a Torus, but on the UI, each player will see a list of all their powers.
-			# Powers List is all clickable text, clicking it makes the Torus that has that power glow.
-			# So how do we associate a Power with a Torus???? do we need Torus IDs?
-			# I'm thinking some kind of layered data structure like: {torusId_1: {Power(name:refurb, rcr: radial, count:1), Power(name:acid, rcr: row, count:2) ... } ... }
-			power = random.choice(ALL_POWERS)
-			powersList[power] = powersList.get(power, 0) + 1
+			# Create a new power randomly, assign it to the Torus's list of powers.
+			# Powers info cannot be stored in the boardstate, should be sent to each player separately
+			power = Power()
+			torusName = targetTile['torus']['name']
+			match power.rcr:
+				case None: key = power.name
+				case _: key = f"{power.name}:{power.rcr}"
+			playerPowers[torusName] = playerPowers.get(torusName, {})
+			torusPowers = playerPowers[torusName]
+			torusPowers[key] = torusPowers.get(key, 0) + 1
 			self.write_message(json.dumps({
-				"command": "updateLegend",
-				"newLegendState": {"powersList": powersList, "turn_number": newTurnNumber, "orb_countdown": newOrbCountdown}
+				"command": "updatePowers",
+				"newLegendState": {"playerPowers": playerPowers, "turn_number": newTurnNumber, "orb_countdown": newOrbCountdown}
 			}))
-
-			targetTile.torus.powers
-			# here is where we grant the Torus a power
 
 		newActivePlayer = game.player1 if game.active_player == game.player2 else game.player2
 		newInactivePlayer = game.player1 if game.active_player == game.player1 else game.player2
 
 		messageToSubscribers = {
 			"command": "update",
-			"newLegendState": {"turn_number": newTurnNumber, "orb_countdown": newOrbCountdown, "powersList": {}},
+			"newLegendState": {"turn_number": newTurnNumber, "orb_countdown": newOrbCountdown},
 			"newBoardstate": game.boardstate,
 			"active_player": newActivePlayer,
 			"inactive_player": newInactivePlayer
