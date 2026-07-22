@@ -34,8 +34,9 @@ function Page() {
 	return <>
         <SiteHeader />
         <main>
-            <div className="playArea">
+            <div className="quad playArea">
                 <h3>Quadradius{titleAddition}</h3>
+
                 <DndProvider backend={HTML5Backend}>
                     <SetBoardstateContext.Provider value={setBoardstate}>
                         <QuadBoard boardstate={boardstate} />
@@ -43,7 +44,7 @@ function Page() {
                     <TorusDragLayer />
                 </DndProvider>
                 <Legend legendState={legendState} />
-                <p>Status: <span id="status"></span></p>
+                <p id="statusBlock">Status: <span id="status"></span></p>
             </div>
             <ReconnectingPopUp />
             {isPlayer && use_chat && <Chatbox expanded={false} />}

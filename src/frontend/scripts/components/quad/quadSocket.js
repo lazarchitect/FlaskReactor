@@ -38,7 +38,7 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
             if (data.command === "updatePowers") {
                 setLegendState((curr) => ({
                     ...curr,
-                    powersList: data.newLegendState.powersList
+                    playerPowers: data.newLegendState.playerPowers
                 }));
             }
             else if (data.command === "initialize") {
