@@ -425,6 +425,7 @@ main.chess {
     cy: 47%;
     r: 41.5%;
     stroke: black;
+    transition: fill 1s cubic-bezier(0.24, 0, 0.85, 0.1);
 }
 
 .torusSVGCore {
@@ -445,6 +446,11 @@ main.chess {
 
 .torusSVGPathBottom {
     d: path("M 46,79 C 79,76 79,51 79,46");
+}
+
+.torusPop {
+    fill: white;
+    transition: fill 0s;
 }
 
 #legend {

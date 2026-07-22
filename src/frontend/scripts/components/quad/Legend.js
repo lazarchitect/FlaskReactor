@@ -10,24 +10,45 @@ export function Legend({legendState}) {
 
 function PowersList({playerPowers}) {
 
-    let powersTotals = collatePowerTotals(playerPowers);
+    let powerTotals = collatePowerTotals(playerPowers);
+
+    function highlightTori(powerData) {
+        console.log(powerData);
+        const tori = powerData[1].tori;
+        for (const torusName of tori) {
+            const torusDiv = document.getElementById(torusName);
+            const visual = torusDiv.querySelector(".torusSVGBody");
+            visual.classList.add("torusPop");
+            setTimeout(() => visual.classList.remove("torusPop"), 2000);
+        }
+    }
+
     return <div>
         Powers: <br/>
-        {Object.entries(powersTotals).map((power) =>
-            <span className="powerListing" key={power[0]}> {power[0]}: {power[1]} </span>)}
+        {Object.entries(powerTotals).map((powerData) =>
+            <span key={powerData[0]} className="powerListing" onClick={() => highlightTori(powerData)}>
+                {powerData[0]}: {powerData[1].count}
+            </span>)}
     </div>
 }
 
-/** returns a dict purely of {name: <power_name>, count: <power_count_across_all_tori>} */
+/** returns a dict indicating what powers a player has. Each power has a count and a list of associated tori.
+ * @return e.g. {name: "Refurb:Radial", {tori: ["elegant_smith", "powered_winston"], count: 2}} */
 function collatePowerTotals(playerPowers) {
     const powerTotals = {};
     Object.entries(playerPowers).forEach(torusPowerInfo => {
+        const torusName = torusPowerInfo[0];
         const torusPowers = torusPowerInfo[1];
         Object.entries(torusPowers).forEach(power => {
-            const name = power[0].replace(':', ' ');
+            const powerName = power[0].replace(':', ' ');
             const count = power[1];
-            if (name in powerTotals) powerTotals[name] += count;
-            else powerTotals[name] = count;
+            if (powerName in powerTotals) {
+                powerTotals[powerName].tori.push(torusName);
+                powerTotals[powerName].count += count;
+            }
+            else {
+                powerTotals[powerName] = {"tori": [torusName], count: count};
+            }
         })
     })
     return powerTotals;
