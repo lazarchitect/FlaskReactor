@@ -13,5 +13,7 @@ class Power:
 	def __init__(self):
 		self.name = random.choice(ALL_POWERS)
 		self.count = 1
-		if self.name in RCR_POWERS:
+		if self.name in ["Wall, Trench"]:
+			self.rcr = random.choice(["Row", "Column"])
+		elif self.name in RCR_POWERS:
 			self.rcr = random.choice(["Row", "Column", "Radial"])
