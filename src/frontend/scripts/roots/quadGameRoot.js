@@ -18,7 +18,14 @@ import {ReconnectingPopUp} from "../components/common/ReconnectingPopUp";
 const players = [payload.game.player1, payload.game.player2]; // send players array itself in payload?
 const isPlayer = players.includes(payload.username);
 const use_chat = payload.preferences.use_chat;
-const legendData = {playerPowers: payload.userPowers, orb_countdown: payload.game.orb_countdown, turn_number: payload.game.turn_number};
+
+const legendData = {
+    playerPowers: payload.userPowers,
+    orb_countdown: payload.game.orb_countdown,
+    turn_number: payload.game.turn_number,
+    player1_count: payload.game.player1_count,
+    player2_count: payload.game.player2_count
+};
 
 const titleAddition = configureTitleAddition(players);
 

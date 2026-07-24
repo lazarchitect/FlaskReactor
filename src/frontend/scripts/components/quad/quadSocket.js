@@ -41,7 +41,9 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
                 setLegendState((curr) => ({
                     ...curr,
                     orb_countdown: data.newLegendState.orb_countdown,
-                    turn_counter: data.newLegendState.turn_counter
+                    turn_counter: data.newLegendState.turn_counter,
+                    player1_count: data.newLegendState.player1_count,
+                    player2_count: data.newLegendState.player2_count
                 }));
                 yourTurn = payload.username === data.active_player;
             }
@@ -70,13 +72,13 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
 function determineStatus(data){
     let status = "";
     if(data.gameEnded) {
-        status += "Game over."
+        status += "Game ended"
         if(data.winner == null)
-            status += "It's a tie."
+            status += " in a tie."
         else if(data.winner === payload.username)
-            status += "You win!"
-        else if(payload.username === data.otherPlayer)
-            status += "You lose...";
+            status += " in Victory! You win!"
+        else if(payload.username === data.loser)
+            status += " in defeat. You lose...";
         else
             status += "Winner was " + data.winner;
         return status;

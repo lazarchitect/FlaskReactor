@@ -2,6 +2,8 @@ import React from 'react';
 
 export function Legend({legendState}) {
     return <div id="legend">
+        {payload.game.player1}: {legendState.player1_count}<br/>
+        {payload.game.player2}: {legendState.player2_count}<br/>
         Turn number: {legendState.turn_number}<br/>
         Orb countdown: {legendState.orb_countdown}<br/><br/>
         {legendState.playerPowers && <PowersList playerPowers={legendState.playerPowers} />}

@@ -126,7 +126,10 @@ class QuadHandler(WebSocketHandler):
 			opponentName = game.player1 if fields['username'] == game.player2 else game.player2
 			opponentPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(opponentName)
 			crushedTorusName = targetTile['torus']['name']
-			playerPowers.pop(crushedTorusName, None) # USE OPPONENT POWERS HERE
+			playerPowers.pop(crushedTorusName, None) # USE opponentPowers HERE INSTEAD OF playerPowers
+
+			if opponentName == game.player1: game.player1_count -= 1
+			elif opponentName == game.player2: game.player2_count -= 1
 
 		# execute the move. copy torus over to target and then remove source one. any existing torus at target is wiped out.
 		targetTile['torus'] = sourceTile['torus']
@@ -168,16 +171,18 @@ class QuadHandler(WebSocketHandler):
 
 		messageToSubscribers = {
 			"command": "update",
-			"newLegendState": {"turn_number": newTurnNumber, "orb_countdown": newOrbCountdown},
+			"newLegendState": {
+				"turn_number": newTurnNumber, "orb_countdown": newOrbCountdown,
+				"player1_count": game.player1_count, "player2_count": game.player2_count
+		    },
 			"newBoardstate": game.boardstate,
 			"active_player": newActivePlayer,
 			"inactive_player": newInactivePlayer
-			# what else?
 		}
 
 		updateAll(clientConnections[fields['gameId']], messageToSubscribers)
 
-		self.pgdb.updateQuadradiusGame(game.boardstate, newActivePlayer, datetime.now(), newTurnNumber, newOrbCountdown, game.player1_powers, game.player2_powers, gameId)
+		self.pgdb.updateQuadradiusGame(game.boardstate, newActivePlayer, datetime.now(), newTurnNumber, newOrbCountdown, game.player1_powers, game.player2_powers, game.player1_count, game.player2_count, gameId)
 
 
 	def handleSubscribe(self, fields: dict):
