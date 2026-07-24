@@ -13,7 +13,6 @@ function PowersList({playerPowers}) {
     let powerTotals = collatePowerTotals(playerPowers);
 
     function highlightTori(powerData) {
-        console.log(powerData);
         const tori = powerData[1].tori;
         for (const torusName of tori) {
             const torusDiv = document.getElementById(torusName);
