@@ -28,9 +28,10 @@ export function isValidMove(sourceTileData, targetTileData) {
 
     let manhattanDistance = Math.abs(sourceTileData.row - targetTileData.row) + Math.abs(sourceTileData.col - targetTileData.col);
     let isInvalidDistance = manhattanDistance !== 1; // normal moves are exactly 1 orthogonal tile only (exceptions are Move Diagonal, F2S, Centerpult?)
+    let isJumpTooHigh = (targetTileData.elevation - sourceTileData.elevation) > 1; // jump up 1 tile but not more than that
     let allyAtTarget = ("torus" in targetTileData && targetTileData.torus.color === sourceTileData.torus.color);
 
-    return !isInvalidDistance && !allyAtTarget;
+    return !isInvalidDistance && !allyAtTarget && !isJumpTooHigh;
 }
 
 /** Quickly and responsively display a move locally before the round trip to the server updates the board.
