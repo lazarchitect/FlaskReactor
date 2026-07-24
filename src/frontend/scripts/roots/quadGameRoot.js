@@ -37,12 +37,15 @@ function Page() {
             <div className="quad playArea">
                 <h3>Quadradius{titleAddition}</h3>
 
-                <DndProvider backend={HTML5Backend}>
-                    <QuadContext.Provider value={{setBoardstate, legendState}}>
-                        <QuadBoard boardstate={boardstate} />
-                    </QuadContext.Provider>
-                    <TorusDragLayer />
-                </DndProvider>
+                <div id="quadboardBorder">
+
+                    <DndProvider backend={HTML5Backend}>
+                        <QuadContext.Provider value={{setBoardstate, legendState}}>
+                                <QuadBoard boardstate={boardstate} />
+                        </QuadContext.Provider>
+                        <TorusDragLayer />
+                    </DndProvider>
+                </div>
                 <Legend legendState={legendState} />
                 <p id="statusBlock">Status: <span id="status"></span></p>
             </div>

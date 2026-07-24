@@ -1,4 +1,5 @@
 import React, {useContext, useEffect, useState} from 'react';
+import {createPortal} from "react-dom";
 import {useDrag} from 'react-dnd';
 import {getEmptyImage} from 'react-dnd-html5-backend';
 
@@ -54,7 +55,9 @@ export function Torus ({ tileData }) {
 
     return <div id={torusData.name} className='torus' style={torusStyles} onClick={handleClick} ref={draggable}>
         <TorusSVG color={torusData.color} isRadiating={false} isGhost={false} />
-        {showPowerModal && <PowerModal powers={powers}/>}
+        {showPowerModal && createPortal(
+            <PowerModal tileData={tileData} powers={powers}/>, document.getElementsByClassName('quad playArea')[0]
+        )}
     </div>;
 }
 
