@@ -136,9 +136,9 @@ function generateNormalMoves(boardstate, activePiece, offsets) {
  * @returns array of tile IDs for valid move targets */
 function generateKingMoves(boardstate, gameDetails, activePiece) {
     let validMoveTargets = [];
-    if (activePiece.color === "White") {
+    if (activePiece.color === WHITE) {
         validMoveTargets.push(...whiteCastlingMoves(boardstate, gameDetails));
-    } else if (activePiece.color === "Black") {
+    } else if (activePiece.color === BLACK) {
         validMoveTargets.push(...blackCastlingMoves(boardstate, gameDetails));
     }
 
