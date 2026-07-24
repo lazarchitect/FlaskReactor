@@ -3,18 +3,25 @@ import {
     BISHOP_OFFSETS,
     bkbStartTile,
     bknStartTile,
+    bkrStartTile,
     bkStartTile,
+    BLACK,
     bqbStartTile,
     bqnStartTile,
+    bqrStartTile,
     bqStartTile,
     KNIGHT_OFFSETS,
+    ROOK,
     ROOK_OFFSETS,
     ROYAL_OFFSETS,
+    WHITE,
     wkbStartTile,
     wknStartTile,
+    wkrStartTile,
     wkStartTile,
     wqbStartTile,
     wqnStartTile,
+    wqrStartTile,
     wqStartTile
 } from "./chessConsts";
 import isSafeMove from "./moveSafetyVerifier";
@@ -199,10 +206,13 @@ function whiteCastlingMoves(boardstate, gameDetails) {
         let whiteIsSafeToCastleKingside = isSafeMove(boardstate, wkStartTile, wkbStartTile) && isSafeMove(boardstate, wkStartTile, wknStartTile);
         let whiteIsSafeToCastleQueenside = isSafeMove(boardstate, wkStartTile, wqStartTile) && isSafeMove(boardstate, wkStartTile, wqbStartTile);
 
-        if (!gameDetails.wqr_moved && intermediateWqTilesEmpty && whiteIsSafeToCastleQueenside) {
+        let wqrNotCaptured = pieceAt(boardstate, wqrStartTile)?.is(WHITE, ROOK);
+        let wkrNotCaptured = pieceAt(boardstate, wkrStartTile)?.is(WHITE, ROOK);
+
+        if (!gameDetails.wqr_moved && intermediateWqTilesEmpty && whiteIsSafeToCastleQueenside && wqrNotCaptured) {
             validCastlingTargets.push(wqbStartTile);
         }
-        if(!gameDetails.wkr_moved && intermediateWkTilesEmpty && whiteIsSafeToCastleKingside) {
+        if(!gameDetails.wkr_moved && intermediateWkTilesEmpty && whiteIsSafeToCastleKingside && wkrNotCaptured) {
             validCastlingTargets.push(wknStartTile);
         }
     }
@@ -221,10 +231,13 @@ function blackCastlingMoves(boardstate, gameDetails) {
         let blackIsSafeToCastleKingside = isSafeMove(boardstate, bkStartTile, bkbStartTile) && isSafeMove(boardstate, bkStartTile, bknStartTile);
         let blackIsSafeToCastleQueenside = isSafeMove(boardstate, bkStartTile, bqStartTile) && isSafeMove(boardstate, bkStartTile, bqbStartTile);
 
-        if (!gameDetails.bqr_moved && intermediateBqTilesEmpty && blackIsSafeToCastleQueenside) {
+        let bqrNotCaptured = pieceAt(boardstate, bqrStartTile)?.is(BLACK, ROOK);
+        let bkrNotCaptured = pieceAt(boardstate, bkrStartTile)?.is(BLACK, ROOK);
+
+        if (!gameDetails.bqr_moved && intermediateBqTilesEmpty && blackIsSafeToCastleQueenside && bqrNotCaptured) {
             validCastlingTargets.push(bqbStartTile);
         }
-        if(!gameDetails.bkr_moved && intermediateBkTilesEmpty && blackIsSafeToCastleKingside) {
+        if(!gameDetails.bkr_moved && intermediateBkTilesEmpty && blackIsSafeToCastleKingside && bkrNotCaptured) {
             validCastlingTargets.push(bknStartTile);
         }
     }
