@@ -1,7 +1,9 @@
 import React, {useState} from "react";
 import {isYourTurn} from "./quadSocket";
 
-const playerColors = {
+const unpoweredColor = "#8e8e8e";
+
+const coreColors = {
     "red":    ["#e72424", "#6e0b0b"], "redHighlight":    ["#FF0000", "#CC0000"],
     "blue":   ["#0000ff", "#191983"], "blueHighlight":   ["#2583ff", "#2424e7"],
     "green":  ["#0fda41", "#08681c"], "greenHighlight":  ["#99FF99", "#44cc44"],
@@ -14,10 +16,15 @@ const playerColors = {
     // can add more colors (bronze?) or like, dual colors, or other gradient types
 };
 
+const poweredColors = {
+    "red": "#ea6d6d",
+    "blue": "#2583ff"
+};
+
 /// CSS Utility functions for Torus glow on hover ///
 
 const halo = (horizontal, vertical, color) => {
-    let haloColor = playerColors[color + "Highlight"][0] + "99"; // 99 is alpha for translucency
+    let haloColor = coreColors[color + "Highlight"][0] + "99"; // 99 is alpha for translucency
     let blur = "3px";
     return `drop-shadow(${horizontal} ${vertical} ${blur} ${haloColor}) `;
 }
@@ -31,7 +38,7 @@ const allHalosFilter = (color) => {
 
 /// Components ///
 
-export function TorusSVG ({ color, isRadiating, isGhost }) {
+export function TorusSVG ({ color, isRadiating, isGhost, hasPowers }) {
 
     let [isHovering, setIsHovering] = useState(false);
 
@@ -47,6 +54,8 @@ export function TorusSVG ({ color, isRadiating, isGhost }) {
 
     let coreStyle = {filter: hasHalo ? allHalosFilter(color) : "none"};
 
+    let bodyFill = hasPowers? poweredColors[color] : unpoweredColor;
+
     return (
         <svg viewBox='0 0 100 100' className='torusSVG' style={isGhost ? {opacity: "50%"} : {}}
         onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}
@@ -61,7 +70,9 @@ export function TorusSVG ({ color, isRadiating, isGhost }) {
                 <TorusCoreRadialGradient id="torusCoreGradient2Radial" color={payload.game.player2_color} />
             </defs>
 
-            <circle className='torusSVGBody' />
+            <circle className='torusSVGBody' fill={bodyFill}/>
+            {/*<line x1="50" y1="5" x2="50" y2="88" stroke="black" strokeWidth="4" />*/}
+            {/*<line x1="5" y1="47" x2="88" y2="47" stroke="black" strokeWidth="4" />*/}
             <path className='torusSVGPath torusSVGPathTop' />
             <path className='torusSVGPath torusSVGPathBottom' />
             {/*Copilot says consider using an SVG <filter> element with feGaussianBlur + feOffset + feMerge, can improve performance*/}
@@ -72,14 +83,14 @@ export function TorusSVG ({ color, isRadiating, isGhost }) {
 
 function TorusCoreLinearGradient ({ color, id }) {
     return <linearGradient id={id} x1="0" x2="1" y1="0" y2="1">
-        <stop offset="0%" stopColor={playerColors[color][0]} />
-        <stop offset="100%" stopColor={playerColors[color][1]} />
+        <stop offset="0%" stopColor={coreColors[color][0]} />
+        <stop offset="100%" stopColor={coreColors[color][1]} />
     </linearGradient>;
 }
 
 function TorusCoreRadialGradient ({ color, id }) {
     return <radialGradient id={id} >
-        <stop offset="0%" stopColor={playerColors[color][0]} />
-        <stop offset="100%" stopColor={playerColors[color][1]} />
+        <stop offset="0%" stopColor={coreColors[color][0]} />
+        <stop offset="100%" stopColor={coreColors[color][1]} />
     </radialGradient>;
 }

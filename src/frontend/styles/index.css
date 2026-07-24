@@ -450,7 +450,7 @@ main.chess {
 }
 
 .torusSVGBody {
-    fill: #8e8e8e;
+    filter: drop-shadow(3px 5px 2px rgba(0, 0, 0, 0.4));
     cx: 47%;
     cy: 47%;
     r: 41.5%;
