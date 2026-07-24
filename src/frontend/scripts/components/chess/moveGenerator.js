@@ -1,28 +1,7 @@
 import {outOfBounds, pieceAt, tileIdOf} from "./chessUtils";
-import {
-    BISHOP_OFFSETS,
-    bkbStartTile,
-    bknStartTile,
-    bkrStartTile,
-    bkStartTile,
-    BLACK,
-    bqbStartTile,
-    bqnStartTile,
-    bqrStartTile,
-    bqStartTile,
-    KNIGHT_OFFSETS,
-    ROOK,
-    ROOK_OFFSETS,
-    ROYAL_OFFSETS,
-    WHITE,
-    wkbStartTile,
-    wknStartTile,
-    wkrStartTile,
-    wkStartTile,
-    wqbStartTile,
-    wqnStartTile,
-    wqrStartTile,
-    wqStartTile
+import {BLACK, WHITE, ROOK, BISHOP_OFFSETS, KNIGHT_OFFSETS, ROOK_OFFSETS, ROYAL_OFFSETS,
+    bkbStartTile, bknStartTile, bkrStartTile, bkStartTile, bqbStartTile, bqnStartTile, bqrStartTile, bqStartTile,
+    wkbStartTile, wknStartTile, wkrStartTile, wkStartTile, wqbStartTile, wqnStartTile, wqrStartTile, wqStartTile
 } from "./chessConsts";
 import isSafeMove from "./moveSafetyVerifier";
 
