@@ -6,6 +6,7 @@ import {getEmptyImage} from 'react-dnd-html5-backend';
 import {TorusSVG} from './TorusSVG';
 import {QuadContext} from "../../roots/quadGameRoot";
 import {PowerModal} from "./PowerModal";
+import {isYourTurn} from "./quadSocket";
 
 export function Torus ({ tileData }) {
 
@@ -33,7 +34,7 @@ export function Torus ({ tileData }) {
         [dragPreview]
     );
 
-    const draggable = dragRef;//(isYourTurn() && torusData.color === payload.userColor) ? dragRef : null;
+    const draggable = (isYourTurn() && torusData.color === payload.userColor) ? dragRef : null;
 
     const powers = legendState.playerPowers[torusData.name];
     const hasPowers = powers !== undefined && Object.keys(powers).length > 0;
