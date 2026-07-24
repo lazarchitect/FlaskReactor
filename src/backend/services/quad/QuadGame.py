@@ -3,7 +3,7 @@ import json
 import random
 from datetime import datetime
 
-import names_generator
+from names_generator import generate_name
 from psycopg.types.json import Json
 
 from src.backend.pgdb import getPgdb
@@ -62,10 +62,10 @@ def populateTorusDetails(boardstate, player1_color, player2_color):
         for col in range (0, 10):
             torus = boardstate[row][col]['torus']
             torus['color'] = player1_color
-            torus['name'] = names_generator.generate_name()
+            torus['name'] = generate_name()
 
     for row in range(6, 8):
         for col in range (0, 10):
             torus = boardstate[row][col]['torus']
             torus['color'] = player2_color
-            torus['name'] = names_generator.generate_name()
+            torus['name'] = generate_name()
