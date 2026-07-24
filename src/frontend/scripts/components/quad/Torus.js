@@ -11,7 +11,6 @@ export function Torus ({ tileData }) {
     const {legendState} = useContext(QuadContext);
 
     const [showPowerModal, setShowPowerModal] = useState(false);
-    const [powerModalPinned, setPowerModalPinned] = useState(false);
 
     const torusData = tileData.torus;
 
@@ -37,32 +36,23 @@ export function Torus ({ tileData }) {
 
     const powers = legendState.playerPowers[torusData.name];
     const torusStyles = { cursor: "grab", opacity: opacity };
-    function showModal(bool) {return () => !powerModalPinned && setShowPowerModal(bool);}
     const handleClick = () => {
-        setPowerModalPinned((prev) => !prev);
-        setShowPowerModal(true); // ensure it's visible once pinned
+        setShowPowerModal((prev) => !prev);
     };
 
     useEffect(() => {
-        if (!powerModalPinned) return;
-
         const handleBoardClick = (event) => {
             const clickedOnThisTorus = event.target.closest(`#${torusData.name}`); // returns falsy null if no ancestor found by that ID
             if (!clickedOnThisTorus) {
-                setPowerModalPinned(false);
                 setShowPowerModal(false);
             }
         };
 
         document.getElementById("quadboard").addEventListener("mousedown", handleBoardClick);
         return () => document.getElementById("quadboard").removeEventListener("mousedown", handleBoardClick);
-    }, [powerModalPinned, torusData.name]);
+    }, [torusData.name]);
 
-    return <div id={torusData.name} className='torus' style={torusStyles}
-                onMouseEnter={showModal(true)}
-                onMouseLeave={showModal(false)}
-                onClick={handleClick}
-                ref={draggable}>
+    return <div id={torusData.name} className='torus' style={torusStyles} onClick={handleClick} ref={draggable}>
         <TorusSVG color={torusData.color} isRadiating={false} isGhost={false} />
         {showPowerModal && <PowerModal powers={powers}/>}
     </div>;
