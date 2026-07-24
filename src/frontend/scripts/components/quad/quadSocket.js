@@ -17,6 +17,16 @@ export function sendMoveUpdate(sourceCoords, targetCoords){
     socket.sendUpdate(message);
 }
 
+// powerName is like "Orbic Rehash" or "Acidic Column", server will take it from there.
+export function sendPowerActivation(torusCoords, powerName){
+    const message = {
+        "request": "activate",
+        "power": powerName,
+        "coords": torusCoords
+    }
+    socket.sendUpdate(message);
+}
+
 export function quadSocketConnect(setBoardstate, setLegendState) {
 
     socket = webSocketConnect({

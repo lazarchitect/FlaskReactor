@@ -84,6 +84,9 @@ class QuadHandler(WebSocketHandler):
 		elif request == "update":
 			self.handleUpdate(fields)
 
+		elif request == "activate":
+			print(fields)
+
 	def on_close(self):
 		if not hasattr(self, "gameId"):
 			print("quadSocket was not subscribed? not sure why this would happen")
