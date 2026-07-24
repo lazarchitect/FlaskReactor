@@ -517,11 +517,19 @@ main.chess {
     padding: 10px;
     grid-column: 2;
     grid-row: 2;
-    margin-left: 50px;
+    max-height: 640px;
+    width: 240px;
+    margin-left: 40px;
     font-family: "Doto", sans-serif;
     font-size: larger;
     font-weight: 800;
     color: #ff0000;
+}
+
+#legendPowers {
+    border: #4e4e4e solid 1px;
+    max-height: 540px;
+    overflow-y: auto;
 }
 
 #statusBlock {

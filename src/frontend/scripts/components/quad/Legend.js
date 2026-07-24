@@ -22,13 +22,15 @@ function PowersList({playerPowers}) {
         }
     }
 
-    return <div>
+    return <>
         Powers <br/>
+        <div id="legendPowers">
         {Object.entries(powerTotals).map((powerData) =>
             <span key={powerData[0]} className="powerListing" onClick={() => highlightTori(powerData)}>
                 {`${powerData[1].count}  ${powerData[0]}`}
             </span>)}
-    </div>
+        </div>
+    </>
 }
 
 /** returns a dict indicating what powers a player has. Each power has a count and a list of associated tori.
