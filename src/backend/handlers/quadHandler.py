@@ -199,6 +199,7 @@ class QuadHandler(WebSocketHandler):
 				"active_player": None
 			}
 			updateAll(clientConnections[fields['gameId']], messageToSubscribers)
+			self.pgdb.endQuadradiusGame(game.boardstate, datetime.now(), winner, gameId)
 
 	def handleSubscribe(self, fields: dict):
 
@@ -241,6 +242,8 @@ class QuadHandler(WebSocketHandler):
 
 		self.write_message({
 			"command": "initialize",
+			"gameEnded": game.completed,
+			"winner": game.winner,
 			"active_player": game.active_player,
 			"inactive_player": game.player1 if game.active_player == game.player2 else game.player2,
 			"contents": str(self.socketId) + " subscribed to gameId " + gameId
