@@ -110,6 +110,7 @@ class ChessHandler(AbstractWebSocketHandler):
             "whiteInCheck": whiteInCheck,
             "blackInCheck": blackInCheck,
             "winner": game.winner,
+            # "loser": game.white_player if game.black_player == game.winner # TODO we need to supply this or figure it out client side
             "gameDetails": {
                 "activePlayer": game.active_player, "otherPlayer": otherPlayer,
                 "whitekingmoved": whiteKingMoved, "blackkingmoved": blackKingMoved,
