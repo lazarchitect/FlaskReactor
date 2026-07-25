@@ -5,13 +5,13 @@ import {createRoot} from 'react-dom/client';
 import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {Chessboard} from '../components/chess/Chessboard';
-import {configureTitleAddition} from "./rootUtil";
+import {configureTitlePrefix} from "./rootUtil";
 import {sendResignation} from "../components/chess/chessSocket";
 import {ReconnectingPopUp} from "../components/common/ReconnectingPopUp";
 
 let players = [payload.game.white_player, payload.game.black_player];
 const isPlayer = players.includes(payload.username);
-const titleAddition = configureTitleAddition(players);
+const titleAddition = configureTitlePrefix(players, "Chess");
 
 const use_chat = payload.preferences.use_chat;
 
@@ -31,7 +31,7 @@ function Page() {
         <SiteHeader/>
         <main className="chess">
             <div className="playArea">
-                <h3>Chess{titleAddition}</h3>
+                <h3>{titleAddition}</h3>
                 <Chessboard/>
                 <div id="belowChessboard">
                     <span id="chessStatus">Status: <span id="status"/></span>

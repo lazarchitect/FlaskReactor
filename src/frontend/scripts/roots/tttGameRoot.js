@@ -3,7 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {SiteHeader} from '../components/common/SiteHeader';
 import {Chatbox} from '../components/common/Chatbox';
 import {TttBoard} from "../components/ttt/TttBoard";
-import {configureTitleAddition} from "./rootUtil";
+import {configureTitlePrefix} from "./rootUtil";
 import {ReconnectingPopUp} from "../components/common/ReconnectingPopUp";
 
 const players = [payload.game.x_player, payload.game.o_player];
@@ -11,14 +11,14 @@ const isPlayer = players.includes(payload.username);
 
 const use_chat = payload.preferences.use_chat;
 
-const titleAddition = configureTitleAddition(players);
+const titleAddition = configureTitlePrefix(players, "Tic-Tac-Toe");
 
 function Page(){
 	return <>
 		<SiteHeader/>
 		<main>
 			<div className="playArea">
-				<h3>Tic-Tac-Toe{titleAddition}</h3>
+				<h3>{titleAddition}</h3>
 				<TttBoard/>
 				<p>Status: <span id="status"></span></p>
 			</div>

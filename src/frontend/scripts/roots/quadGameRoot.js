@@ -12,7 +12,7 @@ import {QuadBoard} from '../components/quad/QuadBoard';
 import {TorusDragLayer} from '../components/quad/TorusDragLayer';
 import {quadSocketConnect} from "../components/quad/quadSocket";
 import {Legend} from "../components/quad/Legend";
-import {configureTitleAddition} from "./rootUtil";
+import {configureTitlePrefix} from "./rootUtil";
 import {ReconnectingPopUp} from "../components/common/ReconnectingPopUp";
 
 const players = [payload.game.player1, payload.game.player2]; // send players array itself in payload?
@@ -27,7 +27,7 @@ const legendData = {
     player2_count: payload.game.player2_count
 };
 
-const titleAddition = configureTitleAddition(players);
+const titleAddition = configureTitlePrefix(players, "Quadradius");
 
 export const QuadContext = createContext(null);
 
@@ -42,7 +42,7 @@ function Page() {
         <SiteHeader />
         <main>
             <div className="quad playArea">
-                <h3>Quadradius{titleAddition}</h3>
+                <h3>{titleAddition}</h3>
 
                 <div id="quadboardBorder">
 
