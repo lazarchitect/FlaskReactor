@@ -27,7 +27,7 @@ def validateCreateGame(request):
 	if opponent_name == "":
 		raise ValidationError("enter a name, doofbury.")
 
-	if player_name == opponent_name:
+	if player_name.casefold() == opponent_name.casefold():
 		raise ValidationError("you can't vs yourself, bubso.")
 
 	opponent = getPgdb().getUser(opponent_name)
