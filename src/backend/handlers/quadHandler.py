@@ -183,8 +183,8 @@ class QuadHandler(WebSocketHandler):
 
 		self.pgdb.updateQuadradiusGame(game.boardstate, newActivePlayer, datetime.now(), newTurnNumber, newOrbCountdown, game.player1_powers, game.player2_powers, game.player1_count, game.player2_count, gameId)
 
-		if game.player1_count is 0 or game.player2_count is 0:
-			isTie = game.player1_count is 0 and game.player2_count is 0
+		if game.player1_count == 0 or game.player2_count == 0:
+			isTie = game.player1_count == 0 and game.player2_count == 0
 			outcome = "Tie" if isTie else "Win"
 			# there must be a way to refactor the following...
 			winner = None if isTie else (game.player1 if game.player1_count > 0 else game.player2)
