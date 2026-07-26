@@ -73,15 +73,14 @@ function determineStatus(data){
     let status = "";
     if(data.gameEnded) {
         status += "Game ended";
-        // let loser = data.winner == null ? null : (game.)
         if(data.winner == null)
             status += " in a tie."
-        else if(data.winner === payload.username)
-            status += " in Victory! You win!"
-        else if(payload.username === data.loser) // TODO initiate data does not contain loser
-            status += " in defeat. You lose...";
-        else
-            status += "Winner was " + data.winner;
+        else {
+            const loser = (payload.game.player1 === data.winner ? payload.game.player2 : payload.game.player1);
+            if (data.winner === payload.username) status += " in Victory! You win!";
+            else if (payload.username === loser)  status += " in defeat. You lose...";
+            else status += ". Winner was " + data.winner;
+        }
         return status;
     }
     switch(payload.username) {
