@@ -85,7 +85,7 @@ class QuadHandler(WebSocketHandler):
 			self.handleUpdate(fields)
 
 		elif request == "activate":
-			print(fields)
+			self.handleActivate(fields)
 
 	def on_close(self):
 		if not hasattr(self, "gameId"):
@@ -245,3 +245,23 @@ class QuadHandler(WebSocketHandler):
 			"inactive_player": game.player1 if game.active_player == game.player2 else game.player2,
 			"contents": str(self.socketId) + " subscribed to gameId " + gameId
 		})
+
+	def handleActivate(self, fields):
+		print(fields)
+		gameId = fields['gameId']
+		game = self.pgdb.getQuadradiusGame(gameId)
+
+		coords = fields['coords']
+		row, col = coords['row'], coords['col']
+		tile = game.boardstate[row][col]
+
+		# 'Raise Tile' logic. Put a dict mapping for other power functions here
+		tile['elevation'] += 1
+
+		messageToSubscribers = {
+			"command": "grantPower",
+			"newBoardstate": game.boardstate,
+		}
+
+		updateAll(clientConnections[gameId], messageToSubscribers)
+		self.pgdb.updateQuadradiusBoardstate(game.boardstate, gameId)

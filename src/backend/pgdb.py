@@ -35,6 +35,7 @@ sql = {
 	"getQuadradiusGame": f"SELECT * FROM {quadGamesTable} WHERE id = %s",
 	"getPreferredTorusColors": f"SELECT quad_color_pref, quad_color_backup FROM {usersTable} where name=%s",
 	"updateQuadradiusGame": f"UPDATE {quadGamesTable} SET boardstate=%s, active_player=%s, last_move=%s, turn_number=%s, orb_countdown=%s, player1_powers=%s, player2_powers=%s, player1_count=%s, player2_count=%s where id=%s",
+	"updateQuadradiusBoardstate": f"UPDATE {quadGamesTable} SET boardstate=%s where id=%s",
 	"endQuadradiusGame": f"UPDATE {quadGamesTable} SET completed=true, boardstate=%s, time_ended=%s, winner=%s where id=%s",
 
 	# Chess
@@ -201,6 +202,12 @@ class Pgdb:
 	def updateQuadradiusGame(self, boardstate, active_player, last_move, turn_number, orb_countdown, player1_powers, player2_powers, player1_count, player2_count, gameId):
 		query = sql['updateQuadradiusGame']
 		values = (Json(boardstate), active_player, last_move, turn_number, orb_countdown, Json(player1_powers), Json(player2_powers), player1_count, player2_count, gameId)
+		self.__execute(query, values)
+		self.conn.commit()
+
+	def updateQuadradiusBoardstate(self, boardstate, gameId):
+		query = sql['updateQuadradiusBoardstate']
+		values = (Json(boardstate), gameId)
 		self.__execute(query, values)
 		self.conn.commit()
 
