@@ -104,8 +104,7 @@ class QuadHandler(WebSocketHandler):
 
 		# for posterity: there are multiple types of updates. Moves, power activations on tori, power effect outcomes.
 
-		### MOVE LOGIC ###
-		# modify game.boardstate based on src and dest. Destroy tori where appropriate.
+		# HANDLING MOVE LOGIC: modify game.boardstate based on src and dest. Destroy torus at target when appropriate.
 
 		sourceCoords = fields['src']
 		targetCoords = fields['dest']
