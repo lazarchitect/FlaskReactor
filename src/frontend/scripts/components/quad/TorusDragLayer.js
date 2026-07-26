@@ -12,13 +12,15 @@ export function TorusDragLayer () {
 		currentOffset: monitor.getSourceClientOffset()
 	}));
 
-	if (sourceTileData?.torus === undefined) return null; // not dragging anything.
+	const torus = sourceTileData?.torus;
+
+	if (torus === undefined) return null; // not dragging anything.
 
     const dragStyles = getDragStyles(initialOffset, currentOffset);
 
 	return (
 		<div style={dragStyles} className='torusDragLayer'>
-			<TorusSVG color={sourceTileData.torus.color} isRadiating={true}/>
+			<TorusSVG color={torus.color} isRadiating={true} hasPowers={torus.hasPowers}/>
 		</div>
 	);
 }

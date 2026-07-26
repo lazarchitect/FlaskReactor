@@ -64,6 +64,6 @@ export function Torus ({ tileData }) {
 
 export function TorusHoverGhost({torusData}) {
     return <div className='torus'>
-        <TorusSVG color={torusData.color} isRadiating={false} isGhost={true} />
+        <TorusSVG color={torusData.color} isRadiating={false} isGhost={true} hasPowers={torusData.hasPowers} />
     </div>;
 }
