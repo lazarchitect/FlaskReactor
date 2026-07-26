@@ -561,20 +561,23 @@ main.chess {
     height: 6%;
 }
 
-#chatbox-base {
+#chatboxBase {
+    position: relative;
+    font-size: 1.2vw;
     height: 100%;
     background-color: #DDDDDD;
-    outline: 2px solid #1e1e49;
+    outline: 0.3vh solid #1e1e49;
+    z-index: 3;
 }
 
-#chatbox-label {
+#chatboxLabel {
     position: relative;
     width: 1fr;
     left: 10%;
     top: 25%;
 }
 
-#chatbox-indicator {
+#chatboxIndicator {
     position: absolute;
     top: 20%;
     right: 8%;
@@ -586,25 +589,30 @@ main.chess {
     border-radius: 15% / 50%;
 }
 
-#chatbox-indicator:hover {
+#chatboxIndicator:hover {
     box-shadow: 2px 2px black;
 }
 
-#chatbox-indicator:active {
+#chatboxIndicator:active {
     box-shadow: none;
     top: 22%;
     right: 6%;
 }
 
 /* possible improvement - make it slide up and down for show/hide */
-#chatbox-text-area {
+#chatboxTextArea {
     position: absolute;
-    top: -750%;
+    top: 100%;
     width: 100%;
     height: 750%;
+    transition: top 0.6s cubic-bezier(0.4, 0, 0.2, 1)
 }
 
-#chatbox-log {
+#chatboxTextArea.show {
+    top: -750%;
+}
+
+#chatboxLog {
     box-sizing: border-box;
     position: absolute;
     height: 90%;
@@ -612,7 +620,7 @@ main.chess {
     resize: none;
 }
 
-#chatbox-input{
+#chatboxInput{
     box-sizing: border-box;
     position: absolute;
     bottom: 0.5%;
