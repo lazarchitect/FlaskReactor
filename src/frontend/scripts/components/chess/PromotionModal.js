@@ -1,34 +1,29 @@
-import React, {useContext} from "react";
+import React, {useContext, useLayoutEffect, useState} from "react";
 import {BISHOP, BLACK, KNIGHT, QUEEN, ROOK, WHITE} from "./chessConsts";
 import {generatePieceMetadata} from "./chessUtils";
 import {sendPromotionMoveUpdate} from "./chessSocket";
 import {ActivePieceContext} from "./Chessboard";
 
-export default function PromotionModal({tileId}) {
+export function PromotionModal({tileId}) {
 
     let [row, col] = [parseInt(tileId['0']), parseInt(tileId['1'])];
 
     const pieces = [BISHOP, KNIGHT, QUEEN, ROOK];
     const pieceColor = row === 7 ? BLACK : WHITE;
 
-    let initialLeft = -63;
-    let left = initialLeft + (60*col);
+    const [left, setLeft] = useState(-80 + (80 * col));
+    let top = pieceColor === WHITE ? "-5" : "95";
 
-    let top = pieceColor === WHITE ? 24 : 506;
-
-    // following code "retrieves" the modal if it initially rendered off left side of screen
-    React.useEffect(() => {
-
-        let promotionModal = document.getElementById("promotionModal");
-        let distanceToViewportLeft = promotionModal.getBoundingClientRect().left;
-        let leftSpillover = Math.min(distanceToViewportLeft, 0);
-        if (leftSpillover < 0) left -= leftSpillover;
-
-        promotionModal.style.left = `${left}px`;
+    // following code "retrieves" the modal if it initially rendered off side of screen
+    useLayoutEffect(() => {
+        let modalRect = document.getElementById("promotionModal").getBoundingClientRect();
+        let [distanceToViewportLeft, distanceToViewportRight] = [modalRect.left, window.innerWidth - modalRect.right]; // negative values represent 'spillover'
+        if (distanceToViewportLeft < 0) setLeft((prev) => prev - distanceToViewportLeft);
+        else if (distanceToViewportRight < 0) setLeft((prev) => prev + distanceToViewportRight);
     }, []);
 
     return (
-        <div id={"promotionModal"} className={"promotionModal" + pieceColor} style={{left: `${left}px`, top: `${top}px`}} >
+        <div id={"promotionModal"} className={"promotionModal" + pieceColor} style={{left: `${left}px`, top: `${top}%`}} >
             { pieces.map(pieceType => <PromotionChoice key={pieceType} tileId={tileId} piece={{color: pieceColor, type: pieceType}} /> )}
         </div>
     );

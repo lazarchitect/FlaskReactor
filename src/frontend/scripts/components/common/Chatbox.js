@@ -32,15 +32,13 @@ export function Chatbox ( {expanded} ) {
 
     return (
         <div id="chatbox">
-            {isCurrentlyExpanded &&
-                <div id="chatbox-text-area">
-                    <ChatBoxLog log={chatLog} />
-                    <ChatBoxInput />
-                </div>
-            }
-            <div id="chatbox-base">
-                <span id="chatbox-label">Chat</span>
-                <span id="chatbox-indicator" onClick={onExpanderClick}>
+            <div id="chatboxTextArea" className={isCurrentlyExpanded ? "show" : ""}>
+                <ChatBoxLog log={chatLog} />
+                <ChatBoxInput />
+            </div>
+            <div id="chatboxBase">
+                <span id="chatboxLabel">Chat</span>
+                <span id="chatboxIndicator" onClick={onExpanderClick}>
                     {notifCount === 0 ? indicatorText : <NotifText indicatorText={indicatorText} notifCount={notifCount}/> }
                 </span>
             </div>
@@ -61,7 +59,7 @@ function ChatBoxLog({log}) {
         }
     }, [log]); // scrolls latest into view when log updates
 
-    return <textarea ref={scrollRef} id="chatbox-log" readOnly value={log} />;
+    return <textarea ref={scrollRef} id="chatboxLog" readOnly value={log} />;
 }
 
 /** editable text box where user types chat messages. <Enter> will trigger a socket send. */
@@ -72,7 +70,7 @@ function ChatBoxInput() {
 
             event.preventDefault();
 
-            let inputField = document.getElementById('chatbox-input');
+            let inputField = document.getElementById('chatboxInput');
 
             let trimmedInput = inputField.value.trim();
 
@@ -84,7 +82,7 @@ function ChatBoxInput() {
         }
     };
 
-    return <textarea id="chatbox-input" onKeyDown={enterListener} form="chatbox-form" rows="2" />;
+    return <textarea id="chatboxInput" onKeyDown={enterListener} form="chatbox-form" rows="2" />;
 }
 
 function NotifText ({indicatorText, notifCount}) {
