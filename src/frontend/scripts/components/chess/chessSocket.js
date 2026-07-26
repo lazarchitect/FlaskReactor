@@ -63,12 +63,12 @@ function determineStatus(data){
         status += "Game ended"
         if(data.mate === "Stalemate")
             status += " in stalemate."
-        else if(data.winner === payload.username)
-            status += " with a checkmate. You win!"
-        else if(data.loser === payload.username)
-            status += " with a checkmate. You lose...";
-        else
-            status += ". Winner was " + data.winner; // spectator view
+        else {
+            const loser = (payload.game.white_player === data.winner ? payload.game.black_player : payload.game.white_player);
+            if(data.winner === payload.username) status += " with a checkmate. You win!"
+            else if (loser === payload.username) status += " with a checkmate. You lose...";
+            else status += ". Winner was " + data.winner; // spectator view
+        }
         return status;
     }
     switch(payload.username){
