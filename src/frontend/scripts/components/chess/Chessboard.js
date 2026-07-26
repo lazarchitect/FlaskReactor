@@ -6,7 +6,7 @@ import generateMoves from "./moveGenerator";
 import {chessSocketConnect, sendMoveUpdate} from "./chessSocket";
 import {isPromotion, pieceAt} from "./chessUtils";
 import {Row} from "./chessboardElements";
-import PromotionModal from "./PromotionModal";
+import {PromotionModal} from "./PromotionModal";
 
 export const ActivePieceContext = createContext({});
 
@@ -50,7 +50,6 @@ export function Chessboard() {
 
 			if (isPromotion(activePieceInfo, clickedId)) {
 				// display modal but do not send any server message or update any state just yet
-				console.log("we got here");
 				setDisplayPromotionModal(true);
 				setPromotionTileId(clickedId);
 				promotionTileId = clickedId;

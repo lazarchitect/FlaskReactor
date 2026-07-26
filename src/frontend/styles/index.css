@@ -236,6 +236,7 @@ main.chess {
 }
 
 #chessboard {
+    position: relative;
     width: fit-content;
 }
 
@@ -244,8 +245,8 @@ main.chess {
 }
 
 .tile {
-    width: 9vh;
-    height: 9vh;
+    width: 80px;
+    height: 80px;
     display: inline-block;
     position: relative;
 }
