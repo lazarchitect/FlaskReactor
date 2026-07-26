@@ -125,7 +125,7 @@ class QuadHandler(WebSocketHandler):
 			opponentName = game.player1 if fields['username'] == game.player2 else game.player2
 			opponentPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(opponentName)
 			crushedTorusName = targetTile['torus']['name']
-			playerPowers.pop(crushedTorusName, None) # USE opponentPowers HERE INSTEAD OF playerPowers
+			opponentPowers.pop(crushedTorusName, None) # USE opponentPowers HERE INSTEAD OF playerPowers
 
 			if opponentName == game.player1: game.player1_count -= 1
 			elif opponentName == game.player2: game.player2_count -= 1
@@ -149,15 +149,13 @@ class QuadHandler(WebSocketHandler):
 			del targetTile['orb']
 
 			# Create a new power randomly, assign it to the Torus's list of powers.
-			# Powers info cannot be stored in the boardstate, should be sent to each player separately
+			# Power specifics cannot be stored in the boardstate, should be sent to each player separately
 			power = Power()
 			torusName = targetTile['torus']['name']
-			match power.rcr:
-				case None: key = power.name
-				case _: key = f"{power.name}:{power.rcr}"
 			playerPowers[torusName] = playerPowers.get(torusName, {})
 			torusPowers = playerPowers[torusName]
-			torusPowers[key] = torusPowers.get(key, 0) + 1
+			torusPowers[power.key] = torusPowers.get(power.key, 0) + 1
+			targetTile['torus']['hasPowers'] = True
 
 		# players should receive power updates after orb captures or Torus captures.
 		self.write_message(json.dumps({
