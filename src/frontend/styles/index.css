@@ -377,8 +377,7 @@ main.chess {
     display: grid;
     grid-template-columns: repeat(10, 10%);
     background-color: #1e1e49;
-    clip-path: polygon(-10% -10%, 110% -10%, 100% 0, 100% 100%, 0 100%);
-    /*border: 1px solid black;*/
+    clip-path: polygon(-100% -100%, 100% -100%, 100% 100%, -100% 100%);
 }
 
 .quadTile { /* base level container underneath everything it has, including the surface and block */
