@@ -113,25 +113,25 @@ class TttHandler(AbstractWebSocketHandler):
             return
 
         #issue: gameId can be invalid ttt game?
-        tttGame = self.pgdb.getTttGame(gameId)
+        game = self.pgdb.getTttGame(gameId)
 
-        if player != tttGame.active_player:
+        if player != game.active_player:
             self.write_message({
                 "command": "error",
                 "contents": "NOT YOUR TURN!"
             })
             return
 
-        if tttGame.x_player == player:
-            otherPlayer = tttGame.o_player
+        if game.x_player == player:
+            otherPlayer = game.o_player
             piece = 'X'
         else:
-            otherPlayer = tttGame.x_player
+            otherPlayer = game.x_player
             piece = 'O'
 
         # here, we need to authenticate user currently requesting an update. Session tokens? cookies?
 
-        boardstate = tttGame.boardstate
+        boardstate = game.boardstate
 
         if boardstate[boardIndex] != "":
             self.write_message({
