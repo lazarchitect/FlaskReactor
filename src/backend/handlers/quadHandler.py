@@ -125,7 +125,7 @@ class QuadHandler(WebSocketHandler):
 			opponentName = game.player1 if fields['username'] == game.player2 else game.player2
 			opponentPowers = {game.player1: game.player1_powers,game.player2: game.player2_powers}.get(opponentName)
 			crushedTorusName = targetTile['torus']['name']
-			opponentPowers.pop(crushedTorusName, None) # USE opponentPowers HERE INSTEAD OF playerPowers
+			opponentPowers.pop(crushedTorusName, None)
 
 			if opponentName == game.player1: game.player1_count -= 1
 			elif opponentName == game.player2: game.player2_count -= 1
