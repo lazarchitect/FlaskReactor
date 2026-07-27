@@ -47,6 +47,10 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
                 }));
                 yourTurn = payload.username === data.active_player;
             }
+            if (data.command === "grantPower") {
+                setBoardstate(data.newBoardstate);
+            }
+
             if (data.command === "updatePowers") {
                 setLegendState((curr) => ({
                     ...curr,

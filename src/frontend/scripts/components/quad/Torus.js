@@ -37,7 +37,6 @@ export function Torus ({ tileData }) {
     const draggable = (isYourTurn() && torusData.color === payload.userColor) ? dragRef : null;
 
     const powers = legendState.playerPowers[torusData.name];
-    const hasPowers = powers !== undefined && Object.keys(powers).length > 0;
     const torusStyles = { cursor: "grab", opacity: opacity };
     const handleClick = () => {
         setShowPowerModal((prev) => !prev);
@@ -56,7 +55,7 @@ export function Torus ({ tileData }) {
     }, [torusData.name]);
 
     return <div id={torusData.name} className='torus' style={torusStyles} onClick={handleClick} ref={draggable}>
-        <TorusSVG color={torusData.color} isRadiating={false} isGhost={false} hasPowers={hasPowers} />
+        <TorusSVG color={torusData.color} isRadiating={false} isGhost={false} hasPowers={torusData.hasPowers} />
         {showPowerModal && createPortal(
             <PowerModal tileData={tileData} powers={powers}/>, document.getElementsByClassName('quad playArea')[0]
         )}
@@ -65,6 +64,6 @@ export function Torus ({ tileData }) {
 
 export function TorusHoverGhost({torusData}) {
     return <div className='torus'>
-        <TorusSVG color={torusData.color} isRadiating={false} isGhost={true} />
+        <TorusSVG color={torusData.color} isRadiating={false} isGhost={true} hasPowers={torusData.hasPowers} />
     </div>;
 }

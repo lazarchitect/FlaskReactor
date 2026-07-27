@@ -11,9 +11,10 @@ class Power:
 	count = 0
 
 	def __init__(self):
-		self.name = random.choices(population=ALL_POWERS, weights=ALL_WEIGHTS, k=1)[0] # returns a list of k items
+		self.name = random.choices(population=ALL_POWERS, weights=ALL_WEIGHTS, k=1)[0] # choices returns a list of k items
 		self.count = 1
 		if self.name in ["Wall, Trench"]:
 			self.rcr = random.choice(["Row", "Column"])
 		elif self.name in RCR_POWERS:
 			self.rcr = random.choice(["Row", "Column", "Radial"])
+		self.key = self.name if self.rcr is None else f"{self.name}:{self.rcr}"
