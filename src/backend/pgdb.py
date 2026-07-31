@@ -107,7 +107,7 @@ class Pgdb:
 			self.cursor.execute(query, values)
 			self.conn.commit()
 		except (InterfaceError, OperationalError):
-			#Connection was closed, so reconnect. (this happens due to idle timeouts.)
+			# Connection was closed, so reconnect and retry. (this happens due to idle timeouts.)
 			self.__connect()
 			self.__execute(query, values)
 
