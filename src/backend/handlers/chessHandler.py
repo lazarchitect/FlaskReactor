@@ -94,8 +94,8 @@ class ChessHandler(AbstractWebSocketHandler):
 
         boardstate = game.boardstate
         
-        whiteInCheck = inCheck(boardstate, "Black")
-        blackInCheck = inCheck(boardstate, "White")
+        whiteInCheck = inCheck(boardstate, WHITE)
+        blackInCheck = inCheck(boardstate, BLACK)
 
         blackKingMoved = game.blackkingmoved
         whiteKingMoved = game.whitekingmoved

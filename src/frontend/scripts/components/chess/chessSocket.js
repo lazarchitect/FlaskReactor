@@ -1,4 +1,5 @@
 import {webSocketConnect} from "../common/SocketConnection";
+import {BLACK, WHITE} from "./chessConsts";
 
 let socket = null;
 
@@ -53,8 +54,8 @@ export function chessSocketConnect(setBoardstate, setGameDetails) {
     });
 }
 
-function playerInCheck(yourColor, whiteInCheck, blackInCheck) {
-    return (yourColor === "White" && whiteInCheck) || (yourColor === "Black" && blackInCheck);
+function playerInCheck(color, whiteInCheck, blackInCheck) {
+    return (color === WHITE && whiteInCheck) || (color === BLACK && blackInCheck);
 }
 
 function determineStatus(data){
@@ -80,7 +81,8 @@ function determineStatus(data){
             break;
         case data.gameDetails.otherPlayer:
             status += "Waiting for opponent... ";
-            if(playerInCheck(payload.enemyColor, data.whiteInCheck, data.blackInCheck)){
+            const enemyColor = (payload.userColor === WHITE ? BLACK : WHITE);
+            if(playerInCheck(enemyColor, data.whiteInCheck, data.blackInCheck)){
                 status += "Opponent is in check!"
             }
             break;
