@@ -20,7 +20,7 @@ const GameDiv = styled.div`
 	margin: 10px;
 	text-align: center;
 	padding: 10px 0;
-	border: 2px solid blue;
+	border: 1px solid black;
 	border-radius: 10px`;
 
 function openGame(gameId, gameType){
@@ -34,6 +34,33 @@ function determineOpponentName(gameType, game) {
 		case "Quad": return (game.player1 === you ? game.player2 : game.player1);
 		case "Ttt": return (game.x_player === you ? game.o_player : game.x_player);
 	}
+}
+
+function CreateGameArea() {
+
+	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+	const [selectedGameType, setSelectedGameType] = useState(null);
+
+	const usernameFieldBehavior = () => {
+		const opponentName = document.getElementById("opponentName").value;
+		setSubmitButtonDisabled(opponentName.length === 0);
+	};
+
+	return <div id="createGameDiv">
+		<form action="/create-game" method="POST">
+			<h4>Create Game</h4>
+
+			<select name="gameType" onChange={(e) => setSelectedGameType(e.target.value)}>
+				{gameTypes.map((type) => <option key={type} value={type}>{gameDefs[type].displayName}</option>)}
+			</select>
+			<br/>
+
+			{selectedGameType === "Ttt" && <input type="submit" name="vsAI" value="Create vs. AI Game" />}
+
+			Opponent Username: <input type="text" name="opponent" id="opponentName" onKeyUp={usernameFieldBehavior} />
+			<input type="submit" value="Create" disabled={submitButtonDisabled} />
+		</form>
+	</div>;
 }
 
 function GameList ({isCompleted, gameType}) {
@@ -63,28 +90,6 @@ function GameDisplay ({gameType}) {
 			{showPastGames && <GameList gameType={gameType} isCompleted={true}/>}
 		</div>
 	);
-}
-
-function CreateGameArea() {
-
-	const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
-
-	const usernameFieldBehavior = () => {
-		const opponentName = document.getElementById("opponentName").value;
-		setSubmitButtonDisabled(opponentName.length === 0);
-	};
-
-	return <form action="/create-game" method="POST" id="createGameDiv">
-		<h4>Create Game</h4>
-
-		<select name="gameType"> {/*The name attribute is used to reference the form data*/}
-			{gameTypes.map((type) => <option key={type} value={type}>{gameDefs[type].displayName}</option>)}
-		</select>
-		<br/>
-
-		Opponent Username: <input type="text" name="opponent" id="opponentName" onKeyUp={usernameFieldBehavior} />
-		<input type="submit" value="Create" id="submitCreateGame" disabled={submitButtonDisabled} />
-	</form>;
 }
 
 const page = (
