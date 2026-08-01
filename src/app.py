@@ -205,6 +205,9 @@ def createGame():
     opponent_name = request.form['opponent'].strip()
     game_type = request.form['gameType']
 
+    if "vsAI" in request.form:
+        print("It's a vs AI game!")
+
     opponent = pgdb.getUser(opponent_name)
     opponent_name = opponent.name # postgres lower() ensures case-insensitive username handling
 
