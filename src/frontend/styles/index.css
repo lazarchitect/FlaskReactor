@@ -178,9 +178,19 @@ main.chess {
     color: #a61b1b;
 }
 
+#createGameDiv {
+    margin-top: 1em;
+    border: 2px solid teal;
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+}
+
+
 #gameDisplaysArea {
     display: flex;
     width: 100%;
+    justify-content: center;
 }
 
 .gameDisplay {
@@ -329,11 +339,6 @@ main.chess {
     box-sizing: border-box;
     text-align: right;
     justify-content: space-between;
-}
-
-#createGameDiv {
-    border: 3px solid blue;
-    padding: 1em;
 }
 
 #tttBoard {
