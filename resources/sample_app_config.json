@@ -1,5 +1,5 @@
 {
-    "README": "this is a sample structure of the app config. Put details in app_config.json, structured the same as this file, to run the app.",
+    "README": "this is a sample structure of the app config. Put details in ./app_config.json, structured the same as this file, to run the app.",
     
     "version": "0.5.0",
 
@@ -19,7 +19,9 @@
         "user": "account username to connect with",
         "password": "user's private password"
     },
-
+    "resend": {
+        "api_key": "set this to the private user API key of the Resend email service"
+    },
     "secret_key": "randomized value used for Flask session verification"
     
 }
