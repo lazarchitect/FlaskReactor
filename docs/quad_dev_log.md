@@ -14,3 +14,6 @@ So, what else do we need to build? Elevation change powers should be trivial at 
 - we also need to prohibit player input while animations are going on.
 
 This is all future-minded but not too far off. Let's start with Lower, Plateau, Moat, Trench, Wall, and then pick one bullet to build out next.
+
+Where do we make this change to build out power logic? 
+Well, the back end game logic starts in the SocketHandlers, so it would start in [`QuadHandler.py`](../src/backend/handlers/quadHandler.py). But we are going to have a massive match-case statement so it might make sense to have some sort of `String`->function mapping there instead with all the logic in a separate file.

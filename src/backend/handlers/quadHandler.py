@@ -256,7 +256,17 @@ class QuadHandler(WebSocketHandler):
 		tile = game.boardstate[row][col]
 
 		# 'Raise Tile' logic. Put a dict mapping for other power functions here
-		tile['elevation'] += 1
+		power = fields['power'].split(":")[0]
+		match power:
+			case 'Raise Tile':
+				if tile['elevation'] != 5:
+					tile['elevation'] += 1
+			case 'Lower Tile':
+				if tile['elevation'] != 1:
+					tile['elevation'] -= 1
+			case 'Plateau':
+				# TODO get all tiles around row/col and set their elevations to 5. messageToSubscribers should mention that this occurred in this way
+				pass
 
 		messageToSubscribers = {
 			"command": "grantPower",
