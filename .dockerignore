@@ -22,5 +22,5 @@
 **/obj
 **/secrets.dev.yaml
 **/values.dev.yaml
-README.md
+docs/README.md
 **/app_config.json
