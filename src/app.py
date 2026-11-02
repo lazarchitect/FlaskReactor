@@ -206,7 +206,7 @@ def createGame():
     game_type = request.form['gameType']
 
     opponent = pgdb.getUser(opponent_name)
-    opponent_name = opponent.name # postgres lower() ensures case-insensitive username handling
+    opponent_name = opponent.name # Postgres lower() ensures case-insensitive username handling
 
     match game_type:
         case "Ttt":   createTttGame(player_name, opponent_name)
