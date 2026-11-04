@@ -7,6 +7,7 @@ from tornado.websocket import WebSocketHandler
 
 from src.backend.pgdb import getPgdb
 from src.backend.services.quad.Power import Power
+from src.backend.services.quad.quadUtils import radial
 from src.backend.utils import generateId, isEmpty, updateAll
 
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
@@ -265,8 +266,8 @@ class QuadHandler(WebSocketHandler):
 				if tile['elevation'] != 1:
 					tile['elevation'] -= 1
 			case 'Plateau':
-				# TODO get all tiles around row/col and set their elevations to 5. messageToSubscribers should mention that this occurred in this way
-				pass
+				for affectedRow, affectedCol in radial(row, col, radius=1):
+					game.boardstate[affectedRow][affectedCol]['elevation'] = 5
 
 		messageToSubscribers = {
 			"command": "grantPower",
