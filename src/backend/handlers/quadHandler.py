@@ -266,7 +266,7 @@ class QuadHandler(WebSocketHandler):
 				if tile['elevation'] != 1:
 					tile['elevation'] -= 1
 			case 'Plateau':
-				for affectedRow, affectedCol in radial(row, col, radius=1):
+				for affectedRow, affectedCol in radial(row, col, size=1):
 					game.boardstate[affectedRow][affectedCol]['elevation'] = 5
 
 		messageToSubscribers = {
