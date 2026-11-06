@@ -28,6 +28,12 @@ class Power:
 		self.count = 1
 
 	@classmethod
+	def unpackFromKey(cls, key: str):
+		name = key.split(":")[0]
+		rcr = key.split(":")[1] if ":" in key else None
+		return Power(name, rcr)
+
+	@classmethod
 	def random(cls):
 		name = random.choices(population=ALL_POWERS, weights=ALL_WEIGHTS, k=1)[0] # choices returns a list of k items
 		rcr = None

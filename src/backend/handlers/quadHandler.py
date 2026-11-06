@@ -8,7 +8,6 @@ from tornado.websocket import WebSocketHandler
 from src.backend.pgdb import getPgdb
 from src.backend.services.quad.Power import Power
 from src.backend.services.quad.invoker import invokePower
-from src.backend.services.quad.quadUtils import unpack_power
 from src.backend.utils import generateId, isEmpty, updateAll
 
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
@@ -251,12 +250,12 @@ class QuadHandler(WebSocketHandler):
 	def handleActivate(self, fields):
 
 		gameId = fields['gameId']
+
+		power = Power.unpackFromKey(fields['power'])
+		coords = fields['coords']
 		game = self.pgdb.getQuadradiusGame(gameId)
 
-		coords = fields['coords']
-		power, rcr = unpack_power(fields)
-
-		invokePower(power, rcr, coords, game)
+		invokePower(power, coords, game)
 
 		messageToSubscribers = {
 			"command": "grantPower", # TODO change name from grant to invoke

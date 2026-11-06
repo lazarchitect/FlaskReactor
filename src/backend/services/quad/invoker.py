@@ -3,13 +3,12 @@ from random import choice
 from src.backend.services.quad.quadUtils import radial, determineRcrFunction
 from src.backend.services.quad.Power import Power
 
-def invokePower(powerName, rcr, coords, game):
+def invokePower(power, coords, game):
 
 	size = 1 # growQ will modify this
 	row, col = coords['row'], coords['col']
 	tile = game.boardstate[row][col]
 
-	power = Power(powerName, rcr)
 	rcrFn = determineRcrFunction(power.rcr)
 
 	# optimization: dict of {string: function()}, which would be O(1) vs O(n)

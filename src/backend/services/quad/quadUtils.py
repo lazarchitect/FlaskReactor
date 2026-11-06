@@ -13,7 +13,6 @@ size 2: row-1 -> row+2 (3 rows)
 size 3: row-2 -> row+3 (5 rows)
 
 formula: -1*(size-1) -> size
-
 """
 
 def row(torusRow, _, size):
@@ -46,8 +45,3 @@ def radial(torusRow, torusCol, size):
 
 def outOfBounds(coords):
 	return coords[0] > 7 or coords[1] > 9
-
-def unpack_power(fields) -> tuple[str, str | None]:
-	power = fields['power'].split(":")[0]
-	rcr = fields['power'].split(":")[1] if ":" in fields['power'] else None
-	return power, rcr
