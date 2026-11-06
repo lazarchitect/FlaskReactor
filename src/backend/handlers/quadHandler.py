@@ -152,7 +152,7 @@ class QuadHandler(WebSocketHandler):
 
 			# Create a new power randomly, assign it to the Torus's list of powers.
 			# Power specifics cannot be stored in the boardstate, should be sent to each player separately
-			power = Power()
+			power = Power.random()
 			torusName = targetTile['torus']['name']
 			playerPowers[torusName] = playerPowers.get(torusName, {})
 			torusPowers = playerPowers[torusName]
