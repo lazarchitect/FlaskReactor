@@ -14,6 +14,11 @@ def invokePower(powerName, rcr, coords, game):
 
 	# optimization: dict of {string: function()}, which would be O(1) vs O(n)
 	match power.name:
+	power = Power(powerName, rcr)
+	rcrFn = determineRcrFunction(power.rcr)
+
+	# optimization: dict of {string: function()}, which would be O(1) vs O(n)
+	match power.name:
 		case 'Raise Tile':
 			if tile['elevation'] != 5:
 				tile['elevation'] += 1
