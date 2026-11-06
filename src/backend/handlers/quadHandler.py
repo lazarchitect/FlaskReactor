@@ -7,7 +7,8 @@ from tornado.websocket import WebSocketHandler
 
 from src.backend.pgdb import getPgdb
 from src.backend.services.quad.Power import Power
-from src.backend.services.quad.quadUtils import radial
+from src.backend.services.quad.invoker import invokePower
+from src.backend.services.quad.quadUtils import unpack_power
 from src.backend.utils import generateId, isEmpty, updateAll
 
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
@@ -248,29 +249,17 @@ class QuadHandler(WebSocketHandler):
 		})
 
 	def handleActivate(self, fields):
-		print(fields)
+
 		gameId = fields['gameId']
 		game = self.pgdb.getQuadradiusGame(gameId)
 
 		coords = fields['coords']
-		row, col = coords['row'], coords['col']
-		tile = game.boardstate[row][col]
+		power, rcr = unpack_power(fields)
 
-		# 'Raise Tile' logic. Put a dict mapping for other power functions here
-		power = fields['power'].split(":")[0]
-		match power:
-			case 'Raise Tile':
-				if tile['elevation'] != 5:
-					tile['elevation'] += 1
-			case 'Lower Tile':
-				if tile['elevation'] != 1:
-					tile['elevation'] -= 1
-			case 'Plateau':
-				for affectedRow, affectedCol in radial(row, col, size=1):
-					game.boardstate[affectedRow][affectedCol]['elevation'] = 5
+		invokePower(power, rcr, coords, game)
 
 		messageToSubscribers = {
-			"command": "grantPower",
+			"command": "grantPower", # TODO change name from grant to invoke
 			"newBoardstate": game.boardstate,
 		}
 
