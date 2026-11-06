@@ -1,7 +1,21 @@
-from random import choice
+from dataclasses import dataclass
+from typing import Callable
 
-from src.backend.services.quad.quadUtils import radial, determineRcrFunction
-from src.backend.services.quad.Power import Power
+from src.backend.services.quad.quadUtils import determineRcrFunction
+from src.backend.services.quad.powerFunctions import *
+
+POWER_FUNCTIONS = {
+	"Raise Tile": raiseTile, "Lower Tile": lowerTile, "Moat": moat, "Plateau": plateau, "Wall": wall, "Trench": trench
+}
+
+@dataclass
+class PowerContext:
+	row: int
+	col: int
+	size: int
+	tile: dict
+	rcrFn: Callable
+	boardstate: dict
 
 def invokePower(power, coords, game):
 
@@ -11,26 +25,7 @@ def invokePower(power, coords, game):
 
 	rcrFn = determineRcrFunction(power.rcr)
 
-	# optimization: dict of {string: function()}, which would be O(1) vs O(n)
-	match power.name:
-		case 'Raise Tile':
-			if tile['elevation'] != 5:
-				tile['elevation'] += 1
-		case 'Lower Tile':
-			if tile['elevation'] != 1:
-				tile['elevation'] -= 1
-		case 'Plateau':
-			for affectedRow, affectedCol in radial(row, col, size):
-				game.boardstate[affectedRow][affectedCol]['elevation'] = 5
-		case 'Moat':
-			for affectedRow, affectedCol in radial(row, col, size):
-				game.boardstate[affectedRow][affectedCol]['elevation'] = 1
-			game.boardstate[row][col]['elevation'] = 5
-		case 'Wall':
-			affectedTiles = rcrFn(row, col, size)
-			for affectedRow, affectedCol in affectedTiles:
-				game.boardstate[affectedRow][affectedCol]['elevation'] = 5
-		case 'Trench':
-			affectedTiles = rcrFn(row, col, size)
-			for affectedRow, affectedCol in affectedTiles:
-				game.boardstate[affectedRow][affectedCol]['elevation'] = 1
+	# dispatch logic
+	powerLogic = POWER_FUNCTIONS[power.name]
+	context = PowerContext(row=row, col=col, size=size, tile=tile, rcrFn=rcrFn, boardstate=game.boardstate)
+	powerLogic(context)
