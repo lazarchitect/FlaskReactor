@@ -1,13 +1,19 @@
-from src.backend.services.quad.quadUtils import radial, rcrFunc
+from random import choice
 
+from src.backend.services.quad.quadUtils import radial, determineRcrFunction
+from src.backend.services.quad.Power import Power
 
-def invokePower(power, rcr, coords, game):
+def invokePower(powerName, rcr, coords, game):
 
-	size = 2
+	size = 1 # growQ will modify this
 	row, col = coords['row'], coords['col']
 	tile = game.boardstate[row][col]
 
-	match power:
+	power = Power(powerName, rcr)
+	rcrFn = determineRcrFunction(power.rcr)
+
+	# optimization: dict of {string: function()}, which would be O(1) vs O(n)
+	match power.name:
 		case 'Raise Tile':
 			if tile['elevation'] != 5:
 				tile['elevation'] += 1
@@ -22,12 +28,10 @@ def invokePower(power, rcr, coords, game):
 				game.boardstate[affectedRow][affectedCol]['elevation'] = 1
 			game.boardstate[row][col]['elevation'] = 5
 		case 'Wall':
-			if rcr == "Radial": raise ValueError("Wall cannot be radial")
-			affectedTiles = rcrFunc(rcr)(row, col, size)
+			affectedTiles = rcrFn(row, col, size)
 			for affectedRow, affectedCol in affectedTiles:
 				game.boardstate[affectedRow][affectedCol]['elevation'] = 5
 		case 'Trench':
-			if rcr == "Radial": raise ValueError("Trench cannot be radial")
-			affectedTiles = rcrFunc(rcr)(row, col, size)
+			affectedTiles = rcrFn(row, col, size)
 			for affectedRow, affectedCol in affectedTiles:
 				game.boardstate[affectedRow][affectedCol]['elevation'] = 1

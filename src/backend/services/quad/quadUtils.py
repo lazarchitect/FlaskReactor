@@ -1,5 +1,5 @@
 
-def rcrFunc(rcr):
+def determineRcrFunction(rcr):
 	match rcr:
 		case "Row": return row
 		case "Column": return column
