@@ -13,13 +13,13 @@ class Power:
 	count = 0
 
 	def __init__(self, name, rcr):
-
+		"""the only way Powers should be handled. Class methods below only wrap this with specific inputs. Includes validation."""
 		if name not in ALL_POWERS:
 			raise ValueError("power name not supported")
-		if rcr not in ["Row", "Column", "Radial"]:
-			raise ValueError("rcr value not valid")
-		if name in ["Wall", "Trench"] and rcr == "Radial":
-			raise ValueError("Wall and Trench cannot be Radial")
+		if name in RCR_POWERS and rcr not in ["Row", "Column", "Radial"]:
+			raise ValueError(f"rcr value {rcr} not valid")
+		if name in ["Wall", "Trench"] and rcr not in ["Row", "Column"]:
+			raise ValueError("Wall and Trench must be Row or Column")
 
 		self.name = name
 		self.rcr = rcr
@@ -29,12 +29,14 @@ class Power:
 
 	@classmethod
 	def unpackFromKey(cls, key: str):
+		""" Generates a Power from an input key, which simply wraps the name and rcr. Used when handling power data sent from frontend. """
 		name = key.split(":")[0]
 		rcr = key.split(":")[1] if ":" in key else None
-		return Power(name, rcr)
+		return cls(name, rcr)
 
 	@classmethod
 	def random(cls):
+		""" Chooses random power and rcr before generating a Power. The primary way for players, via orbs, to get Powers. """
 		name = random.choices(population=ALL_POWERS, weights=ALL_WEIGHTS, k=1)[0] # choices returns a list of k items
 		rcr = None
 		if name in ["Wall", "Trench"]:
