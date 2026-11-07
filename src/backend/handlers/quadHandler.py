@@ -8,6 +8,7 @@ from tornado.websocket import WebSocketHandler
 from src.backend.pgdb import getPgdb
 from src.backend.services.quad.Power import Power
 from src.backend.services.quad.invoker import invokePower
+from src.backend.services.quad.quadUtils import findEmptyLocation
 from src.backend.utils import generateId, isEmpty, updateAll
 
 # keys are gameIds. values are lists of connection details {socketId, connection} to inform of updates.
@@ -22,15 +23,6 @@ def deleteConnection(gameId, socketId):
 		if conn['id'] == socketId:
 			gameConnectionList.remove(conn)
 			return
-
-
-def generateOrbSpawnLocation(boardstate):
-	""" Randomly finds an open spot on the board and returns those coords."""
-	while True:
-		x = randint(0, 9)
-		y = randint(0, 7)
-		if "torus" not in boardstate[y][x]:
-			return x, y
 
 
 def determineMaxOrbs(turn_number, boardstate):
@@ -141,7 +133,7 @@ class QuadHandler(WebSocketHandler):
 		if newOrbCountdown == 0:
 			newOrbCountdown = 8
 			maxOrbs = determineMaxOrbs(game.turn_number, game.boardstate)
-			orbSpawnLocations = [generateOrbSpawnLocation(game.boardstate) for _ in range(randint(1, maxOrbs))]
+			orbSpawnLocations = [findEmptyLocation(game.boardstate) for _ in range(randint(1, maxOrbs))]
 			for orbSpawn in orbSpawnLocations:
 				game.boardstate[orbSpawn[1]][orbSpawn[0]]["orb"] = True
 

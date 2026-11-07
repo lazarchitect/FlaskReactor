@@ -1,3 +1,4 @@
+from random import randint
 
 def determineRcrFunction(rcr):
 	match rcr:
@@ -45,3 +46,11 @@ def radial(torusRow, torusCol, size):
 
 def outOfBounds(coords):
 	return coords[0] > 7 or coords[1] > 9
+
+def findEmptyLocation(boardstate):
+	""" Randomly finds an open spot on the board and returns those coords. No torus, orb, or acidic. """
+	while True:
+		x = randint(0, 9)
+		y = randint(0, 7)
+		if "torus" not in boardstate[y][x] and "orb" not in boardstate[y][x]: # also acidic
+			return x, y
