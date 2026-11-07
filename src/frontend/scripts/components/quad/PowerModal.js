@@ -6,6 +6,7 @@ export function PowerModal({powers, tileData}) {
     if (powers === undefined) return null;
 
     function handleClick(power) {
+        // TODO operates unusually for Multiply
         sendPowerActivation({row: tileData.row, col: tileData.col}, power);
     }
 
