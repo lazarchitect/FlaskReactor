@@ -5,7 +5,8 @@ from src.backend.services.quad.quadUtils import determineRcrFunction
 from src.backend.services.quad.powerFunctions import *
 
 POWER_FUNCTIONS = {
-	"Raise Tile": raiseTile, "Lower Tile": lowerTile, "Moat": moat, "Plateau": plateau, "Wall": wall, "Trench": trench
+	"Raise Tile": raiseTile, "Lower Tile": lowerTile, "Moat": moat, "Plateau": plateau, "Wall": wall, "Trench": trench,
+	"Relocate": relocate
 }
 
 @dataclass
