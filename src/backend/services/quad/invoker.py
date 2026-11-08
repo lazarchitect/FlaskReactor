@@ -9,7 +9,8 @@ POWER_FUNCTIONS = {
 	# "Orb Spy": orbSpy, "Bankrupt": bankrupt, "Power Plant": powerPlant, "Hotspot": hotspot, "Refurb": refurb, "Bunker": bunker
 	# Offensive
 	"Destroy": destroy, #"Pilfer": pilfer, "Inhibit": inhibit, "Acidic": acidic, "Parasite": parasite, "Kamikaze": kamikaze, "Spyware": spyware, "Tripwire": tripwire
-	#Power Utilities
+	# Power Utilities
+	"2x": twoX, # "Learn": learn, "Teach": teach, "Beneficiary": beneficiary,
 	# Mobility Torus Mods
 	# "Move Again": moveAgain, "Recursive": recursive, "Flat To Sphere": flatToSphere, "Centerpult": centerpult,
 	# Other Torus Mods
