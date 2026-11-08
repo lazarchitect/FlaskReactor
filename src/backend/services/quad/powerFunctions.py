@@ -70,17 +70,14 @@ def dredge(context: PowerContext):
 				affectedTile['elevation'] = 1
 
 def destroy(context: PowerContext):
-	pass
+	row, col, size, rcrFn, boardstate, activeColor  = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
 
-def multiply(context: PowerContext):
-	"""
-	Other functions are given some expectation of how the board will look after they are done. Wall raises tiles, Moat lowers and raises, etc.
-	Multiply is fundamentally no different. We know at this point that the user has activated Multiply and chosen where to put the new torus.
-	All we need to do is modify the boardstate to represent that torus in that location.
-	So, the context from the front end should include this. First thing's first, we need to edit the front end code to ensure this.
-	It is unique in this regard that there is extra game data incoming that no other power uses, and an extra step on the front end.
-	"""
-	pass
+	for affectedRow, affectedCol in rcrFn(row, col, size):
+		affectedTile = boardstate[affectedRow][affectedCol]
+		if 'torus' in affectedTile:
+			torus = affectedTile['torus']
+			if torus['color'] != activeColor:
+				del affectedTile['torus']
 
 def relocate(context: PowerContext):
 	"""Moves the powered torus to a random empty spot on the board."""
@@ -104,5 +101,15 @@ def orbicRehash(context: PowerContext):
 		del boardstate[oldRow][oldCol]['orb']
 
 def twoX(context: PowerContext):
-	""" get list of powers for this orb. remove 1 2X and then for all powers, double their count. """
+	""" get list of powers for this orb. subtract 1 2X and then for all powers, double their count. """
+	pass
+
+def multiply(context: PowerContext):
+	"""
+	Other functions are given some expectation of how the board will look after they are done. Wall raises tiles, Moat lowers and raises, etc.
+	Multiply is fundamentally no different. We know at this point that the user has activated Multiply and chosen where to put the new torus.
+	All we need to do is modify the boardstate to represent that torus in that location.
+	So, the context from the front end should include this. First thing's first, we need to edit the front end code to ensure this.
+	It is unique in this regard that there is extra game data incoming that no other power uses, and an extra step on the front end.
+	"""
 	pass

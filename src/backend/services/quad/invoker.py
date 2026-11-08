@@ -11,9 +11,9 @@ POWER_FUNCTIONS = {
 	"Destroy": destroy, #"Pilfer": pilfer, "Inhibit": inhibit, "Acidic": acidic, "Parasite": parasite, "Kamikaze": kamikaze, "Spyware": spyware, "Tripwire": tripwire
 	#Power Utilities
 	"2X": twoX, # "Learn": learn, "Teach": teach, "Beneficiary": beneficiary,
-	# Mobility Buffs
+	# Mobility Torus Mods
 	# "Move Again": moveAgain, "Recursive": recursive, "Flat To Sphere": flatToSphere, "Centerpult": centerpult,
-	# Other Buffs
+	# Other Torus Mods
 	# "Jump Proof": jumpProof, "Grow Quadradius": growQuadradius, "Scavenger": scavenger, "Network Bridge": networkBridge, "Invisible": invisible
 	# RNG effects
 	"Relocate": relocate, "Orbic Rehash": orbicRehash # "Bombs": bombs, "Smart Bombs": smartBombs
