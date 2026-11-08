@@ -1,4 +1,4 @@
-from src.backend.services.quad.quadUtils import radial, findEmptyLocation
+from src.backend.services.quad.quadUtils import radial, findEmptyLocation, getOrbLocations
 
 def raiseTile(context):
 	tile = context.tile
@@ -55,3 +55,17 @@ def relocate(context):
 	sourceTile = boardstate[sourceRow][sourceCol]
 	targetTile['torus'] = sourceTile['torus']
 	del sourceTile['torus']
+
+def orbicRehash(context):
+	""" For each orb on the board, find that many empty spots, load new orbs there, then remove the original orbs. """
+	boardstate = context.boardstate
+	oldOrbLocations = getOrbLocations(boardstate)
+	for _ in oldOrbLocations:
+		newCol, newRow = findEmptyLocation(boardstate)
+		boardstate[newRow][newCol]['orb'] = True # NOTE - later, for Orb Spy, we will need orbs to have identifiable powers via mapped ID in DB
+	for (oldRow, oldCol) in oldOrbLocations:
+		del boardstate[oldRow][oldCol]['orb']
+
+def twoX(context):
+	""" get list of powers for this orb. remove 1 2X and then for all powers, double their count. """
+	pass

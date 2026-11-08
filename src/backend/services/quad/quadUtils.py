@@ -54,3 +54,12 @@ def findEmptyLocation(boardstate):
 		y = randint(0, 7)
 		if "torus" not in boardstate[y][x] and "orb" not in boardstate[y][x]: # also acidic
 			return x, y
+
+
+def getOrbLocations(boardstate):
+	orbLocations = []
+	for currRow in range(8):
+		for currCol in range(10):
+			if 'orb' in boardstate[currRow][currCol]:
+				orbLocations.append((currRow, currCol))
+	return orbLocations

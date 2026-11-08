@@ -6,7 +6,7 @@ from src.backend.services.quad.powerFunctions import *
 
 POWER_FUNCTIONS = {
 	"Raise Tile": raiseTile, "Lower Tile": lowerTile, "Moat": moat, "Plateau": plateau, "Wall": wall, "Trench": trench,
-	"Relocate": relocate
+	"Relocate": relocate, "Orbic Rehash": orbicRehash, "2X": twoX
 }
 
 @dataclass
@@ -17,6 +17,7 @@ class PowerContext:
 	tile: dict
 	rcrFn: Callable
 	boardstate: dict
+	# "2X" is a power that interacts with other powers, not the board, and as such we will need torus powers context from game obj
 
 def invokePower(power, coords, game):
 
