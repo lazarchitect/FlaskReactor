@@ -247,6 +247,9 @@ class QuadHandler(WebSocketHandler):
 		coords = fields['coords']
 		game = self.pgdb.getQuadradiusGame(gameId)
 
+		# NOTE FOR AFTER TESTING IS DONE - powers about to be invoked should be removed from that torus's list,
+		# and this change should be tracked in the DB. No special treatment for 2x
+
 		invokePower(power, coords, game)
 
 		messageToSubscribers = {
