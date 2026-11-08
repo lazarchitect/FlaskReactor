@@ -3,7 +3,6 @@ from src.backend.services.quad.quadUtils import determineRcrFunction
 from src.backend.services.quad.powerFunctions import *
 
 POWER_FUNCTIONS = {
-	"Relocate": relocate, "Orbic Rehash": orbicRehash, "2X": twoX
 	# Elevation
 	"Raise Tile": raiseTile, "Lower Tile": lowerTile, "Moat": moat, "Plateau": plateau, "Wall": wall, "Trench": trench, "Invert": invert, "Dredge": dredge,
 	# Tile Mods
