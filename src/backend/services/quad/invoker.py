@@ -3,10 +3,20 @@ from src.backend.services.quad.quadUtils import determineRcrFunction
 from src.backend.services.quad.powerFunctions import *
 
 POWER_FUNCTIONS = {
-	"Raise Tile": raiseTile, "Lower Tile": lowerTile, "Moat": moat, "Plateau": plateau, "Wall": wall, "Trench": trench,
 	"Relocate": relocate, "Orbic Rehash": orbicRehash, "2X": twoX
+	# Elevation
 	"Raise Tile": raiseTile, "Lower Tile": lowerTile, "Moat": moat, "Plateau": plateau, "Wall": wall, "Trench": trench, "Invert": invert, "Dredge": dredge,
+	# Tile Mods
+	# Orb Spy, Bankrupt, Power Plant, Hotspot, Refurb, Bunker?
+	# Offensive
+	"Destroy": destroy, #Pilfer, Inhibit, Acidic, Parasite, Kamikaze, Spyware, Tripwire
+	#Power Utilities
 	"2X": twoX, # Learn, Teach
+	# Mobility Buffs
+	# Move Again, Recursive, Flat To Sphere
+	# Other Buffs
+	# Jump Proof, Grow Quadradius, Scavenger, Centerpult(?), Network Bridge, Invisible
+	# RNG effects
 	"Relocate": relocate, "Orbic Rehash": orbicRehash # Bombs, Smart Bombs
 }
 
