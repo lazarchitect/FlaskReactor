@@ -6,17 +6,17 @@ POWER_FUNCTIONS = {
 	# Elevation
 	"Raise Tile": raiseTile, "Lower Tile": lowerTile, "Moat": moat, "Plateau": plateau, "Wall": wall, "Trench": trench, "Invert": invert, "Dredge": dredge,
 	# Tile Mods
-	# Orb Spy, Bankrupt, Power Plant, Hotspot, Refurb, Bunker?
+	# "Orb Spy": orbSpy, "Bankrupt": bankrupt, "Power Plant": powerPlant, "Hotspot": hotspot, "Refurb": refurb, "Bunker": bunker
 	# Offensive
-	"Destroy": destroy, #Pilfer, Inhibit, Acidic, Parasite, Kamikaze, Spyware, Tripwire
+	"Destroy": destroy, #"Pilfer": pilfer, "Inhibit": inhibit, "Acidic": acidic, "Parasite": parasite, "Kamikaze": kamikaze, "Spyware": spyware, "Tripwire": tripwire
 	#Power Utilities
-	"2X": twoX, # Learn, Teach
+	"2X": twoX, # "Learn": learn, "Teach": teach, "Beneficiary": beneficiary,
 	# Mobility Buffs
-	# Move Again, Recursive, Flat To Sphere
+	# "Move Again": moveAgain, "Recursive": recursive, "Flat To Sphere": flatToSphere, "Centerpult": centerpult,
 	# Other Buffs
-	# Jump Proof, Grow Quadradius, Scavenger, Centerpult(?), Network Bridge, Invisible
+	# "Jump Proof": jumpProof, "Grow Quadradius": growQuadradius, "Scavenger": scavenger, "Network Bridge": networkBridge, "Invisible": invisible
 	# RNG effects
-	"Relocate": relocate, "Orbic Rehash": orbicRehash # Bombs, Smart Bombs
+	"Relocate": relocate, "Orbic Rehash": orbicRehash # "Bombs": bombs, "Smart Bombs": smartBombs
 }
 
 def invokePower(power, coords, game):
