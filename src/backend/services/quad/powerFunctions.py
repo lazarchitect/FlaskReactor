@@ -101,8 +101,24 @@ def orbicRehash(context: PowerContext):
 		del boardstate[oldRow][oldCol]['orb']
 
 def twoX(context: PowerContext):
-	""" get list of powers for this orb. subtract 1 2X and then for all powers, double their count. """
+	""" get list of powers for this orb. Double their count. """
+	row, col, size, rcrFn, boardstate, activeColor  = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
+	torusName = boardstate[row][col]['torus']['name']
+	# TODO get list of powers via game.playerX_powers via game.active_player
 	pass
+
+def recruit(context: PowerContext):
+	row, col, size, rcrFn, boardstate, activeColor  = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
+
+	for affectedRow, affectedCol in rcrFn(row, col, size):
+		affectedTile = boardstate[affectedRow][affectedCol]
+		if 'torus' in affectedTile:
+			torus = affectedTile['torus']
+			if torus['color'] != activeColor:
+				torusName = ""
+				torusColor = ""
+				#swapColor() # will need to move torus's power obj into the other player's dict within the game obj. Maybe the whole game should be in context
+				pass
 
 def multiply(context: PowerContext):
 	"""

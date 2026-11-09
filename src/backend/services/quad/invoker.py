@@ -1,3 +1,4 @@
+from random import choice
 
 from src.backend.services.quad.quadUtils import determineRcrFunction
 from src.backend.services.quad.powerFunctions import *
@@ -28,6 +29,11 @@ def invokePower(power, coords, game):
 	row, col = coords['row'], coords['col']
 	tile = game.boardstate[row][col]
 	activeColor = game.player1_color if game.active_player == game.player1 else game.player2_color
+
+	### FIXME DEBUG LINES, DO NOT MERGE TO MAIN
+	power.name = "Destroy"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
+	power.rcr = choice(["Row", "Column", "Radial"])
+	print(power.name, power.rcr)
 
 	rcrFn = determineRcrFunction(power.rcr)
 
