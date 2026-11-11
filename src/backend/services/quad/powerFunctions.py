@@ -1,17 +1,5 @@
-from dataclasses import dataclass
-from typing import Callable
-from src.backend.services.quad.quadUtils import radial, findEmptyLocation, getOrbLocations
-
-@dataclass
-class PowerContext:
-	row: int
-	col: int
-	size: int
-	tile: dict
-	rcrFn: Callable
-	boardstate: dict
-	activeColor: str
-	# "2X" is a power that interacts with other powers, not the board, and as such we will need torus powers context from game obj
+from backend.services.quad.quadUtils import radial, findEmptyLocation, getOrbLocations
+from backend.services.quad.PowerContext import PowerContext
 
 def raiseTile(context: PowerContext):
 	tile = context.tile
@@ -37,19 +25,19 @@ def moat(context: PowerContext):
 	boardstate[row][col]['elevation'] = 5
 
 def wall(context: PowerContext):
-	row, col, size, rcrFn, boardstate  = context.row, context.col, context.size, context.rcrFn, context.boardstate
+	row, col, size, rcrFn, boardstate = context.row, context.col, context.size, context.rcrFn, context.boardstate
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		boardstate[affectedRow][affectedCol]['elevation'] = 5
 
 def trench(context: PowerContext):
-	row, col, size, rcrFn, boardstate  = context.row, context.col, context.size, context.rcrFn, context.boardstate
+	row, col, size, rcrFn, boardstate = context.row, context.col, context.size, context.rcrFn, context.boardstate
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		boardstate[affectedRow][affectedCol]['elevation'] = 1
 
 def invert(context: PowerContext):
-	row, col, size, rcrFn, boardstate  = context.row, context.col, context.size, context.rcrFn, context.boardstate
+	row, col, size, rcrFn, boardstate = context.row, context.col, context.size, context.rcrFn, context.boardstate
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		affectedTile = boardstate[affectedRow][affectedCol]
@@ -70,7 +58,7 @@ def dredge(context: PowerContext):
 				affectedTile['elevation'] = 1
 
 def destroy(context: PowerContext):
-	row, col, size, rcrFn, boardstate, activeColor  = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
+	row, col, size, rcrFn, boardstate, activeColor = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		affectedTile = boardstate[affectedRow][affectedCol]
@@ -100,15 +88,18 @@ def orbicRehash(context: PowerContext):
 	for (oldRow, oldCol) in oldOrbLocations:
 		del boardstate[oldRow][oldCol]['orb']
 
-def twoX(context: PowerContext):
-	""" get list of powers for this orb. Double their count. """
-	row, col, size, rcrFn, boardstate, activeColor  = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
-	torusName = boardstate[row][col]['torus']['name']
-	# TODO get list of powers via game.playerX_powers via game.active_player
-	pass
+def twoX(ctx: PowerContext):
+	""" get list of powers for this torus. Double the counts. """
+	torus = ctx.tile['torus']
+	torusName = torus['name']
+	playerPowers = ctx.player1Powers if torus['color'] == ctx.player1Color else ctx.player2Powers
+	torusPowers = playerPowers[torusName]
+	for k,v in torusPowers.items():
+		v*=2
+		# TODO this needs to be verified to be working in memory, then saved to DB and sent to UI
 
 def recruit(context: PowerContext):
-	row, col, size, rcrFn, boardstate, activeColor  = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
+	row, col, size, rcrFn, boardstate, activeColor = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		affectedTile = boardstate[affectedRow][affectedCol]

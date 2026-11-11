@@ -255,7 +255,13 @@ class QuadHandler(WebSocketHandler):
 		messageToSubscribers = {
 			"command": "grantPower", # TODO change name from grant to invoke
 			"newBoardstate": game.boardstate,
+			# TODO for 2x: need to send its action and count here but not the power names, so others can see it happened
 		}
+
+		# TODO for 2x: a separate message to only the active player should inform them that their powers have been doubled.
 
 		updateAll(clientConnections[gameId], messageToSubscribers)
 		self.pgdb.updateQuadradiusBoardstate(game.boardstate, gameId)
+
+		# TODO for 2x - update db player_powers (fn will be reused by Swap, Recruit, Beneficiary)
+		# self.pgdb.updateQuadradiusPowers(game.player1_powers, game.player2_powers, gameId)

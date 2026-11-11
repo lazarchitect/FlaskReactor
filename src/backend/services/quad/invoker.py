@@ -1,7 +1,7 @@
 from random import choice
 
-from src.backend.services.quad.quadUtils import determineRcrFunction
-from src.backend.services.quad.powerFunctions import *
+from backend.services.quad.PowerContext import createPowerContext
+from backend.services.quad.powerFunctions import *
 
 POWER_FUNCTIONS = {
 	### Elevation
@@ -25,19 +25,12 @@ POWER_FUNCTIONS = {
 
 def invokePower(power, coords, game):
 
-	size = 1 # growQ will modify this
-	row, col = coords['row'], coords['col']
-	tile = game.boardstate[row][col]
-	activeColor = game.player1_color if game.active_player == game.player1 else game.player2_color
-
 	### FIXME DEBUG LINES, DO NOT MERGE TO MAIN
-	power.name = "Destroy"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
+	power.name = "2x"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
 	power.rcr = choice(["Row", "Column", "Radial"])
 	print(power.name, power.rcr)
 
-	rcrFn = determineRcrFunction(power.rcr)
-
 	# dispatch logic
 	powerLogic = POWER_FUNCTIONS[power.name]
-	context = PowerContext(row=row, col=col, size=size, tile=tile, rcrFn=rcrFn, boardstate=game.boardstate, activeColor=activeColor)
+	context = createPowerContext(power, coords, game)
 	powerLogic(context)
