@@ -53,7 +53,7 @@ class QuadHandler(WebSocketHandler):
 	def initialize(self):
 		self.pgdb = getPgdb()
 
-	def open(self):
+	def open(self, *args: str, **kwargs: str):
 		self.socketId = "socket"+ str(generateId())[:8]
 		logging.info("quadSocket opened: " + self.socketId)
 
