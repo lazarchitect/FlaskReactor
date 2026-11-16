@@ -77,8 +77,8 @@ class QuadHandler(WebSocketHandler):
 		elif request == "update":
 			self.handleUpdate(fields)
 
-		elif request == "activate":
-			self.handleActivate(fields)
+		elif request == "invoke":
+			self.handleInvoke(fields)
 
 	def on_close(self):
 		if not hasattr(self, "gameId"):
@@ -239,7 +239,7 @@ class QuadHandler(WebSocketHandler):
 			"contents": str(self.socketId) + " subscribed to gameId " + gameId
 		})
 
-	def handleActivate(self, fields):
+	def handleInvoke(self, fields):
 
 		gameId = fields['gameId']
 
@@ -253,15 +253,11 @@ class QuadHandler(WebSocketHandler):
 		invokePower(power, coords, game)
 
 		messageToSubscribers = {
-			"command": "grantPower", # TODO change name from grant to invoke
+			"command": "invokePower",
 			"newBoardstate": game.boardstate,
-			# TODO for 2x: need to send its action and count here but not the power names, so others can see it happened
+			# TODO for 2x: need to send its action and count here but not the power names, so others can see it happened. We should send the coords of affected tile so front end can handle each player specifically
 		}
 
-		# TODO for 2x: a separate message to only the active player should inform them that their powers have been doubled.
-
 		updateAll(clientConnections[gameId], messageToSubscribers)
-		self.pgdb.updateQuadradiusBoardstate(game.boardstate, gameId)
+		self.pgdb.trackQuadradiusPowerInvocation(game.boardstate, game.player1_powers, game.player2_powers, game.player1_count, game.player2_count, gameId)
 
-		# TODO for 2x - update db player_powers (fn will be reused by Swap, Recruit, Beneficiary)
-		# self.pgdb.updateQuadradiusPowers(game.player1_powers, game.player2_powers, gameId)

@@ -17,10 +17,10 @@ export function sendMoveUpdate(sourceCoords, targetCoords){
     socket.sendUpdate(message);
 }
 
-// powerName is like "Orbic Rehash" or "Acidic Column", server will take it from there.
+// powerName is like "Orbic Rehash" or "Acidic:Column", server will take it from there.
 export function sendPowerActivation(torusCoords, powerName){
     const message = {
-        "request": "activate",
+        "request": "invoke",
         "power": powerName,
         "coords": torusCoords
     }
@@ -47,8 +47,13 @@ export function quadSocketConnect(setBoardstate, setLegendState) {
                 }));
                 yourTurn = payload.username === data.active_player;
             }
-            if (data.command === "grantPower") {
+            if (data.command === "invokePower") {
                 setBoardstate(data.newBoardstate);
+
+                // TODO invocations impact more than just the boardstate
+                if (data.containsKey("2x")) {
+                    setLegendState();
+                }
             }
 
             if (data.command === "updatePowers") {

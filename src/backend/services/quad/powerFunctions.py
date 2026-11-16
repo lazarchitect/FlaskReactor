@@ -94,8 +94,8 @@ def twoX(ctx: PowerContext):
 	torusName = torus['name']
 	playerPowers = ctx.player1Powers if torus['color'] == ctx.player1Color else ctx.player2Powers
 	torusPowers = playerPowers[torusName]
-	for k,v in torusPowers.items():
-		v*=2
+	for k in torusPowers.keys():
+		torusPowers[k]*=2
 		# TODO this needs to be verified to be working in memory, then saved to DB and sent to UI
 
 def recruit(context: PowerContext):
