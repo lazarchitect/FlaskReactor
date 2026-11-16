@@ -96,7 +96,6 @@ def twoX(ctx: PowerContext):
 	torusPowers = playerPowers[torusName]
 	for k in torusPowers.keys():
 		torusPowers[k]*=2
-		# TODO this needs to be verified to be working in memory, then saved to DB and sent to UI
 
 def recruit(context: PowerContext):
 	row, col, size, rcrFn, boardstate, activeColor = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
@@ -106,6 +105,7 @@ def recruit(context: PowerContext):
 		if 'torus' in affectedTile:
 			torus = affectedTile['torus']
 			if torus['color'] != activeColor:
+				# TODO work on this next. Let's focus on building out the backend functions before adding front end handling
 				torusName = ""
 				torusColor = ""
 				#swapColor() # will need to move torus's power obj into the other player's dict within the game obj. Maybe the whole game should be in context
