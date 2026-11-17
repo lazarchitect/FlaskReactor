@@ -1,52 +1,52 @@
-from backend.services.quad.quadUtils import radial, findEmptyLocation, getOrbLocations
+from backend.services.quad.quadUtils import *
 from backend.services.quad.PowerContext import PowerContext
 
-def raiseTile(context: PowerContext):
-	tile = context.tile
+def raiseTile(ctxt: PowerContext):
+	tile = ctxt.tile
 	if tile['elevation'] != 5:
 		tile['elevation'] += 1
 
-def lowerTile(context: PowerContext):
-	tile = context.tile
+def lowerTile(ctxt: PowerContext):
+	tile = ctxt.tile
 	if tile['elevation'] != 1:
 		tile['elevation'] -= 1
 
-def plateau(context: PowerContext):
-	row, col, size, boardstate = context.row, context.col, context.size, context.boardstate
+def plateau(ctxt: PowerContext):
+	row, col, size, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.boardstate
 
 	for affectedRow, affectedCol in radial(row, col, size):
 		boardstate[affectedRow][affectedCol]['elevation'] = 5
 
-def moat(context: PowerContext):
-	row, col, size, boardstate = context.row, context.col, context.size, context.boardstate
+def moat(ctxt: PowerContext):
+	row, col, size, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.boardstate
 
 	for affectedRow, affectedCol in radial(row, col, size):
 		boardstate[affectedRow][affectedCol]['elevation'] = 1
 	boardstate[row][col]['elevation'] = 5
 
-def wall(context: PowerContext):
-	row, col, size, rcrFn, boardstate = context.row, context.col, context.size, context.rcrFn, context.boardstate
+def wall(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		boardstate[affectedRow][affectedCol]['elevation'] = 5
 
-def trench(context: PowerContext):
-	row, col, size, rcrFn, boardstate = context.row, context.col, context.size, context.rcrFn, context.boardstate
+def trench(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		boardstate[affectedRow][affectedCol]['elevation'] = 1
 
-def invert(context: PowerContext):
-	row, col, size, rcrFn, boardstate = context.row, context.col, context.size, context.rcrFn, context.boardstate
+def invert(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		affectedTile = boardstate[affectedRow][affectedCol]
 		currElevation = affectedTile['elevation']
 		affectedTile['elevation'] = 6 - currElevation
 
-def dredge(context: PowerContext):
+def dredge(ctxt: PowerContext):
 	""" this power cares about who is casting it. """
-	row, col, size, rcrFn, boardstate, activeColor  = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
+	row, col, size, rcrFn, boardstate, activeColor  = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		affectedTile = boardstate[affectedRow][affectedCol]
@@ -57,8 +57,8 @@ def dredge(context: PowerContext):
 			else:
 				affectedTile['elevation'] = 1
 
-def destroy(context: PowerContext):
-	row, col, size, rcrFn, boardstate, activeColor = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
+def destroy(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		affectedTile = boardstate[affectedRow][affectedCol]
@@ -67,9 +67,9 @@ def destroy(context: PowerContext):
 			if torus['color'] != activeColor:
 				del affectedTile['torus']
 
-def relocate(context: PowerContext):
+def relocate(ctxt: PowerContext):
 	"""Moves the powered torus to a random empty spot on the board."""
-	sourceRow, sourceCol, boardstate = context.row, context.col, context.boardstate
+	sourceRow, sourceCol, boardstate = ctxt.row, ctxt.col, ctxt.boardstate
 
 	targetCol, targetRow = findEmptyLocation(boardstate)
 
@@ -78,9 +78,9 @@ def relocate(context: PowerContext):
 	targetTile['torus'] = sourceTile['torus']
 	del sourceTile['torus']
 
-def orbicRehash(context: PowerContext):
+def orbicRehash(ctxt: PowerContext):
 	""" For each orb on the board, find that many empty spots, load new orbs there, then remove the original orbs. """
-	boardstate = context.boardstate
+	boardstate = ctxt.boardstate
 	oldOrbLocations = getOrbLocations(boardstate)
 	for _ in oldOrbLocations:
 		newCol, newRow = findEmptyLocation(boardstate)
@@ -88,30 +88,40 @@ def orbicRehash(context: PowerContext):
 	for (oldRow, oldCol) in oldOrbLocations:
 		del boardstate[oldRow][oldCol]['orb']
 
-def twoX(ctx: PowerContext):
+def twoX(ctxt: PowerContext):
 	""" get list of powers for this torus. Double the counts. """
-	torus = ctx.tile['torus']
+	torus = ctxt.tile['torus']
 	torusName = torus['name']
-	playerPowers = ctx.player1Powers if torus['color'] == ctx.player1Color else ctx.player2Powers
+	playerPowers = ctxt.player1Powers if torus['color'] == ctxt.player1Color else ctxt.player2Powers
 	torusPowers = playerPowers[torusName]
 	for k in torusPowers.keys():
 		torusPowers[k]*=2
 
-def recruit(context: PowerContext):
-	row, col, size, rcrFn, boardstate, activeColor = context.row, context.col, context.size, context.rcrFn, context.boardstate, context.activeColor
+def recruit(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		affectedTile = boardstate[affectedRow][affectedCol]
 		if 'torus' in affectedTile:
 			torus = affectedTile['torus']
 			if torus['color'] != activeColor:
-				# TODO work on this next. Let's focus on building out the backend functions before adding front end handling
-				torusName = ""
-				torusColor = ""
-				#swapColor() # will need to move torus's power obj into the other player's dict within the game obj. Maybe the whole game should be in context
-				pass
 
-def multiply(context: PowerContext):
+				torusName = torus['name']
+
+				activePlayerPowers, inactivePlayerPowers = determinePlayerPowers(ctxt)
+				torusPowers = inactivePlayerPowers.get(torusName, None)
+				if torusPowers is not None:
+					activePlayerPowers[torusName] = torusPowers
+					del inactivePlayerPowers[torusName]
+
+				torus['color'] = activeColor
+
+def swap(ctxt: PowerContext):
+	# TODO work on this next. Let's focus on building out the backend functions before adding front end handling
+	inactiveColor = getInactiveColor(ctxt)
+	pass
+
+def multiply(ctxt: PowerContext):
 	"""
 	Other functions are given some expectation of how the board will look after they are done. Wall raises tiles, Moat lowers and raises, etc.
 	Multiply is fundamentally no different. We know at this point that the user has activated Multiply and chosen where to put the new torus.

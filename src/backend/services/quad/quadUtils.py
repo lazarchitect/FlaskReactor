@@ -63,3 +63,13 @@ def getOrbLocations(boardstate):
 			if 'orb' in boardstate[currRow][currCol]:
 				orbLocations.append((currRow, currCol))
 	return orbLocations
+
+def determinePlayerPowers(ctxt):
+	""" returns 2 things, in order: activePlayerPowers, inactivePlayerPowers """
+	if ctxt.activeColor == ctxt.player1Color:
+		return ctxt.player1Powers, ctxt.player2Powers
+	else:
+		return ctxt.player2Powers, ctxt.player1Powers
+
+def getInactiveColor(ctxt):
+	return ctxt.player2_color if ctxt.activeColor == ctxt.player1_color else ctxt.player1_color

@@ -20,14 +20,14 @@ POWER_FUNCTIONS = {
 	### RNG effects
 	"Relocate": relocate, "Orbic Rehash": orbicRehash, # "Scramble": scramble, "Snake Tunneling": snakeTunneling, "Bombs": bombs, "Smart Bombs": smartBombs
 	#### Team Building
-	"Multiply": multiply #, "Swap": swap, "Recruit": recruit
+	"Multiply": multiply, "Swap": swap, "Recruit": recruit
 }
 
 def invokePower(power, coords, game):
 
 	### FIXME DEBUG LINES, DO NOT MERGE TO MAIN
-	power.name = "2x"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
-	power.rcr = choice(["Row", "Column", "Radial"])
+	power.name = "Recruit"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
+	power.rcr = "Row"#choice(["Row", "Column", "Radial"])
 	print(power.name, power.rcr)
 
 	# dispatch logic
