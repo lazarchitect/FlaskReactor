@@ -2,8 +2,10 @@
     [
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -11,8 +13,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -20,8 +24,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -29,8 +35,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -38,8 +46,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -47,8 +57,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -56,8 +68,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -65,8 +79,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -74,8 +90,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -83,8 +101,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -94,8 +114,10 @@
     [
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -103,8 +125,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -112,8 +136,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -121,8 +147,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -130,8 +158,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -139,8 +169,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -148,8 +180,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -157,8 +191,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -166,8 +202,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -175,8 +213,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -190,8 +230,10 @@
     [
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -199,8 +241,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -208,8 +252,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -217,8 +263,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -226,8 +274,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -235,8 +285,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -244,8 +296,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -253,8 +307,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -262,8 +318,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -271,8 +329,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -282,8 +342,10 @@
     [
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -291,8 +353,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -300,8 +364,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -309,8 +375,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -318,8 +386,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -327,8 +397,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -336,8 +408,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -345,8 +419,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -354,8 +430,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
@@ -363,8 +441,10 @@
         },
         {
             "torus": { 
+                "name": "TBD",
                 "color": "TBD",
-                "powers": [],
+                "hasPowers": false,
+                "traits": [],
                 "isParasiteHost": false,
                 "parasites": []
             },
