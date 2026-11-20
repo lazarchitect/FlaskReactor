@@ -67,6 +67,15 @@ def destroy(ctxt: PowerContext):
 			if torus['color'] != activeColor:
 				del affectedTile['torus']
 
+def twoX(ctxt: PowerContext):
+	""" get list of powers for this torus. Double the counts. """
+	torus = ctxt.tile['torus']
+	torusName = torus['name']
+	playerPowers = ctxt.player1Powers if torus['color'] == ctxt.player1Color else ctxt.player2Powers
+	torusPowers = playerPowers[torusName]
+	for k in torusPowers.keys():
+		torusPowers[k]*=2
+
 def relocate(ctxt: PowerContext):
 	"""Moves the powered torus to a random empty spot on the board."""
 	sourceRow, sourceCol, boardstate = ctxt.row, ctxt.col, ctxt.boardstate
@@ -88,27 +97,18 @@ def orbicRehash(ctxt: PowerContext):
 	for (oldRow, oldCol) in oldOrbLocations:
 		del boardstate[oldRow][oldCol]['orb']
 
-def twoX(ctxt: PowerContext):
-	""" get list of powers for this torus. Double the counts. """
-	torus = ctxt.tile['torus']
-	torusName = torus['name']
-	playerPowers = ctxt.player1Powers if torus['color'] == ctxt.player1Color else ctxt.player2Powers
-	torusPowers = playerPowers[torusName]
-	for k in torusPowers.keys():
-		torusPowers[k]*=2
 
 def recruit(ctxt: PowerContext):
 	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
+
+	activePlayerPowers, inactivePlayerPowers = determinePlayerPowers(ctxt)
 
 	for affectedRow, affectedCol in rcrFn(row, col, size):
 		affectedTile = boardstate[affectedRow][affectedCol]
 		if 'torus' in affectedTile:
 			torus = affectedTile['torus']
 			if torus['color'] != activeColor:
-
 				torusName = torus['name']
-
-				activePlayerPowers, inactivePlayerPowers = determinePlayerPowers(ctxt)
 				torusPowers = inactivePlayerPowers.get(torusName, None)
 				if torusPowers is not None:
 					activePlayerPowers[torusName] = torusPowers
@@ -117,9 +117,29 @@ def recruit(ctxt: PowerContext):
 				torus['color'] = activeColor
 
 def swap(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
 	# TODO work on this next. Let's focus on building out the backend functions before adding front end handling
 	inactiveColor = getInactiveColor(ctxt)
-	pass
+
+	activePlayerPowers, inactivePlayerPowers = determinePlayerPowers(ctxt)
+
+	for affectedRow, affectedCol in rcrFn(row, col, size):
+		affectedTile = boardstate[affectedRow][affectedCol]
+		if 'torus' in affectedTile:
+			torus = affectedTile['torus']
+			torusName = torus['name']
+			if torus['color'] == activeColor:
+				torus['color'] = inactiveColor
+				torusPowers = activePlayerPowers.get(torusName, None)
+				if torusPowers is not None:
+					inactivePlayerPowers[torusName] = torusPowers
+					del activePlayerPowers[torusName]
+			else:
+				torus['color'] = activeColor
+				torusPowers = inactivePlayerPowers.get(torusName, None)
+				if torusPowers is not None:
+					activePlayerPowers[torusName] = torusPowers
+					del inactivePlayerPowers[torusName]
 
 def multiply(ctxt: PowerContext):
 	"""

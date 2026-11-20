@@ -20,7 +20,7 @@ POWER_FUNCTIONS = {
 	### RNG effects
 	"Relocate": relocate, "Orbic Rehash": orbicRehash, # "Scramble": scramble, "Snake Tunneling": snakeTunneling, "Bombs": bombs, "Smart Bombs": smartBombs
 	#### Team Building
-	"Multiply": multiply, "Swap": swap, "Recruit": recruit
+	"Multiply": multiply, "Recruit": recruit, "Swap": swap
 }
 
 def invokePower(power, coords, game):

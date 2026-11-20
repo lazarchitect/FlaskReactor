@@ -72,4 +72,4 @@ def determinePlayerPowers(ctxt):
 		return ctxt.player2Powers, ctxt.player1Powers
 
 def getInactiveColor(ctxt):
-	return ctxt.player2_color if ctxt.activeColor == ctxt.player1_color else ctxt.player1_color
+	return ctxt.player2Color if ctxt.activeColor == ctxt.player1Color else ctxt.player1Color
