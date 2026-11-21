@@ -1,3 +1,5 @@
+import random
+
 from backend.services.quad.quadUtils import *
 from backend.services.quad.PowerContext import PowerContext
 
@@ -97,6 +99,23 @@ def orbicRehash(ctxt: PowerContext):
 	for (oldRow, oldCol) in oldOrbLocations:
 		del boardstate[oldRow][oldCol]['orb']
 
+def scramble(ctxt: PowerContext):
+	""" For all affected tiles, remove any tori from them and add the torus to a list.
+	    For each torus, place it in a random affected tile which has no torus or orb. (or acidic)"""
+	row, col, size, rcrFn, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate
+
+	tilesInRange = [boardstate[affRow][affCol] for affRow, affCol in rcrFn(row, col, size)]
+	affectedTiles = [tile for tile in tilesInRange if 'orb' not in tile]
+	tori = [tile.pop('torus') for tile in affectedTiles if 'torus' in tile]
+
+	while tori: # not empty
+		randomDest = random.choice(affectedTiles)
+		if 'torus' not in randomDest and 'orb' not in randomDest:
+			randomDest['torus'] = tori.pop()
+
+def snakeTunneling(ctxt: PowerContext):
+	# TODO work on this next. Build out backend functions before adding front end handling
+	pass
 
 def recruit(ctxt: PowerContext):
 	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
@@ -118,7 +137,6 @@ def recruit(ctxt: PowerContext):
 
 def swap(ctxt: PowerContext):
 	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
-	# TODO work on this next. Let's focus on building out the backend functions before adding front end handling
 	inactiveColor = getInactiveColor(ctxt)
 
 	activePlayerPowers, inactivePlayerPowers = determinePlayerPowers(ctxt)

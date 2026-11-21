@@ -18,7 +18,7 @@ POWER_FUNCTIONS = {
 	### Other Torus Mods
 	# "Jump Proof": jumpProof, "Grow Quadradius": growQuadradius, "Scavenger": scavenger, "Network Bridge": networkBridge, "Invisible": invisible
 	### RNG effects
-	"Relocate": relocate, "Orbic Rehash": orbicRehash, # "Scramble": scramble, "Snake Tunneling": snakeTunneling, "Bombs": bombs, "Smart Bombs": smartBombs
+	"Relocate": relocate, "Orbic Rehash": orbicRehash, "Scramble": scramble, "Snake Tunneling": snakeTunneling, # "Bombs": bombs, "Smart Bombs": smartBombs
 	#### Team Building
 	"Multiply": multiply, "Recruit": recruit, "Swap": swap
 }
@@ -26,8 +26,8 @@ POWER_FUNCTIONS = {
 def invokePower(power, coords, game):
 
 	### FIXME DEBUG LINES, DO NOT MERGE TO MAIN
-	power.name = "Recruit"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
-	power.rcr = "Row"#choice(["Row", "Column", "Radial"])
+	power.name = "Snake Tunneling"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
+	power.rcr = "Row" #choice(["Row", "Column", "Radial"])
 	print(power.name, power.rcr)
 
 	# dispatch logic
