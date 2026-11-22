@@ -2,6 +2,8 @@ import random
 
 from backend.services.quad.quadUtils import *
 from backend.services.quad.PowerContext import PowerContext
+from backend.services.quad.quadUtils import combinePowers
+
 
 def raiseTile(ctxt: PowerContext):
 	tile = ctxt.tile
@@ -77,6 +79,28 @@ def twoX(ctxt: PowerContext):
 	torusPowers = playerPowers[torusName]
 	for k in torusPowers.keys():
 		torusPowers[k]*=2
+
+def learn(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate
+	activePlayerPowers, _ = determinePlayerPowers(ctxt)
+
+	originTorus = boardstate[row][col]['torus']
+	originTorusName = originTorus['name']
+	for affectedRow, affectedCol in rcrFn(row, col, size):
+		affectedTile = boardstate[affectedRow][affectedCol]
+		if 'torus' in affectedTile:
+			affectedTorus = affectedTile['torus']
+			if affectedTorus != originTorus and affectedTorus['color'] == originTorus['color']:
+				affectedTorusPowers = activePlayerPowers.get(affectedTorus['name'], None)
+				originTorusPowers = activePlayerPowers.get(originTorusName, None)
+				if affectedTorusPowers is not None:
+					activePlayerPowers[originTorusName] = combinePowers(affectedTorusPowers, originTorusPowers)
+
+def teach(ctxt: PowerContext):
+	pass
+
+def beneficiary(ctxt: PowerContext):
+	pass
 
 def relocate(ctxt: PowerContext):
 	"""Moves the powered torus to a random empty spot on the board."""

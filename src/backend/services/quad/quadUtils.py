@@ -72,3 +72,12 @@ def determinePlayerPowers(ctxt):
 
 def getInactiveColor(ctxt):
 	return ctxt.player2Color if ctxt.activeColor == ctxt.player1Color else ctxt.player1Color
+
+def combinePowers(powerList1, powerList2) -> dict[str, int]:
+	""" adds values from matching keys across the two input dicts.
+		Keys with no matches are included with their starting value. """
+	assert powerList1 is not None and powerList2 is not None
+	return {
+		powerName: powerList1.get(powerName, 0) + powerList2.get(powerName, 0)
+		for powerName in powerList1.keys() | powerList2.keys()
+	}
