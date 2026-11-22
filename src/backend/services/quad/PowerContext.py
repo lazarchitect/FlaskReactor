@@ -5,8 +5,8 @@ from backend.services.quad.quadUtils import determineRcrFunction
 
 @dataclass
 class PowerContext:
-    """ Data encapsulator used when invoking an arbitrary power function,
-    so the logic has access to all relevant fields it might need without repetitive destructuring. """
+    """ Data encapsulator used when invoking all power functions, so that the logic
+        has access to all relevant fields it might need without repetitive destructuring. """
     row: int
     col: int
     size: int
