@@ -114,14 +114,16 @@ def scramble(ctxt: PowerContext):
 			randomDest['torus'] = tori.pop()
 
 def snakeTunneling(ctxt: PowerContext):
-	row, col, size, rcrFn, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate
-	tunnelCount = size * 10
+	row, col, boardstate = ctxt.row, ctxt.col, ctxt.boardstate
+	tunnelCount = ctxt.size * 10
 
 	for tunnelStep in range(tunnelCount):
-		boardstate[row][col]['elevation'] = 5
+		tile = boardstate[row][col]
+		tile['elevation'] = 5
+		if 'torus' in tile and tile['torus']['color'] == ctxt.activeColor:
+			del tile['torus']
 		while True:
 			direction = random.choice(["up", "down", "left", "right"])
-			print(direction, end=", ")
 			newRow, newCol = -1, -1
 			match direction:
 				case "down":  newRow, newCol = row + 1, col
