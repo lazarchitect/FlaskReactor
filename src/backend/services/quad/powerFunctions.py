@@ -16,13 +16,13 @@ def lowerTile(ctxt: PowerContext):
 def plateau(ctxt: PowerContext):
 	row, col, size, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.boardstate
 
-	for affectedRow, affectedCol in radial(row, col, size):
+	for affectedRow, affectedCol in radialTiles(row, col, size):
 		boardstate[affectedRow][affectedCol]['elevation'] = 5
 
 def moat(ctxt: PowerContext):
 	row, col, size, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.boardstate
 
-	for affectedRow, affectedCol in radial(row, col, size):
+	for affectedRow, affectedCol in radialTiles(row, col, size):
 		boardstate[affectedRow][affectedCol]['elevation'] = 1
 	boardstate[row][col]['elevation'] = 5
 
