@@ -2,10 +2,11 @@ from random import randint
 
 def determineRcrFunction(rcr):
 	match rcr:
+		case None: return None
 		case "Row": return rowTiles
 		case "Column": return columnTiles
 		case "Radial": return radialTiles
-		case _: raise TypeError("invalid rcr type")
+		case _: raise ValueError(f"invalid rcr {rcr}")
 
 """
 size 1: row-0 -> row+1 (1 rows)
