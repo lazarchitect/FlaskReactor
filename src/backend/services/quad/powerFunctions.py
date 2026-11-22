@@ -114,7 +114,24 @@ def teach(ctxt: PowerContext):
 				affectedTorus['hasPowers'] = True
 
 def beneficiary(ctxt: PowerContext):
-	pass
+	originRow, originCol, boardstate = ctxt.row, ctxt.col, ctxt.boardstate
+	activePlayerPowers, _ = determinePlayerPowers(ctxt)
+
+	originTorus = boardstate[originRow][originCol]['torus']
+	originTorusName = originTorus['name']
+
+	for row in boardstate:
+		for tile in row:
+			if 'torus' in tile and tile['torus']['color'] == originTorus['color'] and tile['torus'] != originTorus:
+				affectedTorus = tile['torus']
+				affectedTorusName = affectedTorus['name']
+				affectedTorusPowers = activePlayerPowers.get(affectedTorusName, None)
+				if affectedTorusPowers is not None:
+					originTorusPowers = activePlayerPowers.get(originTorusName, {})
+					activePlayerPowers[originTorusName] = combinePowers(originTorusPowers, affectedTorusPowers)
+
+					del activePlayerPowers[affectedTorusName]
+					affectedTorus['hasPowers'] = False
 
 def relocate(ctxt: PowerContext):
 	"""Moves the powered torus to a random empty spot on the board."""
