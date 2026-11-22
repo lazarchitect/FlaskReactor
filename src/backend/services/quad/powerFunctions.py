@@ -97,7 +97,21 @@ def learn(ctxt: PowerContext):
 					activePlayerPowers[originTorusName] = combinePowers(affectedTorusPowers, originTorusPowers)
 
 def teach(ctxt: PowerContext):
-	pass
+	row, col, size, rcrFn, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate
+	activePlayerPowers, _ = determinePlayerPowers(ctxt)
+
+	originTorus = boardstate[row][col]['torus']
+	originTorusName = originTorus['name']
+	originTorusPowers = activePlayerPowers.get(originTorusName, None)
+	for affectedRow, affectedCol in rcrFn(row, col, size):
+		affectedTile = boardstate[affectedRow][affectedCol]
+		if 'torus' in affectedTile:
+			affectedTorus = affectedTile['torus']
+			if affectedTorus != originTorus and affectedTorus['color'] == originTorus['color']:
+				affectedTorusName = affectedTorus['name']
+				affectedTorusPowers = activePlayerPowers.get(affectedTorusName, {}) # empty dict if no powers
+				activePlayerPowers[affectedTorusName] = combinePowers(affectedTorusPowers, originTorusPowers)
+				affectedTorus['hasPowers'] = True
 
 def beneficiary(ctxt: PowerContext):
 	pass
