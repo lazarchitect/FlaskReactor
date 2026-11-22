@@ -2,11 +2,10 @@ from random import randint
 
 def determineRcrFunction(rcr):
 	match rcr:
-		case "Row": return row
-		case "Column": return column
-		case "Radial": return radial
-		case _: raise TypeError("rcr type invalid")
-
+		case "Row": return rowTiles
+		case "Column": return columnTiles
+		case "Radial": return radialTiles
+		case _: raise TypeError("invalid rcr type")
 
 """
 size 1: row-0 -> row+1 (1 rows)
@@ -16,7 +15,7 @@ size 3: row-2 -> row+3 (5 rows)
 formula: -1*(size-1) -> size
 """
 
-def row(torusRow, _, size):
+def rowTiles(torusRow, _, size):
 	affectedCoords = []
 	for r in range((size-1)*-1, size):
 		for c in range(10):
@@ -25,7 +24,7 @@ def row(torusRow, _, size):
 			affectedCoords.append(coords)
 	return affectedCoords
 
-def column(_, torusCol, size):
+def columnTiles(_, torusCol, size):
 	affectedCoords = []
 	for r in range(8):
 		for c in range((size-1)*-1, size):
@@ -35,7 +34,7 @@ def column(_, torusCol, size):
 	return affectedCoords
 
 # creates a list of coords, all impacted tiles within radial effect.
-def radial(torusRow, torusCol, size):
+def radialTiles(torusRow, torusCol, size):
 	affectedCoords = []
 	for r in range(size * -1, size + 1):
 		for c in range(size * -1, size + 1):
