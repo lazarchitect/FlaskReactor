@@ -92,7 +92,7 @@ def learn(ctxt: PowerContext):
 			affectedTorus = affectedTile['torus']
 			if affectedTorus != originTorus and affectedTorus['color'] == originTorus['color']:
 				affectedTorusPowers = activePlayerPowers.get(affectedTorus['name'], None)
-				originTorusPowers = activePlayerPowers.get(originTorusName, None)
+				originTorusPowers = activePlayerPowers.get(originTorusName, {})
 				if affectedTorusPowers is not None:
 					activePlayerPowers[originTorusName] = combinePowers(affectedTorusPowers, originTorusPowers)
 
