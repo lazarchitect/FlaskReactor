@@ -16,30 +16,30 @@ size 3: row-2 -> row+3 (5 rows)
 formula: -1*(size-1) -> size
 """
 
-def rowTiles(torusRow, _, size):
+def rowTiles(rowIndex, _, size):
 	affectedCoords = []
-	for r in range((size-1)*-1, size):
-		for c in range(10):
-			coords = (torusRow + r, c)
+	for rowOffset in range((size-1)*-1, size):
+		for col in range(10):
+			coords = (rowIndex + rowOffset, col)
 			if outOfBounds(coords): continue
 			affectedCoords.append(coords)
 	return affectedCoords
 
-def columnTiles(_, torusCol, size):
+def columnTiles(_, colIndex, size):
 	affectedCoords = []
-	for r in range(8):
-		for c in range((size-1)*-1, size):
-			coords = (r, torusCol + c)
+	for row in range(8):
+		for colOffset in range((size-1)*-1, size):
+			coords = (row, colIndex + colOffset)
 			if outOfBounds(coords): continue
 			affectedCoords.append(coords)
 	return affectedCoords
 
 # creates a list of coords, all impacted tiles within radial effect.
-def radialTiles(torusRow, torusCol, size):
+def radialTiles(rowIndex, colIndex, size):
 	affectedCoords = []
-	for r in range(size * -1, size + 1):
-		for c in range(size * -1, size + 1):
-			coords = (torusRow + r, torusCol + c)
+	for rowOffset in range(size * -1, size + 1):
+		for colOffset in range(size * -1, size + 1):
+			coords = (rowIndex + rowOffset, colIndex + colOffset)
 			if outOfBounds(coords): continue
 			affectedCoords.append(coords)
 	return affectedCoords
