@@ -44,7 +44,7 @@ def radialTiles(torusRow, torusCol, size):
 	return affectedCoords
 
 def outOfBounds(coords):
-	return coords[0] > 7 or coords[1] > 9
+	return coords[0] > 7 or coords[0] < 0	 or coords[1] > 9 or coords[1] < 0
 
 def findEmptyLocation(boardstate):
 	""" Randomly finds an open spot on the board and returns those coords. No torus, orb, or acidic. """
