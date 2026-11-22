@@ -114,8 +114,24 @@ def scramble(ctxt: PowerContext):
 			randomDest['torus'] = tori.pop()
 
 def snakeTunneling(ctxt: PowerContext):
-	# TODO work on this next. Build out backend functions before adding front end handling
-	pass
+	row, col, size, rcrFn, boardstate = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate
+	tunnelCount = size * 10
+
+	for tunnelStep in range(tunnelCount):
+		boardstate[row][col]['elevation'] = 5
+		while True:
+			direction = random.choice(["up", "down", "left", "right"])
+			print(direction, end=", ")
+			newRow, newCol = -1, -1
+			match direction:
+				case "down":  newRow, newCol = row + 1, col
+				case "up":    newRow, newCol = row - 1, col
+				case "right": newRow, newCol = row, col + 1
+				case "left":  newRow, newCol = row, col - 1
+			if not outOfBounds((newRow, newCol)):
+				row, col = newRow, newCol
+				print(row, col)
+				break
 
 def recruit(ctxt: PowerContext):
 	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
