@@ -71,6 +71,16 @@ def destroy(ctxt: PowerContext):
 			if torus['color'] != activeColor:
 				del affectedTile['torus']
 
+def pilfer(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
+
+	activePlayerPowers, inactivePlayerPowers = determinePlayerPowers(ctxt)
+
+	originTorus = boardstate[row][col]['torus']
+	originTorusName = originTorus['name']
+	originTorusPowers = activePlayerPowers[originTorusName]
+	## TODO WIP
+
 def twoX(ctxt: PowerContext):
 	""" get list of powers for this torus. Double the counts. """
 	torus = ctxt.tile['torus']
