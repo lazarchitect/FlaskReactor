@@ -78,8 +78,19 @@ def pilfer(ctxt: PowerContext):
 
 	originTorus = boardstate[row][col]['torus']
 	originTorusName = originTorus['name']
-	originTorusPowers = activePlayerPowers[originTorusName]
-	## TODO WIP
+
+	for affRow, affCol in rcrFn(row, col, size):
+		affTile = boardstate[affRow][affCol]
+		if 'torus' in affTile and affTile['torus']['color'] != originTorus['color']:
+			enemyTorus = affTile['torus']
+			enemyTorusName = enemyTorus['name']
+			enemyTorusPowers = inactivePlayerPowers.get(enemyTorusName, None)
+			if enemyTorusPowers is not None:
+				originTorusPowers = activePlayerPowers[originTorusName]
+				activePlayerPowers[originTorusName] = combinePowers(originTorusPowers, enemyTorusPowers)
+
+				del inactivePlayerPowers[enemyTorusName]
+				enemyTorus['hasPowers'] = False
 
 def twoX(ctxt: PowerContext):
 	""" get list of powers for this torus. Double the counts. """
