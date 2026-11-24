@@ -23,10 +23,17 @@ export function QuadTile ({ tileData }) {
     const surfaceColor = `rgba(${brightness}, ${brightness}, ${brightness}, 1)`;
     let tileStyle = {right: elevationShift, bottom: elevationShift, zIndex: elevationZ};
 
+    let modTypes = "";
+    let hasMods = tileData.mods.length > 0;
+    if (hasMods && tileData.mods.includes('Dissolved')) {
+        modTypes = "quadTileDissolved";
+    }
+
     return <div id={tileId} className="quadTile" ref={dropRef} style={tileStyle}>
 
         <div className="quadTileBlock"/>
         <div className="quadTileSurface" style={{backgroundColor: surfaceColor}}/>
+        { hasMods && <div className={modTypes} /> }
 
         { hasOrb && <Orb /> }
         { hasHoverGhost && <TorusHoverGhost torusData={sourceTileData.torus} /> }

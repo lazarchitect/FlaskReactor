@@ -400,6 +400,16 @@ main.chess {
     border: 1px rgb(0 0 0 / 0.44) solid;
 }
 
+.quadTileDissolved {
+    position: absolute;
+    background-image: url('../images/quadradius/tile_dissolved.svg'); /* path is relative to this CSS file */
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 99%;
+    width: 99%;
+}
+
 .quadTileBlock {
     position: absolute;
     background-image: url('../images/quadradius/tile_underlay.svg');
