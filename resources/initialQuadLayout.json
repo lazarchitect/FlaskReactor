@@ -1,454 +1,414 @@
 [
     [
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         }
     ],
     [
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         }
     ],
-    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
-    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
-    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
-    [{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3},{"elevation": 3}],
+    [{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []}],
+    [{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []}],
+    [{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []}],
+    [{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []},{"elevation": 3, "mods": []}],
     [
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         }
     ],
     [
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         },
         {
-            "torus": { 
+            "torus": {
                 "name": "TBD",
                 "color": "TBD",
                 "hasPowers": false,
-                "traits": [],
-                "isParasiteHost": false,
-                "parasites": []
+                "mods": []
             },
-            "elevation": 3
+            "elevation": 3,
+            "mods": []
         }
     ]
 ]
