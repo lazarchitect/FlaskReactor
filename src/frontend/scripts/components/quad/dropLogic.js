@@ -30,8 +30,10 @@ export function isValidMove(sourceTileData, targetTileData) {
     let isInvalidDistance = manhattanDistance !== 1; // normal moves are exactly 1 orthogonal tile only (exceptions are Move Diagonal, F2S, Centerpult?)
     let isJumpTooHigh = (targetTileData.elevation - sourceTileData.elevation) > 1; // jump up 1 tile but not more than that
     let allyAtTarget = ("torus" in targetTileData && targetTileData.torus.color === sourceTileData.torus.color);
+    let targetIsDissolved = targetTileData.mods.includes("Dissolved");
+    // other checks will consider if a bunker is present or if the moving torus has Climb Tile, Scavenger, F2S, etc
 
-    return !isInvalidDistance && !allyAtTarget && !isJumpTooHigh;
+    return !isInvalidDistance && !allyAtTarget && !isJumpTooHigh && !targetIsDissolved;
 }
 
 /** Quickly and responsively display a move locally before the round trip to the server updates the board.
