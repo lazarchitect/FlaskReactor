@@ -71,6 +71,17 @@ def destroy(ctxt: PowerContext):
 			if torus['color'] != activeColor:
 				del affectedTile['torus']
 
+def kamikaze(ctxt: PowerContext):
+	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
+
+	for affectedRow, affectedCol in rcrFn(row, col, size):
+		affectedTile = boardstate[affectedRow][affectedCol]
+		if 'torus' in affectedTile:
+			del affectedTile['torus']
+
+def acidic(ctxt: PowerContext):
+	pass
+
 def pilfer(ctxt: PowerContext):
 	row, col, size, rcrFn, boardstate, activeColor = ctxt.row, ctxt.col, ctxt.size, ctxt.rcrFn, ctxt.boardstate, ctxt.activeColor
 

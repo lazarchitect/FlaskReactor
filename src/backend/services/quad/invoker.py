@@ -9,7 +9,7 @@ POWER_FUNCTIONS = {
 	# Tile Mods
 	# "Orb Spy": orbSpy, "Bankrupt": bankrupt, "Power Plant": powerPlant, "Hotspot": hotspot, "Refurb": refurb, "Bunker": bunker,
 	# Offensive
-	"Destroy": destroy, "Pilfer": pilfer, # "Inhibit": inhibit, "Acidic": acidic, "Parasite": parasite, "Kamikaze": kamikaze, "Spyware": spyware, "Tripwire": tripwire,
+	"Destroy": destroy, "Kamikaze": kamikaze, "Acidic": acidic, "Pilfer": pilfer,  # "Inhibit": inhibit, "Parasite": parasite, "Spyware": spyware, "Tripwire": tripwire,
 	### Power Utilities
 	"2x": twoX, "Learn": learn, "Teach": teach, "Beneficiary": beneficiary,
 	### Mobility Torus Mods
@@ -26,7 +26,7 @@ POWER_FUNCTIONS = {
 def invokePower(power, coords, game):
 
 	### FIXME DEBUG LINES, DO NOT MERGE TO MAIN
-	#power.name = "Snake Tunneling"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
+	#power.name = "Kamikaze"#choice(["Raise Tile", "Lower Tile", "Moat", "Plateau", "Wall", "Trench"])
 	#power.rcr = "Row" #choice(["Row", "Column", "Radial"])
 	print(power.name, power.rcr)
 
